@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Button from "./button";
+import { Button } from "./button";
 import { AstralisProvider } from "../../../theme";
 
 const meta: Meta<typeof Button> = {

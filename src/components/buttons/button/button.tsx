@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import type { ButtonProps } from "./button.types";
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       children,
@@ -76,4 +76,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
-export default Button;
