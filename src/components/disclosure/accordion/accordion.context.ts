@@ -1,24 +1,18 @@
 import { createContext, useContext } from "react";
-import type { AccordionContextValue } from "./accordion.types";
 
-export const AccordionContext = createContext<AccordionContextValue | null>(null)
+interface AccordionContextValue {
+  isOpen: (value: string) => boolean;
+  toggle: (value: string) => void;
+}
+
+const AccordionContext = createContext<AccordionContextValue | null>(null);
 
 export function useAccordionContext() {
-    const ctx = useContext(AccordionContext)
-
-    if(!ctx){
-        throw new Error("Accordion components must be used within <Accordion.Root>")
-    }
-
-    return ctx
-}
-
-export const AccordionItemContext = createContext<{ value: string; disabled?: boolean } | null>(null)
-
-export function useAccordionItemContext() {
-  const ctx = useContext(AccordionItemContext)
+  const ctx = useContext(AccordionContext);
   if (!ctx) {
-    throw new Error('Accordion.Item must be used inside Accordion.Root')
+    throw new Error("Accordion components must be used within <Accordion />");
   }
-  return ctx
+  return ctx;
 }
+
+export default AccordionContext;

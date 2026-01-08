@@ -554,6 +554,22 @@ video {
   display: none;
 }
 
+.astralis-pointer-events-none {
+  pointer-events: none;
+}
+
+.astralis-fixed {
+  position: fixed;
+}
+
+.astralis-inset-0 {
+  inset: 0px;
+}
+
+.astralis-z-50 {
+  z-index: 50;
+}
+
 .astralis-mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -585,6 +601,10 @@ video {
 
 .astralis-mt-1 {
   margin-top: 0.25rem;
+}
+
+.astralis-mt-6 {
+  margin-top: 1.5rem;
 }
 
 .astralis-flex {
@@ -627,12 +647,24 @@ video {
   height: 2rem;
 }
 
+.astralis-max-h-\[80vh\] {
+  max-height: 80vh;
+}
+
 .astralis-w-4 {
   width: 1rem;
 }
 
 .astralis-w-5 {
   width: 1.25rem;
+}
+
+.astralis-w-8 {
+  width: 2rem;
+}
+
+.astralis-w-\[400px\] {
+  width: 400px;
 }
 
 .astralis-w-\[500px\] {
@@ -643,8 +675,29 @@ video {
   width: 100%;
 }
 
+.astralis-w-\[420px\] {
+  width: 420px;
+}
+
+.astralis-w-\[480px\] {
+  width: 480px;
+}
+
+.astralis-min-w-\[500px\] {
+  min-width: 500px;
+}
+
+.astralis-max-w-md {
+  max-width: 28rem;
+}
+
 .astralis-flex-shrink-0 {
   flex-shrink: 0;
+}
+
+.astralis-rotate-180 {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 @keyframes astralis-pulse {
@@ -675,12 +728,20 @@ video {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
+.astralis-flex-row {
+  flex-direction: row;
+}
+
 .astralis-flex-col {
   flex-direction: column;
 }
 
 .astralis-flex-wrap {
   flex-wrap: wrap;
+}
+
+.astralis-items-start {
+  align-items: flex-start;
 }
 
 .astralis-items-end {
@@ -691,8 +752,28 @@ video {
   align-items: center;
 }
 
+.astralis-justify-end {
+  justify-content: flex-end;
+}
+
 .astralis-justify-center {
   justify-content: center;
+}
+
+.astralis-justify-between {
+  justify-content: space-between;
+}
+
+.astralis-gap-1 {
+  gap: 0.25rem;
+}
+
+.astralis-gap-2 {
+  gap: 0.5rem;
+}
+
+.astralis-gap-3 {
+  gap: 0.75rem;
 }
 
 .astralis-gap-4 {
@@ -719,6 +800,12 @@ video {
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+.astralis-space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
 .astralis-space-y-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
@@ -735,6 +822,20 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.astralis-space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+}
+
+.astralis-overflow-hidden {
+  overflow: hidden;
+}
+
+.astralis-overflow-y-auto {
+  overflow-y: auto;
 }
 
 .astralis-rounded {
@@ -777,9 +878,28 @@ video {
   border-width: 1px;
 }
 
+.astralis-border-2 {
+  border-width: 2px;
+}
+
 .astralis-border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+}
+
+.astralis-border-neutral-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(212 212 212 / var(--tw-border-opacity, 1));
+}
+
+.astralis-border-primary-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
+}
+
+.astralis-border-secondary-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
 }
 
 .astralis-border-secondary-300 {
@@ -851,6 +971,10 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
+.astralis-bg-black\/50 {
+  background-color: rgb(0 0 0 / 0.5);
+}
+
 .astralis-object-contain {
   -o-object-fit: contain;
      object-fit: contain;
@@ -915,6 +1039,25 @@ video {
 .astralis-px-8 {
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.astralis-py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.astralis-py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.astralis-py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.astralis-pt-3 {
+  padding-top: 0.75rem;
 }
 
 .astralis-text-left {
@@ -1029,6 +1172,16 @@ video {
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
 }
 
+.astralis-text-neutral-500 {
+  --tw-text-opacity: 1;
+  color: rgb(115 115 115 / var(--tw-text-opacity, 1));
+}
+
+.astralis-text-neutral-600 {
+  --tw-text-opacity: 1;
+  color: rgb(82 82 82 / var(--tw-text-opacity, 1));
+}
+
 .astralis-text-primary-600 {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
@@ -1039,6 +1192,11 @@ video {
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
 }
 
+.astralis-text-secondary-700 {
+  --tw-text-opacity: 1;
+  color: rgb(51 65 85 / var(--tw-text-opacity, 1));
+}
+
 .astralis-text-secondary-900 {
   --tw-text-opacity: 1;
   color: rgb(15 23 42 / var(--tw-text-opacity, 1));
@@ -1047,6 +1205,11 @@ video {
 .astralis-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.astralis-text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
 }
 
 .astralis-opacity-25 {
@@ -1078,6 +1241,12 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.astralis-transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 .astralis-transition-colors {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -1090,9 +1259,24 @@ video {
   transition-duration: 150ms;
 }
 
+.astralis-transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.astralis-duration-200 {
+  transition-duration: 200ms;
+}
+
 .hover\:astralis-bg-error-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:astralis-bg-neutral-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:astralis-bg-primary-700:hover {
