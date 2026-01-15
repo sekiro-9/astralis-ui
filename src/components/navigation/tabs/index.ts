@@ -1,21 +1,26 @@
-import { Tabs as TabsRoot } from "./tabs";
-import { TabsList } from "./tabs-list";
-import { TabsTrigger } from "./tabs-trigger";
-import { TabsContent } from "./tabs-content";
+import { TabsRoot } from "./components/tabs-root";
+import { TabsList } from "./components/tabs-list";
+import { TabsTrigger } from "./components/tabs-trigger";
+import { TabsContent } from "./components/tabs-content";
 
-// 1️⃣ Compound DX API
+/* 1️⃣ Compound API */
 export const Tabs = Object.assign(TabsRoot, {
   List: TabsList,
   Trigger: TabsTrigger,
   Content: TabsContent,
 });
 
-// 2️⃣ Flat exports for tree-shaking
+/* 2️⃣ Flat exports */
 export {
-  TabsRoot,
   TabsList,
   TabsTrigger,
   TabsContent,
 };
 
-export type { TabsProps } from "./tabs.types";
+/* 3️⃣ Types */
+export type {
+  TabsProps,
+  TabsListProps,
+  TabsTriggerProps,
+  TabsContentProps,
+} from "./tabs.types";

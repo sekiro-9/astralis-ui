@@ -1,24 +1,33 @@
 import type { ReactNode } from "react";
 
-export type StepsOrientation = "horizontal" | "vertical";
-export type StepsSize = "sm" | "md" | "lg";
+/* ------------------------------------------------------------------ */
+/* Root */
+/* ------------------------------------------------------------------ */
 
 export interface StepsProps {
-  /** Current active step (0-based index) */
-  value: number;
-  orientation?: StepsOrientation;
-  size?: StepsSize;
-  clickable?: boolean;
-  onChange?: (step: number) => void;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
+  orientation?: "horizontal" | "vertical";
   children: ReactNode;
 }
 
-export interface StepProps {
-  title: string;
-  description?: string;
-  icon?: ReactNode;
-  disabled?: boolean;
+/* ------------------------------------------------------------------ */
+/* Sub-components */
+/* ------------------------------------------------------------------ */
 
-  /** @internal – injected by <Steps /> */
-  index?: number;
+export interface StepsListProps {
+  children: ReactNode;
+}
+
+export interface StepsItemProps {
+  children: ReactNode;
+}
+
+export interface StepsIndicatorProps {
+  children?: ReactNode;
+}
+
+export interface StepsContentProps {
+  children: ReactNode;
 }

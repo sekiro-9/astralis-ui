@@ -1,20 +1,30 @@
 import type { ReactNode } from "react";
 
-export type TabsOrientation = "horizontal" | "vertical";
-export type TabsSize = "sm" | "md" | "lg";
+/* ------------------------------------------------------------------ */
+/* Root */
+/* ------------------------------------------------------------------ */
 
 export interface TabsProps {
   value?: string;
   defaultValue?: string;
-  onChange?: (value: string) => void;
-  orientation?: TabsOrientation;
-  size?: TabsSize;
+  onValueChange?: (value: string) => void;
   children: ReactNode;
 }
 
-export interface TabsContextValue {
-  value?: string;
-  orientation: TabsOrientation;
-  size: TabsSize;
-  setValue: (value: string) => void;
+/* ------------------------------------------------------------------ */
+/* Sub-components */
+/* ------------------------------------------------------------------ */
+
+export interface TabsListProps {
+  children: ReactNode;
+}
+
+export interface TabsTriggerProps {
+  value: string;
+  children: ReactNode;
+}
+
+export interface TabsContentProps {
+  value: string;
+  children: ReactNode;
 }
