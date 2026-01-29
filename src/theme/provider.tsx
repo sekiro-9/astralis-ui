@@ -1,118 +1,18 @@
-// // src/theme/provider.tsx
-// "use client";
-// import React, { createContext, useContext, useEffect, useState } from "react";
-
-// export type Theme = "light" | "dark" | "system";
-
-// interface ThemeProviderProps {
-//   children: React.ReactNode;
-//   defaultTheme?: Theme;
-//   storageKey?: string;
-//   className?: string;
-// }
-
-// interface ThemeProviderState {
-//   theme: Theme;
-//   setTheme: (theme: Theme) => void;
-//   resolvedTheme: "light" | "dark";
-// }
-
-// const initialState: ThemeProviderState = {
-//   theme: "system",
-//   setTheme: () => null,
-//   resolvedTheme: "light",
-// };
-
-// const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
-
-// export function AstralisProvider({
-//   children,
-//   defaultTheme = "system",
-//   storageKey = "astralis-ui-theme",
-//   className = "",
-//   ...props
-// }: ThemeProviderProps) {
-//   const [theme, setTheme] = useState<Theme>(defaultTheme);
-//   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
-
-//   useEffect(() => {
-//     const stored = localStorage.getItem(storageKey);
-//     if (stored) {
-//       setTheme(stored as Theme);
-//     }
-//   }, [storageKey]);
-
-//   useEffect(() => {
-//     const root = window.document.documentElement;
-//     console.log(root);
-//     console.log(theme);
-    
-
-//     // Remove any existing theme classes
-//     root.classList.remove("light", "dark");
-
-//     let themeToApply: "light" | "dark";
-//     if (theme === "system") {
-//       themeToApply = window.matchMedia("(prefers-color-scheme: dark)").matches
-//         ? "dark"
-//         : "light";
-//     } else {
-//       themeToApply = theme;
-//     }
-
-//     // Apply the theme class - Tailwind uses 'dark' class for dark mode
-//     if (themeToApply === "dark") {
-//       root.classList.add("dark");
-//     } else {
-//       root.classList.remove("dark");
-//     }
-
-//     setResolvedTheme(themeToApply);
-
-//     // Store the preference
-//     if (theme !== "system") {
-//       localStorage.setItem(storageKey, theme);
-//     } else {
-//       localStorage.removeItem(storageKey);
-//     }
-//   }, [theme, storageKey]);
-
-//   const value = {
-//     theme,
-//     setTheme: (theme: Theme) => {
-//       setTheme(theme);
-//     },
-//     resolvedTheme,
-//   };
-
-//   return (
-//     <ThemeProviderContext.Provider {...props} value={value}>
-//       <div className={`astralis ${className}`}>{children}</div>
-//     </ThemeProviderContext.Provider>
-//   );
-// }
-
-// export const useTheme = () => {
-//   const context = useContext(ThemeProviderContext);
-
-//   if (context === undefined) {
-//     throw new Error("useTheme must be used within a AstralisProvider");
-//   }
-
-//   return context;
-// };
-
-// src/theme/provider.tsx
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type Theme = "light" | "dark" | "system";
+
+export type ThemeTokens = Partial<{
+  primaryColor: string;
+}>;
 
 interface ThemeProviderProps {
   children: React.ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
   className?: string;
+  tokens?: ThemeTokens;
 }
 
 interface ThemeProviderState {
@@ -129,68 +29,97 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+function resolveTheme(theme: Theme): "light" | "dark" {
+  if (theme === "system") {
+    return typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return theme;
+}
+
 export function AstralisProvider({
   children,
   defaultTheme = "system",
   storageKey = "astralis-ui-theme",
   className = "",
+  tokens,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Read from localStorage only once on initial render
+  const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(storageKey);
-      return stored as Theme || defaultTheme;
+      // Only use stored value if no explicit defaultTheme was passed
+      // by checking if defaultTheme is still the fallback "system"
+      // Instead: always honour defaultTheme when it's explicitly "light" or "dark"
+      if (defaultTheme !== "system") {
+        return defaultTheme;
+      }
+      return (stored as Theme) || defaultTheme;
     }
     return defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  // Derive resolvedTheme synchronously so there's no flash
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(() =>
+    resolveTheme(theme)
+  );
 
-  // This useEffect will now only handle the resolved theme logic.
+  // Keep resolvedTheme in sync when theme changes
   useEffect(() => {
-    // This logic is for the application, not Storybook.
-    // Storybook is already handling the `dark` class for you.
-    let themeToApply: "light" | "dark";
-    if (theme === "system") {
-      themeToApply = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    } else {
-      themeToApply = theme;
-    }
+    const resolved = resolveTheme(theme);
+    setResolvedTheme(resolved);
 
-    setResolvedTheme(themeToApply);
-
-    // Persist to local storage.
-    if (theme !== "system") {
-      localStorage.setItem(storageKey, theme);
-    } else {
-      localStorage.removeItem(storageKey);
+    // Only persist to localStorage when theme is user-driven (not forced by prop)
+    if (defaultTheme === "system") {
+      if (theme !== "system") {
+        localStorage.setItem(storageKey, theme);
+      } else {
+        localStorage.removeItem(storageKey);
+      }
     }
-  }, [theme, storageKey]);
+  }, [theme, storageKey, defaultTheme]);
+
+  // Listen for system preference changes when theme is "system"
+  useEffect(() => {
+    if (theme !== "system") return;
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = () => setResolvedTheme(resolveTheme("system"));
+
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, [theme]);
+
+  const tokenStyles = tokens
+    ? ({
+        "--astralis-primary-500": tokens.primaryColor,
+      } as React.CSSProperties)
+    : undefined;
 
   const value = {
     theme,
-    setTheme: (newTheme: Theme) => {
-      setTheme(newTheme);
-    },
+    setTheme: (newTheme: Theme) => setThemeState(newTheme),
     resolvedTheme,
   };
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <div className={`astralis ${className}`}>{children}</div>
+      <div
+        className={`astralis ${resolvedTheme === "dark" ? "astralis-dark" : ""} ${className}`.trim()}
+        style={tokenStyles}
+      >
+        {children}
+      </div>
     </ThemeProviderContext.Provider>
   );
 }
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
-
   if (context === undefined) {
     throw new Error("useTheme must be used within a AstralisProvider");
   }
-
   return context;
 };

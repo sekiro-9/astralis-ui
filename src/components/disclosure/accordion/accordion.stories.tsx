@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
   AccordionContent,
   AccordionIndicator,
+  AccordionTitle,
 } from "./index";
 import { AstralisProvider } from "../../../theme";
 import React from "react";
@@ -40,7 +41,7 @@ export const Basic: Story = {
     <Accordion collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger value="item-1">
-          What is Astralis?
+          <AccordionTitle>What is Astralis?</AccordionTitle>
           <AccordionIndicator value="item-1" />
         </AccordionTrigger>
         
@@ -51,7 +52,7 @@ export const Basic: Story = {
 
       <AccordionItem value="item-2">
         <AccordionTrigger value="item-2">
-          Why use Astralis?
+          <AccordionTitle>Why use Astralis?</AccordionTitle>
           <AccordionIndicator value="item-2" />
         </AccordionTrigger>
         <AccordionContent value="item-2">
@@ -69,7 +70,6 @@ export const Basic: Story = {
     },
   },
 };
-
 
 export const Multiple: Story = {
   render: () => (
@@ -104,7 +104,6 @@ export const Multiple: Story = {
     },
   },
 };
-
 
 export const Controlled: Story = {
   render: () => {

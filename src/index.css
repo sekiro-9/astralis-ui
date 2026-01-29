@@ -554,6 +554,105 @@ video {
   display: none;
 }
 
+/* --- Raw Purple Palette (Astralis Brand) --- */
+
+:root {
+  --astralis-primary-50:  #faf5ff;
+  --astralis-primary-100: #f3e8ff;
+  --astralis-primary-200: #e9d5ff;
+  --astralis-primary-300: #d8b4fe;
+  --astralis-primary-400: #c084fc;
+  --astralis-primary-500: #a855f7;
+  --astralis-primary-600: #9333ea;
+  --astralis-primary-700: #7c3aed;
+  --astralis-primary-800: #6b21a8;
+  --astralis-primary-900: #581c87;
+  /* --- Secondary (Slate) --- */
+  --astralis-secondary-50:  #f8fafc;
+  --astralis-secondary-100: #f1f5f9;
+  --astralis-secondary-200: #e2e8f0;
+  --astralis-secondary-300: #cbd5e1;
+  --astralis-secondary-400: #94a3b8;
+  --astralis-secondary-500: #64748b;
+  --astralis-secondary-600: #475569;
+  --astralis-secondary-700: #334155;
+  --astralis-secondary-800: #1e293b;
+  --astralis-secondary-900: #0f172a;
+  /* --- Success (Green) --- */
+  --astralis-success-50:  #f0fdf4;
+  --astralis-success-100: #dcfce7;
+  --astralis-success-200: #bbf7d0;
+  --astralis-success-300: #86efac;
+  --astralis-success-400: #4ade80;
+  --astralis-success-500: #22c55e;
+  --astralis-success-600: #16a34a;
+  --astralis-success-700: #15803d;
+  --astralis-success-800: #166534;
+  --astralis-success-900: #14532d;
+  /* --- Warning (Amber) --- */
+  --astralis-warning-50:  #fffbeb;
+  --astralis-warning-100: #fef3c7;
+  --astralis-warning-200: #fde68a;
+  --astralis-warning-300: #fcd34d;
+  --astralis-warning-400: #fbbf24;
+  --astralis-warning-500: #f59e0b;
+  --astralis-warning-600: #d97706;
+  --astralis-warning-700: #b45309;
+  --astralis-warning-800: #92400e;
+  --astralis-warning-900: #78350f;
+  /* --- Error (Red) --- */
+  --astralis-error-50:  #fef2f2;
+  --astralis-error-100: #fee2e2;
+  --astralis-error-200: #fecaca;
+  --astralis-error-300: #fca5a5;
+  --astralis-error-400: #f87171;
+  --astralis-error-500: #ef4444;
+  --astralis-error-600: #dc2626;
+  --astralis-error-700: #b91c1c;
+  --astralis-error-800: #991b1b;
+  --astralis-error-900: #7f1d1d;
+  /* ============================================
+       LIGHT THEME SEMANTIC TOKENS
+       These are what your components actually use
+       ============================================ */
+  /* Surfaces */
+  --astralis-surface-base:    #ffffff;
+  --astralis-surface-raised:  #F4F4F5;
+  --astralis-surface-overlay: #f1f5f9;
+  --astralis-surface-sunken:  #e2e8f0;
+  /* Content / Text */
+  --astralis-content-primary:   #0f172a;
+  --astralis-content-secondary: #475569;
+  --astralis-content-tertiary:  #94a3b8;
+  --astralis-content-inverse:   #ffffff;
+  --astralis-content-disabled:  #cbd5e1;
+  /* Borders */
+  --astralis-border-strong: #94a3b8;
+  --astralis-border-subtle: #e5e7eb;
+}
+
+/* ============================================
+     DARK THEME SEMANTIC TOKENS
+     Only semantic tokens change — raw palette stays the same
+     ============================================ */
+
+.astralis-dark {
+  /* Surfaces */
+  --astralis-surface-base:    #09090B;
+  --astralis-surface-raised:  #18181B;
+  --astralis-surface-overlay: #334155;
+  --astralis-surface-sunken:  #0a0f1e;
+  /* Content / Text */
+  --astralis-content-primary:   #f8fafc;
+  --astralis-content-secondary: #cbd5e1;
+  --astralis-content-tertiary:  #64748b;
+  --astralis-content-inverse:   #0f172a;
+  --astralis-content-disabled:  #334155;
+  /* Borders */
+  --astralis-border-strong: #64748b;
+  --astralis-border-subtle: #27272A;
+}
+
 .astralis-fixed {
   position: fixed;
 }
@@ -659,6 +758,10 @@ video {
   margin-top: 1.5rem;
 }
 
+.astralis-inline-block {
+  display: inline-block;
+}
+
 .astralis-flex {
   display: flex;
 }
@@ -725,6 +828,10 @@ video {
 
 .astralis-max-h-\[80vh\] {
   max-height: 80vh;
+}
+
+.astralis-min-h-screen {
+  min-height: 100vh;
 }
 
 .astralis-w-10 {
@@ -872,6 +979,10 @@ video {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.astralis-grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .astralis-grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -955,6 +1066,12 @@ video {
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.astralis-space-y-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 
 .astralis-space-y-2 > :not([hidden]) ~ :not([hidden]) {
@@ -1061,6 +1178,14 @@ video {
   border-top-width: 1px;
 }
 
+.astralis-border-border-subtle {
+  border-color: var(--astralis-border-subtle);
+}
+
+.astralis-border-error-300 {
+  border-color: var(--astralis-error-300);
+}
+
 .astralis-border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
@@ -1071,18 +1196,20 @@ video {
   border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
 }
 
-.astralis-border-secondary-200 {
-  --tw-border-opacity: 1;
-  border-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
+.astralis-border-secondary-300 {
+  border-color: var(--astralis-secondary-300);
 }
 
-.astralis-border-secondary-300 {
-  --tw-border-opacity: 1;
-  border-color: rgb(203 213 225 / var(--tw-border-opacity, 1));
+.astralis-border-success-300 {
+  border-color: var(--astralis-success-300);
 }
 
 .astralis-border-transparent {
   border-color: transparent;
+}
+
+.astralis-border-warning-300 {
+  border-color: var(--astralis-warning-300);
 }
 
 .astralis-bg-black {
@@ -1094,14 +1221,12 @@ video {
   background-color: rgb(0 0 0 / 0.5);
 }
 
-.astralis-bg-error-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
+.astralis-bg-error-100 {
+  background-color: var(--astralis-error-100);
 }
 
 .astralis-bg-error-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-error-600);
 }
 
 .astralis-bg-gray-100 {
@@ -1134,14 +1259,8 @@ video {
   background-color: rgb(220 252 231 / var(--tw-bg-opacity, 1));
 }
 
-.astralis-bg-primary-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
-}
-
 .astralis-bg-primary-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-primary-600);
 }
 
 .astralis-bg-red-100 {
@@ -1150,27 +1269,39 @@ video {
 }
 
 .astralis-bg-secondary-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(226 232 240 / var(--tw-bg-opacity, 1));
-}
-
-.astralis-bg-secondary-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-secondary-200);
 }
 
 .astralis-bg-secondary-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-secondary-50);
 }
 
-.astralis-bg-success-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1));
+.astralis-bg-success-100 {
+  background-color: var(--astralis-success-100);
+}
+
+.astralis-bg-surface-base {
+  background-color: var(--astralis-surface-base);
+}
+
+.astralis-bg-surface-overlay {
+  background-color: var(--astralis-surface-overlay);
+}
+
+.astralis-bg-surface-raised {
+  background-color: var(--astralis-surface-raised);
+}
+
+.astralis-bg-surface-sunken {
+  background-color: var(--astralis-surface-sunken);
 }
 
 .astralis-bg-transparent {
   background-color: transparent;
+}
+
+.astralis-bg-warning-100 {
+  background-color: var(--astralis-warning-100);
 }
 
 .astralis-bg-white {
@@ -1226,6 +1357,11 @@ video {
 
 .astralis-p-8 {
   padding: 2rem;
+}
+
+.astralis-px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 
 .astralis-px-2 {
@@ -1384,6 +1520,34 @@ video {
   font-weight: 100;
 }
 
+.astralis-text-content-disabled {
+  color: var(--astralis-content-disabled);
+}
+
+.astralis-text-content-inverse {
+  color: var(--astralis-content-inverse);
+}
+
+.astralis-text-content-primary {
+  color: var(--astralis-content-primary);
+}
+
+.astralis-text-content-secondary {
+  color: var(--astralis-content-secondary);
+}
+
+.astralis-text-content-tertiary {
+  color: var(--astralis-content-tertiary);
+}
+
+.astralis-text-error-600 {
+  color: var(--astralis-error-600);
+}
+
+.astralis-text-error-700 {
+  color: var(--astralis-error-700);
+}
+
 .astralis-text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity, 1));
@@ -1404,11 +1568,6 @@ video {
   color: rgb(55 65 81 / var(--tw-text-opacity, 1));
 }
 
-.astralis-text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
-}
-
 .astralis-text-gray-900 {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity, 1));
@@ -1425,8 +1584,7 @@ video {
 }
 
 .astralis-text-primary-600 {
-  --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+  color: var(--astralis-primary-600);
 }
 
 .astralis-text-red-600 {
@@ -1440,18 +1598,27 @@ video {
 }
 
 .astralis-text-secondary-600 {
-  --tw-text-opacity: 1;
-  color: rgb(71 85 105 / var(--tw-text-opacity, 1));
-}
-
-.astralis-text-secondary-700 {
-  --tw-text-opacity: 1;
-  color: rgb(51 65 85 / var(--tw-text-opacity, 1));
+  color: var(--astralis-secondary-600);
 }
 
 .astralis-text-secondary-900 {
-  --tw-text-opacity: 1;
-  color: rgb(15 23 42 / var(--tw-text-opacity, 1));
+  color: var(--astralis-secondary-900);
+}
+
+.astralis-text-success-600 {
+  color: var(--astralis-success-600);
+}
+
+.astralis-text-success-700 {
+  color: var(--astralis-success-700);
+}
+
+.astralis-text-warning-600 {
+  color: var(--astralis-warning-600);
+}
+
+.astralis-text-warning-700 {
+  color: var(--astralis-warning-700);
 }
 
 .astralis-text-white {
@@ -1539,9 +1706,16 @@ video {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+/* ============================================
+   ASTRALIS DESIGN TOKENS
+   ============================================ */
+
+.css-1erac46 {
+  background-color: var(--astralis-surface-base) !important;
+}
+
 .hover\:astralis-bg-error-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(185 28 28 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-error-700);
 }
 
 .hover\:astralis-bg-gray-100:hover {
@@ -1560,23 +1734,19 @@ video {
 }
 
 .hover\:astralis-bg-primary-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-primary-700);
 }
 
 .hover\:astralis-bg-secondary-100:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-secondary-100);
 }
 
 .hover\:astralis-bg-secondary-300:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-secondary-300);
 }
 
 .hover\:astralis-bg-secondary-50:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
+  background-color: var(--astralis-secondary-50);
 }
 
 .hover\:astralis-text-gray-900:hover {
@@ -1596,18 +1766,15 @@ video {
 }
 
 .focus\:astralis-ring-error-500:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity, 1));
+  --tw-ring-color: var(--astralis-error-500);
 }
 
 .focus\:astralis-ring-primary-500:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1));
+  --tw-ring-color: var(--astralis-primary-500);
 }
 
 .focus\:astralis-ring-secondary-500:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(100 116 139 / var(--tw-ring-opacity, 1));
+  --tw-ring-color: var(--astralis-secondary-500);
 }
 
 .focus\:astralis-ring-offset-2:focus {
@@ -1622,32 +1789,6 @@ video {
   opacity: 0.5;
 }
 
-.dark\:astralis-border-gray-700:is(.astralis-dark *) {
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
-}
-
-.dark\:astralis-bg-gray-700:is(.astralis-dark *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
-}
-
-.dark\:astralis-bg-gray-800:is(.astralis-dark *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity, 1));
-}
-
-.dark\:astralis-bg-secondary-900:is(.astralis-dark *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1));
-}
-
-.dark\:astralis-text-gray-200:is(.astralis-dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity, 1));
-}
-
-.dark\:astralis-text-white:is(.astralis-dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+.dark\:astralis-bg-secondary-900:is(.astralis-astralis-dark *) {
+  background-color: var(--astralis-secondary-900);
 }

@@ -6,7 +6,7 @@ export function AccordionItem({
 }: React.PropsWithChildren<AccordionItemProps>) {
   return (
     <div
-      className={`astralis-w-full astralis-border astralis-border-secondary-200 astralis-rounded-lg astralis-overflow-hidden ${
+      className={`astralis-w-full astralis-bg astralis-border astralis-border-border-subtle astralis-rounded-lg astralis-overflow-hidden ${
         disabled ? "astralis-opacity-50" : ""
       }`}
     >

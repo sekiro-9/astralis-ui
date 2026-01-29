@@ -14,7 +14,7 @@ export function AccordionContent({
   if (!isOpen(value)) return null;
 
   return (
-    <div className="astralis-w-full astralis-p-4 astralis-text-secondary-700">
+    <div className="astralis-w-full astralis-text-sm astralis-p-4 astralis-text-content-primary">
       {children}
     </div>
   );

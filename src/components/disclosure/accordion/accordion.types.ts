@@ -12,3 +12,7 @@ export interface AccordionItemProps {
   value: string;
   disabled?: boolean;
 }
+
+export interface AccordionTitleProps {
+  children: React.ReactNode;
+}

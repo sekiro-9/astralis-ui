@@ -3,6 +3,7 @@ import { AccordionItem } from "./components/accordion-item";
 import { AccordionTrigger } from "./components/accordion-trigger";
 import { AccordionContent } from "./components/accordion-content";
 import { AccordionIndicator } from "./components/accordion-indicator";
+import { AccordionTitle } from "./components/accordion-title";
 
 // 1️⃣ Compound DX API
 export const Accordion = Object.assign(AccordionRoot, {
@@ -10,6 +11,7 @@ export const Accordion = Object.assign(AccordionRoot, {
   Trigger: AccordionTrigger,
   Conten: AccordionContent,
   Indicator: AccordionIndicator,
+  Title: AccordionTitle,
 });
 
 // 2️⃣ Flat exports for tree-shaking
@@ -18,6 +20,7 @@ export {
   AccordionTrigger,
   AccordionContent,
   AccordionIndicator,
+  AccordionTitle,
 };
 
 // 3️⃣ Type exports
