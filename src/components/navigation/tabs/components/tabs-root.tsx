@@ -6,10 +6,12 @@ export function TabsRoot({
   value: controlledValue,
   defaultValue,
   onValueChange,
+  orientation = "horizontal",
+  loop = true,
+  className,
   children,
 }: TabsProps) {
-  const [uncontrolledValue, setUncontrolledValue] =
-    useState(defaultValue);
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
 
   const value = controlledValue ?? uncontrolledValue;
 
@@ -20,12 +22,21 @@ export function TabsRoot({
       }
       onValueChange?.(next);
     },
-    [controlledValue, onValueChange]
+    [controlledValue, onValueChange],
   );
 
   return (
-    <TabsContext.Provider value={{ value, setValue }}>
-      <div className="astralis-flex astralis-flex-col astralis-gap-4">
+    <TabsContext.Provider value={{ value, setValue, orientation, loop }}>
+      <div
+        data-orientation={orientation}
+        className={[
+          "astralis-flex astralis-gap-4",
+          orientation === "horizontal"
+            ? "astralis-flex-col"
+            : "astralis-flex-row",
+          className,
+        ].join(" ")}
+      >
         {children}
       </div>
     </TabsContext.Provider>

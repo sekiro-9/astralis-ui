@@ -1,13 +1,9 @@
 import type { ReactNode } from "react";
 
-export function StepsDescription({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function StepsDescription({ children }: { children: ReactNode }) {
   return (
-    <p className="astralis-text-sm astralis-text-gray-500">
+    <div className="astralis-text-xs astralis-whitespace-nowrap astralis-text-content-secondary astralis-mt-1">
       {children}
-    </p>
+    </div>
   );
 }

@@ -7,10 +7,11 @@ export function StepsRoot({
   defaultValue = 0,
   onValueChange,
   orientation = "horizontal",
+  size = "default",
   children,
+  className = "",
 }: StepsProps) {
-  const [uncontrolledValue, setUncontrolledValue] =
-    useState(defaultValue);
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
 
   const value = controlledValue ?? uncontrolledValue;
 
@@ -21,18 +22,19 @@ export function StepsRoot({
       }
       onValueChange?.(next);
     },
-    [controlledValue, onValueChange]
+    [controlledValue, onValueChange],
   );
 
   return (
-    <StepsContext.Provider value={{ value, setValue, orientation }}>
+    <StepsContext.Provider value={{ value, setValue, orientation, size }}>
       <div
         data-orientation={orientation}
         className={[
-          "astralis-flex",
+          "astralis-flex astralis-gap-4",
           orientation === "horizontal"
-            ? "astralis-flex-row"
+            ? "astralis-flex-row astralis-items-center"
             : "astralis-flex-col",
+          className,
         ].join(" ")}
       >
         {children}

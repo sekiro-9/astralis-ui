@@ -100,7 +100,7 @@
   .astralis-dark {
     /* Surfaces */
     --astralis-surface-base:    #09090B;
-    --astralis-surface-raised:  #18181B;
+    --astralis-surface-raised:  #1f2937;
     --astralis-surface-overlay: #334155;
     --astralis-surface-sunken:  #0a0f1e;
 
@@ -117,6 +117,10 @@
   }
 }
 
-.css-1erac46 {
+.docs-story {
   @apply astralis-bg-surface-base !important;
 }
+
+/* .docs-story div {
+  padding: 2px !important;
+} */

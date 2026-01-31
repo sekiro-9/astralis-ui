@@ -639,7 +639,7 @@ video {
 .astralis-dark {
   /* Surfaces */
   --astralis-surface-base:    #09090B;
-  --astralis-surface-raised:  #18181B;
+  --astralis-surface-raised:  #1f2937;
   --astralis-surface-overlay: #334155;
   --astralis-surface-sunken:  #0a0f1e;
   /* Content / Text */
@@ -726,6 +726,10 @@ video {
   margin-top: -0.5rem;
 }
 
+.-astralis-mt-5 {
+  margin-top: -1.25rem;
+}
+
 .astralis-mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -742,6 +746,10 @@ video {
   margin-bottom: 1.5rem;
 }
 
+.astralis-ml-2 {
+  margin-left: 0.5rem;
+}
+
 .astralis-mr-2 {
   margin-right: 0.5rem;
 }
@@ -754,8 +762,24 @@ video {
   margin-top: 0.75rem;
 }
 
+.astralis-mt-4 {
+  margin-top: 1rem;
+}
+
 .astralis-mt-6 {
   margin-top: 1.5rem;
+}
+
+.astralis-mt-8 {
+  margin-top: 2rem;
+}
+
+.-astralis-mt-3 {
+  margin-top: -0.75rem;
+}
+
+.astralis-box-border {
+  box-sizing: border-box;
 }
 
 .astralis-inline-block {
@@ -806,6 +830,10 @@ video {
   height: 1.25rem;
 }
 
+.astralis-h-6 {
+  height: 1.5rem;
+}
+
 .astralis-h-7 {
   height: 1.75rem;
 }
@@ -818,8 +846,16 @@ video {
   height: 20rem;
 }
 
+.astralis-h-\[200px\] {
+  height: 200px;
+}
+
 .astralis-h-\[280px\] {
   height: 280px;
+}
+
+.astralis-h-\[300px\] {
+  height: 300px;
 }
 
 .astralis-h-full {
@@ -858,6 +894,10 @@ video {
   width: 1.25rem;
 }
 
+.astralis-w-6 {
+  width: 1.5rem;
+}
+
 .astralis-w-8 {
   width: 2rem;
 }
@@ -868,6 +908,10 @@ video {
 
 .astralis-w-\[180px\] {
   width: 180px;
+}
+
+.astralis-w-\[20\%\] {
+  width: 20%;
 }
 
 .astralis-w-\[200px\] {
@@ -912,6 +956,10 @@ video {
 
 .astralis-max-w-md {
   max-width: 28rem;
+}
+
+.astralis-flex-1 {
+  flex: 1 1 0%;
 }
 
 .astralis-flex-shrink-0 {
@@ -959,6 +1007,14 @@ video {
 
 .astralis-cursor-help {
   cursor: help;
+}
+
+.astralis-cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.astralis-cursor-pointer {
+  cursor: pointer;
 }
 
 .astralis-select-none {
@@ -1009,6 +1065,14 @@ video {
 
 .astralis-items-center {
   align-items: center;
+}
+
+.astralis-items-stretch {
+  align-items: stretch;
+}
+
+.astralis-justify-start {
+  justify-content: flex-start;
 }
 
 .astralis-justify-end {
@@ -1122,6 +1186,12 @@ video {
   overflow-y: auto;
 }
 
+.astralis-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .astralis-whitespace-nowrap {
   white-space: nowrap;
 }
@@ -1174,6 +1244,14 @@ video {
   border-bottom-width: 2px;
 }
 
+.astralis-border-r {
+  border-right-width: 1px;
+}
+
+.astralis-border-r-2 {
+  border-right-width: 2px;
+}
+
 .astralis-border-t {
   border-top-width: 1px;
 }
@@ -1191,9 +1269,9 @@ video {
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
 }
 
-.astralis-border-gray-300 {
+.astralis-border-purple-600 {
   --tw-border-opacity: 1;
-  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1));
+  border-color: rgb(147 51 234 / var(--tw-border-opacity, 1));
 }
 
 .astralis-border-secondary-300 {
@@ -1223,6 +1301,10 @@ video {
 
 .astralis-bg-error-100 {
   background-color: var(--astralis-error-100);
+}
+
+.astralis-bg-error-500 {
+  background-color: var(--astralis-error-500);
 }
 
 .astralis-bg-error-600 {
@@ -1261,6 +1343,15 @@ video {
 
 .astralis-bg-primary-600 {
   background-color: var(--astralis-primary-600);
+}
+
+.astralis-bg-purple-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(168 85 247 / var(--tw-bg-opacity, 1));
+}
+
+.astralis-bg-purple-500\/30 {
+  background-color: rgb(168 85 247 / 0.3);
 }
 
 .astralis-bg-red-100 {
@@ -1359,6 +1450,10 @@ video {
   padding: 2rem;
 }
 
+.astralis-p-10 {
+  padding: 2.5rem;
+}
+
 .astralis-px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -1412,10 +1507,6 @@ video {
 .astralis-py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
-}
-
-.astralis-pt-4 {
-  padding-top: 1rem;
 }
 
 .astralis-text-left {
@@ -1587,6 +1678,16 @@ video {
   color: var(--astralis-primary-600);
 }
 
+.astralis-text-purple-500 {
+  --tw-text-opacity: 1;
+  color: rgb(168 85 247 / var(--tw-text-opacity, 1));
+}
+
+.astralis-text-purple-600 {
+  --tw-text-opacity: 1;
+  color: rgb(147 51 234 / var(--tw-text-opacity, 1));
+}
+
 .astralis-text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
@@ -1671,9 +1772,20 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.astralis-outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
 .astralis-blur-sm {
   --tw-blur: blur(4px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.astralis-transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 .astralis-transition-colors {
@@ -1710,8 +1822,16 @@ video {
    ASTRALIS DESIGN TOKENS
    ============================================ */
 
-.css-1erac46 {
+.docs-story {
   background-color: var(--astralis-surface-base) !important;
+}
+
+/* .docs-story div {
+  padding: 2px !important;
+} */
+
+.hover\:astralis-border-border-subtle:hover {
+  border-color: var(--astralis-border-subtle);
 }
 
 .hover\:astralis-bg-error-700:hover {
@@ -1749,9 +1869,12 @@ video {
   background-color: var(--astralis-secondary-50);
 }
 
-.hover\:astralis-text-gray-900:hover {
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity, 1));
+.hover\:astralis-bg-surface-overlay:hover {
+  background-color: var(--astralis-surface-overlay);
+}
+
+.hover\:astralis-text-content-primary:hover {
+  color: var(--astralis-content-primary);
 }
 
 .focus\:astralis-outline-none:focus {
@@ -1779,6 +1902,21 @@ video {
 
 .focus\:astralis-ring-offset-2:focus {
   --tw-ring-offset-width: 2px;
+}
+
+.focus-visible\:astralis-ring-2:focus-visible {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.focus-visible\:astralis-ring-primary-500:focus-visible {
+  --tw-ring-color: var(--astralis-primary-500);
+}
+
+.focus-visible\:astralis-ring-purple-500:focus-visible {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(168 85 247 / var(--tw-ring-opacity, 1));
 }
 
 .disabled\:astralis-cursor-not-allowed:disabled {
