@@ -1,11 +1,20 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Drawer } from "./index";
+import { Button } from "../../buttons/button";
+import { useState } from "react";
 
 const meta: Meta<typeof Drawer> = {
   title: "Components/Overlay/Drawer",
   component: Drawer,
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Used to render a content that slides in from the side of the screen.",
+      },
+    },
   },
   argTypes: {
     open: {
@@ -30,165 +39,160 @@ const meta: Meta<typeof Drawer> = {
 export default meta;
 type Story = StoryObj<typeof Drawer>;
 
-
 export const Default: Story = {
   args: {
     defaultOpen: false,
     side: "right",
   },
   render: (args) => (
-    <Drawer {...args}>
-      <Drawer.Trigger>
-        <button className="astralis-btn">Open Drawer</button>
-      </Drawer.Trigger>
+    <div className="astralis-flex astralis-w-full astralis-justify-center astralis-p-10">
+      <Drawer {...args}>
+        <Drawer.Trigger>
+          <Button variant="outline">Open Drawer</Button>
+        </Drawer.Trigger>
 
-      <Drawer.Overlay />
+        <Drawer.Overlay />
 
-      <Drawer.Content>
-        <div className="astralis-h-full astralis-w-[360px] astralis-bg-white astralis-p-6">
+        <Drawer.Content>
           <Drawer.Header>Default Drawer</Drawer.Header>
 
-          <p className="astralis-text-sm astralis-text-gray-600">
-            This drawer manages its own open state.
-          </p>
-
-          <Drawer.Footer>
-            <button className="astralis-btn-secondary">Cancel</button>
-            <button className="astralis-btn-primary">Save</button>
-          </Drawer.Footer>
-        </div>
-      </Drawer.Content>
-    </Drawer>
-  ),
-};
-
-
-export const Controlled: Story = {
-  args: {
-    open: true,
-    side: "right",
-  },
-  render: (args) => (
-    <Drawer {...args}>
-      <Drawer.Overlay />
-
-      <Drawer.Content>
-        <div className="astralis-h-full astralis-w-[360px] astralis-bg-white astralis-p-6">
-          <Drawer.Header>Controlled Drawer</Drawer.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            This drawer is fully controlled from outside.
-          </p>
-
-          <Drawer.Footer>
-            <button className="astralis-btn-primary">Okay</button>
-          </Drawer.Footer>
-        </div>
-      </Drawer.Content>
-    </Drawer>
-  ),
-};
-
-export const Left: Story = {
-  args: {
-    defaultOpen: false,
-    side: "left",
-  },
-  render: (args) => (
-    <Drawer {...args}>
-      <Drawer.Trigger>
-        <button className="astralis-btn">Open Left Drawer</button>
-      </Drawer.Trigger>
-
-      <Drawer.Overlay />
-
-      <Drawer.Content>
-        <div className="astralis-h-full astralis-w-[360px] astralis-bg-white astralis-p-6">
-          <Drawer.Header>Left Drawer</Drawer.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            Drawer sliding in from the left.
-          </p>
-        </div>
-      </Drawer.Content>
-    </Drawer>
-  ),
-};
-
-export const Bottom: Story = {
-  args: {
-    defaultOpen: false,
-    side: "bottom",
-  },
-  render: (args) => (
-    <Drawer {...args}>
-      <Drawer.Trigger>
-        <button className="astralis-btn">Open Bottom Drawer</button>
-      </Drawer.Trigger>
-
-      <Drawer.Overlay />
-
-      <Drawer.Content>
-        <div className="astralis-h-[280px] astralis-w-full astralis-bg-white astralis-p-6">
-          <Drawer.Header>Bottom Drawer</Drawer.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            Useful for mobile actions and quick selections.
-          </p>
-        </div>
-      </Drawer.Content>
-    </Drawer>
-  ),
-};
-
-export const NoOverlayClose: Story = {
-  render: () => (
-    <Drawer defaultOpen side="right">
-      <Drawer.Trigger>
-        <button className="astralis-btn">Open</button>
-      </Drawer.Trigger>
-
-      <Drawer.Overlay closeOnClick={false} />
-
-      <Drawer.Content>
-        <div className="astralis-h-full astralis-w-[360px] astralis-bg-white astralis-p-6">
-          <Drawer.Header>Overlay Locked</Drawer.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            Clicking the overlay will not close this drawer.
-          </p>
-
-          <Drawer.Footer>
-            <button className="astralis-btn-primary">Got it</button>
-          </Drawer.Footer>
-        </div>
-      </Drawer.Content>
-    </Drawer>
-  ),
-};
-
-export const LongContent: Story = {
-  render: () => (
-    <Drawer defaultOpen side="right">
-      <Drawer.Overlay />
-
-      <Drawer.Content>
-        <div className="astralis-h-full astralis-w-[360px] astralis-overflow-y-auto astralis-bg-white astralis-p-6">
-          <Drawer.Header>Scrollable Drawer</Drawer.Header>
-
-          <div className="astralis-space-y-3 astralis-text-sm astralis-text-gray-600">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <p key={i}>
-                This is line {i + 1} of scrollable drawer content.
+          <div className="astralis-h-full astralis-w-full astralis-max-w-md astralis-p-6 astralis-flex astralis-flex-col">
+            <div className="astralis-flex-1">
+              <p className="astralis-text-sm">
+                This drawer manages its own open state.
               </p>
-            ))}
+            </div>
           </div>
 
           <Drawer.Footer>
-            <button className="astralis-btn-primary">Close</button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => args.onOpenChange?.(false)}
+            >
+              Cancel
+            </Button>
+            <Button size="sm" variant="primary">
+              Save
+            </Button>
           </Drawer.Footer>
-        </div>
-      </Drawer.Content>
-    </Drawer>
+        </Drawer.Content>
+      </Drawer>
+    </div>
   ),
+};
+
+export const Sizes: Story = {
+  render: () => {
+    const sizes = ["xs", "sm", "md", "lg", "xl", "full"] as const;
+    const [currentSize, setCurrentSize] =
+      useState<(typeof sizes)[number]>("md");
+    const [open, setOpen] = useState(false);
+
+    return (
+      <div className="astralis-flex astralis-w-full astralis-justify-center astralis-gap-4 astralis-p-10 astralis-flex-wrap">
+        {sizes.map((size) => (
+          <Button
+            variant="outline"
+            key={size}
+            onClick={() => {
+              setCurrentSize(size);
+              setOpen(true);
+            }}
+          >
+            Open ({size})
+          </Button>
+        ))}
+
+        <Drawer
+          open={open}
+          onOpenChange={setOpen}
+          size={currentSize}
+          side="right"
+        >
+          <Drawer.Overlay />
+          <Drawer.Content>
+            <Drawer.Header>
+              {currentSize === "full"
+                ? "Full Screen"
+                : `${currentSize.toUpperCase()} Size`}{" "}
+              Drawer
+            </Drawer.Header>
+
+            <div className="astralis-h-full astralis-w-full astralis-p-6 astralis-flex astralis-flex-col">
+              <div className="astralis-flex-1">
+                <p className="astralis-text-sm astralis-text-content-secondary">
+                  This drawer is using the{" "}
+                  <code className="astralis-bg-surface-raised astralis-p-1 astralis-rounded">
+                    {currentSize}
+                  </code>{" "}
+                  size.
+                </p>
+              </div>
+            </div>
+
+            <Drawer.Footer>
+              <Drawer.Close>
+                <Button size="sm" variant="primary">
+                  Close
+                </Button>
+              </Drawer.Close>
+            </Drawer.Footer>
+          </Drawer.Content>
+        </Drawer>
+      </div>
+    );
+  },
+};
+
+export const Placement: Story = {
+  render: () => {
+    const placements = ["top", "right", "bottom", "left"] as const;
+    const [currentPlacement, setCurrentPlacement] =
+      useState<(typeof placements)[number]>("right");
+    const [open, setOpen] = useState(false);
+
+    return (
+      <div className="astralis-flex astralis-w-full astralis-justify-center astralis-gap-4 astralis-p-10 astralis-flex-wrap">
+        {placements.map((placement) => (
+          <Button
+            variant="outline"
+            key={placement}
+            onClick={() => {
+              setCurrentPlacement(placement);
+              setOpen(true);
+            }}
+          >
+            Open ({placement})
+          </Button>
+        ))}
+
+        <Drawer open={open} onOpenChange={setOpen} side={currentPlacement}>
+          <Drawer.Overlay />
+
+          <Drawer.Content>
+            <Drawer.Header>
+              {currentPlacement.charAt(0).toUpperCase() +
+                currentPlacement.slice(1)}{" "}
+              Drawer
+            </Drawer.Header>
+
+            <div className="astralis-h-full astralis-w-full astralis-p-6 astralis-flex astralis-flex-col">
+              <div className="astralis-flex-1">
+                <p className="astralis-text-sm astralis-text-content-secondary">
+                  This drawer slides in from the {currentPlacement}.
+                </p>
+              </div>
+            </div>
+
+            <Drawer.Footer>
+              <Drawer.Close>
+                <Button size="sm" variant="primary">Close</Button>
+              </Drawer.Close>
+            </Drawer.Footer>
+          </Drawer.Content>
+        </Drawer>
+      </div>
+    );
+  },
 };

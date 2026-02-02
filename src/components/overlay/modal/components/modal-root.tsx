@@ -6,6 +6,8 @@ export function ModalRoot({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
+  size = "md",
+  placement = "center",
   children,
 }: ModalProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
@@ -19,11 +21,11 @@ export function ModalRoot({
       }
       onOpenChange?.(value);
     },
-    [controlledOpen, onOpenChange]
+    [controlledOpen, onOpenChange],
   );
 
   return (
-    <ModalContext.Provider value={{ open, setOpen }}>
+    <ModalContext.Provider value={{ open, setOpen, size, placement }}>
       {children}
     </ModalContext.Provider>
   );

@@ -1,11 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Modal } from "./index";
+import { useState } from "react";
 
 const meta: Meta<typeof Modal> = {
   title: "Components/Overlay/Modal",
   component: Modal,
+  tags: ["autodocs"],
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Used to display a modal dialog box",
+      },
+    },
   },
   argTypes: {
     open: {
@@ -26,7 +34,6 @@ export default meta;
 
 type Story = StoryObj<typeof Modal>;
 
-
 export const Default: Story = {
   args: {
     defaultOpen: false,
@@ -40,125 +47,124 @@ export const Default: Story = {
       <Modal.Overlay />
 
       <Modal.Content>
-        <div className="astralis-w-[420px] astralis-rounded-xl astralis-bg-white astralis-p-6">
-          <Modal.Header>Default Modal</Modal.Header>
+        <Modal.Header>Default Modal</Modal.Header>
 
-          <p className="astralis-text-sm astralis-text-gray-600">
+        <div className="astralis-p-4 astralis-flex-1">
+          <p className="astralis-text-sm astralis-text-content-secondary">
             This modal manages its own open state.
           </p>
-
-          <Modal.Footer>
-            <button className="astralis-btn-secondary">Cancel</button>
-            <button className="astralis-btn-primary">Confirm</button>
-          </Modal.Footer>
         </div>
+
+        <Modal.Footer>
+          <button className="astralis-btn-secondary">Cancel</button>
+          <button className="astralis-btn-primary">Confirm</button>
+        </Modal.Footer>
       </Modal.Content>
     </Modal>
   ),
 };
 
+export const Sizes: Story = {
+  render: () => {
+    const sizes = ["xs", "sm", "md", "lg", "xl", "full"] as const;
+    const [currentSize, setCurrentSize] =
+      useState<(typeof sizes)[number]>("md");
+    const [open, setOpen] = useState(false);
 
-export const Controlled: Story = {
-  args: {
-    open: true,
-  },
-  render: (args) => (
-    <Modal {...args}>
-      <Modal.Overlay />
+    return (
+      <div className="astralis-flex astralis-gap-4 astralis-flex-wrap astralis-justify-center astralis-p-10">
+        {sizes.map((size) => (
+          <button
+            key={size}
+            className="astralis-btn"
+            onClick={() => {
+              setCurrentSize(size);
+              setOpen(true);
+            }}
+          >
+            Open ({size})
+          </button>
+        ))}
 
-      <Modal.Content>
-        <div className="astralis-w-[420px] astralis-rounded-xl astralis-bg-white astralis-p-6">
-          <Modal.Header>Controlled Modal</Modal.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            This modal is fully controlled from outside.
-          </p>
-
-          <Modal.Footer>
-            <button className="astralis-btn-primary">Okay</button>
-          </Modal.Footer>
-        </div>
-      </Modal.Content>
-    </Modal>
-  ),
-};
-
-
-export const NoOverlayClose: Story = {
-  render: () => (
-    <Modal defaultOpen>
-      <Modal.Trigger>
-        <button className="astralis-btn">Open</button>
-      </Modal.Trigger>
-
-      <Modal.Overlay closeOnClick={false} />
-
-      <Modal.Content>
-        <div className="astralis-w-[420px] astralis-rounded-xl astralis-bg-white astralis-p-6">
-          <Modal.Header>Overlay Locked</Modal.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            Clicking the overlay will not close this modal.
-          </p>
-
-          <Modal.Footer>
-            <button className="astralis-btn-primary">Got it</button>
-          </Modal.Footer>
-        </div>
-      </Modal.Content>
-    </Modal>
-  ),
-};
-
-
-export const LongContent: Story = {
-  render: () => (
-    <Modal defaultOpen>
-      <Modal.Overlay />
-
-      <Modal.Content>
-        <div className="astralis-max-h-[80vh] astralis-w-[480px] astralis-overflow-y-auto astralis-rounded-xl astralis-bg-white astralis-p-6">
-          <Modal.Header>Scrollable Modal</Modal.Header>
-
-          <div className="astralis-space-y-3 astralis-text-sm astralis-text-gray-600">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <p key={i}>
-                This is line {i + 1} of scrollable content inside the modal.
+        <Modal open={open} onOpenChange={setOpen} size={currentSize}>
+          <Modal.Overlay />
+          <Modal.Content>
+            <Modal.Header>
+              {currentSize === "full"
+                ? "Full Screen"
+                : `${currentSize.toUpperCase()} Size`}{" "}
+              Modal
+            </Modal.Header>
+            <div className="astralis-p-4 astralis-flex-1">
+              <p className="astralis-text-sm astralis-text-content-secondary">
+                This modal is using the{" "}
+                <code className="astralis-bg-surface-raised astralis-p-1 astralis-rounded">
+                  {currentSize}
+                </code>{" "}
+                size.
               </p>
-            ))}
-          </div>
-
-          <Modal.Footer>
-            <button className="astralis-btn-primary">Close</button>
-          </Modal.Footer>
-        </div>
-      </Modal.Content>
-    </Modal>
-  ),
+            </div>
+            <Modal.Footer>
+              <button
+                className="astralis-btn-primary"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </button>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
+      </div>
+    );
+  },
 };
 
+export const Placement: Story = {
+  render: () => {
+    const placements = ["top", "center", "bottom"] as const;
+    const [currentPlacement, setCurrentPlacement] =
+      useState<(typeof placements)[number]>("center");
+    const [open, setOpen] = useState(false);
 
-export const ConfirmDialog: Story = {
-  render: () => (
-    <Modal defaultOpen>
-      <Modal.Overlay />
+    return (
+      <div className="astralis-flex astralis-gap-4 astralis-flex-wrap astralis-justify-center astralis-p-10">
+        {placements.map((placement) => (
+          <button
+            key={placement}
+            className="astralis-btn"
+            onClick={() => {
+              setCurrentPlacement(placement);
+              setOpen(true);
+            }}
+          >
+            Open ({placement})
+          </button>
+        ))}
 
-      <Modal.Content>
-        <div className="astralis-w-[400px] astralis-rounded-xl astralis-bg-white astralis-p-6">
-          <Modal.Header>Delete Item</Modal.Header>
-
-          <p className="astralis-text-sm astralis-text-gray-600">
-            This action cannot be undone. Are you sure?
-          </p>
-
-          <Modal.Footer>
-            <button className="astralis-btn-secondary">Cancel</button>
-            <button className="astralis-btn-danger">Delete</button>
-          </Modal.Footer>
-        </div>
-      </Modal.Content>
-    </Modal>
-  ),
+        <Modal open={open} onOpenChange={setOpen} placement={currentPlacement}>
+          <Modal.Overlay />
+          <Modal.Content>
+            <Modal.Header>
+              {currentPlacement.charAt(0).toUpperCase() +
+                currentPlacement.slice(1)}{" "}
+              Modal
+            </Modal.Header>
+            <div className="astralis-p-4 astralis-flex-1">
+              <p className="astralis-text-sm astralis-text-content-secondary">
+                This modal is positioned at the {currentPlacement}.
+              </p>
+            </div>
+            <Modal.Footer>
+              <button
+                className="astralis-btn-primary"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </button>
+            </Modal.Footer>
+          </Modal.Content>
+        </Modal>
+      </div>
+    );
+  },
 };
-
-

@@ -15,19 +15,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "astralis-inline-flex astralis-items-center astralis-justify-center astralis-font-medium astralis-rounded-lg astralis-transition-colors focus:astralis-outline-none focus:astralis-ring-2 focus:astralis-ring-offset-2 disabled:astralis-opacity-50 disabled:astralis-cursor-not-allowed";
+      "astralis-inline-flex astralis-items-center astralis-justify-center astralis-font-medium astralis-rounded-lg astralis-transition-colors focus:astralis-outline-none disabled:astralis-opacity-50 disabled:astralis-cursor-not-allowed";
 
     const variants = {
       primary:
-        "astralis-bg-primary-600 astralis-text-white hover:astralis-bg-primary-700 focus:astralis-ring-primary-500",
+        "astralis-bg-primary-600 astralis-text-white hover:astralis-bg-primary-700",
       secondary:
-        "astralis-bg-secondary-200 astralis-text-secondary-900 hover:astralis-bg-secondary-300 focus:astralis-ring-secondary-500",
+        "astralis-bg-secondary-200 astralis-text-secondary-900 hover:astralis-bg-secondary-300",
       outline:
-        "astralis-border astralis-border-secondary-300 astralis-bg-transparent hover:astralis-bg-secondary-50 focus:astralis-ring-primary-500",
+        "astralis-border astralis-border-border-subtle astralis-bg-transparent astralis-text-content-primary hover:astralis-bg-surface-raised",
       ghost:
-        "astralis-bg-transparent hover:astralis-bg-secondary-100 focus:astralis-ring-primary-500",
+        "astralis-bg-transparent hover:astralis-bg-secondary-100",
       danger:
-        "astralis-bg-error-600 astralis-text-white hover:astralis-bg-error-700 focus:astralis-ring-error-500",
+        "astralis-bg-error-600 astralis-text-white hover:astralis-bg-error-700", 
     };
 
     const sizes = {
