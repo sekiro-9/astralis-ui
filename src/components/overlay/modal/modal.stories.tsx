@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Modal } from "./index";
 import { useState } from "react";
+import { Button } from "../../buttons";
 
 const meta: Meta<typeof Modal> = {
   title: "Components/Overlay/Modal",
@@ -10,8 +11,7 @@ const meta: Meta<typeof Modal> = {
     layout: "fullscreen",
     docs: {
       description: {
-        component:
-          "Used to display a modal dialog box",
+        component: "Used to display a modal dialog box",
       },
     },
   },
@@ -39,28 +39,39 @@ export const Default: Story = {
     defaultOpen: false,
   },
   render: (args) => (
-    <Modal {...args}>
-      <Modal.Trigger>
-        <button className="astralis-btn">Open Modal</button>
-      </Modal.Trigger>
+    <div className="astralis-flex astralis-w-full astralis-justify-center astralis-p-10">
+      <Modal {...args}>
+        <Modal.Trigger>
+          <Button variant="outline">Open Modal</Button>
+        </Modal.Trigger>
 
-      <Modal.Overlay />
+        <Modal.Overlay />
 
-      <Modal.Content>
-        <Modal.Header>Default Modal</Modal.Header>
+        <Modal.Content>
+          <Modal.Header>Modal Title</Modal.Header>
 
-        <div className="astralis-p-4 astralis-flex-1">
-          <p className="astralis-text-sm astralis-text-content-secondary">
-            This modal manages its own open state.
-          </p>
-        </div>
+          <div className="astralis-p-4 astralis-flex-1">
+            <p className="astralis-text-sm astralis-text-content-secondary">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
 
-        <Modal.Footer>
-          <button className="astralis-btn-secondary">Cancel</button>
-          <button className="astralis-btn-primary">Confirm</button>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
+          <Modal.Footer>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => args.onOpenChange?.(false)}
+            >
+              Cancel
+            </Button>
+            <Button size="sm" variant="primary">
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </div>
   ),
 };
 
@@ -72,18 +83,18 @@ export const Sizes: Story = {
     const [open, setOpen] = useState(false);
 
     return (
-      <div className="astralis-flex astralis-gap-4 astralis-flex-wrap astralis-justify-center astralis-p-10">
+      <div className="astralis-flex astralis-w-full astralis-justify-center astralis-gap-4 astralis-p-10 astralis-flex-wrap">
         {sizes.map((size) => (
-          <button
+          <Button
+            variant="outline"
             key={size}
-            className="astralis-btn"
             onClick={() => {
               setCurrentSize(size);
               setOpen(true);
             }}
           >
             Open ({size})
-          </button>
+          </Button>
         ))}
 
         <Modal open={open} onOpenChange={setOpen} size={currentSize}>
@@ -95,6 +106,7 @@ export const Sizes: Story = {
                 : `${currentSize.toUpperCase()} Size`}{" "}
               Modal
             </Modal.Header>
+
             <div className="astralis-p-4 astralis-flex-1">
               <p className="astralis-text-sm astralis-text-content-secondary">
                 This modal is using the{" "}
@@ -104,13 +116,15 @@ export const Sizes: Story = {
                 size.
               </p>
             </div>
+
             <Modal.Footer>
-              <button
-                className="astralis-btn-primary"
+              <Button
                 onClick={() => setOpen(false)}
+                size="sm"
+                variant="primary"
               >
                 Close
-              </button>
+              </Button>
             </Modal.Footer>
           </Modal.Content>
         </Modal>
@@ -127,18 +141,18 @@ export const Placement: Story = {
     const [open, setOpen] = useState(false);
 
     return (
-      <div className="astralis-flex astralis-gap-4 astralis-flex-wrap astralis-justify-center astralis-p-10">
+      <div className="astralis-flex astralis-w-full astralis-justify-center astralis-gap-4 astralis-p-10 astralis-flex-wrap">
         {placements.map((placement) => (
-          <button
+          <Button
+            variant="outline"
             key={placement}
-            className="astralis-btn"
             onClick={() => {
               setCurrentPlacement(placement);
               setOpen(true);
             }}
           >
             Open ({placement})
-          </button>
+          </Button>
         ))}
 
         <Modal open={open} onOpenChange={setOpen} placement={currentPlacement}>
@@ -149,18 +163,21 @@ export const Placement: Story = {
                 currentPlacement.slice(1)}{" "}
               Modal
             </Modal.Header>
+
             <div className="astralis-p-4 astralis-flex-1">
               <p className="astralis-text-sm astralis-text-content-secondary">
                 This modal is positioned at the {currentPlacement}.
               </p>
             </div>
+
             <Modal.Footer>
-              <button
-                className="astralis-btn-primary"
+              <Button
                 onClick={() => setOpen(false)}
+                size="sm"
+                variant="primary"
               >
                 Close
-              </button>
+              </Button>
             </Modal.Footer>
           </Modal.Content>
         </Modal>
