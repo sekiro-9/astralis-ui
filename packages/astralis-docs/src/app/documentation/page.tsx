@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import DocumentationPage from '@/modules/docs'
 
-export default function DocumentationRedirect() {
-  redirect("/documentation/get-started");
+export default function Documentation() {
+  return <DocumentationPage/>
 }
