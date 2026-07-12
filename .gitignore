@@ -11,6 +11,12 @@ lerna-debug.log*
 node_modules/
 **/node_modules/
 
+# npm pack output
+*.tgz
+
+# Internal audit/roadmap reports
+reports/
+
 # Production builds
 dist/
 **/dist/
