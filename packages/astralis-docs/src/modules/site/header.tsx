@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Tag, ThemeToggle } from "astralis-ui";
+import { Separator, Tag, ThemeToggle } from "astralis-ui";
 import { Logo } from "./logo";
 
 const links = [
@@ -46,9 +46,14 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Tag variant="subtle" colorScheme="brand">
-            0.1.3
+            0.2.0
           </Tag>
-          <span className="mx-1 hidden h-4 w-px bg-stroke-subtle sm:block" aria-hidden="true" />
+          {/* Prefixed: vertical brings h-full + self-stretch, and only a
+              prefixed class merges against them. */}
+          <Separator
+            orientation="vertical"
+            className="mx-1 hidden sm:block astralis:h-4 astralis:self-center"
+          />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
         </div>
       </div>
