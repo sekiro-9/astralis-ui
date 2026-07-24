@@ -10,5 +10,14 @@ import { createPortal } from "react-dom";
  */
 export function Portal({ children, container }: { children: ReactNode; container?: HTMLElement }) {
   if (typeof document === "undefined") return null;
-  return createPortal(children, container ?? document.body);
+  // Portalled content escapes the provider's `.astralis` wrapper, so re-apply
+  // the class here — it's what carries the scoped Preflight reset and the token
+  // font/colour to overlays. `display: contents` keeps this wrapper out of the
+  // box tree so it never affects overlay positioning.
+  return createPortal(
+    <div className="astralis" style={{ display: "contents" }}>
+      {children}
+    </div>,
+    container ?? document.body,
+  );
 }

@@ -381,7 +381,7 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
               aria-multiselectable="true"
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
-                "astralis:bg-surface-base astralis:border-normal astralis:border-stroke-subtle astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
+                "astralis astralis:bg-surface-base astralis:border-normal astralis:border-stroke-subtle astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
                 accentClass(colorScheme),
               )}
             >

@@ -2,8 +2,16 @@
    ASTRALIS UI - MASTER CSS ENTRY (TAILWIND V4 COMPLIANT)
    ========================================================================== */
 
-/* 1. Import Tailwind v4 Engine */
-@import "tailwindcss" prefix(astralis);
+/* 1. Import the Tailwind v4 engine — theme + utilities only.
+   Preflight is deliberately NOT imported. Tailwind's global reset targets bare
+   element selectors (`*`, `h1`, `button`…) that `prefix()` cannot scope, so
+   importing it would restyle the *host* app's elements — a real leak for any
+   project consuming this stylesheet. We ship a `.astralis`-scoped port of
+   Preflight instead (see @layer base below), so this file resets Astralis
+   components and touches nothing else in the consumer's document. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(astralis);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(astralis);
 
 /* Dark mode is class-based, scoped to .astralis-dark on the html element */
 @custom-variant dark (&:where(.astralis-dark, .astralis-dark *));
@@ -776,13 +784,25 @@
 }
 
 /* ==========================================================================
-   SCOPED CONTAINER RESETS
-   Lives in Tailwind's own @layer base — utilities always beats base by
-   Tailwind's own invariant, so no custom layer ordering is needed.
+   SCOPED PREFLIGHT
+   A port of Tailwind's Preflight, confined to the `.astralis` container so this
+   stylesheet never restyles the host app. The provider wraps the app in
+   `.astralis`; portalled overlays re-add it (see the Portal component and the
+   select/multi-select/combobox/toaster dropdowns), so every element Astralis
+   renders is covered — and nothing else is.
+
+   Element rules use `:where()` to keep zero specificity, mirroring Preflight,
+   so prefixed utilities (in @layer utilities) always win. Lives in Tailwind's
+   own @layer base.
    ========================================================================== */
 @layer base {
   .astralis {
-    box-sizing: border-box;
+    /* from Preflight `html, :host` — the container is the reset root */
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    -webkit-tap-highlight-color: transparent;
+    /* Astralis container identity */
     font-family: var(--astralis-font-body);
     background-color: var(--astralis-color-surface-base);
     color: var(--astralis-color-label-base);
@@ -790,14 +810,51 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  .astralis *, 
-  .astralis *::before, 
-  .astralis *::after {
+  /* Universal reset (Preflight §1–3) + our default border colour. */
+  .astralis,
+  .astralis *,
+  .astralis *::before,
+  .astralis *::after,
+  .astralis *::backdrop {
     box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
     border-color: var(--astralis-color-stroke-base, currentColor);
   }
+
+  .astralis :where(hr) { height: 0; color: inherit; border-top-width: 1px; }
+  .astralis :where(abbr[title]) { text-decoration: underline dotted; }
+  .astralis :where(h1, h2, h3, h4, h5, h6) { font-size: inherit; font-weight: inherit; }
+  .astralis :where(a) { color: inherit; text-decoration: inherit; }
+  .astralis :where(b, strong) { font-weight: bolder; }
+  .astralis :where(code, kbd, samp, pre) { font-family: var(--astralis-font-mono); font-size: 1em; }
+  .astralis :where(small) { font-size: 80%; }
+  .astralis :where(sub, sup) { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+  .astralis :where(sub) { bottom: -0.25em; }
+  .astralis :where(sup) { top: -0.5em; }
+  .astralis :where(table) { text-indent: 0; border-color: inherit; border-collapse: collapse; }
+  .astralis :where(:-moz-focusring) { outline: auto; }
+  .astralis :where(progress) { vertical-align: baseline; }
+  .astralis :where(summary) { display: list-item; }
+  .astralis :where(ol, ul, menu) { list-style: none; }
+  .astralis :where(img, svg, video, canvas, audio, iframe, embed, object) { display: block; vertical-align: middle; }
+  .astralis :where(img, video) { max-width: 100%; height: auto; }
+  .astralis :where(button, input, select, optgroup, textarea, ::file-selector-button) {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  .astralis :where(::placeholder) { opacity: 1; color: color-mix(in oklab, currentcolor 50%, transparent); }
+  .astralis :where(textarea) { resize: vertical; }
+  .astralis :where(button, input:is([type="button"], [type="reset"], [type="submit"]), ::file-selector-button) { appearance: button; }
+  .astralis :where(::-webkit-inner-spin-button, ::-webkit-outer-spin-button) { height: auto; }
+  .astralis :where([hidden]:not([hidden="until-found"])) { display: none !important; }
 }
 
 /* ==========================================================================
