@@ -1,0 +1,85 @@
+export const metadata = {
+  title: "AI Agents",
+  description: "An MCP server that feeds coding agents Astralis's current component APIs, props, and theming — instead of guesses.",
+};
+
+# AI Agents
+
+An MCP server that feeds coding agents Astralis's current component APIs, props,
+and theming — instead of guesses.
+
+## The problem it solves
+
+Ask an AI agent to write Astralis code and it may invent props, guess
+variants, and reach for APIs that don't exist — working from stale or
+second-hand knowledge instead of the real component contracts. The
+`astralis-mcp` server closes that gap: it exposes the **live** documentation
+over the [Model Context Protocol](https://modelcontextprotocol.io), so the agent
+reads the same component docs you do — current props tables, demo source, and
+theming guides — at the moment it writes code.
+
+## Setup
+
+The fastest path is the [CLI](/docs/cli), which walks you through connecting one
+client:
+
+```bash
+npx astralis-cli connect-mcp
+```
+
+It supports Claude Code, Codex, Cursor, Claude Desktop, and Antigravity, and
+configures the one you pick — running its `mcp add` command, or writing its JSON
+config with your existing config backed up first.
+
+### Configure a client by hand
+
+Claude Code (and Codex) take an `mcp add` command directly:
+
+```bash
+claude mcp add astralis -- npx -y astralis-mcp
+```
+
+Any other MCP client takes the same server entry in its config file:
+
+```json
+{
+  "mcpServers": {
+    "astralis": {
+      "command": "npx",
+      "args": ["-y", "astralis-mcp"]
+    }
+  }
+}
+```
+
+## What the agent gets
+
+The server exposes five tools:
+
+| Tool | Returns |
+| --- | --- |
+| `list_components` | Every docs page — components and guides — with slug, description, and category. The agent calls this first to discover what exists. |
+| `get_component` | Full docs for one component: usage, the complete props table, accessibility notes, and runnable demo source. |
+| `get_guide` | One guide page (installation, theming, tokens, and the rest) as markdown. |
+| `search_docs` | Full-text search across all documentation, with a snippet around each hit. |
+| `get_theming` | The complete theming reference — token system, dark mode, runtime brand color, the accent channel, and every design-token scale. |
+
+## How it stays current
+
+The server holds no copy of the docs. It reads them from this site's
+machine-readable endpoints — the same single pipeline that renders the pages you
+are reading now — so its answers can never drift from what's published. Ship a
+doc update and every connected agent sees it.
+
+When you're working on unpublished docs, point the server at a local build:
+
+```bash
+ASTRALIS_DOCS_URL=http://localhost:3000
+```
+
+## Browsing agents
+
+An agent that browses the web rather than speaking MCP can read the docs
+directly: [llms.txt](https://astralis-zeta.vercel.app/llms.txt) is the index of
+every page, and [llms-full.txt](https://astralis-zeta.vercel.app/llms-full.txt)
+is the entire documentation inlined into one file.

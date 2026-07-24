@@ -1,0 +1,96 @@
+export const metadata = {
+  title: "CLI",
+  description: "Scaffold a project, generate a static brand theme, and connect AI agents — the astralis command-line tool.",
+};
+
+# CLI
+
+Scaffold a project, generate a static brand theme, and connect AI agents — the
+`astralis` command-line tool.
+
+## Running it
+
+Every command runs through `npx`, so there's nothing to install:
+
+```bash
+npx astralis-cli <command> [options]
+```
+
+Or install it once and call `astralis` directly:
+
+```bash
+pnpm add -g astralis-cli
+astralis <command>
+```
+
+Run `astralis --help` for the command list, or `astralis <command> --help` for
+a command's options.
+
+## `create` — start a new project
+
+Scaffolds a fresh app with the official `create-next-app` / `create-vite`
+prompts, then wires Astralis into it — the stylesheet import and the
+`<AstralisProvider>` are already in place when it finishes.
+
+```bash
+npx astralis-cli create my-app
+```
+
+| Option | |
+| --- | --- |
+| `--framework next\|vite` | Skip the framework prompt. |
+| *extra args* | Anything after the name passes straight to the underlying scaffolder. |
+
+## `init` — add Astralis to an existing project
+
+Wires `astralis-ui` into a project you already have (Next.js or Vite): installs
+the package, adds the `astralis-ui/styles.css` import, and mounts
+`<AstralisProvider>` at your app's entry point — the same [manual
+steps](/docs/installation), done for you.
+
+```bash
+npx astralis-cli init
+```
+
+| Option | |
+| --- | --- |
+| `--dry-run` | Print the changes it would make without writing anything. |
+
+## `theme` — generate a static theme
+
+Produces a plain CSS stylesheet from a brand seed, for when you want your theme
+baked into a file rather than derived at runtime by the provider. See
+[Theming](/docs/theming) for how the two approaches compare.
+
+```bash
+npx astralis-cli theme --brand "#6d3bf5" --out astralis-theme.css
+```
+
+| Option | |
+| --- | --- |
+| `--brand / --gray <hex>` | Brand and neutral seed colors. |
+| `--font-heading / -body / -mono <stack>` | Font family stacks. |
+| `--radius / --spacing / --font-scale / --motion <n>` | Scale multipliers. |
+| `--out <file>` | Output path (default `astralis-theme.css`). |
+| `--force` | Overwrite an existing file. |
+
+Run `astralis theme --help` for the full list of scales and defaults.
+
+## `connect-mcp` — connect an AI coding agent
+
+Connects one AI client to the Astralis [MCP server](/docs/ai-agents) so its
+agent reads your current component docs instead of guessing. It prompts for the
+client, tells you exactly what it will do, and — once you confirm — does it.
+
+```bash
+npx astralis-cli connect-mcp
+```
+
+| Option | |
+| --- | --- |
+| `--client claude-code\|codex\|cursor\|claude-desktop\|antigravity` | Skip the prompt and configure that client directly. |
+
+For Claude Code and Codex it runs the client's own `mcp add` command; for
+Cursor, Claude Desktop, and Antigravity it writes the client's JSON config
+(backing up any existing one first). Full details on the
+[AI Agents](/docs/ai-agents) page.

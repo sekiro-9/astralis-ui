@@ -256,17 +256,25 @@ Full guidance: [Style Props → Escape hatches](/docs/style-props).`,
     aliases: [
       "mcp server",
       "claude code integration",
+      "codex integration",
       "cursor integration",
+      "antigravity integration",
       "ai coding agent setup",
       "model context protocol",
     ],
-    answer: `Astralis ships an MCP server so AI coding agents read the **current** docs instead of guessing:
+    answer: `Astralis ships an MCP server so AI coding agents read the **current** docs instead of guessing. The quickest setup is the CLI — it walks you through connecting one client:
+
+\`\`\`bash
+npx astralis-cli connect-mcp
+\`\`\`
+
+It supports Claude Code, Codex, Cursor, Claude Desktop, and Antigravity, and configures the one you pick (running its \`mcp add\` command, or writing its config file — with your existing config backed up first). To wire up Claude Code by hand instead:
 
 \`\`\`bash
 claude mcp add astralis -- npx -y astralis-mcp
 \`\`\`
 
-Or in any MCP client's config: \`{"command": "npx", "args": ["-y", "astralis-mcp"]}\`. Five tools: component docs with full props tables, guides, theming reference, and search. Browsing agents can also read [llms.txt](https://astralis-zeta.vercel.app/llms.txt).`,
+Or drop this into any MCP client's config: \`{"command": "npx", "args": ["-y", "astralis-mcp"]}\`. Five tools: component docs with full props tables, guides, theming reference, and search. Browsing agents can also read [llms.txt](https://astralis-zeta.vercel.app/llms.txt).`,
   },
   {
     id: "accessibility",
