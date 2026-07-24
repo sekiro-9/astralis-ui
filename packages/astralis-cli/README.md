@@ -45,16 +45,22 @@ npx astralis-cli theme "#8b5cf6" --out astralis-theme.css
 
 Import it **after** `astralis-ui/styles.css`.
 
-### `astralis mcp`
+### `astralis connect-mcp`
 
-Connects AI coding agents to the [astralis-mcp](https://www.npmjs.com/package/astralis-mcp)
-docs server — prints ready-made configs for Claude Code, Cursor, and any MCP
-client; `--write` adds it to Claude Desktop's config for you (with a backup).
+Connects a single client to the [astralis-mcp](https://www.npmjs.com/package/astralis-mcp)
+docs server. It prompts for the client (Claude Code, Codex, Cursor, Claude
+Desktop, or Antigravity), tells you exactly what it's about to do, asks you to
+confirm, then does it — running the client's own `mcp add` command, or writing
+its JSON config (with a backup). Pass `--client` to skip the prompt.
 
 ```bash
-npx astralis-cli mcp          # print configs
-npx astralis-cli mcp --write  # configure Claude Desktop
+npx astralis-cli connect-mcp                      # prompt for a client, then configure it
+npx astralis-cli connect-mcp --client antigravity # go straight to Antigravity
+npx astralis-cli connect-mcp --client codex       # go straight to Codex
 ```
+
+Claude Code and Codex are configured by running their own `mcp add` command;
+Cursor, Claude Desktop, and Antigravity by writing their config files.
 
 ## License
 
