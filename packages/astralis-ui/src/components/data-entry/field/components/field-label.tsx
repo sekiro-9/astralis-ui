@@ -26,7 +26,7 @@ export function FieldLabel({
       >
         {children}
         {field?.required && (
-          <span aria-hidden="true" className="astralis:ml-0.5 astralis:text-label-error">
+          <span aria-hidden="true" className="astralis:ml-0.5 astralis:text-error-label">
             *
           </span>
         )}

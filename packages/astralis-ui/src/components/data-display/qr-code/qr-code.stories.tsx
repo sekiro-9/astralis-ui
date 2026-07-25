@@ -78,7 +78,7 @@ export const ErrorLevels: Story = {
         >
           <QrCode value="https://astralis:ui.dev" errorLevel={level} />
           <div className="astralis:text-center">
-            <p className="astralis:text-xs astralis:font-semibold astralis:text-content-primary">
+            <p className="astralis:text-xs astralis:font-semibold astralis:text-label-base">
               Level {level}
             </p>
             <p className="astralis:text-xs astralis:text-content-secondary">
@@ -258,8 +258,8 @@ export const LiveInput: Story = {
           </label>
           <input
             className={[
-              "astralis:w-full astralis:rounded-lg astralis:border astralis:border-stroke-default",
-              "astralis:bg-surface-default astralis:text-content-primary astralis:text-sm",
+              "astralis:w-full astralis:rounded-lg astralis:border astralis:border-stroke-base",
+              "astralis:bg-surface-subtle astralis:text-label-base astralis:text-sm",
               "astralis:px-3 astralis:py-2 astralis:outline-none",
               "astralis:focus:ring-2 astralis:focus:ring-primary-500 astralis:focus:ring-offset-1",
               "astralis:transition-shadow astralis:duration-150",

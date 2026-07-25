@@ -7,7 +7,7 @@ export function TableHeader({ children, className = "", ...rest }: TableSectionP
   return (
     <thead
       className={astralisMerge(
-        "astralis:bg-surface-muted astralis:border-b astralis:border-stroke-base",
+        "astralis:bg-surface-subtle astralis:border-b astralis:border-stroke-base",
         stickyHeader ? "astralis:sticky astralis:top-0 astralis:z-10" : "",
         className,
       )}

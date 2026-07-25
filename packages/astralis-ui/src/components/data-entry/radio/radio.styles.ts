@@ -17,10 +17,10 @@ export const radioControl =
 export function radioControlColor(checked: boolean, invalid: boolean): string {
   if (invalid) {
     return checked
-      ? "astralis:bg-red-solid astralis:border-red-solid"
-      : "astralis:bg-surface-base astralis:border-red-solid";
+      ? "astralis:bg-error-solid astralis:border-error-solid"
+      : "astralis:bg-surface-base astralis:border-error-solid";
   }
   return checked
     ? "astralis:bg-accent-solid astralis:border-accent-solid"
-    : "astralis:bg-surface-base astralis:border-stroke-emphasized";
+    : "astralis:bg-surface-base astralis:border-stroke-base";
 }

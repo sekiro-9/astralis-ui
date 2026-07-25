@@ -121,7 +121,7 @@ export function semanticCss(spec, palette) {
     "   Two tiers:",
     "   1. GLOBAL semantics — neutral roles (surface / label / stroke), no hue.",
     "   2. PER-PALETTE roles — every hue gets the same role vocabulary",
-    "      (solid, contrast, label, subtle, muted, emphasized, stroke, ring),",
+    "      (solid, contrast, label, subtle, muted, stroke, ring),",
     "      each with a light + dark value.",
     "",
     "   To change a formula, edit token-spec.ts and regenerate — editing this",

@@ -125,7 +125,7 @@ export function NumberInput({
         {!hideSteppers && (
           <div
             aria-hidden="true"
-            className="astralis:absolute astralis:inset-y-1 astralis:right-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:rounded-md astralis:border-normal astralis:border-stroke-subtle"
+            className="astralis:absolute astralis:inset-y-1 astralis:right-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:rounded-md astralis:border-normal astralis:border-stroke-base"
           >
             <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(1)} className={stepperClasses}>
               <ChevronUpIcon className="astralis:h-3 astralis:w-3" />

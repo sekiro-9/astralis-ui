@@ -215,7 +215,7 @@ export function CalendarRoot({
         <div
           ref={ref}
           className={[
-            "astralis:inline-flex astralis:flex-col astralis:gap-3 astralis:rounded-xl astralis:border astralis:border-stroke-subtle astralis:bg-surface-base astralis:p-3",
+            "astralis:inline-flex astralis:flex-col astralis:gap-3 astralis:rounded-xl astralis:border astralis:border-stroke-base astralis:bg-surface-base astralis:p-3",
             SIZE_MAP[size],
             className,
           ]

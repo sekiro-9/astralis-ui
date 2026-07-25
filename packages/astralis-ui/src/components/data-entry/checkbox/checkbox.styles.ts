@@ -20,10 +20,10 @@ export const checkboxControl =
 export function checkboxControlColor(active: boolean, invalid: boolean): string {
   if (invalid) {
     return active
-      ? "astralis:bg-red-solid astralis:border-red-solid"
-      : "astralis:bg-surface-base astralis:border-red-solid";
+      ? "astralis:bg-error-solid astralis:border-error-solid"
+      : "astralis:bg-surface-base astralis:border-error-solid";
   }
   return active
     ? "astralis:bg-accent-solid astralis:border-accent-solid"
-    : "astralis:bg-surface-base astralis:border-stroke-emphasized";
+    : "astralis:bg-surface-base astralis:border-stroke-base";
 }

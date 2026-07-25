@@ -118,10 +118,10 @@ function Thumb({
         "astralis:outline-none astralis:focus-visible:ring-2 astralis:focus-visible:ring-offset-1 astralis:focus-visible:ring-offset-surface-base",
         sliderThumbSize[size],
         isInvalid
-          ? "astralis:border-red-solid astralis:focus-visible:ring-red-muted"
+          ? "astralis:border-error-solid astralis:focus-visible:ring-error-muted"
           : "astralis:border-accent-solid astralis:focus-visible:ring-accent-ring",
         isDisabled
-          ? "astralis:cursor-not-allowed astralis:border-stroke-emphasized"
+          ? "astralis:cursor-not-allowed astralis:border-stroke-base"
           : isReadOnly
             ? "astralis:cursor-default"
             : "astralis:cursor-grab astralis:active:cursor-grabbing astralis:hover:shadow-lg",
@@ -150,7 +150,7 @@ function Marks({ marksArr, min, max, isActive }: { marksArr: SliderMark[]; min: 
                 "astralis:h-1.5 astralis:w-1.5 astralis:rounded-full astralis:border-normal",
                 isActive(mark.value)
                   ? "astralis:bg-accent-solid astralis:border-accent-solid"
-                  : "astralis:bg-surface-base astralis:border-stroke-emphasized",
+                  : "astralis:bg-surface-base astralis:border-stroke-base",
               )}
             />
             {mark.label && (
@@ -308,7 +308,7 @@ export function SliderBase({
           <div
             aria-hidden="true"
             style={{ top: 0, bottom: 0, left: 0, width: `${pct}%` }}
-            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-red-solid" : "astralis:bg-accent-solid")}
+            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-error-solid" : "astralis:bg-accent-solid")}
           />
 
           <Thumb
@@ -485,7 +485,7 @@ export function RangeSliderBase({
           <div
             aria-hidden="true"
             style={{ top: 0, bottom: 0, left: `${pctA}%`, width: `${pctB - pctA}%` }}
-            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-red-solid" : "astralis:bg-accent-solid")}
+            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-error-solid" : "astralis:bg-accent-solid")}
           />
 
           <Thumb

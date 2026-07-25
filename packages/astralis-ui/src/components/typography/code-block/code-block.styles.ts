@@ -11,10 +11,10 @@ export const codeBlockRootVariants = cva(
   {
     variants: {
       variant: {
-        subtle: "astralis:bg-surface-muted astralis:text-label-base",
+        subtle: "astralis:bg-surface-subtle astralis:text-label-base",
         // Same-polarity surface — tracks the active theme (dark block in dark
         // mode) rather than inverting against it.
-        solid: "astralis:bg-surface-subtle astralis:text-label-base",
+        solid: "astralis:bg-surface-muted astralis:text-label-base",
         outline: "astralis:border-normal astralis:border-stroke-base astralis:text-label-base",
       },
     },
@@ -32,7 +32,7 @@ export const codeBlockControlClasses =
   "astralis:ms-auto astralis:flex astralis:items-center astralis:gap-1.5";
 
 export const codeBlockCopyTriggerClasses =
-  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:size-7 astralis:rounded-md astralis:text-current astralis:opacity-high astralis:cursor-pointer astralis:transition astralis:hover:opacity-100 astralis:hover:bg-surface-emphasized astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring";
+  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:size-7 astralis:rounded-md astralis:text-current astralis:opacity-high astralis:cursor-pointer astralis:transition astralis:hover:opacity-100 astralis:hover:bg-surface-muted astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring";
 
 export const codeBlockContentVariants = cva(
   // Whitespace preserved; long lines scroll horizontally rather than wrap.

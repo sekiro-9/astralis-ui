@@ -20,7 +20,6 @@
   --astralis-color-accent-label: var(--astralis-color-brand-label);
   --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
   --astralis-color-accent-muted: var(--astralis-color-brand-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-brand-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
   --astralis-color-accent-ring: var(--astralis-color-brand-ring);
 }
@@ -31,7 +30,6 @@
   --astralis-color-accent-label: var(--astralis-color-brand-label);
   --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
   --astralis-color-accent-muted: var(--astralis-color-brand-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-brand-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
   --astralis-color-accent-ring: var(--astralis-color-brand-ring);
 }
@@ -42,7 +40,6 @@
   --astralis-color-accent-label: var(--astralis-color-gray-label);
   --astralis-color-accent-subtle: var(--astralis-color-gray-subtle);
   --astralis-color-accent-muted: var(--astralis-color-gray-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-gray-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-gray-stroke);
   --astralis-color-accent-ring: var(--astralis-color-gray-ring);
 }
@@ -53,7 +50,6 @@
   --astralis-color-accent-label: var(--astralis-color-red-label);
   --astralis-color-accent-subtle: var(--astralis-color-red-subtle);
   --astralis-color-accent-muted: var(--astralis-color-red-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-red-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-red-stroke);
   --astralis-color-accent-ring: var(--astralis-color-red-ring);
 }
@@ -64,7 +60,6 @@
   --astralis-color-accent-label: var(--astralis-color-orange-label);
   --astralis-color-accent-subtle: var(--astralis-color-orange-subtle);
   --astralis-color-accent-muted: var(--astralis-color-orange-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-orange-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-orange-stroke);
   --astralis-color-accent-ring: var(--astralis-color-orange-ring);
 }
@@ -75,7 +70,6 @@
   --astralis-color-accent-label: var(--astralis-color-yellow-label);
   --astralis-color-accent-subtle: var(--astralis-color-yellow-subtle);
   --astralis-color-accent-muted: var(--astralis-color-yellow-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-yellow-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-yellow-stroke);
   --astralis-color-accent-ring: var(--astralis-color-yellow-ring);
 }
@@ -86,7 +80,6 @@
   --astralis-color-accent-label: var(--astralis-color-green-label);
   --astralis-color-accent-subtle: var(--astralis-color-green-subtle);
   --astralis-color-accent-muted: var(--astralis-color-green-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-green-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-green-stroke);
   --astralis-color-accent-ring: var(--astralis-color-green-ring);
 }
@@ -97,7 +90,6 @@
   --astralis-color-accent-label: var(--astralis-color-teal-label);
   --astralis-color-accent-subtle: var(--astralis-color-teal-subtle);
   --astralis-color-accent-muted: var(--astralis-color-teal-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-teal-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-teal-stroke);
   --astralis-color-accent-ring: var(--astralis-color-teal-ring);
 }
@@ -108,7 +100,6 @@
   --astralis-color-accent-label: var(--astralis-color-blue-label);
   --astralis-color-accent-subtle: var(--astralis-color-blue-subtle);
   --astralis-color-accent-muted: var(--astralis-color-blue-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-blue-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-blue-stroke);
   --astralis-color-accent-ring: var(--astralis-color-blue-ring);
 }
@@ -119,7 +110,6 @@
   --astralis-color-accent-label: var(--astralis-color-cyan-label);
   --astralis-color-accent-subtle: var(--astralis-color-cyan-subtle);
   --astralis-color-accent-muted: var(--astralis-color-cyan-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-cyan-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-cyan-stroke);
   --astralis-color-accent-ring: var(--astralis-color-cyan-ring);
 }
@@ -130,7 +120,6 @@
   --astralis-color-accent-label: var(--astralis-color-purple-label);
   --astralis-color-accent-subtle: var(--astralis-color-purple-subtle);
   --astralis-color-accent-muted: var(--astralis-color-purple-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-purple-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-purple-stroke);
   --astralis-color-accent-ring: var(--astralis-color-purple-ring);
 }
@@ -141,7 +130,6 @@
   --astralis-color-accent-label: var(--astralis-color-pink-label);
   --astralis-color-accent-subtle: var(--astralis-color-pink-subtle);
   --astralis-color-accent-muted: var(--astralis-color-pink-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-pink-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-pink-stroke);
   --astralis-color-accent-ring: var(--astralis-color-pink-ring);
 }
@@ -152,7 +140,6 @@
   --astralis-color-accent-label: var(--astralis-color-error-label);
   --astralis-color-accent-subtle: var(--astralis-color-error-subtle);
   --astralis-color-accent-muted: var(--astralis-color-error-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-error-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-error-stroke);
   --astralis-color-accent-ring: var(--astralis-color-error-ring);
 }
@@ -163,7 +150,6 @@
   --astralis-color-accent-label: var(--astralis-color-warning-label);
   --astralis-color-accent-subtle: var(--astralis-color-warning-subtle);
   --astralis-color-accent-muted: var(--astralis-color-warning-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-warning-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-warning-stroke);
   --astralis-color-accent-ring: var(--astralis-color-warning-ring);
 }
@@ -174,7 +160,6 @@
   --astralis-color-accent-label: var(--astralis-color-success-label);
   --astralis-color-accent-subtle: var(--astralis-color-success-subtle);
   --astralis-color-accent-muted: var(--astralis-color-success-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-success-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-success-stroke);
   --astralis-color-accent-ring: var(--astralis-color-success-ring);
 }
@@ -185,7 +170,6 @@
   --astralis-color-accent-label: var(--astralis-color-info-label);
   --astralis-color-accent-subtle: var(--astralis-color-info-subtle);
   --astralis-color-accent-muted: var(--astralis-color-info-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-info-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-info-stroke);
   --astralis-color-accent-ring: var(--astralis-color-info-ring);
 }

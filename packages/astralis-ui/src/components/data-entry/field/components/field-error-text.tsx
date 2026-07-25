@@ -25,7 +25,7 @@ export function FieldErrorText({
       role="alert"
       aria-live="polite"
       className={astralisMerge(
-        "astralis:flex astralis:items-center astralis:gap-1 astralis:text-xs astralis:text-label-error",
+        "astralis:flex astralis:items-center astralis:gap-1 astralis:text-xs astralis:text-error-label",
         className,
       )}
       {...props}

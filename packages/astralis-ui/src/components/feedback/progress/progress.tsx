@@ -71,7 +71,7 @@ export function Progress({
           >
             <circle
               cx="24" cy="24" r={radius} fill="none" strokeWidth={stroke}
-              className="astralis:stroke-surface-emphasized"
+              className="astralis:stroke-surface-muted"
             />
             <circle
               cx="24" cy="24" r={radius} fill="none" strokeWidth={stroke} strokeLinecap="round"

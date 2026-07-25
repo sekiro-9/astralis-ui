@@ -63,7 +63,7 @@ function Tag({
             e.preventDefault(); // don't blur the container
             onRemove();
           }}
-          className="astralis:flex astralis:items-center astralis:shrink-0 astralis:transition-colors astralis:hover:text-accent-emphasized"
+          className="astralis:flex astralis:items-center astralis:shrink-0 astralis:transition-colors astralis:hover:text-accent-solid"
         >
           <XIcon className="astralis:h-2.5 astralis:w-2.5" />
         </button>
@@ -381,12 +381,12 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
               aria-multiselectable="true"
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
-                "astralis astralis:bg-surface-base astralis:border-normal astralis:border-stroke-subtle astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
+                "astralis astralis:bg-surface-raised astralis:border-normal astralis:border-stroke-base astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
                 accentClass(colorScheme),
               )}
             >
               {isMaxReached && (
-                <div className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:text-label-subtle astralis:border-b astralis:border-stroke-subtle astralis:bg-surface-muted">
+                <div className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:text-label-subtle astralis:border-b astralis:border-stroke-subtle astralis:bg-surface-subtle">
                   Maximum {max} item{max !== 1 ? "s" : ""} selected
                 </div>
               )}

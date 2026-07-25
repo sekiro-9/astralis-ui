@@ -73,7 +73,7 @@ export const Spacing: Story = {
         <HStack gap="3" alignItems="end" wrap="wrap">
           {(["2", "4", "6", "8"] as const).map((p) => (
             <Box key={p} bg="subtle" border="normal" borderColor="muted" rounded="md" p={p}>
-              <Box bg="blue-solid" w="12" h="12" rounded="sm" />
+              <Box bg="blue" w="12" h="12" rounded="sm" />
             </Box>
           ))}
         </HStack>
@@ -83,7 +83,7 @@ export const Spacing: Story = {
         <HStack gap="3" alignItems="start">
           {(["0.5", "2", "4", "8"] as const).map((m) => (
             <Box key={m} bg="subtle" border="normal" borderColor="muted" rounded="md">
-              <Box bg="green-solid" w="12" h="12" rounded="sm" mt={m} mx="2" mb="2" />
+              <Box bg="green" w="12" h="12" rounded="sm" mt={m} mx="2" mb="2" />
             </Box>
           ))}
         </HStack>
@@ -105,7 +105,7 @@ export const Sizing: Story = {
       <Text size="sm" color="muted">size — equal width & height</Text>
       <HStack gap="3" alignItems="end">
         {(["10", "16", "20"] as const).map((s) => (
-          <Box key={s} bg="blue-solid" size={s} rounded="md" />
+          <Box key={s} bg="blue" size={s} rounded="md" />
         ))}
       </HStack>
     </VStack>
@@ -173,8 +173,8 @@ export const Rounded: Story = {
         ))}
       </HStack>
       <HStack gap="4">
-        <Box bg="blue-solid" w="20" h="16" roundedT="2xl" />
-        <Box bg="blue-solid" w="20" h="16" roundedTl="2xl" roundedBr="2xl" />
+        <Box bg="blue" w="20" h="16" roundedT="2xl" />
+        <Box bg="blue" w="20" h="16" roundedTl="2xl" roundedBr="2xl" />
       </HStack>
     </VStack>
   ),
@@ -253,7 +253,7 @@ export const Opacity: Story = {
 export const Responsive: Story = {
   render: () => (
     <Box
-      bg={{ base: "red-solid", md: "yellow-solid", lg: "green-solid" }}
+      bg={{ base: "red", md: "yellow", lg: "green" }}
       p={{ base: "4", md: "8" }}
       rounded={{ base: "md", lg: "2xl" }}
       w="full"
@@ -271,10 +271,10 @@ export const Polymorphism: Story = {
   render: () => (
     <VStack gap="3" w="full" alignItems="start">
       <Box as="section" bg="subtle" p="4" rounded="md" w="full"><Text>as="section"</Text></Box>
-      <Box as="a" href="#" bg="brand-solid" color="white" px="4" py="2" rounded="md" cursor="pointer">
+      <Box as="a" href="#" bg="brand" color="white" px="4" py="2" rounded="md" cursor="pointer">
         <Text color="current">as="a" (anchor)</Text>
       </Box>
-      <Box as="button" bg="blue-solid" color="white" px="4" py="2" rounded="md" border="normal" borderColor="info">
+      <Box as="button" bg="blue" color="white" px="4" py="2" rounded="md" border="normal" borderColor="info">
         <Text color="current">as="button"</Text>
       </Box>
     </VStack>

@@ -4,12 +4,21 @@ import { InfoIcon, CircleCheckIcon, TriangleAlertIcon, CircleAlertIcon } from ".
 /** The shared status vocabulary for feedback components (Alert, Toast). */
 export type FeedbackStatus = "info" | "success" | "warning" | "error";
 
-/** Default hue per status — components allow a colorScheme override. */
+/**
+ * Default palette per status — components allow a colorScheme override.
+ *
+ * These point at the ROLE palettes, not the literal hues. `error` defaults to
+ * red, but it is a first-class palette that `errorColor` reseeds; `red` is a
+ * literal that must always contain red. Pointing at `red` here meant a themed
+ * `errorColor` regenerated a palette that Alert and Toast never read.
+ * Identical rendering until a seed is supplied, since each role palette
+ * aliases the hue below it.
+ */
 export const STATUS_SCHEME: Record<FeedbackStatus, ColorScheme> = {
-  info: "blue",
-  success: "green",
-  warning: "orange",
-  error: "red",
+  info: "info",
+  success: "success",
+  warning: "warning",
+  error: "error",
 };
 
 export const STATUS_ICON: Record<FeedbackStatus, typeof InfoIcon> = {

@@ -237,7 +237,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
               className={astralisMerge(
                 "astralis",
                 accentClass(colorScheme),
-                "astralis:max-h-64 astralis:overflow-auto astralis:rounded-xl astralis:border-normal astralis:border-stroke-subtle astralis:bg-surface-panel astralis:shadow-lg astralis:p-1",
+                "astralis:max-h-64 astralis:overflow-auto astralis:rounded-xl astralis:border-normal astralis:border-stroke-base astralis:bg-surface-raised astralis:shadow-lg astralis:p-1",
               )}
             >
               {flatFiltered.length === 0 && (

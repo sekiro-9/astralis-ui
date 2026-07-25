@@ -116,7 +116,7 @@ export const AlignItems: Story = {
           <Frame>
             <Flex alignItems={a} gap="2" h="24">
               <Item>tall</Item>
-              <Box bg="blue-solid" color="white" px="4" py="6" rounded="md"><Text color="current" size="sm">taller</Text></Box>
+              <Box bg="blue" color="white" px="4" py="6" rounded="md"><Text color="current" size="sm">taller</Text></Box>
               <Item>tall</Item>
             </Flex>
           </Frame>
@@ -173,7 +173,7 @@ export const FlexItem: Story = {
         <Frame>
           <Flex gap="2">
             <Item>fixed</Item>
-            <Flex.Item flex="1" bg="green-solid" color="white" px="4" py="3" rounded="md">
+            <Flex.Item flex="1" bg="green" color="white" px="4" py="3" rounded="md">
               <Text color="current" size="sm" align="center">Flex.Item flex="1"</Text>
             </Flex.Item>
             <Item>fixed</Item>

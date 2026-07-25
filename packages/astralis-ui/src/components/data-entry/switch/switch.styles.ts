@@ -20,10 +20,10 @@ export const switchTrack =
 export function switchTrackColor(on: boolean, invalid: boolean): string {
   if (invalid) {
     return on
-      ? "astralis:bg-red-solid"
-      : "astralis:bg-surface-muted astralis:border-normal astralis:border-red-solid";
+      ? "astralis:bg-error-solid"
+      : "astralis:bg-surface-muted astralis:border-normal astralis:border-error-solid";
   }
   return on
     ? "astralis:bg-accent-solid"
-    : "astralis:bg-surface-muted astralis:border-normal astralis:border-stroke-emphasized";
+    : "astralis:bg-surface-muted astralis:border-normal astralis:border-stroke-base";
 }

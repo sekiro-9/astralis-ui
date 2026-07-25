@@ -43,10 +43,10 @@ export const ROLE_PALETTES = {
 } as const;
 
 export const ROLES = [
-  "solid", "contrast", "label", "subtle", "muted", "emphasized", "stroke", "ring",
+  "solid", "contrast", "label", "subtle", "muted", "stroke", "ring",
 ] as const;
 
-/** Ramp steps. Note 950: gray-950 backs surface-panel in dark mode. */
+/** Ramp steps. Note 950: gray-950 backs surface-raised in dark mode. */
 export const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
 
 export type Hue = (typeof HUES)[number];
@@ -74,11 +74,11 @@ export type RoleTarget = Step | "white" | "black" | "auto";
 const STANDARD: Record<Mode, Record<Role, RoleTarget>> = {
   light: {
     solid: 600, contrast: "white", label: 700, subtle: 100,
-    muted: 200, emphasized: 300, stroke: 500, ring: 500,
+    muted: 200, stroke: 500, ring: 500,
   },
   dark: {
     solid: 600, contrast: "white", label: 300, subtle: 900,
-    muted: 800, emphasized: 700, stroke: 400, ring: 500,
+    muted: 800, stroke: 400, ring: 500,
   },
 };
 
@@ -146,37 +146,71 @@ export function roleTargets(hue: Hue, mode: Mode): Record<Role, RoleTarget> {
  * Neutral roles that carry no hue — the surface / label / stroke vocabulary
  * components reach for when they aren't painting with a palette.
  * Values are [light, dark] references into the primitive layer.
+ *
+ * Each family here is a LADDER: rungs measuring emphasis, nothing else. Status
+ * colours deliberately do NOT live here. `surface-error` was never a rung on
+ * the surface ladder — it is meaning, not elevation — and filing it under the
+ * same prefix bought a second vocabulary for a job the palettes already did.
+ * The two disagreed: `label-error` resolved to error-600 while `error-label`
+ * resolved to error-700, so a validation message and an error Alert rendered
+ * different reds. Status is a palette like any other: use `error-subtle`,
+ * `error-label`, `error-stroke` — the same seven roles every hue implements,
+ * and the same ones .astralis-accent-{status} rebinds onto the accent channel.
  */
 export const GLOBAL_SEMANTICS: Record<string, [string, string]> = {
+  /*
+   * Layering surfaces. `base` is the page; anything sitting ON the page that
+   * wants to be an alternate value is `subtle`; nested one level deeper it
+   * goes back to `base`. `muted` is the filled-control surface (inputs, table
+   * headers, disabled). `raised` is NOT a fourth neutral — it is `base` plus
+   * dark-mode elevation: identical to base in light, one step lighter in dark,
+   * where a shadow cannot read. Floating layers only.
+   */
   "surface-base": ["white", "black"],
   "surface-subtle": ["gray-100", "gray-900"],
   "surface-muted": ["gray-200", "gray-800"],
-  "surface-emphasized": ["gray-300", "gray-700"],
-  "surface-panel": ["white", "gray-950"],
+  "surface-raised": ["white", "gray-950"],
   "surface-inverted": ["black", "white"],
-  "surface-warning": ["warning-100", "warning-950"],
-  "surface-error": ["error-100", "error-950"],
-  "surface-success": ["success-100", "success-950"],
-  "surface-info": ["info-100", "info-950"],
 
+  /*
+   * Labels are ordered by contrast against the page: base > muted > subtle in
+   * both modes. Every step here clears WCAG AA (4.5:1) on the page it sits on,
+   * because `subtle` paints real content — placeholders, empty states, listbox
+   * group headers, calendar weekday rows — not just decoration.
+   *
+   *   light  gray-900 17.7  |  gray-600 7.7  |  gray-500 4.8
+   *   dark   gray-50  19.1  |  gray-300 13.5 |  gray-400 7.8
+   *
+   * `subtle` was gray-400 in light (2.6:1 on white, 2.0:1 on a muted card) —
+   * a placeholder nobody could read. Dark is spaced one step wider than light
+   * because the ramp offers nothing between gray-400 (7.8) and gray-500 (4.1)
+   * on a near-black page: holding `muted` at gray-400 would have forced
+   * `subtle` to 4.1 and missed AA.
+   */
   "label-base": ["gray-900", "gray-50"],
-  "label-muted": ["gray-600", "gray-400"],
-  "label-subtle": ["gray-400", "gray-500"],
+  "label-muted": ["gray-600", "gray-300"],
+  "label-subtle": ["gray-500", "gray-400"],
   "label-inverted": ["white", "black"],
-  "label-warning": ["warning-700", "warning-300"],
-  "label-error": ["error-600", "error-400"],
-  "label-success": ["success-700", "success-300"],
-  "label-info": ["info-600", "info-300"],
 
+  /*
+   * Strokes are NOT a ladder climbing away from nothing the way surfaces are.
+   * A default background is the absence of tint, so surfaces can only step up
+   * from `base`. A default BORDER has to be visible, so `base` sits in the
+   * middle and the other two step either side of it:
+   *
+   *   subtle  <  base  <  muted
+   *   divider   default   hover / stronger
+   *
+   * Ordered by contrast against the page, so the light values ascend and the
+   * dark ones descend. Keep `muted` on the far side of `base` in BOTH modes —
+   * when it sat at gray-200 the light ramp read subtle < muted < base, and a
+   * base-to-muted hover made the border fainter in light while strengthening
+   * it in dark, from one line of code.
+   */
   "stroke-base": ["gray-300", "gray-800"],
-  "stroke-muted": ["gray-200", "gray-700"],
+  "stroke-muted": ["gray-400", "gray-700"],
   "stroke-subtle": ["gray-100", "gray-900"],
-  "stroke-emphasized": ["gray-400", "gray-600"],
   "stroke-inverted": ["black", "white"],
-  "stroke-warning": ["warning-300", "warning-400"],
-  "stroke-error": ["error-300", "error-400"],
-  "stroke-success": ["success-300", "success-400"],
-  "stroke-info": ["info-300", "info-400"],
 };
 
 /* ==========================================================================

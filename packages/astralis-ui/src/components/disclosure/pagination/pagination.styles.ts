@@ -35,11 +35,11 @@ export const paginationItemVariants = cva(
     },
     compoundVariants: [
       { variant: "solid", active: true, class: "astralis:bg-accent-solid astralis:text-accent-contrast" },
-      { variant: "solid", active: false, class: "astralis:text-label-base astralis:hover:bg-surface-muted" },
+      { variant: "solid", active: false, class: "astralis:text-label-base astralis:hover:bg-surface-subtle" },
       { variant: "outline", active: true, class: "astralis:bg-transparent astralis:border-normal astralis:border-accent-stroke astralis:text-accent-label" },
       { variant: "outline", active: false, class: "astralis:border-normal astralis:border-transparent astralis:text-label-muted astralis:hover:border-stroke-base astralis:hover:text-label-base" },
       { variant: "subtle", active: true, class: "astralis:bg-accent-subtle astralis:text-accent-label" },
-      { variant: "subtle", active: false, class: "astralis:text-label-muted astralis:hover:bg-surface-muted astralis:hover:text-label-base" },
+      { variant: "subtle", active: false, class: "astralis:text-label-muted astralis:hover:bg-surface-subtle astralis:hover:text-label-base" },
       { variant: "plain", active: true, class: "astralis:text-accent-label astralis:font-semibold" },
       { variant: "plain", active: false, class: "astralis:text-label-muted astralis:hover:text-label-base" },
     ],
@@ -51,7 +51,7 @@ export const paginationItemVariants = cva(
 /* Control buttons (Prev/Next/First/Last) — neutral, square, icon-only */
 /* ------------------------------------------------------------------ */
 export const paginationControlVariants = cva(
-  `astralis:inline-flex astralis:items-center astralis:justify-center astralis:cursor-pointer astralis:text-label-muted astralis:transition-colors astralis:hover:bg-surface-muted astralis:hover:text-label-base ${focusRing} ${disabledState}`,
+  `astralis:inline-flex astralis:items-center astralis:justify-center astralis:cursor-pointer astralis:text-label-muted astralis:transition-colors astralis:hover:bg-surface-subtle astralis:hover:text-label-base ${focusRing} ${disabledState}`,
   {
     variants: {
       size: {

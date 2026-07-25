@@ -17,7 +17,7 @@ export const modalBackdropClasses =
 export const SCRIM_COLOR = "rgba(0, 0, 0, 0.5)";
 
 export const modalPanelVariants = cva(
-  "astralis:relative astralis:w-full astralis:my-auto astralis:bg-surface-base astralis:text-label-base astralis:rounded-xl astralis:border-normal astralis:border-stroke-subtle astralis:shadow-xl",
+  "astralis:relative astralis:w-full astralis:my-auto astralis:bg-surface-raised astralis:text-label-base astralis:rounded-xl astralis:border-normal astralis:border-stroke-base astralis:shadow-xl",
   {
     variants: {
       size: {

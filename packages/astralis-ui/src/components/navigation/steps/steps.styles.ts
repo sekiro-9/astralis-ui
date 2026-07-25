@@ -53,12 +53,12 @@ export const stepIndicatorVariants = cva(
       { variant: "solid", status: "upcoming", class: "astralis:bg-transparent astralis:text-label-subtle astralis:border-stroke-base" },
       { variant: "solid", status: "active", class: "astralis:bg-brand-solid astralis:text-brand-contrast astralis:border-brand-solid" },
       { variant: "solid", status: "completed", class: "astralis:bg-brand-solid astralis:text-brand-contrast astralis:border-brand-solid" },
-      { variant: "solid", status: "error", class: "astralis:bg-surface-error astralis:text-label-error astralis:border-stroke-error" },
+      { variant: "solid", status: "error", class: "astralis:bg-error-subtle astralis:text-error-label astralis:border-error-stroke" },
       // subtle
       { variant: "subtle", status: "upcoming", class: "astralis:bg-transparent astralis:text-label-subtle astralis:border-stroke-base" },
       { variant: "subtle", status: "active", class: "astralis:bg-brand-subtle astralis:text-brand-label astralis:border-brand-solid" },
       { variant: "subtle", status: "completed", class: "astralis:bg-brand-subtle astralis:text-brand-label astralis:border-brand-subtle" },
-      { variant: "subtle", status: "error", class: "astralis:bg-surface-error astralis:text-label-error astralis:border-stroke-error" },
+      { variant: "subtle", status: "error", class: "astralis:bg-error-subtle astralis:text-error-label astralis:border-error-stroke" },
     ],
     defaultVariants: { size: "md", variant: "solid", status: "upcoming" },
   },
@@ -78,10 +78,10 @@ export const stepDotVariants = cva(
         lg: "astralis:size-4",
       },
       status: {
-        upcoming: "astralis:bg-surface-emphasized",
+        upcoming: "astralis:bg-surface-subtle",
         active: "astralis:bg-brand-solid",
         completed: "astralis:bg-brand-solid",
-        error: "astralis:bg-label-error",
+        error: "astralis:bg-error-solid",
       },
     },
     defaultVariants: { size: "md", status: "upcoming" },
@@ -119,5 +119,5 @@ export const stepTriggerVariants = cva(
 );
 
 export const stepNavVariants = cva(
-  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:gap-2 astralis:rounded-md astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:text-label-base astralis:px-4 astralis:py-2 astralis:text-sm astralis:font-medium astralis:transition-colors astralis:cursor-pointer astralis:hover:bg-surface-muted astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed astralis:disabled:pointer-events-none",
+  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:gap-2 astralis:rounded-md astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:text-label-base astralis:px-4 astralis:py-2 astralis:text-sm astralis:font-medium astralis:transition-colors astralis:cursor-pointer astralis:hover:bg-surface-subtle astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed astralis:disabled:pointer-events-none",
 );

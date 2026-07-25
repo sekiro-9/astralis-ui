@@ -51,7 +51,7 @@ describe("generateBrandShades", () => {
 describe("generateBrandTokens", () => {
   it("re-declares brand AND accent role tokens (the P0 subtree-baking fix)", () => {
     const vars = generateBrandTokens(VIOLET, "light") as Record<string, string>;
-    for (const role of ["solid", "contrast", "label", "subtle", "muted", "emphasized", "stroke", "ring"]) {
+    for (const role of ["solid", "contrast", "label", "subtle", "muted", "stroke", "ring"]) {
       expect(vars[`--astralis-color-brand-${role}`], `brand-${role}`).toBeTruthy();
       expect(vars[`--astralis-color-accent-${role}`], `accent-${role}`).toBeTruthy();
     }
@@ -94,7 +94,7 @@ describe("generateThemeTokens", () => {
     }
   });
 
-  it("emits an 11-step gray ramp including the 950 that backs surface-panel", () => {
+  it("emits an 11-step gray ramp including the 950 that backs surface-raised", () => {
     const v = vars({ grayColor: "#71717a" });
     for (const step of [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]) {
       expect(v[`--astralis-color-gray-${step}`], `gray-${step}`).toMatch(HEX);
@@ -115,13 +115,13 @@ describe("generateThemeTokens", () => {
     const dark = vars({ grayColor: "#71717a" }, "dark");
     expect(light["--astralis-color-surface-subtle"]).toBe(light["--astralis-color-gray-100"]);
     expect(dark["--astralis-color-surface-subtle"]).toBe(dark["--astralis-color-gray-900"]);
-    // surface-panel is the reason the ramp needs a 950 step at all.
-    expect(dark["--astralis-color-surface-panel"]).toBe(dark["--astralis-color-gray-950"]);
+    // surface-raised is the reason the ramp needs a 950 step at all.
+    expect(dark["--astralis-color-surface-raised"]).toBe(dark["--astralis-color-gray-950"]);
   });
 
   it("leaves hues the seed does not touch alone", () => {
     const v = vars({ brandColor: VIOLET });
-    expect(v["--astralis-color-surface-warning"]).toBeUndefined();
+    expect(v["--astralis-color-warning-subtle"]).toBeUndefined();
     expect(v["--astralis-color-blue-solid"]).toBeUndefined();
   });
 

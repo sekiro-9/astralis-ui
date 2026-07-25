@@ -203,8 +203,6 @@
     --astralis-blur-3xl: var(--astralis-blur-3xl);
     --astralis-default-transition-duration: 150ms;
     --astralis-default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    --astralis-default-font-family: var(--astralis-font-sans);
-    --astralis-default-mono-font-family: var(--astralis-font-mono);
     --astralis-color-transparent: var(--astralis-color-transparent);
     --astralis-color-current: var(--astralis-color-current);
     --astralis-color-brand-50: var(--astralis-color-brand-50);
@@ -265,36 +263,21 @@
     --astralis-color-surface-base: var(--astralis-color-surface-base);
     --astralis-color-surface-muted: var(--astralis-color-surface-muted);
     --astralis-color-surface-subtle: var(--astralis-color-surface-subtle);
-    --astralis-color-surface-emphasized: var(--astralis-color-surface-emphasized);
-    --astralis-color-surface-panel: var(--astralis-color-surface-panel);
+    --astralis-color-surface-raised: var(--astralis-color-surface-raised);
     --astralis-color-surface-inverted: var(--astralis-color-surface-inverted);
-    --astralis-color-surface-warning: var(--astralis-color-surface-warning);
-    --astralis-color-surface-error: var(--astralis-color-surface-error);
-    --astralis-color-surface-success: var(--astralis-color-surface-success);
-    --astralis-color-surface-info: var(--astralis-color-surface-info);
     --astralis-color-label-base: var(--astralis-color-label-base);
     --astralis-color-label-muted: var(--astralis-color-label-muted);
     --astralis-color-label-subtle: var(--astralis-color-label-subtle);
     --astralis-color-label-inverted: var(--astralis-color-label-inverted);
-    --astralis-color-label-warning: var(--astralis-color-label-warning);
-    --astralis-color-label-error: var(--astralis-color-label-error);
-    --astralis-color-label-success: var(--astralis-color-label-success);
-    --astralis-color-label-info: var(--astralis-color-label-info);
     --astralis-color-stroke-base: var(--astralis-color-stroke-base);
     --astralis-color-stroke-muted: var(--astralis-color-stroke-muted);
     --astralis-color-stroke-subtle: var(--astralis-color-stroke-subtle);
-    --astralis-color-stroke-emphasized: var(--astralis-color-stroke-emphasized);
     --astralis-color-stroke-inverted: var(--astralis-color-stroke-inverted);
-    --astralis-color-stroke-warning: var(--astralis-color-stroke-warning);
-    --astralis-color-stroke-error: var(--astralis-color-stroke-error);
-    --astralis-color-stroke-success: var(--astralis-color-stroke-success);
-    --astralis-color-stroke-info: var(--astralis-color-stroke-info);
     --astralis-color-gray-solid: var(--astralis-color-gray-solid);
     --astralis-color-gray-contrast: var(--astralis-color-gray-contrast);
     --astralis-color-gray-label: var(--astralis-color-gray-label);
     --astralis-color-gray-subtle: var(--astralis-color-gray-subtle);
     --astralis-color-gray-muted: var(--astralis-color-gray-muted);
-    --astralis-color-gray-emphasized: var(--astralis-color-gray-emphasized);
     --astralis-color-gray-stroke: var(--astralis-color-gray-stroke);
     --astralis-color-gray-ring: var(--astralis-color-gray-ring);
     --astralis-color-red-solid: var(--astralis-color-red-solid);
@@ -302,7 +285,6 @@
     --astralis-color-red-label: var(--astralis-color-red-label);
     --astralis-color-red-subtle: var(--astralis-color-red-subtle);
     --astralis-color-red-muted: var(--astralis-color-red-muted);
-    --astralis-color-red-emphasized: var(--astralis-color-red-emphasized);
     --astralis-color-red-stroke: var(--astralis-color-red-stroke);
     --astralis-color-red-ring: var(--astralis-color-red-ring);
     --astralis-color-orange-solid: var(--astralis-color-orange-solid);
@@ -310,7 +292,6 @@
     --astralis-color-orange-label: var(--astralis-color-orange-label);
     --astralis-color-orange-subtle: var(--astralis-color-orange-subtle);
     --astralis-color-orange-muted: var(--astralis-color-orange-muted);
-    --astralis-color-orange-emphasized: var(--astralis-color-orange-emphasized);
     --astralis-color-orange-stroke: var(--astralis-color-orange-stroke);
     --astralis-color-orange-ring: var(--astralis-color-orange-ring);
     --astralis-color-yellow-solid: var(--astralis-color-yellow-solid);
@@ -318,7 +299,6 @@
     --astralis-color-yellow-label: var(--astralis-color-yellow-label);
     --astralis-color-yellow-subtle: var(--astralis-color-yellow-subtle);
     --astralis-color-yellow-muted: var(--astralis-color-yellow-muted);
-    --astralis-color-yellow-emphasized: var(--astralis-color-yellow-emphasized);
     --astralis-color-yellow-stroke: var(--astralis-color-yellow-stroke);
     --astralis-color-yellow-ring: var(--astralis-color-yellow-ring);
     --astralis-color-green-solid: var(--astralis-color-green-solid);
@@ -326,7 +306,6 @@
     --astralis-color-green-label: var(--astralis-color-green-label);
     --astralis-color-green-subtle: var(--astralis-color-green-subtle);
     --astralis-color-green-muted: var(--astralis-color-green-muted);
-    --astralis-color-green-emphasized: var(--astralis-color-green-emphasized);
     --astralis-color-green-stroke: var(--astralis-color-green-stroke);
     --astralis-color-green-ring: var(--astralis-color-green-ring);
     --astralis-color-teal-solid: var(--astralis-color-teal-solid);
@@ -334,7 +313,6 @@
     --astralis-color-teal-label: var(--astralis-color-teal-label);
     --astralis-color-teal-subtle: var(--astralis-color-teal-subtle);
     --astralis-color-teal-muted: var(--astralis-color-teal-muted);
-    --astralis-color-teal-emphasized: var(--astralis-color-teal-emphasized);
     --astralis-color-teal-stroke: var(--astralis-color-teal-stroke);
     --astralis-color-teal-ring: var(--astralis-color-teal-ring);
     --astralis-color-blue-solid: var(--astralis-color-blue-solid);
@@ -342,7 +320,6 @@
     --astralis-color-blue-label: var(--astralis-color-blue-label);
     --astralis-color-blue-subtle: var(--astralis-color-blue-subtle);
     --astralis-color-blue-muted: var(--astralis-color-blue-muted);
-    --astralis-color-blue-emphasized: var(--astralis-color-blue-emphasized);
     --astralis-color-blue-stroke: var(--astralis-color-blue-stroke);
     --astralis-color-blue-ring: var(--astralis-color-blue-ring);
     --astralis-color-cyan-solid: var(--astralis-color-cyan-solid);
@@ -350,7 +327,6 @@
     --astralis-color-cyan-label: var(--astralis-color-cyan-label);
     --astralis-color-cyan-subtle: var(--astralis-color-cyan-subtle);
     --astralis-color-cyan-muted: var(--astralis-color-cyan-muted);
-    --astralis-color-cyan-emphasized: var(--astralis-color-cyan-emphasized);
     --astralis-color-cyan-stroke: var(--astralis-color-cyan-stroke);
     --astralis-color-cyan-ring: var(--astralis-color-cyan-ring);
     --astralis-color-purple-solid: var(--astralis-color-purple-solid);
@@ -358,7 +334,6 @@
     --astralis-color-purple-label: var(--astralis-color-purple-label);
     --astralis-color-purple-subtle: var(--astralis-color-purple-subtle);
     --astralis-color-purple-muted: var(--astralis-color-purple-muted);
-    --astralis-color-purple-emphasized: var(--astralis-color-purple-emphasized);
     --astralis-color-purple-stroke: var(--astralis-color-purple-stroke);
     --astralis-color-purple-ring: var(--astralis-color-purple-ring);
     --astralis-color-pink-solid: var(--astralis-color-pink-solid);
@@ -366,7 +341,6 @@
     --astralis-color-pink-label: var(--astralis-color-pink-label);
     --astralis-color-pink-subtle: var(--astralis-color-pink-subtle);
     --astralis-color-pink-muted: var(--astralis-color-pink-muted);
-    --astralis-color-pink-emphasized: var(--astralis-color-pink-emphasized);
     --astralis-color-pink-stroke: var(--astralis-color-pink-stroke);
     --astralis-color-pink-ring: var(--astralis-color-pink-ring);
     --astralis-color-brand-solid: var(--astralis-color-brand-solid);
@@ -374,7 +348,6 @@
     --astralis-color-brand-label: var(--astralis-color-brand-label);
     --astralis-color-brand-subtle: var(--astralis-color-brand-subtle);
     --astralis-color-brand-muted: var(--astralis-color-brand-muted);
-    --astralis-color-brand-emphasized: var(--astralis-color-brand-emphasized);
     --astralis-color-brand-stroke: var(--astralis-color-brand-stroke);
     --astralis-color-brand-ring: var(--astralis-color-brand-ring);
     --astralis-color-error-solid: var(--astralis-color-error-solid);
@@ -382,7 +355,6 @@
     --astralis-color-error-label: var(--astralis-color-error-label);
     --astralis-color-error-subtle: var(--astralis-color-error-subtle);
     --astralis-color-error-muted: var(--astralis-color-error-muted);
-    --astralis-color-error-emphasized: var(--astralis-color-error-emphasized);
     --astralis-color-error-stroke: var(--astralis-color-error-stroke);
     --astralis-color-error-ring: var(--astralis-color-error-ring);
     --astralis-color-warning-solid: var(--astralis-color-warning-solid);
@@ -390,7 +362,6 @@
     --astralis-color-warning-label: var(--astralis-color-warning-label);
     --astralis-color-warning-subtle: var(--astralis-color-warning-subtle);
     --astralis-color-warning-muted: var(--astralis-color-warning-muted);
-    --astralis-color-warning-emphasized: var(--astralis-color-warning-emphasized);
     --astralis-color-warning-stroke: var(--astralis-color-warning-stroke);
     --astralis-color-warning-ring: var(--astralis-color-warning-ring);
     --astralis-color-success-solid: var(--astralis-color-success-solid);
@@ -398,7 +369,6 @@
     --astralis-color-success-label: var(--astralis-color-success-label);
     --astralis-color-success-subtle: var(--astralis-color-success-subtle);
     --astralis-color-success-muted: var(--astralis-color-success-muted);
-    --astralis-color-success-emphasized: var(--astralis-color-success-emphasized);
     --astralis-color-success-stroke: var(--astralis-color-success-stroke);
     --astralis-color-success-ring: var(--astralis-color-success-ring);
     --astralis-color-info-solid: var(--astralis-color-info-solid);
@@ -406,7 +376,6 @@
     --astralis-color-info-label: var(--astralis-color-info-label);
     --astralis-color-info-subtle: var(--astralis-color-info-subtle);
     --astralis-color-info-muted: var(--astralis-color-info-muted);
-    --astralis-color-info-emphasized: var(--astralis-color-info-emphasized);
     --astralis-color-info-stroke: var(--astralis-color-info-stroke);
     --astralis-color-info-ring: var(--astralis-color-info-ring);
     --astralis-color-accent-solid: var(--astralis-color-accent-solid);
@@ -414,7 +383,6 @@
     --astralis-color-accent-label: var(--astralis-color-accent-label);
     --astralis-color-accent-subtle: var(--astralis-color-accent-subtle);
     --astralis-color-accent-muted: var(--astralis-color-accent-muted);
-    --astralis-color-accent-emphasized: var(--astralis-color-accent-emphasized);
     --astralis-color-accent-stroke: var(--astralis-color-accent-stroke);
     --astralis-color-accent-ring: var(--astralis-color-accent-ring);
     --astralis-spacing-1: var(--astralis-spacing-1);
@@ -6201,29 +6169,11 @@
   .astralis\:border-error-950 {
     border-color: var(--astralis-color-error-950);
   }
-  .astralis\:border-error-contrast {
-    border-color: var(--astralis-color-error-contrast);
-  }
-  .astralis\:border-error-emphasized {
-    border-color: var(--astralis-color-error-emphasized);
-  }
-  .astralis\:border-error-label {
-    border-color: var(--astralis-color-error-label);
-  }
-  .astralis\:border-error-muted {
-    border-color: var(--astralis-color-error-muted);
-  }
-  .astralis\:border-error-ring {
-    border-color: var(--astralis-color-error-ring);
-  }
   .astralis\:border-error-solid {
     border-color: var(--astralis-color-error-solid);
   }
   .astralis\:border-error-stroke {
     border-color: var(--astralis-color-error-stroke);
-  }
-  .astralis\:border-error-subtle {
-    border-color: var(--astralis-color-error-subtle);
   }
   .astralis\:border-gray-50 {
     border-color: var(--astralis-color-gray-50);
@@ -6330,29 +6280,8 @@
   .astralis\:border-info-950 {
     border-color: var(--astralis-color-info-950);
   }
-  .astralis\:border-info-contrast {
-    border-color: var(--astralis-color-info-contrast);
-  }
-  .astralis\:border-info-emphasized {
-    border-color: var(--astralis-color-info-emphasized);
-  }
-  .astralis\:border-info-label {
-    border-color: var(--astralis-color-info-label);
-  }
-  .astralis\:border-info-muted {
-    border-color: var(--astralis-color-info-muted);
-  }
-  .astralis\:border-info-ring {
-    border-color: var(--astralis-color-info-ring);
-  }
-  .astralis\:border-info-solid {
-    border-color: var(--astralis-color-info-solid);
-  }
   .astralis\:border-info-stroke {
     border-color: var(--astralis-color-info-stroke);
-  }
-  .astralis\:border-info-subtle {
-    border-color: var(--astralis-color-info-subtle);
   }
   .astralis\:border-inherit {
     border-color: inherit;
@@ -6498,23 +6427,11 @@
   .astralis\:border-red-950 {
     border-color: var(--astralis-color-red-950);
   }
-  .astralis\:border-red-solid {
-    border-color: var(--astralis-color-red-solid);
-  }
   .astralis\:border-red-stroke {
     border-color: var(--astralis-color-red-stroke);
   }
   .astralis\:border-stroke-base {
     border-color: var(--astralis-color-stroke-base);
-  }
-  .astralis\:border-stroke-emphasized {
-    border-color: var(--astralis-color-stroke-emphasized);
-  }
-  .astralis\:border-stroke-error {
-    border-color: var(--astralis-color-stroke-error);
-  }
-  .astralis\:border-stroke-info {
-    border-color: var(--astralis-color-stroke-info);
   }
   .astralis\:border-stroke-inverted {
     border-color: var(--astralis-color-stroke-inverted);
@@ -6524,12 +6441,6 @@
   }
   .astralis\:border-stroke-subtle {
     border-color: var(--astralis-color-stroke-subtle);
-  }
-  .astralis\:border-stroke-success {
-    border-color: var(--astralis-color-stroke-success);
-  }
-  .astralis\:border-stroke-warning {
-    border-color: var(--astralis-color-stroke-warning);
   }
   .astralis\:border-success-50 {
     border-color: var(--astralis-color-success-50);
@@ -6564,29 +6475,8 @@
   .astralis\:border-success-950 {
     border-color: var(--astralis-color-success-950);
   }
-  .astralis\:border-success-contrast {
-    border-color: var(--astralis-color-success-contrast);
-  }
-  .astralis\:border-success-emphasized {
-    border-color: var(--astralis-color-success-emphasized);
-  }
-  .astralis\:border-success-label {
-    border-color: var(--astralis-color-success-label);
-  }
-  .astralis\:border-success-muted {
-    border-color: var(--astralis-color-success-muted);
-  }
-  .astralis\:border-success-ring {
-    border-color: var(--astralis-color-success-ring);
-  }
-  .astralis\:border-success-solid {
-    border-color: var(--astralis-color-success-solid);
-  }
   .astralis\:border-success-stroke {
     border-color: var(--astralis-color-success-stroke);
-  }
-  .astralis\:border-success-subtle {
-    border-color: var(--astralis-color-success-subtle);
   }
   .astralis\:border-teal-50 {
     border-color: var(--astralis-color-teal-50);
@@ -6660,29 +6550,8 @@
   .astralis\:border-warning-950 {
     border-color: var(--astralis-color-warning-950);
   }
-  .astralis\:border-warning-contrast {
-    border-color: var(--astralis-color-warning-contrast);
-  }
-  .astralis\:border-warning-emphasized {
-    border-color: var(--astralis-color-warning-emphasized);
-  }
-  .astralis\:border-warning-label {
-    border-color: var(--astralis-color-warning-label);
-  }
-  .astralis\:border-warning-muted {
-    border-color: var(--astralis-color-warning-muted);
-  }
-  .astralis\:border-warning-ring {
-    border-color: var(--astralis-color-warning-ring);
-  }
-  .astralis\:border-warning-solid {
-    border-color: var(--astralis-color-warning-solid);
-  }
   .astralis\:border-warning-stroke {
     border-color: var(--astralis-color-warning-stroke);
-  }
-  .astralis\:border-warning-subtle {
-    border-color: var(--astralis-color-warning-subtle);
   }
   .astralis\:border-white {
     border-color: var(--astralis-color-white);
@@ -6774,9 +6643,6 @@
   .astralis\:bg-blue-950 {
     background-color: var(--astralis-color-blue-950);
   }
-  .astralis\:bg-blue-emphasized {
-    background-color: var(--astralis-color-blue-emphasized);
-  }
   .astralis\:bg-blue-muted {
     background-color: var(--astralis-color-blue-muted);
   }
@@ -6818,9 +6684,6 @@
   }
   .astralis\:bg-brand-950 {
     background-color: var(--astralis-color-brand-950);
-  }
-  .astralis\:bg-brand-emphasized {
-    background-color: var(--astralis-color-brand-emphasized);
   }
   .astralis\:bg-brand-muted {
     background-color: var(--astralis-color-brand-muted);
@@ -6867,9 +6730,6 @@
   .astralis\:bg-cyan-950 {
     background-color: var(--astralis-color-cyan-950);
   }
-  .astralis\:bg-cyan-emphasized {
-    background-color: var(--astralis-color-cyan-emphasized);
-  }
   .astralis\:bg-cyan-muted {
     background-color: var(--astralis-color-cyan-muted);
   }
@@ -6912,26 +6772,11 @@
   .astralis\:bg-error-950 {
     background-color: var(--astralis-color-error-950);
   }
-  .astralis\:bg-error-contrast {
-    background-color: var(--astralis-color-error-contrast);
-  }
-  .astralis\:bg-error-emphasized {
-    background-color: var(--astralis-color-error-emphasized);
-  }
-  .astralis\:bg-error-label {
-    background-color: var(--astralis-color-error-label);
-  }
   .astralis\:bg-error-muted {
     background-color: var(--astralis-color-error-muted);
   }
-  .astralis\:bg-error-ring {
-    background-color: var(--astralis-color-error-ring);
-  }
   .astralis\:bg-error-solid {
     background-color: var(--astralis-color-error-solid);
-  }
-  .astralis\:bg-error-stroke {
-    background-color: var(--astralis-color-error-stroke);
   }
   .astralis\:bg-error-subtle {
     background-color: var(--astralis-color-error-subtle);
@@ -6968,9 +6813,6 @@
   }
   .astralis\:bg-gray-950 {
     background-color: var(--astralis-color-gray-950);
-  }
-  .astralis\:bg-gray-emphasized {
-    background-color: var(--astralis-color-gray-emphasized);
   }
   .astralis\:bg-gray-muted {
     background-color: var(--astralis-color-gray-muted);
@@ -7014,9 +6856,6 @@
   .astralis\:bg-green-950 {
     background-color: var(--astralis-color-green-950);
   }
-  .astralis\:bg-green-emphasized {
-    background-color: var(--astralis-color-green-emphasized);
-  }
   .astralis\:bg-green-muted {
     background-color: var(--astralis-color-green-muted);
   }
@@ -7059,35 +6898,17 @@
   .astralis\:bg-info-950 {
     background-color: var(--astralis-color-info-950);
   }
-  .astralis\:bg-info-contrast {
-    background-color: var(--astralis-color-info-contrast);
-  }
-  .astralis\:bg-info-emphasized {
-    background-color: var(--astralis-color-info-emphasized);
-  }
-  .astralis\:bg-info-label {
-    background-color: var(--astralis-color-info-label);
-  }
   .astralis\:bg-info-muted {
     background-color: var(--astralis-color-info-muted);
   }
-  .astralis\:bg-info-ring {
-    background-color: var(--astralis-color-info-ring);
-  }
   .astralis\:bg-info-solid {
     background-color: var(--astralis-color-info-solid);
-  }
-  .astralis\:bg-info-stroke {
-    background-color: var(--astralis-color-info-stroke);
   }
   .astralis\:bg-info-subtle {
     background-color: var(--astralis-color-info-subtle);
   }
   .astralis\:bg-inherit {
     background-color: inherit;
-  }
-  .astralis\:bg-label-error {
-    background-color: var(--astralis-color-label-error);
   }
   .astralis\:bg-orange-50 {
     background-color: var(--astralis-color-orange-50);
@@ -7121,9 +6942,6 @@
   }
   .astralis\:bg-orange-950 {
     background-color: var(--astralis-color-orange-950);
-  }
-  .astralis\:bg-orange-emphasized {
-    background-color: var(--astralis-color-orange-emphasized);
   }
   .astralis\:bg-orange-muted {
     background-color: var(--astralis-color-orange-muted);
@@ -7167,9 +6985,6 @@
   .astralis\:bg-pink-950 {
     background-color: var(--astralis-color-pink-950);
   }
-  .astralis\:bg-pink-emphasized {
-    background-color: var(--astralis-color-pink-emphasized);
-  }
   .astralis\:bg-pink-muted {
     background-color: var(--astralis-color-pink-muted);
   }
@@ -7212,9 +7027,6 @@
   .astralis\:bg-purple-950 {
     background-color: var(--astralis-color-purple-950);
   }
-  .astralis\:bg-purple-emphasized {
-    background-color: var(--astralis-color-purple-emphasized);
-  }
   .astralis\:bg-purple-muted {
     background-color: var(--astralis-color-purple-muted);
   }
@@ -7256,9 +7068,6 @@
   }
   .astralis\:bg-red-950 {
     background-color: var(--astralis-color-red-950);
-  }
-  .astralis\:bg-red-emphasized {
-    background-color: var(--astralis-color-red-emphasized);
   }
   .astralis\:bg-red-muted {
     background-color: var(--astralis-color-red-muted);
@@ -7308,26 +7117,11 @@
   .astralis\:bg-success-950 {
     background-color: var(--astralis-color-success-950);
   }
-  .astralis\:bg-success-contrast {
-    background-color: var(--astralis-color-success-contrast);
-  }
-  .astralis\:bg-success-emphasized {
-    background-color: var(--astralis-color-success-emphasized);
-  }
-  .astralis\:bg-success-label {
-    background-color: var(--astralis-color-success-label);
-  }
   .astralis\:bg-success-muted {
     background-color: var(--astralis-color-success-muted);
   }
-  .astralis\:bg-success-ring {
-    background-color: var(--astralis-color-success-ring);
-  }
   .astralis\:bg-success-solid {
     background-color: var(--astralis-color-success-solid);
-  }
-  .astralis\:bg-success-stroke {
-    background-color: var(--astralis-color-success-stroke);
   }
   .astralis\:bg-success-subtle {
     background-color: var(--astralis-color-success-subtle);
@@ -7335,32 +7129,17 @@
   .astralis\:bg-surface-base {
     background-color: var(--astralis-color-surface-base);
   }
-  .astralis\:bg-surface-emphasized {
-    background-color: var(--astralis-color-surface-emphasized);
-  }
-  .astralis\:bg-surface-error {
-    background-color: var(--astralis-color-surface-error);
-  }
-  .astralis\:bg-surface-info {
-    background-color: var(--astralis-color-surface-info);
-  }
   .astralis\:bg-surface-inverted {
     background-color: var(--astralis-color-surface-inverted);
   }
   .astralis\:bg-surface-muted {
     background-color: var(--astralis-color-surface-muted);
   }
-  .astralis\:bg-surface-panel {
-    background-color: var(--astralis-color-surface-panel);
+  .astralis\:bg-surface-raised {
+    background-color: var(--astralis-color-surface-raised);
   }
   .astralis\:bg-surface-subtle {
     background-color: var(--astralis-color-surface-subtle);
-  }
-  .astralis\:bg-surface-success {
-    background-color: var(--astralis-color-surface-success);
-  }
-  .astralis\:bg-surface-warning {
-    background-color: var(--astralis-color-surface-warning);
   }
   .astralis\:bg-teal-50 {
     background-color: var(--astralis-color-teal-50);
@@ -7394,9 +7173,6 @@
   }
   .astralis\:bg-teal-950 {
     background-color: var(--astralis-color-teal-950);
-  }
-  .astralis\:bg-teal-emphasized {
-    background-color: var(--astralis-color-teal-emphasized);
   }
   .astralis\:bg-teal-muted {
     background-color: var(--astralis-color-teal-muted);
@@ -7443,26 +7219,11 @@
   .astralis\:bg-warning-950 {
     background-color: var(--astralis-color-warning-950);
   }
-  .astralis\:bg-warning-contrast {
-    background-color: var(--astralis-color-warning-contrast);
-  }
-  .astralis\:bg-warning-emphasized {
-    background-color: var(--astralis-color-warning-emphasized);
-  }
-  .astralis\:bg-warning-label {
-    background-color: var(--astralis-color-warning-label);
-  }
   .astralis\:bg-warning-muted {
     background-color: var(--astralis-color-warning-muted);
   }
-  .astralis\:bg-warning-ring {
-    background-color: var(--astralis-color-warning-ring);
-  }
   .astralis\:bg-warning-solid {
     background-color: var(--astralis-color-warning-solid);
-  }
-  .astralis\:bg-warning-stroke {
-    background-color: var(--astralis-color-warning-stroke);
   }
   .astralis\:bg-warning-subtle {
     background-color: var(--astralis-color-warning-subtle);
@@ -7509,9 +7270,6 @@
   .astralis\:bg-yellow-950 {
     background-color: var(--astralis-color-yellow-950);
   }
-  .astralis\:bg-yellow-emphasized {
-    background-color: var(--astralis-color-yellow-emphasized);
-  }
   .astralis\:bg-yellow-muted {
     background-color: var(--astralis-color-yellow-muted);
   }
@@ -7524,8 +7282,8 @@
   .astralis\:stroke-accent-solid {
     stroke: var(--astralis-color-accent-solid);
   }
-  .astralis\:stroke-surface-emphasized {
-    stroke: var(--astralis-color-surface-emphasized);
+  .astralis\:stroke-surface-muted {
+    stroke: var(--astralis-color-surface-muted);
   }
   .astralis\:object-contain {
     object-fit: contain;
@@ -8626,26 +8384,11 @@
   .astralis\:text-error-contrast {
     color: var(--astralis-color-error-contrast);
   }
-  .astralis\:text-error-emphasized {
-    color: var(--astralis-color-error-emphasized);
-  }
   .astralis\:text-error-label {
     color: var(--astralis-color-error-label);
   }
-  .astralis\:text-error-muted {
-    color: var(--astralis-color-error-muted);
-  }
-  .astralis\:text-error-ring {
-    color: var(--astralis-color-error-ring);
-  }
   .astralis\:text-error-solid {
     color: var(--astralis-color-error-solid);
-  }
-  .astralis\:text-error-stroke {
-    color: var(--astralis-color-error-stroke);
-  }
-  .astralis\:text-error-subtle {
-    color: var(--astralis-color-error-subtle);
   }
   .astralis\:text-gray-50 {
     color: var(--astralis-color-gray-50);
@@ -8767,38 +8510,17 @@
   .astralis\:text-info-contrast {
     color: var(--astralis-color-info-contrast);
   }
-  .astralis\:text-info-emphasized {
-    color: var(--astralis-color-info-emphasized);
-  }
   .astralis\:text-info-label {
     color: var(--astralis-color-info-label);
   }
-  .astralis\:text-info-muted {
-    color: var(--astralis-color-info-muted);
-  }
-  .astralis\:text-info-ring {
-    color: var(--astralis-color-info-ring);
-  }
   .astralis\:text-info-solid {
     color: var(--astralis-color-info-solid);
-  }
-  .astralis\:text-info-stroke {
-    color: var(--astralis-color-info-stroke);
-  }
-  .astralis\:text-info-subtle {
-    color: var(--astralis-color-info-subtle);
   }
   .astralis\:text-inherit {
     color: inherit;
   }
   .astralis\:text-label-base {
     color: var(--astralis-color-label-base);
-  }
-  .astralis\:text-label-error {
-    color: var(--astralis-color-label-error);
-  }
-  .astralis\:text-label-info {
-    color: var(--astralis-color-label-info);
   }
   .astralis\:text-label-inverted {
     color: var(--astralis-color-label-inverted);
@@ -8808,12 +8530,6 @@
   }
   .astralis\:text-label-subtle {
     color: var(--astralis-color-label-subtle);
-  }
-  .astralis\:text-label-success {
-    color: var(--astralis-color-label-success);
-  }
-  .astralis\:text-label-warning {
-    color: var(--astralis-color-label-warning);
   }
   .astralis\:text-orange-50 {
     color: var(--astralis-color-orange-50);
@@ -9019,26 +8735,11 @@
   .astralis\:text-success-contrast {
     color: var(--astralis-color-success-contrast);
   }
-  .astralis\:text-success-emphasized {
-    color: var(--astralis-color-success-emphasized);
-  }
   .astralis\:text-success-label {
     color: var(--astralis-color-success-label);
   }
-  .astralis\:text-success-muted {
-    color: var(--astralis-color-success-muted);
-  }
-  .astralis\:text-success-ring {
-    color: var(--astralis-color-success-ring);
-  }
   .astralis\:text-success-solid {
     color: var(--astralis-color-success-solid);
-  }
-  .astralis\:text-success-stroke {
-    color: var(--astralis-color-success-stroke);
-  }
-  .astralis\:text-success-subtle {
-    color: var(--astralis-color-success-subtle);
   }
   .astralis\:text-teal-50 {
     color: var(--astralis-color-teal-50);
@@ -9121,26 +8822,11 @@
   .astralis\:text-warning-contrast {
     color: var(--astralis-color-warning-contrast);
   }
-  .astralis\:text-warning-emphasized {
-    color: var(--astralis-color-warning-emphasized);
-  }
   .astralis\:text-warning-label {
     color: var(--astralis-color-warning-label);
   }
-  .astralis\:text-warning-muted {
-    color: var(--astralis-color-warning-muted);
-  }
-  .astralis\:text-warning-ring {
-    color: var(--astralis-color-warning-ring);
-  }
   .astralis\:text-warning-solid {
     color: var(--astralis-color-warning-solid);
-  }
-  .astralis\:text-warning-stroke {
-    color: var(--astralis-color-warning-stroke);
-  }
-  .astralis\:text-warning-subtle {
-    color: var(--astralis-color-warning-subtle);
   }
   .astralis\:text-white {
     color: var(--astralis-color-white);
@@ -9299,8 +8985,8 @@
   .astralis\:ring-accent-ring {
     --tw-ring-color: var(--astralis-color-accent-ring);
   }
-  .astralis\:ring-red-muted {
-    --tw-ring-color: var(--astralis-color-red-muted);
+  .astralis\:ring-error-muted {
+    --tw-ring-color: var(--astralis-color-error-muted);
   }
   .astralis\:ring-surface-base {
     --tw-ring-color: var(--astralis-color-surface-base);
@@ -10939,10 +10625,10 @@
       }
     }
   }
-  .astralis\:hover\:border-red-solid {
+  .astralis\:hover\:border-error-solid {
     &:hover {
       @media (hover: hover) {
-        border-color: var(--astralis-color-red-solid);
+        border-color: var(--astralis-color-error-solid);
       }
     }
   }
@@ -10953,10 +10639,10 @@
       }
     }
   }
-  .astralis\:hover\:border-stroke-emphasized {
+  .astralis\:hover\:border-stroke-muted {
     &:hover {
       @media (hover: hover) {
-        border-color: var(--astralis-color-stroke-emphasized);
+        border-color: var(--astralis-color-stroke-muted);
       }
     }
   }
@@ -10971,13 +10657,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--astralis-color-accent-subtle);
-      }
-    }
-  }
-  .astralis\:hover\:bg-surface-emphasized {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--astralis-color-surface-emphasized);
       }
     }
   }
@@ -11012,10 +10691,10 @@
       }
     }
   }
-  .astralis\:hover\:text-accent-emphasized {
+  .astralis\:hover\:text-accent-solid {
     &:hover {
       @media (hover: hover) {
-        color: var(--astralis-color-accent-emphasized);
+        color: var(--astralis-color-accent-solid);
       }
     }
   }
@@ -11077,9 +10756,27 @@
       }
     }
   }
-  .astralis\:focus\:bg-surface-error {
+  .astralis\:odd\:hover\:bg-surface-subtle {
+    &:nth-child(odd) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--astralis-color-surface-subtle);
+        }
+      }
+    }
+  }
+  .astralis\:even\:hover\:bg-surface-muted {
+    &:nth-child(even) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--astralis-color-surface-muted);
+        }
+      }
+    }
+  }
+  .astralis\:focus\:bg-error-subtle {
     &:focus {
-      background-color: var(--astralis-color-surface-error);
+      background-color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:focus\:bg-surface-subtle {
@@ -11109,9 +10806,9 @@
       border-color: var(--astralis-color-accent-stroke);
     }
   }
-  .astralis\:focus-visible\:border-red-solid {
+  .astralis\:focus-visible\:border-error-solid {
     &:focus-visible {
-      border-color: var(--astralis-color-red-solid);
+      border-color: var(--astralis-color-error-solid);
     }
   }
   .astralis\:focus-visible\:bg-surface-base {
@@ -11130,9 +10827,9 @@
       --tw-ring-color: var(--astralis-color-accent-ring);
     }
   }
-  .astralis\:focus-visible\:ring-red-muted {
+  .astralis\:focus-visible\:ring-error-muted {
     &:focus-visible {
-      --tw-ring-color: var(--astralis-color-red-muted);
+      --tw-ring-color: var(--astralis-color-error-muted);
     }
   }
   .astralis\:focus-visible\:ring-offset-1 {
@@ -20018,44 +19715,9 @@
       border-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:sm\:border-error-contrast {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:sm\:border-error-emphasized {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:sm\:border-error-label {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-label);
-    }
-  }
-  .astralis\:sm\:border-error-muted {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:sm\:border-error-ring {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-ring);
-    }
-  }
-  .astralis\:sm\:border-error-solid {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-solid);
-    }
-  }
   .astralis\:sm\:border-error-stroke {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:sm\:border-error-subtle {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:sm\:border-gray-50 {
@@ -20233,44 +19895,9 @@
       border-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:sm\:border-info-contrast {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:sm\:border-info-emphasized {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:sm\:border-info-label {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-label);
-    }
-  }
-  .astralis\:sm\:border-info-muted {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:sm\:border-info-ring {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-ring);
-    }
-  }
-  .astralis\:sm\:border-info-solid {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-solid);
-    }
-  }
   .astralis\:sm\:border-info-stroke {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:sm\:border-info-subtle {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:sm\:border-inherit {
@@ -20523,21 +20150,6 @@
       border-color: var(--astralis-color-stroke-base);
     }
   }
-  .astralis\:sm\:border-stroke-emphasized {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-stroke-emphasized);
-    }
-  }
-  .astralis\:sm\:border-stroke-error {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-stroke-error);
-    }
-  }
-  .astralis\:sm\:border-stroke-info {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-stroke-info);
-    }
-  }
   .astralis\:sm\:border-stroke-inverted {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-stroke-inverted);
@@ -20551,16 +20163,6 @@
   .astralis\:sm\:border-stroke-subtle {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-stroke-subtle);
-    }
-  }
-  .astralis\:sm\:border-stroke-success {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-stroke-success);
-    }
-  }
-  .astralis\:sm\:border-stroke-warning {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-stroke-warning);
     }
   }
   .astralis\:sm\:border-success-50 {
@@ -20618,44 +20220,9 @@
       border-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:sm\:border-success-contrast {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:sm\:border-success-emphasized {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:sm\:border-success-label {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-label);
-    }
-  }
-  .astralis\:sm\:border-success-muted {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:sm\:border-success-ring {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-ring);
-    }
-  }
-  .astralis\:sm\:border-success-solid {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-solid);
-    }
-  }
   .astralis\:sm\:border-success-stroke {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:sm\:border-success-subtle {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:sm\:border-teal-50 {
@@ -20778,44 +20345,9 @@
       border-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:sm\:border-warning-contrast {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:sm\:border-warning-emphasized {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:sm\:border-warning-label {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-label);
-    }
-  }
-  .astralis\:sm\:border-warning-muted {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:sm\:border-warning-ring {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-ring);
-    }
-  }
-  .astralis\:sm\:border-warning-solid {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-solid);
-    }
-  }
   .astralis\:sm\:border-warning-stroke {
     @media (width >= 40rem) {
       border-color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:sm\:border-warning-subtle {
-    @media (width >= 40rem) {
-      border-color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:sm\:border-white {
@@ -20943,11 +20475,6 @@
       background-color: var(--astralis-color-blue-950);
     }
   }
-  .astralis\:sm\:bg-blue-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-blue-emphasized);
-    }
-  }
   .astralis\:sm\:bg-blue-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-blue-muted);
@@ -21016,11 +20543,6 @@
   .astralis\:sm\:bg-brand-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-brand-950);
-    }
-  }
-  .astralis\:sm\:bg-brand-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-brand-emphasized);
     }
   }
   .astralis\:sm\:bg-brand-muted {
@@ -21098,11 +20620,6 @@
       background-color: var(--astralis-color-cyan-950);
     }
   }
-  .astralis\:sm\:bg-cyan-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-cyan-emphasized);
-    }
-  }
   .astralis\:sm\:bg-cyan-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-cyan-muted);
@@ -21173,39 +20690,14 @@
       background-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:sm\:bg-error-contrast {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:sm\:bg-error-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:sm\:bg-error-label {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-error-label);
-    }
-  }
   .astralis\:sm\:bg-error-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-error-muted);
     }
   }
-  .astralis\:sm\:bg-error-ring {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:sm\:bg-error-solid {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:sm\:bg-error-stroke {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-error-stroke);
     }
   }
   .astralis\:sm\:bg-error-subtle {
@@ -21266,11 +20758,6 @@
   .astralis\:sm\:bg-gray-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-gray-950);
-    }
-  }
-  .astralis\:sm\:bg-gray-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-gray-emphasized);
     }
   }
   .astralis\:sm\:bg-gray-muted {
@@ -21343,11 +20830,6 @@
       background-color: var(--astralis-color-green-950);
     }
   }
-  .astralis\:sm\:bg-green-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-green-emphasized);
-    }
-  }
   .astralis\:sm\:bg-green-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-green-muted);
@@ -21418,39 +20900,14 @@
       background-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:sm\:bg-info-contrast {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:sm\:bg-info-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:sm\:bg-info-label {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-info-label);
-    }
-  }
   .astralis\:sm\:bg-info-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-info-muted);
     }
   }
-  .astralis\:sm\:bg-info-ring {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:sm\:bg-info-solid {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:sm\:bg-info-stroke {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-info-stroke);
     }
   }
   .astralis\:sm\:bg-info-subtle {
@@ -21516,11 +20973,6 @@
   .astralis\:sm\:bg-orange-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-orange-950);
-    }
-  }
-  .astralis\:sm\:bg-orange-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-orange-emphasized);
     }
   }
   .astralis\:sm\:bg-orange-muted {
@@ -21593,11 +21045,6 @@
       background-color: var(--astralis-color-pink-950);
     }
   }
-  .astralis\:sm\:bg-pink-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-pink-emphasized);
-    }
-  }
   .astralis\:sm\:bg-pink-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-pink-muted);
@@ -21666,11 +21113,6 @@
   .astralis\:sm\:bg-purple-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-purple-950);
-    }
-  }
-  .astralis\:sm\:bg-purple-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-purple-emphasized);
     }
   }
   .astralis\:sm\:bg-purple-muted {
@@ -21743,11 +21185,6 @@
       background-color: var(--astralis-color-red-950);
     }
   }
-  .astralis\:sm\:bg-red-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-red-emphasized);
-    }
-  }
   .astralis\:sm\:bg-red-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-red-muted);
@@ -21818,39 +21255,14 @@
       background-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:sm\:bg-success-contrast {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:sm\:bg-success-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:sm\:bg-success-label {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-success-label);
-    }
-  }
   .astralis\:sm\:bg-success-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-success-muted);
     }
   }
-  .astralis\:sm\:bg-success-ring {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:sm\:bg-success-solid {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:sm\:bg-success-stroke {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-success-stroke);
     }
   }
   .astralis\:sm\:bg-success-subtle {
@@ -21863,21 +21275,6 @@
       background-color: var(--astralis-color-surface-base);
     }
   }
-  .astralis\:sm\:bg-surface-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-emphasized);
-    }
-  }
-  .astralis\:sm\:bg-surface-error {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-error);
-    }
-  }
-  .astralis\:sm\:bg-surface-info {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-info);
-    }
-  }
   .astralis\:sm\:bg-surface-inverted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-surface-inverted);
@@ -21888,24 +21285,14 @@
       background-color: var(--astralis-color-surface-muted);
     }
   }
-  .astralis\:sm\:bg-surface-panel {
+  .astralis\:sm\:bg-surface-raised {
     @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-panel);
+      background-color: var(--astralis-color-surface-raised);
     }
   }
   .astralis\:sm\:bg-surface-subtle {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-surface-subtle);
-    }
-  }
-  .astralis\:sm\:bg-surface-success {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-success);
-    }
-  }
-  .astralis\:sm\:bg-surface-warning {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-surface-warning);
     }
   }
   .astralis\:sm\:bg-teal-50 {
@@ -21961,11 +21348,6 @@
   .astralis\:sm\:bg-teal-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-teal-950);
-    }
-  }
-  .astralis\:sm\:bg-teal-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-teal-emphasized);
     }
   }
   .astralis\:sm\:bg-teal-muted {
@@ -22043,39 +21425,14 @@
       background-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:sm\:bg-warning-contrast {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:sm\:bg-warning-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:sm\:bg-warning-label {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-warning-label);
-    }
-  }
   .astralis\:sm\:bg-warning-muted {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-warning-muted);
     }
   }
-  .astralis\:sm\:bg-warning-ring {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:sm\:bg-warning-solid {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:sm\:bg-warning-stroke {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-warning-stroke);
     }
   }
   .astralis\:sm\:bg-warning-subtle {
@@ -22141,11 +21498,6 @@
   .astralis\:sm\:bg-yellow-950 {
     @media (width >= 40rem) {
       background-color: var(--astralis-color-yellow-950);
-    }
-  }
-  .astralis\:sm\:bg-yellow-emphasized {
-    @media (width >= 40rem) {
-      background-color: var(--astralis-color-yellow-emphasized);
     }
   }
   .astralis\:sm\:bg-yellow-muted {
@@ -23901,39 +23253,14 @@
       color: var(--astralis-color-error-contrast);
     }
   }
-  .astralis\:sm\:text-error-emphasized {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-error-emphasized);
-    }
-  }
   .astralis\:sm\:text-error-label {
     @media (width >= 40rem) {
       color: var(--astralis-color-error-label);
     }
   }
-  .astralis\:sm\:text-error-muted {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:sm\:text-error-ring {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:sm\:text-error-solid {
     @media (width >= 40rem) {
       color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:sm\:text-error-stroke {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:sm\:text-error-subtle {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:sm\:text-gray-50 {
@@ -24136,39 +23463,14 @@
       color: var(--astralis-color-info-contrast);
     }
   }
-  .astralis\:sm\:text-info-emphasized {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-info-emphasized);
-    }
-  }
   .astralis\:sm\:text-info-label {
     @media (width >= 40rem) {
       color: var(--astralis-color-info-label);
     }
   }
-  .astralis\:sm\:text-info-muted {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:sm\:text-info-ring {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:sm\:text-info-solid {
     @media (width >= 40rem) {
       color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:sm\:text-info-stroke {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:sm\:text-info-subtle {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:sm\:text-inherit {
@@ -24179,16 +23481,6 @@
   .astralis\:sm\:text-label-base {
     @media (width >= 40rem) {
       color: var(--astralis-color-label-base);
-    }
-  }
-  .astralis\:sm\:text-label-error {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-label-error);
-    }
-  }
-  .astralis\:sm\:text-label-info {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-label-info);
     }
   }
   .astralis\:sm\:text-label-inverted {
@@ -24204,16 +23496,6 @@
   .astralis\:sm\:text-label-subtle {
     @media (width >= 40rem) {
       color: var(--astralis-color-label-subtle);
-    }
-  }
-  .astralis\:sm\:text-label-success {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-label-success);
-    }
-  }
-  .astralis\:sm\:text-label-warning {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-label-warning);
     }
   }
   .astralis\:sm\:text-orange-50 {
@@ -24556,39 +23838,14 @@
       color: var(--astralis-color-success-contrast);
     }
   }
-  .astralis\:sm\:text-success-emphasized {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-success-emphasized);
-    }
-  }
   .astralis\:sm\:text-success-label {
     @media (width >= 40rem) {
       color: var(--astralis-color-success-label);
     }
   }
-  .astralis\:sm\:text-success-muted {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:sm\:text-success-ring {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:sm\:text-success-solid {
     @media (width >= 40rem) {
       color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:sm\:text-success-stroke {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:sm\:text-success-subtle {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:sm\:text-teal-50 {
@@ -24726,39 +23983,14 @@
       color: var(--astralis-color-warning-contrast);
     }
   }
-  .astralis\:sm\:text-warning-emphasized {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-warning-emphasized);
-    }
-  }
   .astralis\:sm\:text-warning-label {
     @media (width >= 40rem) {
       color: var(--astralis-color-warning-label);
     }
   }
-  .astralis\:sm\:text-warning-muted {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:sm\:text-warning-ring {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:sm\:text-warning-solid {
     @media (width >= 40rem) {
       color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:sm\:text-warning-stroke {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:sm\:text-warning-subtle {
-    @media (width >= 40rem) {
-      color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:sm\:text-white {
@@ -36257,44 +35489,9 @@
       border-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:md\:border-error-contrast {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:md\:border-error-emphasized {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:md\:border-error-label {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-label);
-    }
-  }
-  .astralis\:md\:border-error-muted {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:md\:border-error-ring {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-ring);
-    }
-  }
-  .astralis\:md\:border-error-solid {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-solid);
-    }
-  }
   .astralis\:md\:border-error-stroke {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:md\:border-error-subtle {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:md\:border-gray-50 {
@@ -36472,44 +35669,9 @@
       border-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:md\:border-info-contrast {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:md\:border-info-emphasized {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:md\:border-info-label {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-label);
-    }
-  }
-  .astralis\:md\:border-info-muted {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:md\:border-info-ring {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-ring);
-    }
-  }
-  .astralis\:md\:border-info-solid {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-solid);
-    }
-  }
   .astralis\:md\:border-info-stroke {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:md\:border-info-subtle {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:md\:border-inherit {
@@ -36762,21 +35924,6 @@
       border-color: var(--astralis-color-stroke-base);
     }
   }
-  .astralis\:md\:border-stroke-emphasized {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-stroke-emphasized);
-    }
-  }
-  .astralis\:md\:border-stroke-error {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-stroke-error);
-    }
-  }
-  .astralis\:md\:border-stroke-info {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-stroke-info);
-    }
-  }
   .astralis\:md\:border-stroke-inverted {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-stroke-inverted);
@@ -36790,16 +35937,6 @@
   .astralis\:md\:border-stroke-subtle {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-stroke-subtle);
-    }
-  }
-  .astralis\:md\:border-stroke-success {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-stroke-success);
-    }
-  }
-  .astralis\:md\:border-stroke-warning {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-stroke-warning);
     }
   }
   .astralis\:md\:border-success-50 {
@@ -36857,44 +35994,9 @@
       border-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:md\:border-success-contrast {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:md\:border-success-emphasized {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:md\:border-success-label {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-label);
-    }
-  }
-  .astralis\:md\:border-success-muted {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:md\:border-success-ring {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-ring);
-    }
-  }
-  .astralis\:md\:border-success-solid {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-solid);
-    }
-  }
   .astralis\:md\:border-success-stroke {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:md\:border-success-subtle {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:md\:border-teal-50 {
@@ -37017,44 +36119,9 @@
       border-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:md\:border-warning-contrast {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:md\:border-warning-emphasized {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:md\:border-warning-label {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-label);
-    }
-  }
-  .astralis\:md\:border-warning-muted {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:md\:border-warning-ring {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-ring);
-    }
-  }
-  .astralis\:md\:border-warning-solid {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-solid);
-    }
-  }
   .astralis\:md\:border-warning-stroke {
     @media (width >= 48rem) {
       border-color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:md\:border-warning-subtle {
-    @media (width >= 48rem) {
-      border-color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:md\:border-white {
@@ -37182,11 +36249,6 @@
       background-color: var(--astralis-color-blue-950);
     }
   }
-  .astralis\:md\:bg-blue-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-blue-emphasized);
-    }
-  }
   .astralis\:md\:bg-blue-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-blue-muted);
@@ -37255,11 +36317,6 @@
   .astralis\:md\:bg-brand-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-brand-950);
-    }
-  }
-  .astralis\:md\:bg-brand-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-brand-emphasized);
     }
   }
   .astralis\:md\:bg-brand-muted {
@@ -37337,11 +36394,6 @@
       background-color: var(--astralis-color-cyan-950);
     }
   }
-  .astralis\:md\:bg-cyan-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-cyan-emphasized);
-    }
-  }
   .astralis\:md\:bg-cyan-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-cyan-muted);
@@ -37412,39 +36464,14 @@
       background-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:md\:bg-error-contrast {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:md\:bg-error-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:md\:bg-error-label {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-error-label);
-    }
-  }
   .astralis\:md\:bg-error-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-error-muted);
     }
   }
-  .astralis\:md\:bg-error-ring {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:md\:bg-error-solid {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:md\:bg-error-stroke {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-error-stroke);
     }
   }
   .astralis\:md\:bg-error-subtle {
@@ -37505,11 +36532,6 @@
   .astralis\:md\:bg-gray-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-gray-950);
-    }
-  }
-  .astralis\:md\:bg-gray-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-gray-emphasized);
     }
   }
   .astralis\:md\:bg-gray-muted {
@@ -37582,11 +36604,6 @@
       background-color: var(--astralis-color-green-950);
     }
   }
-  .astralis\:md\:bg-green-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-green-emphasized);
-    }
-  }
   .astralis\:md\:bg-green-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-green-muted);
@@ -37657,39 +36674,14 @@
       background-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:md\:bg-info-contrast {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:md\:bg-info-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:md\:bg-info-label {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-info-label);
-    }
-  }
   .astralis\:md\:bg-info-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-info-muted);
     }
   }
-  .astralis\:md\:bg-info-ring {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:md\:bg-info-solid {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:md\:bg-info-stroke {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-info-stroke);
     }
   }
   .astralis\:md\:bg-info-subtle {
@@ -37755,11 +36747,6 @@
   .astralis\:md\:bg-orange-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-orange-950);
-    }
-  }
-  .astralis\:md\:bg-orange-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-orange-emphasized);
     }
   }
   .astralis\:md\:bg-orange-muted {
@@ -37832,11 +36819,6 @@
       background-color: var(--astralis-color-pink-950);
     }
   }
-  .astralis\:md\:bg-pink-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-pink-emphasized);
-    }
-  }
   .astralis\:md\:bg-pink-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-pink-muted);
@@ -37905,11 +36887,6 @@
   .astralis\:md\:bg-purple-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-purple-950);
-    }
-  }
-  .astralis\:md\:bg-purple-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-purple-emphasized);
     }
   }
   .astralis\:md\:bg-purple-muted {
@@ -37982,11 +36959,6 @@
       background-color: var(--astralis-color-red-950);
     }
   }
-  .astralis\:md\:bg-red-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-red-emphasized);
-    }
-  }
   .astralis\:md\:bg-red-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-red-muted);
@@ -38057,39 +37029,14 @@
       background-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:md\:bg-success-contrast {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:md\:bg-success-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:md\:bg-success-label {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-success-label);
-    }
-  }
   .astralis\:md\:bg-success-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-success-muted);
     }
   }
-  .astralis\:md\:bg-success-ring {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:md\:bg-success-solid {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:md\:bg-success-stroke {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-success-stroke);
     }
   }
   .astralis\:md\:bg-success-subtle {
@@ -38102,21 +37049,6 @@
       background-color: var(--astralis-color-surface-base);
     }
   }
-  .astralis\:md\:bg-surface-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-emphasized);
-    }
-  }
-  .astralis\:md\:bg-surface-error {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-error);
-    }
-  }
-  .astralis\:md\:bg-surface-info {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-info);
-    }
-  }
   .astralis\:md\:bg-surface-inverted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-surface-inverted);
@@ -38127,24 +37059,14 @@
       background-color: var(--astralis-color-surface-muted);
     }
   }
-  .astralis\:md\:bg-surface-panel {
+  .astralis\:md\:bg-surface-raised {
     @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-panel);
+      background-color: var(--astralis-color-surface-raised);
     }
   }
   .astralis\:md\:bg-surface-subtle {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-surface-subtle);
-    }
-  }
-  .astralis\:md\:bg-surface-success {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-success);
-    }
-  }
-  .astralis\:md\:bg-surface-warning {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-surface-warning);
     }
   }
   .astralis\:md\:bg-teal-50 {
@@ -38200,11 +37122,6 @@
   .astralis\:md\:bg-teal-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-teal-950);
-    }
-  }
-  .astralis\:md\:bg-teal-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-teal-emphasized);
     }
   }
   .astralis\:md\:bg-teal-muted {
@@ -38282,39 +37199,14 @@
       background-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:md\:bg-warning-contrast {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:md\:bg-warning-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:md\:bg-warning-label {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-warning-label);
-    }
-  }
   .astralis\:md\:bg-warning-muted {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-warning-muted);
     }
   }
-  .astralis\:md\:bg-warning-ring {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:md\:bg-warning-solid {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:md\:bg-warning-stroke {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-warning-stroke);
     }
   }
   .astralis\:md\:bg-warning-subtle {
@@ -38380,11 +37272,6 @@
   .astralis\:md\:bg-yellow-950 {
     @media (width >= 48rem) {
       background-color: var(--astralis-color-yellow-950);
-    }
-  }
-  .astralis\:md\:bg-yellow-emphasized {
-    @media (width >= 48rem) {
-      background-color: var(--astralis-color-yellow-emphasized);
     }
   }
   .astralis\:md\:bg-yellow-muted {
@@ -40140,39 +39027,14 @@
       color: var(--astralis-color-error-contrast);
     }
   }
-  .astralis\:md\:text-error-emphasized {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-error-emphasized);
-    }
-  }
   .astralis\:md\:text-error-label {
     @media (width >= 48rem) {
       color: var(--astralis-color-error-label);
     }
   }
-  .astralis\:md\:text-error-muted {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:md\:text-error-ring {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:md\:text-error-solid {
     @media (width >= 48rem) {
       color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:md\:text-error-stroke {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:md\:text-error-subtle {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:md\:text-gray-50 {
@@ -40375,39 +39237,14 @@
       color: var(--astralis-color-info-contrast);
     }
   }
-  .astralis\:md\:text-info-emphasized {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-info-emphasized);
-    }
-  }
   .astralis\:md\:text-info-label {
     @media (width >= 48rem) {
       color: var(--astralis-color-info-label);
     }
   }
-  .astralis\:md\:text-info-muted {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:md\:text-info-ring {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:md\:text-info-solid {
     @media (width >= 48rem) {
       color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:md\:text-info-stroke {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:md\:text-info-subtle {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:md\:text-inherit {
@@ -40418,16 +39255,6 @@
   .astralis\:md\:text-label-base {
     @media (width >= 48rem) {
       color: var(--astralis-color-label-base);
-    }
-  }
-  .astralis\:md\:text-label-error {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-label-error);
-    }
-  }
-  .astralis\:md\:text-label-info {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-label-info);
     }
   }
   .astralis\:md\:text-label-inverted {
@@ -40443,16 +39270,6 @@
   .astralis\:md\:text-label-subtle {
     @media (width >= 48rem) {
       color: var(--astralis-color-label-subtle);
-    }
-  }
-  .astralis\:md\:text-label-success {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-label-success);
-    }
-  }
-  .astralis\:md\:text-label-warning {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-label-warning);
     }
   }
   .astralis\:md\:text-orange-50 {
@@ -40795,39 +39612,14 @@
       color: var(--astralis-color-success-contrast);
     }
   }
-  .astralis\:md\:text-success-emphasized {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-success-emphasized);
-    }
-  }
   .astralis\:md\:text-success-label {
     @media (width >= 48rem) {
       color: var(--astralis-color-success-label);
     }
   }
-  .astralis\:md\:text-success-muted {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:md\:text-success-ring {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:md\:text-success-solid {
     @media (width >= 48rem) {
       color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:md\:text-success-stroke {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:md\:text-success-subtle {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:md\:text-teal-50 {
@@ -40965,39 +39757,14 @@
       color: var(--astralis-color-warning-contrast);
     }
   }
-  .astralis\:md\:text-warning-emphasized {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-warning-emphasized);
-    }
-  }
   .astralis\:md\:text-warning-label {
     @media (width >= 48rem) {
       color: var(--astralis-color-warning-label);
     }
   }
-  .astralis\:md\:text-warning-muted {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:md\:text-warning-ring {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:md\:text-warning-solid {
     @media (width >= 48rem) {
       color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:md\:text-warning-stroke {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:md\:text-warning-subtle {
-    @media (width >= 48rem) {
-      color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:md\:text-white {
@@ -52496,44 +51263,9 @@
       border-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:lg\:border-error-contrast {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:lg\:border-error-emphasized {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:lg\:border-error-label {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-label);
-    }
-  }
-  .astralis\:lg\:border-error-muted {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:lg\:border-error-ring {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-ring);
-    }
-  }
-  .astralis\:lg\:border-error-solid {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-solid);
-    }
-  }
   .astralis\:lg\:border-error-stroke {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:lg\:border-error-subtle {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:lg\:border-gray-50 {
@@ -52711,44 +51443,9 @@
       border-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:lg\:border-info-contrast {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:lg\:border-info-emphasized {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:lg\:border-info-label {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-label);
-    }
-  }
-  .astralis\:lg\:border-info-muted {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:lg\:border-info-ring {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-ring);
-    }
-  }
-  .astralis\:lg\:border-info-solid {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-solid);
-    }
-  }
   .astralis\:lg\:border-info-stroke {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:lg\:border-info-subtle {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:lg\:border-inherit {
@@ -53001,21 +51698,6 @@
       border-color: var(--astralis-color-stroke-base);
     }
   }
-  .astralis\:lg\:border-stroke-emphasized {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-stroke-emphasized);
-    }
-  }
-  .astralis\:lg\:border-stroke-error {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-stroke-error);
-    }
-  }
-  .astralis\:lg\:border-stroke-info {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-stroke-info);
-    }
-  }
   .astralis\:lg\:border-stroke-inverted {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-stroke-inverted);
@@ -53029,16 +51711,6 @@
   .astralis\:lg\:border-stroke-subtle {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-stroke-subtle);
-    }
-  }
-  .astralis\:lg\:border-stroke-success {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-stroke-success);
-    }
-  }
-  .astralis\:lg\:border-stroke-warning {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-stroke-warning);
     }
   }
   .astralis\:lg\:border-success-50 {
@@ -53096,44 +51768,9 @@
       border-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:lg\:border-success-contrast {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:lg\:border-success-emphasized {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:lg\:border-success-label {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-label);
-    }
-  }
-  .astralis\:lg\:border-success-muted {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:lg\:border-success-ring {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-ring);
-    }
-  }
-  .astralis\:lg\:border-success-solid {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-solid);
-    }
-  }
   .astralis\:lg\:border-success-stroke {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:lg\:border-success-subtle {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:lg\:border-teal-50 {
@@ -53256,44 +51893,9 @@
       border-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:lg\:border-warning-contrast {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:lg\:border-warning-emphasized {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:lg\:border-warning-label {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-label);
-    }
-  }
-  .astralis\:lg\:border-warning-muted {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:lg\:border-warning-ring {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-ring);
-    }
-  }
-  .astralis\:lg\:border-warning-solid {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-solid);
-    }
-  }
   .astralis\:lg\:border-warning-stroke {
     @media (width >= 64rem) {
       border-color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:lg\:border-warning-subtle {
-    @media (width >= 64rem) {
-      border-color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:lg\:border-white {
@@ -53421,11 +52023,6 @@
       background-color: var(--astralis-color-blue-950);
     }
   }
-  .astralis\:lg\:bg-blue-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-blue-emphasized);
-    }
-  }
   .astralis\:lg\:bg-blue-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-blue-muted);
@@ -53494,11 +52091,6 @@
   .astralis\:lg\:bg-brand-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-brand-950);
-    }
-  }
-  .astralis\:lg\:bg-brand-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-brand-emphasized);
     }
   }
   .astralis\:lg\:bg-brand-muted {
@@ -53576,11 +52168,6 @@
       background-color: var(--astralis-color-cyan-950);
     }
   }
-  .astralis\:lg\:bg-cyan-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-cyan-emphasized);
-    }
-  }
   .astralis\:lg\:bg-cyan-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-cyan-muted);
@@ -53651,39 +52238,14 @@
       background-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:lg\:bg-error-contrast {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:lg\:bg-error-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:lg\:bg-error-label {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-error-label);
-    }
-  }
   .astralis\:lg\:bg-error-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-error-muted);
     }
   }
-  .astralis\:lg\:bg-error-ring {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:lg\:bg-error-solid {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:lg\:bg-error-stroke {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-error-stroke);
     }
   }
   .astralis\:lg\:bg-error-subtle {
@@ -53744,11 +52306,6 @@
   .astralis\:lg\:bg-gray-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-gray-950);
-    }
-  }
-  .astralis\:lg\:bg-gray-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-gray-emphasized);
     }
   }
   .astralis\:lg\:bg-gray-muted {
@@ -53821,11 +52378,6 @@
       background-color: var(--astralis-color-green-950);
     }
   }
-  .astralis\:lg\:bg-green-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-green-emphasized);
-    }
-  }
   .astralis\:lg\:bg-green-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-green-muted);
@@ -53896,39 +52448,14 @@
       background-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:lg\:bg-info-contrast {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:lg\:bg-info-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:lg\:bg-info-label {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-info-label);
-    }
-  }
   .astralis\:lg\:bg-info-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-info-muted);
     }
   }
-  .astralis\:lg\:bg-info-ring {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:lg\:bg-info-solid {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:lg\:bg-info-stroke {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-info-stroke);
     }
   }
   .astralis\:lg\:bg-info-subtle {
@@ -53994,11 +52521,6 @@
   .astralis\:lg\:bg-orange-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-orange-950);
-    }
-  }
-  .astralis\:lg\:bg-orange-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-orange-emphasized);
     }
   }
   .astralis\:lg\:bg-orange-muted {
@@ -54071,11 +52593,6 @@
       background-color: var(--astralis-color-pink-950);
     }
   }
-  .astralis\:lg\:bg-pink-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-pink-emphasized);
-    }
-  }
   .astralis\:lg\:bg-pink-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-pink-muted);
@@ -54144,11 +52661,6 @@
   .astralis\:lg\:bg-purple-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-purple-950);
-    }
-  }
-  .astralis\:lg\:bg-purple-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-purple-emphasized);
     }
   }
   .astralis\:lg\:bg-purple-muted {
@@ -54221,11 +52733,6 @@
       background-color: var(--astralis-color-red-950);
     }
   }
-  .astralis\:lg\:bg-red-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-red-emphasized);
-    }
-  }
   .astralis\:lg\:bg-red-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-red-muted);
@@ -54296,39 +52803,14 @@
       background-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:lg\:bg-success-contrast {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:lg\:bg-success-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:lg\:bg-success-label {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-success-label);
-    }
-  }
   .astralis\:lg\:bg-success-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-success-muted);
     }
   }
-  .astralis\:lg\:bg-success-ring {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:lg\:bg-success-solid {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:lg\:bg-success-stroke {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-success-stroke);
     }
   }
   .astralis\:lg\:bg-success-subtle {
@@ -54341,21 +52823,6 @@
       background-color: var(--astralis-color-surface-base);
     }
   }
-  .astralis\:lg\:bg-surface-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-emphasized);
-    }
-  }
-  .astralis\:lg\:bg-surface-error {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-error);
-    }
-  }
-  .astralis\:lg\:bg-surface-info {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-info);
-    }
-  }
   .astralis\:lg\:bg-surface-inverted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-surface-inverted);
@@ -54366,24 +52833,14 @@
       background-color: var(--astralis-color-surface-muted);
     }
   }
-  .astralis\:lg\:bg-surface-panel {
+  .astralis\:lg\:bg-surface-raised {
     @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-panel);
+      background-color: var(--astralis-color-surface-raised);
     }
   }
   .astralis\:lg\:bg-surface-subtle {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-surface-subtle);
-    }
-  }
-  .astralis\:lg\:bg-surface-success {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-success);
-    }
-  }
-  .astralis\:lg\:bg-surface-warning {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-surface-warning);
     }
   }
   .astralis\:lg\:bg-teal-50 {
@@ -54439,11 +52896,6 @@
   .astralis\:lg\:bg-teal-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-teal-950);
-    }
-  }
-  .astralis\:lg\:bg-teal-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-teal-emphasized);
     }
   }
   .astralis\:lg\:bg-teal-muted {
@@ -54521,39 +52973,14 @@
       background-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:lg\:bg-warning-contrast {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:lg\:bg-warning-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:lg\:bg-warning-label {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-warning-label);
-    }
-  }
   .astralis\:lg\:bg-warning-muted {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-warning-muted);
     }
   }
-  .astralis\:lg\:bg-warning-ring {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:lg\:bg-warning-solid {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:lg\:bg-warning-stroke {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-warning-stroke);
     }
   }
   .astralis\:lg\:bg-warning-subtle {
@@ -54619,11 +53046,6 @@
   .astralis\:lg\:bg-yellow-950 {
     @media (width >= 64rem) {
       background-color: var(--astralis-color-yellow-950);
-    }
-  }
-  .astralis\:lg\:bg-yellow-emphasized {
-    @media (width >= 64rem) {
-      background-color: var(--astralis-color-yellow-emphasized);
     }
   }
   .astralis\:lg\:bg-yellow-muted {
@@ -56379,39 +54801,14 @@
       color: var(--astralis-color-error-contrast);
     }
   }
-  .astralis\:lg\:text-error-emphasized {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-error-emphasized);
-    }
-  }
   .astralis\:lg\:text-error-label {
     @media (width >= 64rem) {
       color: var(--astralis-color-error-label);
     }
   }
-  .astralis\:lg\:text-error-muted {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:lg\:text-error-ring {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:lg\:text-error-solid {
     @media (width >= 64rem) {
       color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:lg\:text-error-stroke {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:lg\:text-error-subtle {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:lg\:text-gray-50 {
@@ -56614,39 +55011,14 @@
       color: var(--astralis-color-info-contrast);
     }
   }
-  .astralis\:lg\:text-info-emphasized {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-info-emphasized);
-    }
-  }
   .astralis\:lg\:text-info-label {
     @media (width >= 64rem) {
       color: var(--astralis-color-info-label);
     }
   }
-  .astralis\:lg\:text-info-muted {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:lg\:text-info-ring {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:lg\:text-info-solid {
     @media (width >= 64rem) {
       color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:lg\:text-info-stroke {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:lg\:text-info-subtle {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:lg\:text-inherit {
@@ -56657,16 +55029,6 @@
   .astralis\:lg\:text-label-base {
     @media (width >= 64rem) {
       color: var(--astralis-color-label-base);
-    }
-  }
-  .astralis\:lg\:text-label-error {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-label-error);
-    }
-  }
-  .astralis\:lg\:text-label-info {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-label-info);
     }
   }
   .astralis\:lg\:text-label-inverted {
@@ -56682,16 +55044,6 @@
   .astralis\:lg\:text-label-subtle {
     @media (width >= 64rem) {
       color: var(--astralis-color-label-subtle);
-    }
-  }
-  .astralis\:lg\:text-label-success {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-label-success);
-    }
-  }
-  .astralis\:lg\:text-label-warning {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-label-warning);
     }
   }
   .astralis\:lg\:text-orange-50 {
@@ -57034,39 +55386,14 @@
       color: var(--astralis-color-success-contrast);
     }
   }
-  .astralis\:lg\:text-success-emphasized {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-success-emphasized);
-    }
-  }
   .astralis\:lg\:text-success-label {
     @media (width >= 64rem) {
       color: var(--astralis-color-success-label);
     }
   }
-  .astralis\:lg\:text-success-muted {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:lg\:text-success-ring {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:lg\:text-success-solid {
     @media (width >= 64rem) {
       color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:lg\:text-success-stroke {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:lg\:text-success-subtle {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:lg\:text-teal-50 {
@@ -57204,39 +55531,14 @@
       color: var(--astralis-color-warning-contrast);
     }
   }
-  .astralis\:lg\:text-warning-emphasized {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-warning-emphasized);
-    }
-  }
   .astralis\:lg\:text-warning-label {
     @media (width >= 64rem) {
       color: var(--astralis-color-warning-label);
     }
   }
-  .astralis\:lg\:text-warning-muted {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:lg\:text-warning-ring {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:lg\:text-warning-solid {
     @media (width >= 64rem) {
       color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:lg\:text-warning-stroke {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:lg\:text-warning-subtle {
-    @media (width >= 64rem) {
-      color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:lg\:text-white {
@@ -68735,44 +67037,9 @@
       border-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:xl\:border-error-contrast {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:xl\:border-error-emphasized {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:xl\:border-error-label {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-label);
-    }
-  }
-  .astralis\:xl\:border-error-muted {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:xl\:border-error-ring {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-ring);
-    }
-  }
-  .astralis\:xl\:border-error-solid {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-solid);
-    }
-  }
   .astralis\:xl\:border-error-stroke {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:xl\:border-error-subtle {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:xl\:border-gray-50 {
@@ -68950,44 +67217,9 @@
       border-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:xl\:border-info-contrast {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:xl\:border-info-emphasized {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:xl\:border-info-label {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-label);
-    }
-  }
-  .astralis\:xl\:border-info-muted {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:xl\:border-info-ring {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-ring);
-    }
-  }
-  .astralis\:xl\:border-info-solid {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-solid);
-    }
-  }
   .astralis\:xl\:border-info-stroke {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:xl\:border-info-subtle {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:xl\:border-inherit {
@@ -69240,21 +67472,6 @@
       border-color: var(--astralis-color-stroke-base);
     }
   }
-  .astralis\:xl\:border-stroke-emphasized {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-stroke-emphasized);
-    }
-  }
-  .astralis\:xl\:border-stroke-error {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-stroke-error);
-    }
-  }
-  .astralis\:xl\:border-stroke-info {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-stroke-info);
-    }
-  }
   .astralis\:xl\:border-stroke-inverted {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-stroke-inverted);
@@ -69268,16 +67485,6 @@
   .astralis\:xl\:border-stroke-subtle {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-stroke-subtle);
-    }
-  }
-  .astralis\:xl\:border-stroke-success {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-stroke-success);
-    }
-  }
-  .astralis\:xl\:border-stroke-warning {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-stroke-warning);
     }
   }
   .astralis\:xl\:border-success-50 {
@@ -69335,44 +67542,9 @@
       border-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:xl\:border-success-contrast {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:xl\:border-success-emphasized {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:xl\:border-success-label {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-label);
-    }
-  }
-  .astralis\:xl\:border-success-muted {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:xl\:border-success-ring {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-ring);
-    }
-  }
-  .astralis\:xl\:border-success-solid {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-solid);
-    }
-  }
   .astralis\:xl\:border-success-stroke {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:xl\:border-success-subtle {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:xl\:border-teal-50 {
@@ -69495,44 +67667,9 @@
       border-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:xl\:border-warning-contrast {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:xl\:border-warning-emphasized {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:xl\:border-warning-label {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-label);
-    }
-  }
-  .astralis\:xl\:border-warning-muted {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:xl\:border-warning-ring {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-ring);
-    }
-  }
-  .astralis\:xl\:border-warning-solid {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-solid);
-    }
-  }
   .astralis\:xl\:border-warning-stroke {
     @media (width >= 80rem) {
       border-color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:xl\:border-warning-subtle {
-    @media (width >= 80rem) {
-      border-color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:xl\:border-white {
@@ -69660,11 +67797,6 @@
       background-color: var(--astralis-color-blue-950);
     }
   }
-  .astralis\:xl\:bg-blue-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-blue-emphasized);
-    }
-  }
   .astralis\:xl\:bg-blue-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-blue-muted);
@@ -69733,11 +67865,6 @@
   .astralis\:xl\:bg-brand-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-brand-950);
-    }
-  }
-  .astralis\:xl\:bg-brand-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-brand-emphasized);
     }
   }
   .astralis\:xl\:bg-brand-muted {
@@ -69815,11 +67942,6 @@
       background-color: var(--astralis-color-cyan-950);
     }
   }
-  .astralis\:xl\:bg-cyan-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-cyan-emphasized);
-    }
-  }
   .astralis\:xl\:bg-cyan-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-cyan-muted);
@@ -69890,39 +68012,14 @@
       background-color: var(--astralis-color-error-950);
     }
   }
-  .astralis\:xl\:bg-error-contrast {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-error-contrast);
-    }
-  }
-  .astralis\:xl\:bg-error-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-error-emphasized);
-    }
-  }
-  .astralis\:xl\:bg-error-label {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-error-label);
-    }
-  }
   .astralis\:xl\:bg-error-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-error-muted);
     }
   }
-  .astralis\:xl\:bg-error-ring {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:xl\:bg-error-solid {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:xl\:bg-error-stroke {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-error-stroke);
     }
   }
   .astralis\:xl\:bg-error-subtle {
@@ -69983,11 +68080,6 @@
   .astralis\:xl\:bg-gray-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-gray-950);
-    }
-  }
-  .astralis\:xl\:bg-gray-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-gray-emphasized);
     }
   }
   .astralis\:xl\:bg-gray-muted {
@@ -70060,11 +68152,6 @@
       background-color: var(--astralis-color-green-950);
     }
   }
-  .astralis\:xl\:bg-green-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-green-emphasized);
-    }
-  }
   .astralis\:xl\:bg-green-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-green-muted);
@@ -70135,39 +68222,14 @@
       background-color: var(--astralis-color-info-950);
     }
   }
-  .astralis\:xl\:bg-info-contrast {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-info-contrast);
-    }
-  }
-  .astralis\:xl\:bg-info-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-info-emphasized);
-    }
-  }
-  .astralis\:xl\:bg-info-label {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-info-label);
-    }
-  }
   .astralis\:xl\:bg-info-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-info-muted);
     }
   }
-  .astralis\:xl\:bg-info-ring {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:xl\:bg-info-solid {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:xl\:bg-info-stroke {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-info-stroke);
     }
   }
   .astralis\:xl\:bg-info-subtle {
@@ -70233,11 +68295,6 @@
   .astralis\:xl\:bg-orange-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-orange-950);
-    }
-  }
-  .astralis\:xl\:bg-orange-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-orange-emphasized);
     }
   }
   .astralis\:xl\:bg-orange-muted {
@@ -70310,11 +68367,6 @@
       background-color: var(--astralis-color-pink-950);
     }
   }
-  .astralis\:xl\:bg-pink-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-pink-emphasized);
-    }
-  }
   .astralis\:xl\:bg-pink-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-pink-muted);
@@ -70383,11 +68435,6 @@
   .astralis\:xl\:bg-purple-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-purple-950);
-    }
-  }
-  .astralis\:xl\:bg-purple-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-purple-emphasized);
     }
   }
   .astralis\:xl\:bg-purple-muted {
@@ -70460,11 +68507,6 @@
       background-color: var(--astralis-color-red-950);
     }
   }
-  .astralis\:xl\:bg-red-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-red-emphasized);
-    }
-  }
   .astralis\:xl\:bg-red-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-red-muted);
@@ -70535,39 +68577,14 @@
       background-color: var(--astralis-color-success-950);
     }
   }
-  .astralis\:xl\:bg-success-contrast {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-success-contrast);
-    }
-  }
-  .astralis\:xl\:bg-success-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-success-emphasized);
-    }
-  }
-  .astralis\:xl\:bg-success-label {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-success-label);
-    }
-  }
   .astralis\:xl\:bg-success-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-success-muted);
     }
   }
-  .astralis\:xl\:bg-success-ring {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:xl\:bg-success-solid {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:xl\:bg-success-stroke {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-success-stroke);
     }
   }
   .astralis\:xl\:bg-success-subtle {
@@ -70580,21 +68597,6 @@
       background-color: var(--astralis-color-surface-base);
     }
   }
-  .astralis\:xl\:bg-surface-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-emphasized);
-    }
-  }
-  .astralis\:xl\:bg-surface-error {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-error);
-    }
-  }
-  .astralis\:xl\:bg-surface-info {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-info);
-    }
-  }
   .astralis\:xl\:bg-surface-inverted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-surface-inverted);
@@ -70605,24 +68607,14 @@
       background-color: var(--astralis-color-surface-muted);
     }
   }
-  .astralis\:xl\:bg-surface-panel {
+  .astralis\:xl\:bg-surface-raised {
     @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-panel);
+      background-color: var(--astralis-color-surface-raised);
     }
   }
   .astralis\:xl\:bg-surface-subtle {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-surface-subtle);
-    }
-  }
-  .astralis\:xl\:bg-surface-success {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-success);
-    }
-  }
-  .astralis\:xl\:bg-surface-warning {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-surface-warning);
     }
   }
   .astralis\:xl\:bg-teal-50 {
@@ -70678,11 +68670,6 @@
   .astralis\:xl\:bg-teal-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-teal-950);
-    }
-  }
-  .astralis\:xl\:bg-teal-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-teal-emphasized);
     }
   }
   .astralis\:xl\:bg-teal-muted {
@@ -70760,39 +68747,14 @@
       background-color: var(--astralis-color-warning-950);
     }
   }
-  .astralis\:xl\:bg-warning-contrast {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-warning-contrast);
-    }
-  }
-  .astralis\:xl\:bg-warning-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-warning-emphasized);
-    }
-  }
-  .astralis\:xl\:bg-warning-label {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-warning-label);
-    }
-  }
   .astralis\:xl\:bg-warning-muted {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-warning-muted);
     }
   }
-  .astralis\:xl\:bg-warning-ring {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:xl\:bg-warning-solid {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:xl\:bg-warning-stroke {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-warning-stroke);
     }
   }
   .astralis\:xl\:bg-warning-subtle {
@@ -70858,11 +68820,6 @@
   .astralis\:xl\:bg-yellow-950 {
     @media (width >= 80rem) {
       background-color: var(--astralis-color-yellow-950);
-    }
-  }
-  .astralis\:xl\:bg-yellow-emphasized {
-    @media (width >= 80rem) {
-      background-color: var(--astralis-color-yellow-emphasized);
     }
   }
   .astralis\:xl\:bg-yellow-muted {
@@ -72618,39 +70575,14 @@
       color: var(--astralis-color-error-contrast);
     }
   }
-  .astralis\:xl\:text-error-emphasized {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-error-emphasized);
-    }
-  }
   .astralis\:xl\:text-error-label {
     @media (width >= 80rem) {
       color: var(--astralis-color-error-label);
     }
   }
-  .astralis\:xl\:text-error-muted {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-error-muted);
-    }
-  }
-  .astralis\:xl\:text-error-ring {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-error-ring);
-    }
-  }
   .astralis\:xl\:text-error-solid {
     @media (width >= 80rem) {
       color: var(--astralis-color-error-solid);
-    }
-  }
-  .astralis\:xl\:text-error-stroke {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-error-stroke);
-    }
-  }
-  .astralis\:xl\:text-error-subtle {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-error-subtle);
     }
   }
   .astralis\:xl\:text-gray-50 {
@@ -72853,39 +70785,14 @@
       color: var(--astralis-color-info-contrast);
     }
   }
-  .astralis\:xl\:text-info-emphasized {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-info-emphasized);
-    }
-  }
   .astralis\:xl\:text-info-label {
     @media (width >= 80rem) {
       color: var(--astralis-color-info-label);
     }
   }
-  .astralis\:xl\:text-info-muted {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-info-muted);
-    }
-  }
-  .astralis\:xl\:text-info-ring {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-info-ring);
-    }
-  }
   .astralis\:xl\:text-info-solid {
     @media (width >= 80rem) {
       color: var(--astralis-color-info-solid);
-    }
-  }
-  .astralis\:xl\:text-info-stroke {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-info-stroke);
-    }
-  }
-  .astralis\:xl\:text-info-subtle {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-info-subtle);
     }
   }
   .astralis\:xl\:text-inherit {
@@ -72896,16 +70803,6 @@
   .astralis\:xl\:text-label-base {
     @media (width >= 80rem) {
       color: var(--astralis-color-label-base);
-    }
-  }
-  .astralis\:xl\:text-label-error {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-label-error);
-    }
-  }
-  .astralis\:xl\:text-label-info {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-label-info);
     }
   }
   .astralis\:xl\:text-label-inverted {
@@ -72921,16 +70818,6 @@
   .astralis\:xl\:text-label-subtle {
     @media (width >= 80rem) {
       color: var(--astralis-color-label-subtle);
-    }
-  }
-  .astralis\:xl\:text-label-success {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-label-success);
-    }
-  }
-  .astralis\:xl\:text-label-warning {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-label-warning);
     }
   }
   .astralis\:xl\:text-orange-50 {
@@ -73273,39 +71160,14 @@
       color: var(--astralis-color-success-contrast);
     }
   }
-  .astralis\:xl\:text-success-emphasized {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-success-emphasized);
-    }
-  }
   .astralis\:xl\:text-success-label {
     @media (width >= 80rem) {
       color: var(--astralis-color-success-label);
     }
   }
-  .astralis\:xl\:text-success-muted {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-success-muted);
-    }
-  }
-  .astralis\:xl\:text-success-ring {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-success-ring);
-    }
-  }
   .astralis\:xl\:text-success-solid {
     @media (width >= 80rem) {
       color: var(--astralis-color-success-solid);
-    }
-  }
-  .astralis\:xl\:text-success-stroke {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-success-stroke);
-    }
-  }
-  .astralis\:xl\:text-success-subtle {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-success-subtle);
     }
   }
   .astralis\:xl\:text-teal-50 {
@@ -73443,39 +71305,14 @@
       color: var(--astralis-color-warning-contrast);
     }
   }
-  .astralis\:xl\:text-warning-emphasized {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-warning-emphasized);
-    }
-  }
   .astralis\:xl\:text-warning-label {
     @media (width >= 80rem) {
       color: var(--astralis-color-warning-label);
     }
   }
-  .astralis\:xl\:text-warning-muted {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-warning-muted);
-    }
-  }
-  .astralis\:xl\:text-warning-ring {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-warning-ring);
-    }
-  }
   .astralis\:xl\:text-warning-solid {
     @media (width >= 80rem) {
       color: var(--astralis-color-warning-solid);
-    }
-  }
-  .astralis\:xl\:text-warning-stroke {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-warning-stroke);
-    }
-  }
-  .astralis\:xl\:text-warning-subtle {
-    @media (width >= 80rem) {
-      color: var(--astralis-color-warning-subtle);
     }
   }
   .astralis\:xl\:text-white {
@@ -76822,36 +74659,21 @@
   --astralis-color-surface-base: var(--astralis-color-white);
   --astralis-color-surface-subtle: var(--astralis-color-gray-100);
   --astralis-color-surface-muted: var(--astralis-color-gray-200);
-  --astralis-color-surface-emphasized: var(--astralis-color-gray-300);
-  --astralis-color-surface-panel: var(--astralis-color-white);
+  --astralis-color-surface-raised: var(--astralis-color-white);
   --astralis-color-surface-inverted: var(--astralis-color-black);
-  --astralis-color-surface-warning: var(--astralis-color-warning-100);
-  --astralis-color-surface-error: var(--astralis-color-error-100);
-  --astralis-color-surface-success: var(--astralis-color-success-100);
-  --astralis-color-surface-info: var(--astralis-color-info-100);
   --astralis-color-label-base: var(--astralis-color-gray-900);
   --astralis-color-label-muted: var(--astralis-color-gray-600);
-  --astralis-color-label-subtle: var(--astralis-color-gray-400);
+  --astralis-color-label-subtle: var(--astralis-color-gray-500);
   --astralis-color-label-inverted: var(--astralis-color-white);
-  --astralis-color-label-warning: var(--astralis-color-warning-700);
-  --astralis-color-label-error: var(--astralis-color-error-600);
-  --astralis-color-label-success: var(--astralis-color-success-700);
-  --astralis-color-label-info: var(--astralis-color-info-600);
   --astralis-color-stroke-base: var(--astralis-color-gray-300);
-  --astralis-color-stroke-muted: var(--astralis-color-gray-200);
+  --astralis-color-stroke-muted: var(--astralis-color-gray-400);
   --astralis-color-stroke-subtle: var(--astralis-color-gray-100);
-  --astralis-color-stroke-emphasized: var(--astralis-color-gray-400);
   --astralis-color-stroke-inverted: var(--astralis-color-black);
-  --astralis-color-stroke-warning: var(--astralis-color-warning-300);
-  --astralis-color-stroke-error: var(--astralis-color-error-300);
-  --astralis-color-stroke-success: var(--astralis-color-success-300);
-  --astralis-color-stroke-info: var(--astralis-color-info-300);
   --astralis-color-gray-solid: var(--astralis-color-gray-900);
   --astralis-color-gray-contrast: var(--astralis-color-white);
   --astralis-color-gray-label: var(--astralis-color-gray-800);
   --astralis-color-gray-subtle: var(--astralis-color-gray-100);
   --astralis-color-gray-muted: var(--astralis-color-gray-200);
-  --astralis-color-gray-emphasized: var(--astralis-color-gray-300);
   --astralis-color-gray-stroke: var(--astralis-color-gray-200);
   --astralis-color-gray-ring: var(--astralis-color-gray-400);
   --astralis-color-red-solid: var(--astralis-color-red-600);
@@ -76859,7 +74681,6 @@
   --astralis-color-red-label: var(--astralis-color-red-700);
   --astralis-color-red-subtle: var(--astralis-color-red-100);
   --astralis-color-red-muted: var(--astralis-color-red-200);
-  --astralis-color-red-emphasized: var(--astralis-color-red-300);
   --astralis-color-red-stroke: var(--astralis-color-red-500);
   --astralis-color-red-ring: var(--astralis-color-red-500);
   --astralis-color-orange-solid: var(--astralis-color-orange-600);
@@ -76867,7 +74688,6 @@
   --astralis-color-orange-label: var(--astralis-color-orange-700);
   --astralis-color-orange-subtle: var(--astralis-color-orange-100);
   --astralis-color-orange-muted: var(--astralis-color-orange-200);
-  --astralis-color-orange-emphasized: var(--astralis-color-orange-300);
   --astralis-color-orange-stroke: var(--astralis-color-orange-500);
   --astralis-color-orange-ring: var(--astralis-color-orange-500);
   --astralis-color-yellow-solid: var(--astralis-color-yellow-300);
@@ -76875,7 +74695,6 @@
   --astralis-color-yellow-label: var(--astralis-color-yellow-800);
   --astralis-color-yellow-subtle: var(--astralis-color-yellow-100);
   --astralis-color-yellow-muted: var(--astralis-color-yellow-200);
-  --astralis-color-yellow-emphasized: var(--astralis-color-yellow-300);
   --astralis-color-yellow-stroke: var(--astralis-color-yellow-500);
   --astralis-color-yellow-ring: var(--astralis-color-yellow-500);
   --astralis-color-green-solid: var(--astralis-color-green-600);
@@ -76883,7 +74702,6 @@
   --astralis-color-green-label: var(--astralis-color-green-700);
   --astralis-color-green-subtle: var(--astralis-color-green-100);
   --astralis-color-green-muted: var(--astralis-color-green-200);
-  --astralis-color-green-emphasized: var(--astralis-color-green-300);
   --astralis-color-green-stroke: var(--astralis-color-green-500);
   --astralis-color-green-ring: var(--astralis-color-green-500);
   --astralis-color-teal-solid: var(--astralis-color-teal-600);
@@ -76891,7 +74709,6 @@
   --astralis-color-teal-label: var(--astralis-color-teal-700);
   --astralis-color-teal-subtle: var(--astralis-color-teal-100);
   --astralis-color-teal-muted: var(--astralis-color-teal-200);
-  --astralis-color-teal-emphasized: var(--astralis-color-teal-300);
   --astralis-color-teal-stroke: var(--astralis-color-teal-500);
   --astralis-color-teal-ring: var(--astralis-color-teal-500);
   --astralis-color-blue-solid: var(--astralis-color-blue-600);
@@ -76899,7 +74716,6 @@
   --astralis-color-blue-label: var(--astralis-color-blue-700);
   --astralis-color-blue-subtle: var(--astralis-color-blue-100);
   --astralis-color-blue-muted: var(--astralis-color-blue-200);
-  --astralis-color-blue-emphasized: var(--astralis-color-blue-300);
   --astralis-color-blue-stroke: var(--astralis-color-blue-500);
   --astralis-color-blue-ring: var(--astralis-color-blue-500);
   --astralis-color-cyan-solid: var(--astralis-color-cyan-600);
@@ -76907,7 +74723,6 @@
   --astralis-color-cyan-label: var(--astralis-color-cyan-700);
   --astralis-color-cyan-subtle: var(--astralis-color-cyan-100);
   --astralis-color-cyan-muted: var(--astralis-color-cyan-200);
-  --astralis-color-cyan-emphasized: var(--astralis-color-cyan-300);
   --astralis-color-cyan-stroke: var(--astralis-color-cyan-500);
   --astralis-color-cyan-ring: var(--astralis-color-cyan-500);
   --astralis-color-purple-solid: var(--astralis-color-purple-600);
@@ -76915,7 +74730,6 @@
   --astralis-color-purple-label: var(--astralis-color-purple-700);
   --astralis-color-purple-subtle: var(--astralis-color-purple-100);
   --astralis-color-purple-muted: var(--astralis-color-purple-200);
-  --astralis-color-purple-emphasized: var(--astralis-color-purple-300);
   --astralis-color-purple-stroke: var(--astralis-color-purple-500);
   --astralis-color-purple-ring: var(--astralis-color-purple-500);
   --astralis-color-pink-solid: var(--astralis-color-pink-600);
@@ -76923,7 +74737,6 @@
   --astralis-color-pink-label: var(--astralis-color-pink-700);
   --astralis-color-pink-subtle: var(--astralis-color-pink-100);
   --astralis-color-pink-muted: var(--astralis-color-pink-200);
-  --astralis-color-pink-emphasized: var(--astralis-color-pink-300);
   --astralis-color-pink-stroke: var(--astralis-color-pink-500);
   --astralis-color-pink-ring: var(--astralis-color-pink-500);
   --astralis-color-brand-solid: var(--astralis-color-brand-500);
@@ -76931,7 +74744,6 @@
   --astralis-color-brand-label: var(--astralis-color-brand-700);
   --astralis-color-brand-subtle: var(--astralis-color-brand-100);
   --astralis-color-brand-muted: var(--astralis-color-brand-200);
-  --astralis-color-brand-emphasized: var(--astralis-color-brand-300);
   --astralis-color-brand-stroke: var(--astralis-color-brand-500);
   --astralis-color-brand-ring: var(--astralis-color-brand-500);
   --astralis-color-error-solid: var(--astralis-color-error-600);
@@ -76939,7 +74751,6 @@
   --astralis-color-error-label: var(--astralis-color-error-700);
   --astralis-color-error-subtle: var(--astralis-color-error-100);
   --astralis-color-error-muted: var(--astralis-color-error-200);
-  --astralis-color-error-emphasized: var(--astralis-color-error-300);
   --astralis-color-error-stroke: var(--astralis-color-error-500);
   --astralis-color-error-ring: var(--astralis-color-error-500);
   --astralis-color-warning-solid: var(--astralis-color-warning-600);
@@ -76947,7 +74758,6 @@
   --astralis-color-warning-label: var(--astralis-color-warning-700);
   --astralis-color-warning-subtle: var(--astralis-color-warning-100);
   --astralis-color-warning-muted: var(--astralis-color-warning-200);
-  --astralis-color-warning-emphasized: var(--astralis-color-warning-300);
   --astralis-color-warning-stroke: var(--astralis-color-warning-500);
   --astralis-color-warning-ring: var(--astralis-color-warning-500);
   --astralis-color-success-solid: var(--astralis-color-success-600);
@@ -76955,7 +74765,6 @@
   --astralis-color-success-label: var(--astralis-color-success-700);
   --astralis-color-success-subtle: var(--astralis-color-success-100);
   --astralis-color-success-muted: var(--astralis-color-success-200);
-  --astralis-color-success-emphasized: var(--astralis-color-success-300);
   --astralis-color-success-stroke: var(--astralis-color-success-500);
   --astralis-color-success-ring: var(--astralis-color-success-500);
   --astralis-color-info-solid: var(--astralis-color-info-600);
@@ -76963,7 +74772,6 @@
   --astralis-color-info-label: var(--astralis-color-info-700);
   --astralis-color-info-subtle: var(--astralis-color-info-100);
   --astralis-color-info-muted: var(--astralis-color-info-200);
-  --astralis-color-info-emphasized: var(--astralis-color-info-300);
   --astralis-color-info-stroke: var(--astralis-color-info-500);
   --astralis-color-info-ring: var(--astralis-color-info-500);
 }
@@ -76971,36 +74779,21 @@
   --astralis-color-surface-base: var(--astralis-color-black);
   --astralis-color-surface-subtle: var(--astralis-color-gray-900);
   --astralis-color-surface-muted: var(--astralis-color-gray-800);
-  --astralis-color-surface-emphasized: var(--astralis-color-gray-700);
-  --astralis-color-surface-panel: var(--astralis-color-gray-950);
+  --astralis-color-surface-raised: var(--astralis-color-gray-950);
   --astralis-color-surface-inverted: var(--astralis-color-white);
-  --astralis-color-surface-warning: var(--astralis-color-warning-950);
-  --astralis-color-surface-error: var(--astralis-color-error-950);
-  --astralis-color-surface-success: var(--astralis-color-success-950);
-  --astralis-color-surface-info: var(--astralis-color-info-950);
   --astralis-color-label-base: var(--astralis-color-gray-50);
-  --astralis-color-label-muted: var(--astralis-color-gray-400);
-  --astralis-color-label-subtle: var(--astralis-color-gray-500);
+  --astralis-color-label-muted: var(--astralis-color-gray-300);
+  --astralis-color-label-subtle: var(--astralis-color-gray-400);
   --astralis-color-label-inverted: var(--astralis-color-black);
-  --astralis-color-label-warning: var(--astralis-color-warning-300);
-  --astralis-color-label-error: var(--astralis-color-error-400);
-  --astralis-color-label-success: var(--astralis-color-success-300);
-  --astralis-color-label-info: var(--astralis-color-info-300);
   --astralis-color-stroke-base: var(--astralis-color-gray-800);
   --astralis-color-stroke-muted: var(--astralis-color-gray-700);
   --astralis-color-stroke-subtle: var(--astralis-color-gray-900);
-  --astralis-color-stroke-emphasized: var(--astralis-color-gray-600);
   --astralis-color-stroke-inverted: var(--astralis-color-white);
-  --astralis-color-stroke-warning: var(--astralis-color-warning-400);
-  --astralis-color-stroke-error: var(--astralis-color-error-400);
-  --astralis-color-stroke-success: var(--astralis-color-success-400);
-  --astralis-color-stroke-info: var(--astralis-color-info-400);
   --astralis-color-gray-solid: var(--astralis-color-white);
   --astralis-color-gray-contrast: var(--astralis-color-black);
   --astralis-color-gray-label: var(--astralis-color-gray-200);
   --astralis-color-gray-subtle: var(--astralis-color-gray-900);
   --astralis-color-gray-muted: var(--astralis-color-gray-800);
-  --astralis-color-gray-emphasized: var(--astralis-color-gray-700);
   --astralis-color-gray-stroke: var(--astralis-color-gray-800);
   --astralis-color-gray-ring: var(--astralis-color-gray-400);
   --astralis-color-red-solid: var(--astralis-color-red-600);
@@ -77008,7 +74801,6 @@
   --astralis-color-red-label: var(--astralis-color-red-300);
   --astralis-color-red-subtle: var(--astralis-color-red-900);
   --astralis-color-red-muted: var(--astralis-color-red-800);
-  --astralis-color-red-emphasized: var(--astralis-color-red-700);
   --astralis-color-red-stroke: var(--astralis-color-red-400);
   --astralis-color-red-ring: var(--astralis-color-red-500);
   --astralis-color-orange-solid: var(--astralis-color-orange-500);
@@ -77016,7 +74808,6 @@
   --astralis-color-orange-label: var(--astralis-color-orange-300);
   --astralis-color-orange-subtle: var(--astralis-color-orange-900);
   --astralis-color-orange-muted: var(--astralis-color-orange-800);
-  --astralis-color-orange-emphasized: var(--astralis-color-orange-700);
   --astralis-color-orange-stroke: var(--astralis-color-orange-400);
   --astralis-color-orange-ring: var(--astralis-color-orange-500);
   --astralis-color-yellow-solid: var(--astralis-color-yellow-300);
@@ -77024,7 +74815,6 @@
   --astralis-color-yellow-label: var(--astralis-color-yellow-300);
   --astralis-color-yellow-subtle: var(--astralis-color-yellow-900);
   --astralis-color-yellow-muted: var(--astralis-color-yellow-800);
-  --astralis-color-yellow-emphasized: var(--astralis-color-yellow-700);
   --astralis-color-yellow-stroke: var(--astralis-color-yellow-500);
   --astralis-color-yellow-ring: var(--astralis-color-yellow-500);
   --astralis-color-green-solid: var(--astralis-color-green-600);
@@ -77032,7 +74822,6 @@
   --astralis-color-green-label: var(--astralis-color-green-300);
   --astralis-color-green-subtle: var(--astralis-color-green-900);
   --astralis-color-green-muted: var(--astralis-color-green-800);
-  --astralis-color-green-emphasized: var(--astralis-color-green-700);
   --astralis-color-green-stroke: var(--astralis-color-green-400);
   --astralis-color-green-ring: var(--astralis-color-green-500);
   --astralis-color-teal-solid: var(--astralis-color-teal-600);
@@ -77040,7 +74829,6 @@
   --astralis-color-teal-label: var(--astralis-color-teal-300);
   --astralis-color-teal-subtle: var(--astralis-color-teal-900);
   --astralis-color-teal-muted: var(--astralis-color-teal-800);
-  --astralis-color-teal-emphasized: var(--astralis-color-teal-700);
   --astralis-color-teal-stroke: var(--astralis-color-teal-400);
   --astralis-color-teal-ring: var(--astralis-color-teal-500);
   --astralis-color-blue-solid: var(--astralis-color-blue-600);
@@ -77048,7 +74836,6 @@
   --astralis-color-blue-label: var(--astralis-color-blue-300);
   --astralis-color-blue-subtle: var(--astralis-color-blue-900);
   --astralis-color-blue-muted: var(--astralis-color-blue-800);
-  --astralis-color-blue-emphasized: var(--astralis-color-blue-700);
   --astralis-color-blue-stroke: var(--astralis-color-blue-400);
   --astralis-color-blue-ring: var(--astralis-color-blue-500);
   --astralis-color-cyan-solid: var(--astralis-color-cyan-600);
@@ -77056,7 +74843,6 @@
   --astralis-color-cyan-label: var(--astralis-color-cyan-300);
   --astralis-color-cyan-subtle: var(--astralis-color-cyan-900);
   --astralis-color-cyan-muted: var(--astralis-color-cyan-800);
-  --astralis-color-cyan-emphasized: var(--astralis-color-cyan-700);
   --astralis-color-cyan-stroke: var(--astralis-color-cyan-400);
   --astralis-color-cyan-ring: var(--astralis-color-cyan-500);
   --astralis-color-purple-solid: var(--astralis-color-purple-600);
@@ -77064,7 +74850,6 @@
   --astralis-color-purple-label: var(--astralis-color-purple-300);
   --astralis-color-purple-subtle: var(--astralis-color-purple-900);
   --astralis-color-purple-muted: var(--astralis-color-purple-800);
-  --astralis-color-purple-emphasized: var(--astralis-color-purple-700);
   --astralis-color-purple-stroke: var(--astralis-color-purple-400);
   --astralis-color-purple-ring: var(--astralis-color-purple-500);
   --astralis-color-pink-solid: var(--astralis-color-pink-600);
@@ -77072,7 +74857,6 @@
   --astralis-color-pink-label: var(--astralis-color-pink-300);
   --astralis-color-pink-subtle: var(--astralis-color-pink-900);
   --astralis-color-pink-muted: var(--astralis-color-pink-800);
-  --astralis-color-pink-emphasized: var(--astralis-color-pink-700);
   --astralis-color-pink-stroke: var(--astralis-color-pink-400);
   --astralis-color-pink-ring: var(--astralis-color-pink-500);
   --astralis-color-brand-solid: var(--astralis-color-brand-500);
@@ -77080,7 +74864,6 @@
   --astralis-color-brand-label: var(--astralis-color-brand-300);
   --astralis-color-brand-subtle: var(--astralis-color-brand-900);
   --astralis-color-brand-muted: var(--astralis-color-brand-800);
-  --astralis-color-brand-emphasized: var(--astralis-color-brand-700);
   --astralis-color-brand-stroke: var(--astralis-color-brand-400);
   --astralis-color-brand-ring: var(--astralis-color-brand-500);
   --astralis-color-error-solid: var(--astralis-color-error-600);
@@ -77088,7 +74871,6 @@
   --astralis-color-error-label: var(--astralis-color-error-300);
   --astralis-color-error-subtle: var(--astralis-color-error-900);
   --astralis-color-error-muted: var(--astralis-color-error-800);
-  --astralis-color-error-emphasized: var(--astralis-color-error-700);
   --astralis-color-error-stroke: var(--astralis-color-error-400);
   --astralis-color-error-ring: var(--astralis-color-error-500);
   --astralis-color-warning-solid: var(--astralis-color-warning-500);
@@ -77096,7 +74878,6 @@
   --astralis-color-warning-label: var(--astralis-color-warning-300);
   --astralis-color-warning-subtle: var(--astralis-color-warning-900);
   --astralis-color-warning-muted: var(--astralis-color-warning-800);
-  --astralis-color-warning-emphasized: var(--astralis-color-warning-700);
   --astralis-color-warning-stroke: var(--astralis-color-warning-400);
   --astralis-color-warning-ring: var(--astralis-color-warning-500);
   --astralis-color-success-solid: var(--astralis-color-success-600);
@@ -77104,7 +74885,6 @@
   --astralis-color-success-label: var(--astralis-color-success-300);
   --astralis-color-success-subtle: var(--astralis-color-success-900);
   --astralis-color-success-muted: var(--astralis-color-success-800);
-  --astralis-color-success-emphasized: var(--astralis-color-success-700);
   --astralis-color-success-stroke: var(--astralis-color-success-400);
   --astralis-color-success-ring: var(--astralis-color-success-500);
   --astralis-color-info-solid: var(--astralis-color-info-600);
@@ -77112,7 +74892,6 @@
   --astralis-color-info-label: var(--astralis-color-info-300);
   --astralis-color-info-subtle: var(--astralis-color-info-900);
   --astralis-color-info-muted: var(--astralis-color-info-800);
-  --astralis-color-info-emphasized: var(--astralis-color-info-700);
   --astralis-color-info-stroke: var(--astralis-color-info-400);
   --astralis-color-info-ring: var(--astralis-color-info-500);
 }
@@ -77122,7 +74901,6 @@
   --astralis-color-accent-label: var(--astralis-color-brand-label);
   --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
   --astralis-color-accent-muted: var(--astralis-color-brand-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-brand-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
   --astralis-color-accent-ring: var(--astralis-color-brand-ring);
 }
@@ -77132,7 +74910,6 @@
   --astralis-color-accent-label: var(--astralis-color-brand-label);
   --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
   --astralis-color-accent-muted: var(--astralis-color-brand-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-brand-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
   --astralis-color-accent-ring: var(--astralis-color-brand-ring);
 }
@@ -77142,7 +74919,6 @@
   --astralis-color-accent-label: var(--astralis-color-gray-label);
   --astralis-color-accent-subtle: var(--astralis-color-gray-subtle);
   --astralis-color-accent-muted: var(--astralis-color-gray-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-gray-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-gray-stroke);
   --astralis-color-accent-ring: var(--astralis-color-gray-ring);
 }
@@ -77152,7 +74928,6 @@
   --astralis-color-accent-label: var(--astralis-color-red-label);
   --astralis-color-accent-subtle: var(--astralis-color-red-subtle);
   --astralis-color-accent-muted: var(--astralis-color-red-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-red-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-red-stroke);
   --astralis-color-accent-ring: var(--astralis-color-red-ring);
 }
@@ -77162,7 +74937,6 @@
   --astralis-color-accent-label: var(--astralis-color-orange-label);
   --astralis-color-accent-subtle: var(--astralis-color-orange-subtle);
   --astralis-color-accent-muted: var(--astralis-color-orange-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-orange-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-orange-stroke);
   --astralis-color-accent-ring: var(--astralis-color-orange-ring);
 }
@@ -77172,7 +74946,6 @@
   --astralis-color-accent-label: var(--astralis-color-yellow-label);
   --astralis-color-accent-subtle: var(--astralis-color-yellow-subtle);
   --astralis-color-accent-muted: var(--astralis-color-yellow-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-yellow-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-yellow-stroke);
   --astralis-color-accent-ring: var(--astralis-color-yellow-ring);
 }
@@ -77182,7 +74955,6 @@
   --astralis-color-accent-label: var(--astralis-color-green-label);
   --astralis-color-accent-subtle: var(--astralis-color-green-subtle);
   --astralis-color-accent-muted: var(--astralis-color-green-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-green-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-green-stroke);
   --astralis-color-accent-ring: var(--astralis-color-green-ring);
 }
@@ -77192,7 +74964,6 @@
   --astralis-color-accent-label: var(--astralis-color-teal-label);
   --astralis-color-accent-subtle: var(--astralis-color-teal-subtle);
   --astralis-color-accent-muted: var(--astralis-color-teal-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-teal-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-teal-stroke);
   --astralis-color-accent-ring: var(--astralis-color-teal-ring);
 }
@@ -77202,7 +74973,6 @@
   --astralis-color-accent-label: var(--astralis-color-blue-label);
   --astralis-color-accent-subtle: var(--astralis-color-blue-subtle);
   --astralis-color-accent-muted: var(--astralis-color-blue-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-blue-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-blue-stroke);
   --astralis-color-accent-ring: var(--astralis-color-blue-ring);
 }
@@ -77212,7 +74982,6 @@
   --astralis-color-accent-label: var(--astralis-color-cyan-label);
   --astralis-color-accent-subtle: var(--astralis-color-cyan-subtle);
   --astralis-color-accent-muted: var(--astralis-color-cyan-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-cyan-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-cyan-stroke);
   --astralis-color-accent-ring: var(--astralis-color-cyan-ring);
 }
@@ -77222,7 +74991,6 @@
   --astralis-color-accent-label: var(--astralis-color-purple-label);
   --astralis-color-accent-subtle: var(--astralis-color-purple-subtle);
   --astralis-color-accent-muted: var(--astralis-color-purple-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-purple-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-purple-stroke);
   --astralis-color-accent-ring: var(--astralis-color-purple-ring);
 }
@@ -77232,7 +75000,6 @@
   --astralis-color-accent-label: var(--astralis-color-pink-label);
   --astralis-color-accent-subtle: var(--astralis-color-pink-subtle);
   --astralis-color-accent-muted: var(--astralis-color-pink-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-pink-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-pink-stroke);
   --astralis-color-accent-ring: var(--astralis-color-pink-ring);
 }
@@ -77242,7 +75009,6 @@
   --astralis-color-accent-label: var(--astralis-color-error-label);
   --astralis-color-accent-subtle: var(--astralis-color-error-subtle);
   --astralis-color-accent-muted: var(--astralis-color-error-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-error-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-error-stroke);
   --astralis-color-accent-ring: var(--astralis-color-error-ring);
 }
@@ -77252,7 +75018,6 @@
   --astralis-color-accent-label: var(--astralis-color-warning-label);
   --astralis-color-accent-subtle: var(--astralis-color-warning-subtle);
   --astralis-color-accent-muted: var(--astralis-color-warning-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-warning-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-warning-stroke);
   --astralis-color-accent-ring: var(--astralis-color-warning-ring);
 }
@@ -77262,7 +75027,6 @@
   --astralis-color-accent-label: var(--astralis-color-success-label);
   --astralis-color-accent-subtle: var(--astralis-color-success-subtle);
   --astralis-color-accent-muted: var(--astralis-color-success-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-success-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-success-stroke);
   --astralis-color-accent-ring: var(--astralis-color-success-ring);
 }
@@ -77272,7 +75036,6 @@
   --astralis-color-accent-label: var(--astralis-color-info-label);
   --astralis-color-accent-subtle: var(--astralis-color-info-subtle);
   --astralis-color-accent-muted: var(--astralis-color-info-muted);
-  --astralis-color-accent-emphasized: var(--astralis-color-info-emphasized);
   --astralis-color-accent-stroke: var(--astralis-color-info-stroke);
   --astralis-color-accent-ring: var(--astralis-color-info-ring);
 }

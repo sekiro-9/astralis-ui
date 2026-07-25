@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 import type { ProgressSize } from "./progress.types";
 
 export const progressTrackVariants = cva(
-  "astralis:w-full astralis:overflow-hidden astralis:rounded-full astralis:bg-surface-emphasized",
+  "astralis:w-full astralis:overflow-hidden astralis:rounded-full astralis:bg-surface-muted",
   {
     variants: {
       size: {

@@ -167,13 +167,15 @@ describe("status palettes", () => {
     }
   });
 
-  it("re-declares the semantics that point at the seeded palette", () => {
+  it("re-declares the roles that point at the seeded palette", () => {
     const vars = generateThemeTokens({ warningColor: "#eab308" }, "light");
-    for (const name of ["surface-warning", "label-warning", "stroke-warning"]) {
+    // Status has no separate surface-/label-/stroke- vocabulary: it is a
+    // palette, so seeding it re-declares that palette's own roles.
+    for (const name of ["warning-subtle", "warning-label", "warning-stroke"]) {
       expect(vars[`--astralis-color-${name}`], name).toBeTruthy();
     }
     // …and not the ones belonging to other palettes.
-    expect(vars["--astralis-color-surface-error"]).toBeUndefined();
+    expect(vars["--astralis-color-error-subtle"]).toBeUndefined();
   });
 
   it("computes contrast per mode rather than assuming light", () => {

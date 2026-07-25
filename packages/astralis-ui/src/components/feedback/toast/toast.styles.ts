@@ -15,7 +15,7 @@ export const toasterBaseClasses =
 
 export const toastPanelClasses =
   "astralis:pointer-events-auto astralis:flex astralis:items-start astralis:gap-3 astralis:w-80 astralis:max-w-full " +
-  "astralis:rounded-xl astralis:border-normal astralis:border-stroke-subtle astralis:bg-surface-panel astralis:shadow-lg " +
+  "astralis:rounded-xl astralis:border-normal astralis:border-stroke-base astralis:bg-surface-raised astralis:shadow-lg " +
   "astralis:px-4 astralis:py-3 astralis:text-sm astralis:transition-all astralis:duration-moderate";
 
 /** Enter/exit transform depends on which edge the stack lives on. */

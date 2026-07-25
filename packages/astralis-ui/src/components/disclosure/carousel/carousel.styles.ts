@@ -7,7 +7,7 @@ const focusRing =
 /* Prev / Next / AutoPlay — circular control buttons.                  */
 /* ------------------------------------------------------------------ */
 export const carouselControlVariants = cva(
-  `astralis:inline-flex astralis:items-center astralis:justify-center astralis:shrink-0 astralis:rounded-full astralis:cursor-pointer astralis:bg-surface-base astralis:text-label-base astralis:border-normal astralis:border-stroke-subtle astralis:shadow-md astralis:transition-colors astralis:hover:bg-surface-muted astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed ${focusRing}`,
+  `astralis:inline-flex astralis:items-center astralis:justify-center astralis:shrink-0 astralis:rounded-full astralis:cursor-pointer astralis:bg-surface-base astralis:text-label-base astralis:border-normal astralis:border-stroke-base astralis:shadow-md astralis:transition-colors astralis:hover:bg-surface-subtle astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed ${focusRing}`,
   {
     variants: {
       size: {
@@ -59,7 +59,7 @@ export const carouselDotVariants = cva(
       size: { sm: "astralis:h-1.5", md: "astralis:h-2", lg: "astralis:h-2.5" },
       active: {
         true: "astralis:bg-accent-solid",
-        false: "astralis:bg-surface-emphasized astralis:hover:bg-surface-muted",
+        false: "astralis:bg-surface-subtle astralis:hover:bg-surface-muted",
       },
     },
     compoundVariants: [
@@ -86,7 +86,7 @@ export const carouselLineVariants = cva(
       },
       active: {
         true: "astralis:bg-accent-solid",
-        false: "astralis:bg-surface-emphasized astralis:hover:bg-surface-muted",
+        false: "astralis:bg-surface-subtle astralis:hover:bg-surface-muted",
       },
     },
     defaultVariants: { orientation: "horizontal", active: false },

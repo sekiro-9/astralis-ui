@@ -3,9 +3,9 @@ import { cva } from "class-variance-authority";
 /** Shared by CVA (typing + scalar) and the responsive engine (per-breakpoint). */
 export const codeVariantMap = {
   variant: {
-    subtle: "astralis:bg-surface-muted astralis:text-label-base",
+    subtle: "astralis:bg-surface-subtle astralis:text-label-base",
     // Same-polarity surface — tracks the active theme instead of inverting.
-    solid: "astralis:bg-surface-subtle astralis:text-label-base",
+    solid: "astralis:bg-surface-muted astralis:text-label-base",
     outline: "astralis:border-normal astralis:border-stroke-base astralis:text-label-base",
   },
   size: {

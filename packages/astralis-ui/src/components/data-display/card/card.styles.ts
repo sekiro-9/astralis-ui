@@ -4,9 +4,9 @@ import type { CardSize } from "./card.types";
 export const cardRootVariants = cva("astralis:overflow-hidden astralis:transition-all astralis:duration-moderate", {
   variants: {
     variant: {
-      elevated: "astralis:bg-surface-base astralis:border-normal astralis:border-stroke-subtle astralis:shadow-md",
-      outline: "astralis:bg-transparent astralis:border-normal astralis:border-stroke-subtle",
-      filled: "astralis:bg-surface-muted astralis:border-normal astralis:border-transparent",
+      elevated: "astralis:bg-surface-base astralis:border-normal astralis:border-stroke-base astralis:shadow-md",
+      outline: "astralis:bg-transparent astralis:border-normal astralis:border-stroke-base",
+      filled: "astralis:bg-surface-subtle astralis:border-normal astralis:border-transparent",
       unstyled: "",
     },
     size: {

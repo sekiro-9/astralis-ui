@@ -124,7 +124,7 @@ export function QrCodeRoot({
     >
       {/* QR Canvas */}
       <div
-        className="astralis:relative astralis:rounded-lg astralis:border astralis:border-stroke-subtle astralis:bg-white astralis:overflow-hidden"
+        className="astralis:relative astralis:rounded-lg astralis:border astralis:border-stroke-base astralis:bg-white astralis:overflow-hidden"
         style={{ width: px, height: px }}
       >
         {/* SVG QR code */}
@@ -143,7 +143,7 @@ export function QrCodeRoot({
 
         {/* Error state */}
         {error && (
-          <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:items-center astralis:justify-center astralis:text-label-error astralis:text-xs astralis:p-2 astralis:text-center">
+          <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:items-center astralis:justify-center astralis:text-error-label astralis:text-xs astralis:p-2 astralis:text-center">
             Failed to generate QR code
           </div>
         )}
@@ -187,7 +187,7 @@ export function QrCodeRoot({
           </div>
         )}
         {status === "scanned" && (
-          <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2 astralis:text-green-solid">
+          <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2 astralis:text-success-solid">
             <svg
               width={px * 0.25}
               height={px * 0.25}
@@ -211,7 +211,7 @@ export function QrCodeRoot({
         {/* Logo/icon overlay — only on active */}
         {overlay && status === "active" && (
           <div
-            className="astralis:absolute astralis:flex astralis:items-center astralis:justify-center astralis:bg-white astralis:rounded-md astralis:shadow-sm astralis:border astralis:border-stroke-subtle astralis:overflow-hidden"
+            className="astralis:absolute astralis:flex astralis:items-center astralis:justify-center astralis:bg-white astralis:rounded-md astralis:shadow-sm astralis:border astralis:border-stroke-base astralis:overflow-hidden"
             style={{
               width: overlaySizePx,
               height: overlaySizePx,
@@ -230,8 +230,8 @@ export function QrCodeRoot({
           onClick={handleDownload}
           className={[
             "astralis:inline-flex astralis:items-center astralis:gap-1.5 astralis:text-xs astralis:font-medium",
-            "astralis:px-3 astralis:py-1.5 astralis:rounded-lg astralis:border astralis:border-stroke-subtle",
-            "astralis:bg-surface-base astralis:hover:bg-surface-muted astralis:text-label-muted",
+            "astralis:px-3 astralis:py-1.5 astralis:rounded-lg astralis:border astralis:border-stroke-base",
+            "astralis:bg-surface-base astralis:hover:bg-surface-subtle astralis:text-label-muted",
             "astralis:transition-colors astralis:duration-150",
           ].join(" ")}
         >

@@ -246,13 +246,13 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
               role="listbox"
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
-                "astralis astralis:bg-surface-base astralis:border-normal astralis:border-stroke-subtle astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
+                "astralis astralis:bg-surface-raised astralis:border-normal astralis:border-stroke-base astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
                 accentClass(colorScheme),
               )}
             >
               {searchable && (
                 <div className="astralis:p-2 astralis:border-b astralis:border-stroke-subtle">
-                  <div className="astralis:flex astralis:items-center astralis:gap-2 astralis:px-2.5 astralis:h-8 astralis:rounded-lg astralis:border-normal astralis:border-stroke-subtle astralis:bg-surface-muted">
+                  <div className="astralis:flex astralis:items-center astralis:gap-2 astralis:px-2.5 astralis:h-8 astralis:rounded-lg astralis:border-normal astralis:border-stroke-base astralis:bg-surface-subtle">
                     <SearchIcon className="astralis:h-3.5 astralis:w-3.5 astralis:shrink-0 astralis:text-label-subtle" />
                     <input
                       ref={searchRef}

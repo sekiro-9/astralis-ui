@@ -94,7 +94,7 @@ export const Spanning: Story = {
       <Cell>1</Cell>
       <Cell>1</Cell>
       <Grid.Item colSpan="4"><Cell>colSpan 4 (full row)</Cell></Grid.Item>
-      <Grid.Item rowSpan="2"><Flex bg="blue-solid" color="white" h="full" p="4" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">rowSpan 2</Text></Flex></Grid.Item>
+      <Grid.Item rowSpan="2"><Flex bg="blue" color="white" h="full" p="4" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">rowSpan 2</Text></Flex></Grid.Item>
       <Cell>a</Cell>
       <Cell>b</Cell>
       <Cell>c</Cell>
@@ -138,7 +138,7 @@ export const Alignment: Story = {
 export const TemplateColumns: Story = {
   render: () => (
     <Grid templateColumns="200px 1fr" gap="3" w="full">
-      <Flex bg="blue-solid" color="white" p="4" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">200px</Text></Flex>
+      <Flex bg="blue" color="white" p="4" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">200px</Text></Flex>
       <Cell>1fr (fills the rest)</Cell>
     </Grid>
   ),
@@ -154,7 +154,7 @@ export const TemplateAreas: Story = {
       templateAreas={`"header header" "nav main" "footer footer"`}
     >
       <Grid.Item area="header"><Box bg="brand-500" color="white" p="4" rounded="md"><Text color="current" size="sm">header</Text></Box></Grid.Item>
-      <Grid.Item area="nav"><Box bg="blue-solid" color="white" p="4" rounded="md" h="full"><Text color="current" size="sm">nav</Text></Box></Grid.Item>
+      <Grid.Item area="nav"><Box bg="blue" color="white" p="4" rounded="md" h="full"><Text color="current" size="sm">nav</Text></Box></Grid.Item>
       <Grid.Item area="main"><Box bg="subtle" border="normal" borderColor="muted" p="4" rounded="md" h="32"><Text size="sm">main</Text></Box></Grid.Item>
       <Grid.Item area="footer"><Box bg="muted" p="4" rounded="md"><Text size="sm">footer</Text></Box></Grid.Item>
     </Grid>

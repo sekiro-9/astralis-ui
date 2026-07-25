@@ -5,7 +5,7 @@ import { accentClass, type ColorScheme } from "../../../const/color-schemes";
 
 export const linkVariants = cva(
   "astralis:cursor-pointer astralis:rounded-sm astralis:text-accent-label astralis:transition-colors " +
-    "astralis:hover:text-accent-emphasized astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
+    "astralis:hover:text-accent-solid astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
   {
     variants: {
       variant: {

@@ -13,7 +13,7 @@ export function TableRoot({
   ...rest
 }: TableProps) {
   const outer = variant === "outline"
-    ? "astralis:border-normal astralis:border-stroke-subtle astralis:rounded-lg astralis:overflow-hidden"
+    ? "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-hidden"
     : "";
 
   return (

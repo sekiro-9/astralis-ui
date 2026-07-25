@@ -64,7 +64,7 @@ export function ModalCloseButton({ className = "" }: { className?: string }) {
       aria-label="Close"
       onClick={close}
       className={astralisMerge(
-        "astralis:absolute astralis:top-4 astralis:right-4 astralis:inline-flex astralis:items-center astralis:justify-center astralis:size-8 astralis:rounded-md astralis:text-label-muted astralis:cursor-pointer astralis:transition-colors astralis:hover:bg-surface-muted astralis:hover:text-label-base astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
+        "astralis:absolute astralis:top-4 astralis:right-4 astralis:inline-flex astralis:items-center astralis:justify-center astralis:size-8 astralis:rounded-md astralis:text-label-muted astralis:cursor-pointer astralis:transition-colors astralis:hover:bg-surface-subtle astralis:hover:text-label-base astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
         className,
       )}
     >

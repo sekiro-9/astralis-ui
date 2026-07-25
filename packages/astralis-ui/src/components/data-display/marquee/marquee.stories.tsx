@@ -50,7 +50,7 @@ function LogoChip({
 }) {
   return (
     <div
-      className="astralis:flex astralis:items-center astralis:gap-2 astralis:px-4 astralis:py-2 astralis:rounded-full astralis:border astralis:border-stroke-subtle astralis:bg-surface-raised astralis:text-sm astralis:font-medium astralis:text-content-primary astralis:whitespace-nowrap"
+      className="astralis:flex astralis:items-center astralis:gap-2 astralis:px-4 astralis:py-2 astralis:rounded-full astralis:border astralis:border-stroke-base astralis:bg-surface-subtle astralis:text-sm astralis:font-medium astralis:text-label-base astralis:whitespace-nowrap"
       style={{ borderLeft: `3px solid ${color}` }}
     >
       <span>{emoji}</span>
@@ -224,7 +224,7 @@ export const NewsTicker: Story = {
       "⚡ Storybook integration now supports hot module reloading",
     ];
     return (
-      <div className="astralis:flex astralis:items-center astralis:rounded-lg astralis:border astralis:border-stroke-subtle astralis:overflow-hidden">
+      <div className="astralis:flex astralis:items-center astralis:rounded-lg astralis:border astralis:border-stroke-base astralis:overflow-hidden">
         {/* Label */}
         <div className="astralis:shrink-0 astralis:px-3 astralis:py-2 astralis:bg-primary-600 astralis:text-white astralis:text-xs astralis:font-bold astralis:uppercase astralis:tracking-wide">
           LIVE
@@ -239,7 +239,7 @@ export const NewsTicker: Story = {
         >
           {headlines.map((h, i) => (
             <Marquee.Item key={i}>
-              <span className="astralis:text-sm astralis:text-content-primary astralis:whitespace-nowrap">
+              <span className="astralis:text-sm astralis:text-label-base astralis:whitespace-nowrap">
                 {h}
               </span>
             </Marquee.Item>
@@ -303,7 +303,7 @@ export const Testimonials: Story = {
         <Marquee gap="1rem" pauseOnHover speed={40}>
           {testimonials.slice(0, 3).map((t) => (
             <Marquee.Item key={t.author}>
-              <div className="astralis:w-72 astralis:rounded-xl astralis:border astralis:border-stroke-subtle astralis:bg-surface-raised astralis:p-4 astralis:flex astralis:flex-col astralis:gap-3">
+              <div className="astralis:w-72 astralis:rounded-xl astralis:border astralis:border-stroke-base astralis:bg-surface-subtle astralis:p-4 astralis:flex astralis:flex-col astralis:gap-3">
                 <p className="astralis:text-sm astralis:text-content-secondary astralis:leading-relaxed">
                   "{t.text}"
                 </p>
@@ -315,7 +315,7 @@ export const Testimonials: Story = {
                     {t.avatar}
                   </div>
                   <div>
-                    <p className="astralis:text-xs astralis:font-semibold astralis:text-content-primary">
+                    <p className="astralis:text-xs astralis:font-semibold astralis:text-label-base">
                       {t.author}
                     </p>
                     <p className="astralis:text-xs astralis:text-content-secondary">
@@ -330,7 +330,7 @@ export const Testimonials: Story = {
         <Marquee gap="1rem" pauseOnHover speed={40} reverse>
           {testimonials.slice(2).map((t) => (
             <Marquee.Item key={t.author}>
-              <div className="astralis:w-72 astralis:rounded-xl astralis:border astralis:border-stroke-subtle astralis:bg-surface-raised astralis:p-4 astralis:flex astralis:flex-col astralis:gap-3">
+              <div className="astralis:w-72 astralis:rounded-xl astralis:border astralis:border-stroke-base astralis:bg-surface-subtle astralis:p-4 astralis:flex astralis:flex-col astralis:gap-3">
                 <p className="astralis:text-sm astralis:text-content-secondary astralis:leading-relaxed">
                   "{t.text}"
                 </p>
@@ -342,7 +342,7 @@ export const Testimonials: Story = {
                     {t.avatar}
                   </div>
                   <div>
-                    <p className="astralis:text-xs astralis:font-semibold astralis:text-content-primary">
+                    <p className="astralis:text-xs astralis:font-semibold astralis:text-label-base">
                       {t.author}
                     </p>
                     <p className="astralis:text-xs astralis:text-content-secondary">

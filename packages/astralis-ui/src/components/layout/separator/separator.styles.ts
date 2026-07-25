@@ -20,7 +20,7 @@ export const separatorVariantMap = {
 
 export const separatorVariants = cva(
   // Default colour comes from the muted stroke token; overridable via `borderColor`.
-  "astralis:border-stroke-muted astralis:shrink-0",
+  "astralis:border-stroke-base astralis:shrink-0",
   {
     variants: separatorVariantMap,
     defaultVariants: { orientation: "horizontal", variant: "solid" },

@@ -67,7 +67,7 @@ export const Horizontal: Story = {
   render: () => (
     <HStack gap="3">
       <Item>One</Item>
-      <Flex bg="blue-solid" color="white" px="4" py="6" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">taller</Text></Flex>
+      <Flex bg="blue" color="white" px="4" py="6" rounded="md" alignItems="center" justifyContent="center"><Text color="current" size="sm">taller</Text></Flex>
       <Item>Three</Item>
     </HStack>
   ),

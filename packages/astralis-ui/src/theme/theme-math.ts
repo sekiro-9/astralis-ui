@@ -146,7 +146,7 @@ type NeutralStep = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 95
 
 /**
  * The 11-step neutral ramp. Unlike the brand ramp this includes 950, which
- * backs surface-panel in dark mode.
+ * backs surface-raised in dark mode.
  *
  * Seeded with the shipped gray-500 this reproduces the authored ramp to within
  * 3/255 per channel on 10 of 11 steps (exact through the mid-range) — close
@@ -236,8 +236,8 @@ export function generateBrandTokens(
   // Mirrors the brand role formulas in semantic.css (light / .astralis-dark).
   const roles =
     mode === "dark"
-      ? { label: shades[300], subtle: shades[900], muted: shades[800], emphasized: shades[700], stroke: shades[400] }
-      : { label: shades[700], subtle: shades[100], muted: shades[200], emphasized: shades[300], stroke: shades[500] };
+      ? { label: shades[300], subtle: shades[900], muted: shades[800], stroke: shades[400] }
+      : { label: shades[700], subtle: shades[100], muted: shades[200], stroke: shades[500] };
 
   const role = {
     solid: shades[500],

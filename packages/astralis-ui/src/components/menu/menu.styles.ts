@@ -1,6 +1,6 @@
 export const menuContentClasses =
   "astralis:fixed astralis:z-higher astralis:min-w-44 astralis:max-w-72 astralis:rounded-xl " +
-  "astralis:border-normal astralis:border-stroke-subtle astralis:bg-surface-panel astralis:shadow-lg " +
+  "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-raised astralis:shadow-lg " +
   // `transition` (not -all): left/top must snap, never animate.
   "astralis:p-1 astralis:outline-none astralis:transition astralis:duration-fast";
 
@@ -13,7 +13,7 @@ export const menuItemClasses =
   "astralis:transition-colors astralis:focus:bg-surface-subtle " +
   "astralis:aria-disabled:opacity-moderate astralis:aria-disabled:pointer-events-none";
 
-export const menuItemDangerClasses = "astralis:text-label-error astralis:focus:bg-surface-error";
+export const menuItemDangerClasses = "astralis:text-error-label astralis:focus:bg-error-subtle";
 
 export const menuLabelClasses =
   "astralis:px-2.5 astralis:py-1.5 astralis:text-xs astralis:font-medium astralis:text-label-subtle";

@@ -147,7 +147,7 @@ export const CardStyle: Story = {
                 p="4"
                 rounded="xl"
                 border="normal"
-                borderColor={active ? "emphasized" : "subtle"}
+                borderColor={active ? "base" : "subtle"}
                 bg={active ? "muted" : "base"}
               >
                 <HStack gap="3" alignItems="start">

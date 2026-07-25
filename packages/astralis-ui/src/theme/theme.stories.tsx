@@ -13,7 +13,7 @@ import { Heading } from "../components/typography/heading";
 function Swatch({ bg, label }: { bg: string; label: string }) {
   return (
     <VStack gap="1">
-      <Box bg={bg as never} h="12" rounded="lg" border="normal" borderColor="subtle" />
+      <Box bg={bg as never} h="12" rounded="lg" border="normal" borderColor="base" />
       <Text size="xs" color="muted" align="center">{label}</Text>
     </VStack>
   );
@@ -22,7 +22,7 @@ function Swatch({ bg, label }: { bg: string; label: string }) {
 /** A titled section card wrapping each token group. */
 function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <Box bg="panel" border="normal" borderColor="subtle" rounded="xl" p="6" shadow="sm">
+    <Box bg="subtle" border="normal" borderColor="base" rounded="xl" p="6" shadow="sm">
       <Heading as="h3" size="lg" weight="semibold" color="base">{title}</Heading>
       <Text size="sm" color="muted">{description}</Text>
       <Box pt="4">{children}</Box>
@@ -50,7 +50,7 @@ const ThemeDemo = () => {
                 System
               </Button>
             </HStack>
-            <Box bg="muted" border="normal" borderColor="subtle" rounded="lg" p="4">
+            <Box bg="muted" border="normal" borderColor="base" rounded="lg" p="4">
               <Text size="sm" color="muted">
                 Selected: <Text as="span" weight="semibold" color="base">{theme}</Text>
                 {"  ·  "}
@@ -72,8 +72,8 @@ const ThemeDemo = () => {
         {/* Semantic Surfaces */}
         <Section title="Semantic Surfaces" description="These automatically adapt to light and dark mode.">
           <Grid columns="2" gap="3">
-            {(["base", "muted", "subtle", "panel", "emphasized", "inverted"] as const).map((surface) => (
-              <Box key={surface} bg={surface} border="normal" borderColor="subtle" rounded="lg" p="4">
+            {(["base", "subtle", "muted", "raised", "inverted"] as const).map((surface) => (
+              <Box key={surface} bg={surface} border="normal" borderColor="base" rounded="lg" p="4">
                 <Text size="sm" weight="medium" color={surface === "inverted" ? "inverted" : "base"}>
                   surface-{surface}
                 </Text>
@@ -98,15 +98,15 @@ const ThemeDemo = () => {
         {/* Status Colors */}
         <Section title="Status Colors" description="Semantic status — success, warning, error.">
           <Grid columns="3" gap="3">
-            <Box bg="success" border="normal" borderColor="success" rounded="lg" p="4">
+            <Box bg="success-subtle" border="normal" borderColor="success" rounded="lg" p="4">
               <Text size="sm" weight="semibold" color="success">Success</Text>
               <Text size="xs" color="success">Operation completed</Text>
             </Box>
-            <Box bg="warning" border="normal" borderColor="warning" rounded="lg" p="4">
+            <Box bg="warning-subtle" border="normal" borderColor="warning" rounded="lg" p="4">
               <Text size="sm" weight="semibold" color="warning">Warning</Text>
               <Text size="xs" color="warning">Needs attention</Text>
             </Box>
-            <Box bg="error" border="normal" borderColor="error" rounded="lg" p="4">
+            <Box bg="error-subtle" border="normal" borderColor="error" rounded="lg" p="4">
               <Text size="sm" weight="semibold" color="error">Error</Text>
               <Text size="xs" color="error">Something went wrong</Text>
             </Box>

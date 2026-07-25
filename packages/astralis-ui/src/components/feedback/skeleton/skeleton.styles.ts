@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-export const skeletonVariants = cva("astralis:bg-surface-emphasized", {
+export const skeletonVariants = cva("astralis:bg-surface-muted", {
   variants: {
     variant: {
       text: "astralis:h-4 astralis:w-full astralis:rounded-md",

@@ -31,7 +31,7 @@ const meta: Meta<typeof Float> = {
 export default meta;
 type Story = StoryObj<typeof Float>;
 
-const Dot = () => <Box bg="red-solid" rounded="full" w="5" h="5" border="normal" borderColor="base" />;
+const Dot = () => <Box bg="red" rounded="full" w="5" h="5" border="normal" borderColor="base" />;
 
 const Anchor = ({ children }: { children: React.ReactNode }) => (
   <Box position="relative" bg="muted" rounded="lg" w="24" h="24" border="normal" borderColor="muted">

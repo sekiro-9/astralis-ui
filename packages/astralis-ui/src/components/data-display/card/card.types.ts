@@ -7,6 +7,12 @@ export type CardVariant = "elevated" | "outline" | "filled" | "unstyled";
 /* CardRoot                                                             */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Card is a data-display component, not a layout primitive — so it takes its
+ * own recipe props, NOT Box's style props. Sizing and placement belong to
+ * whatever lays it out: a Grid with `alignItems="stretch"` already gives a row
+ * of cards equal heights, and anything beyond that is a wrapper's job.
+ */
 export interface CardRootProps extends HTMLAttributes<HTMLDivElement> {
   /** Visual style of the card */
   variant?: CardVariant;

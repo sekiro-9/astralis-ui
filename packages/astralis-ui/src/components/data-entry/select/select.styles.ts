@@ -15,11 +15,11 @@ export const selectTrigger = cva(
       variant: {
         outline:
           "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:rounded-lg " +
-          "astralis:hover:border-stroke-emphasized " +
+          "astralis:hover:border-stroke-muted " +
           "astralis:focus-visible:border-accent-stroke astralis:focus-visible:ring-2 astralis:focus-visible:ring-accent-ring",
         filled:
-          "astralis:border-normal astralis:border-transparent astralis:bg-surface-muted astralis:rounded-lg " +
-          "astralis:hover:bg-surface-subtle " +
+          "astralis:border-normal astralis:border-transparent astralis:bg-surface-subtle astralis:rounded-lg " +
+          "astralis:hover:bg-surface-muted " +
           "astralis:focus-visible:bg-surface-base astralis:focus-visible:border-accent-stroke astralis:focus-visible:ring-2 astralis:focus-visible:ring-accent-ring",
       },
       invalid: { true: "", false: "" },
@@ -29,13 +29,13 @@ export const selectTrigger = cva(
         invalid: true,
         variant: "outline",
         className:
-          "astralis:border-red-solid astralis:hover:border-red-solid astralis:focus-visible:border-red-solid astralis:focus-visible:ring-red-muted",
+          "astralis:border-error-solid astralis:hover:border-error-solid astralis:focus-visible:border-error-solid astralis:focus-visible:ring-error-muted",
       },
       {
         invalid: true,
         variant: "filled",
         className:
-          "astralis:border-red-solid astralis:hover:border-red-solid astralis:focus-visible:border-red-solid astralis:focus-visible:ring-red-muted",
+          "astralis:border-error-solid astralis:hover:border-error-solid astralis:focus-visible:border-error-solid astralis:focus-visible:ring-error-muted",
       },
     ],
     defaultVariants: { size: "md", variant: "outline", invalid: false },
@@ -46,5 +46,5 @@ export const selectTrigger = cva(
 export function selectOptionClasses(active: boolean, disabled: boolean): string {
   if (disabled) return "astralis:cursor-not-allowed astralis:opacity-moderate astralis:text-label-subtle";
   if (active) return "astralis:bg-accent-subtle astralis:text-accent-label";
-  return "astralis:text-label-base astralis:hover:bg-surface-muted";
+  return "astralis:text-label-base astralis:hover:bg-surface-subtle";
 }

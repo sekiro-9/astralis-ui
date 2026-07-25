@@ -55,7 +55,7 @@ export function CalendarCell({
           !selected && inRange &&
             "astralis:bg-brand-subtle astralis:text-brand-label",
           !selected && !inRange &&
-            "astralis:text-label-base astralis:hover:bg-surface-muted",
+            "astralis:text-label-base astralis:hover:bg-surface-subtle",
           outside && !selected && "astralis:text-label-subtle",
           today && !selected && "astralis:border-stroke-base",
           disabled &&

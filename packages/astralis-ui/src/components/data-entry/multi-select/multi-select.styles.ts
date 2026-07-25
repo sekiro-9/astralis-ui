@@ -12,14 +12,14 @@ export const msContainer = cva(
         lg: "astralis:min-h-12 astralis:px-3 astralis:py-2",
       },
       variant: {
-        outline: "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:rounded-lg astralis:hover:border-stroke-emphasized",
-        filled: "astralis:border-normal astralis:border-transparent astralis:bg-surface-muted astralis:rounded-lg astralis:hover:bg-surface-subtle",
+        outline: "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:rounded-lg astralis:hover:border-stroke-muted",
+        filled: "astralis:border-normal astralis:border-transparent astralis:bg-surface-subtle astralis:rounded-lg astralis:hover:bg-surface-muted",
       },
       invalid: { true: "", false: "" },
     },
     compoundVariants: [
-      { invalid: true, variant: "outline", className: "astralis:border-red-solid astralis:hover:border-red-solid" },
-      { invalid: true, variant: "filled", className: "astralis:border-red-solid astralis:hover:border-red-solid" },
+      { invalid: true, variant: "outline", className: "astralis:border-error-solid astralis:hover:border-error-solid" },
+      { invalid: true, variant: "filled", className: "astralis:border-error-solid astralis:hover:border-error-solid" },
     ],
     defaultVariants: { size: "md", variant: "outline", invalid: false },
   },
@@ -28,7 +28,7 @@ export const msContainer = cva(
 /** Focus-ring chrome applied while the inline search input is focused. */
 export function msFocusRing(variant: MultiSelectVariant, invalid: boolean): string {
   const bg = variant === "filled" ? "astralis:bg-surface-base " : "";
-  if (invalid) return bg + "astralis:border-red-solid astralis:ring-2 astralis:ring-red-muted";
+  if (invalid) return bg + "astralis:border-error-solid astralis:ring-2 astralis:ring-error-muted";
   return bg + "astralis:border-accent-stroke astralis:ring-2 astralis:ring-accent-ring";
 }
 
@@ -49,5 +49,5 @@ export const msInputText: Record<MultiSelectSize, string> = {
 export function msOptionClasses(active: boolean, disabled: boolean): string {
   if (disabled) return "astralis:cursor-not-allowed astralis:opacity-moderate astralis:text-label-subtle";
   if (active) return "astralis:bg-accent-subtle astralis:text-accent-label";
-  return "astralis:text-label-base astralis:hover:bg-surface-muted";
+  return "astralis:text-label-base astralis:hover:bg-surface-subtle";
 }

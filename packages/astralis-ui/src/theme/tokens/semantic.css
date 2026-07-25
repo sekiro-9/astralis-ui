@@ -6,7 +6,7 @@
    Two tiers:
    1. GLOBAL semantics — neutral roles (surface / label / stroke), no hue.
    2. PER-PALETTE roles — every hue gets the same role vocabulary
-      (solid, contrast, label, subtle, muted, emphasized, stroke, ring),
+      (solid, contrast, label, subtle, muted, stroke, ring),
       each with a light + dark value.
 
    To change a formula, edit token-spec.ts and regenerate — editing this
@@ -18,34 +18,20 @@
   --astralis-color-surface-base:       var(--astralis-color-white);
   --astralis-color-surface-subtle:     var(--astralis-color-gray-100);
   --astralis-color-surface-muted:      var(--astralis-color-gray-200);
-  --astralis-color-surface-emphasized: var(--astralis-color-gray-300);
-  --astralis-color-surface-panel:      var(--astralis-color-white);
+  --astralis-color-surface-raised:     var(--astralis-color-white);
   --astralis-color-surface-inverted:   var(--astralis-color-black);
-  --astralis-color-surface-warning:    var(--astralis-color-warning-100);
-  --astralis-color-surface-error:      var(--astralis-color-error-100);
-  --astralis-color-surface-success:    var(--astralis-color-success-100);
-  --astralis-color-surface-info:       var(--astralis-color-info-100);
 
   /* ---- GLOBAL: Labels (Text / Foreground) ---- */
   --astralis-color-label-base:         var(--astralis-color-gray-900);
   --astralis-color-label-muted:        var(--astralis-color-gray-600);
-  --astralis-color-label-subtle:       var(--astralis-color-gray-400);
+  --astralis-color-label-subtle:       var(--astralis-color-gray-500);
   --astralis-color-label-inverted:     var(--astralis-color-white);
-  --astralis-color-label-warning:      var(--astralis-color-warning-700);
-  --astralis-color-label-error:        var(--astralis-color-error-600);
-  --astralis-color-label-success:      var(--astralis-color-success-700);
-  --astralis-color-label-info:         var(--astralis-color-info-600);
 
   /* ---- GLOBAL: Strokes (Borders) ---- */
   --astralis-color-stroke-base:        var(--astralis-color-gray-300);
-  --astralis-color-stroke-muted:       var(--astralis-color-gray-200);
+  --astralis-color-stroke-muted:       var(--astralis-color-gray-400);
   --astralis-color-stroke-subtle:      var(--astralis-color-gray-100);
-  --astralis-color-stroke-emphasized:  var(--astralis-color-gray-400);
   --astralis-color-stroke-inverted:    var(--astralis-color-black);
-  --astralis-color-stroke-warning:     var(--astralis-color-warning-300);
-  --astralis-color-stroke-error:       var(--astralis-color-error-300);
-  --astralis-color-stroke-success:     var(--astralis-color-success-300);
-  --astralis-color-stroke-info:        var(--astralis-color-info-300);
 
   /* ---- PER-PALETTE ROLES (light) ---- */
   --astralis-color-gray-solid:         var(--astralis-color-gray-900);
@@ -53,7 +39,6 @@
   --astralis-color-gray-label:         var(--astralis-color-gray-800);
   --astralis-color-gray-subtle:        var(--astralis-color-gray-100);
   --astralis-color-gray-muted:         var(--astralis-color-gray-200);
-  --astralis-color-gray-emphasized:    var(--astralis-color-gray-300);
   --astralis-color-gray-stroke:        var(--astralis-color-gray-200);
   --astralis-color-gray-ring:          var(--astralis-color-gray-400);
 
@@ -62,7 +47,6 @@
   --astralis-color-red-label:          var(--astralis-color-red-700);
   --astralis-color-red-subtle:         var(--astralis-color-red-100);
   --astralis-color-red-muted:          var(--astralis-color-red-200);
-  --astralis-color-red-emphasized:     var(--astralis-color-red-300);
   --astralis-color-red-stroke:         var(--astralis-color-red-500);
   --astralis-color-red-ring:           var(--astralis-color-red-500);
 
@@ -71,7 +55,6 @@
   --astralis-color-orange-label:       var(--astralis-color-orange-700);
   --astralis-color-orange-subtle:      var(--astralis-color-orange-100);
   --astralis-color-orange-muted:       var(--astralis-color-orange-200);
-  --astralis-color-orange-emphasized:  var(--astralis-color-orange-300);
   --astralis-color-orange-stroke:      var(--astralis-color-orange-500);
   --astralis-color-orange-ring:        var(--astralis-color-orange-500);
 
@@ -80,7 +63,6 @@
   --astralis-color-yellow-label:       var(--astralis-color-yellow-800);
   --astralis-color-yellow-subtle:      var(--astralis-color-yellow-100);
   --astralis-color-yellow-muted:       var(--astralis-color-yellow-200);
-  --astralis-color-yellow-emphasized:  var(--astralis-color-yellow-300);
   --astralis-color-yellow-stroke:      var(--astralis-color-yellow-500);
   --astralis-color-yellow-ring:        var(--astralis-color-yellow-500);
 
@@ -89,7 +71,6 @@
   --astralis-color-green-label:        var(--astralis-color-green-700);
   --astralis-color-green-subtle:       var(--astralis-color-green-100);
   --astralis-color-green-muted:        var(--astralis-color-green-200);
-  --astralis-color-green-emphasized:   var(--astralis-color-green-300);
   --astralis-color-green-stroke:       var(--astralis-color-green-500);
   --astralis-color-green-ring:         var(--astralis-color-green-500);
 
@@ -98,7 +79,6 @@
   --astralis-color-teal-label:         var(--astralis-color-teal-700);
   --astralis-color-teal-subtle:        var(--astralis-color-teal-100);
   --astralis-color-teal-muted:         var(--astralis-color-teal-200);
-  --astralis-color-teal-emphasized:    var(--astralis-color-teal-300);
   --astralis-color-teal-stroke:        var(--astralis-color-teal-500);
   --astralis-color-teal-ring:          var(--astralis-color-teal-500);
 
@@ -107,7 +87,6 @@
   --astralis-color-blue-label:         var(--astralis-color-blue-700);
   --astralis-color-blue-subtle:        var(--astralis-color-blue-100);
   --astralis-color-blue-muted:         var(--astralis-color-blue-200);
-  --astralis-color-blue-emphasized:    var(--astralis-color-blue-300);
   --astralis-color-blue-stroke:        var(--astralis-color-blue-500);
   --astralis-color-blue-ring:          var(--astralis-color-blue-500);
 
@@ -116,7 +95,6 @@
   --astralis-color-cyan-label:         var(--astralis-color-cyan-700);
   --astralis-color-cyan-subtle:        var(--astralis-color-cyan-100);
   --astralis-color-cyan-muted:         var(--astralis-color-cyan-200);
-  --astralis-color-cyan-emphasized:    var(--astralis-color-cyan-300);
   --astralis-color-cyan-stroke:        var(--astralis-color-cyan-500);
   --astralis-color-cyan-ring:          var(--astralis-color-cyan-500);
 
@@ -125,7 +103,6 @@
   --astralis-color-purple-label:       var(--astralis-color-purple-700);
   --astralis-color-purple-subtle:      var(--astralis-color-purple-100);
   --astralis-color-purple-muted:       var(--astralis-color-purple-200);
-  --astralis-color-purple-emphasized:  var(--astralis-color-purple-300);
   --astralis-color-purple-stroke:      var(--astralis-color-purple-500);
   --astralis-color-purple-ring:        var(--astralis-color-purple-500);
 
@@ -134,7 +111,6 @@
   --astralis-color-pink-label:         var(--astralis-color-pink-700);
   --astralis-color-pink-subtle:        var(--astralis-color-pink-100);
   --astralis-color-pink-muted:         var(--astralis-color-pink-200);
-  --astralis-color-pink-emphasized:    var(--astralis-color-pink-300);
   --astralis-color-pink-stroke:        var(--astralis-color-pink-500);
   --astralis-color-pink-ring:          var(--astralis-color-pink-500);
 
@@ -143,7 +119,6 @@
   --astralis-color-brand-label:        var(--astralis-color-brand-700);
   --astralis-color-brand-subtle:       var(--astralis-color-brand-100);
   --astralis-color-brand-muted:        var(--astralis-color-brand-200);
-  --astralis-color-brand-emphasized:   var(--astralis-color-brand-300);
   --astralis-color-brand-stroke:       var(--astralis-color-brand-500);
   --astralis-color-brand-ring:         var(--astralis-color-brand-500);
 
@@ -152,7 +127,6 @@
   --astralis-color-error-label:        var(--astralis-color-error-700);
   --astralis-color-error-subtle:       var(--astralis-color-error-100);
   --astralis-color-error-muted:        var(--astralis-color-error-200);
-  --astralis-color-error-emphasized:   var(--astralis-color-error-300);
   --astralis-color-error-stroke:       var(--astralis-color-error-500);
   --astralis-color-error-ring:         var(--astralis-color-error-500);
 
@@ -161,7 +135,6 @@
   --astralis-color-warning-label:      var(--astralis-color-warning-700);
   --astralis-color-warning-subtle:     var(--astralis-color-warning-100);
   --astralis-color-warning-muted:      var(--astralis-color-warning-200);
-  --astralis-color-warning-emphasized: var(--astralis-color-warning-300);
   --astralis-color-warning-stroke:     var(--astralis-color-warning-500);
   --astralis-color-warning-ring:       var(--astralis-color-warning-500);
 
@@ -170,7 +143,6 @@
   --astralis-color-success-label:      var(--astralis-color-success-700);
   --astralis-color-success-subtle:     var(--astralis-color-success-100);
   --astralis-color-success-muted:      var(--astralis-color-success-200);
-  --astralis-color-success-emphasized: var(--astralis-color-success-300);
   --astralis-color-success-stroke:     var(--astralis-color-success-500);
   --astralis-color-success-ring:       var(--astralis-color-success-500);
 
@@ -179,7 +151,6 @@
   --astralis-color-info-label:         var(--astralis-color-info-700);
   --astralis-color-info-subtle:        var(--astralis-color-info-100);
   --astralis-color-info-muted:         var(--astralis-color-info-200);
-  --astralis-color-info-emphasized:    var(--astralis-color-info-300);
   --astralis-color-info-stroke:        var(--astralis-color-info-500);
   --astralis-color-info-ring:          var(--astralis-color-info-500);
 }
@@ -192,34 +163,20 @@
   --astralis-color-surface-base:       var(--astralis-color-black);
   --astralis-color-surface-subtle:     var(--astralis-color-gray-900);
   --astralis-color-surface-muted:      var(--astralis-color-gray-800);
-  --astralis-color-surface-emphasized: var(--astralis-color-gray-700);
-  --astralis-color-surface-panel:      var(--astralis-color-gray-950);
+  --astralis-color-surface-raised:     var(--astralis-color-gray-950);
   --astralis-color-surface-inverted:   var(--astralis-color-white);
-  --astralis-color-surface-warning:    var(--astralis-color-warning-950);
-  --astralis-color-surface-error:      var(--astralis-color-error-950);
-  --astralis-color-surface-success:    var(--astralis-color-success-950);
-  --astralis-color-surface-info:       var(--astralis-color-info-950);
 
   /* ---- GLOBAL: Labels (Text / Foreground) ---- */
   --astralis-color-label-base:         var(--astralis-color-gray-50);
-  --astralis-color-label-muted:        var(--astralis-color-gray-400);
-  --astralis-color-label-subtle:       var(--astralis-color-gray-500);
+  --astralis-color-label-muted:        var(--astralis-color-gray-300);
+  --astralis-color-label-subtle:       var(--astralis-color-gray-400);
   --astralis-color-label-inverted:     var(--astralis-color-black);
-  --astralis-color-label-warning:      var(--astralis-color-warning-300);
-  --astralis-color-label-error:        var(--astralis-color-error-400);
-  --astralis-color-label-success:      var(--astralis-color-success-300);
-  --astralis-color-label-info:         var(--astralis-color-info-300);
 
   /* ---- GLOBAL: Strokes (Borders) ---- */
   --astralis-color-stroke-base:        var(--astralis-color-gray-800);
   --astralis-color-stroke-muted:       var(--astralis-color-gray-700);
   --astralis-color-stroke-subtle:      var(--astralis-color-gray-900);
-  --astralis-color-stroke-emphasized:  var(--astralis-color-gray-600);
   --astralis-color-stroke-inverted:    var(--astralis-color-white);
-  --astralis-color-stroke-warning:     var(--astralis-color-warning-400);
-  --astralis-color-stroke-error:       var(--astralis-color-error-400);
-  --astralis-color-stroke-success:     var(--astralis-color-success-400);
-  --astralis-color-stroke-info:        var(--astralis-color-info-400);
 
   /* ---- PER-PALETTE ROLES (dark) ---- */
   --astralis-color-gray-solid:         var(--astralis-color-white);
@@ -227,7 +184,6 @@
   --astralis-color-gray-label:         var(--astralis-color-gray-200);
   --astralis-color-gray-subtle:        var(--astralis-color-gray-900);
   --astralis-color-gray-muted:         var(--astralis-color-gray-800);
-  --astralis-color-gray-emphasized:    var(--astralis-color-gray-700);
   --astralis-color-gray-stroke:        var(--astralis-color-gray-800);
   --astralis-color-gray-ring:          var(--astralis-color-gray-400);
 
@@ -236,7 +192,6 @@
   --astralis-color-red-label:          var(--astralis-color-red-300);
   --astralis-color-red-subtle:         var(--astralis-color-red-900);
   --astralis-color-red-muted:          var(--astralis-color-red-800);
-  --astralis-color-red-emphasized:     var(--astralis-color-red-700);
   --astralis-color-red-stroke:         var(--astralis-color-red-400);
   --astralis-color-red-ring:           var(--astralis-color-red-500);
 
@@ -245,7 +200,6 @@
   --astralis-color-orange-label:       var(--astralis-color-orange-300);
   --astralis-color-orange-subtle:      var(--astralis-color-orange-900);
   --astralis-color-orange-muted:       var(--astralis-color-orange-800);
-  --astralis-color-orange-emphasized:  var(--astralis-color-orange-700);
   --astralis-color-orange-stroke:      var(--astralis-color-orange-400);
   --astralis-color-orange-ring:        var(--astralis-color-orange-500);
 
@@ -254,7 +208,6 @@
   --astralis-color-yellow-label:       var(--astralis-color-yellow-300);
   --astralis-color-yellow-subtle:      var(--astralis-color-yellow-900);
   --astralis-color-yellow-muted:       var(--astralis-color-yellow-800);
-  --astralis-color-yellow-emphasized:  var(--astralis-color-yellow-700);
   --astralis-color-yellow-stroke:      var(--astralis-color-yellow-500);
   --astralis-color-yellow-ring:        var(--astralis-color-yellow-500);
 
@@ -263,7 +216,6 @@
   --astralis-color-green-label:        var(--astralis-color-green-300);
   --astralis-color-green-subtle:       var(--astralis-color-green-900);
   --astralis-color-green-muted:        var(--astralis-color-green-800);
-  --astralis-color-green-emphasized:   var(--astralis-color-green-700);
   --astralis-color-green-stroke:       var(--astralis-color-green-400);
   --astralis-color-green-ring:         var(--astralis-color-green-500);
 
@@ -272,7 +224,6 @@
   --astralis-color-teal-label:         var(--astralis-color-teal-300);
   --astralis-color-teal-subtle:        var(--astralis-color-teal-900);
   --astralis-color-teal-muted:         var(--astralis-color-teal-800);
-  --astralis-color-teal-emphasized:    var(--astralis-color-teal-700);
   --astralis-color-teal-stroke:        var(--astralis-color-teal-400);
   --astralis-color-teal-ring:          var(--astralis-color-teal-500);
 
@@ -281,7 +232,6 @@
   --astralis-color-blue-label:         var(--astralis-color-blue-300);
   --astralis-color-blue-subtle:        var(--astralis-color-blue-900);
   --astralis-color-blue-muted:         var(--astralis-color-blue-800);
-  --astralis-color-blue-emphasized:    var(--astralis-color-blue-700);
   --astralis-color-blue-stroke:        var(--astralis-color-blue-400);
   --astralis-color-blue-ring:          var(--astralis-color-blue-500);
 
@@ -290,7 +240,6 @@
   --astralis-color-cyan-label:         var(--astralis-color-cyan-300);
   --astralis-color-cyan-subtle:        var(--astralis-color-cyan-900);
   --astralis-color-cyan-muted:         var(--astralis-color-cyan-800);
-  --astralis-color-cyan-emphasized:    var(--astralis-color-cyan-700);
   --astralis-color-cyan-stroke:        var(--astralis-color-cyan-400);
   --astralis-color-cyan-ring:          var(--astralis-color-cyan-500);
 
@@ -299,7 +248,6 @@
   --astralis-color-purple-label:       var(--astralis-color-purple-300);
   --astralis-color-purple-subtle:      var(--astralis-color-purple-900);
   --astralis-color-purple-muted:       var(--astralis-color-purple-800);
-  --astralis-color-purple-emphasized:  var(--astralis-color-purple-700);
   --astralis-color-purple-stroke:      var(--astralis-color-purple-400);
   --astralis-color-purple-ring:        var(--astralis-color-purple-500);
 
@@ -308,7 +256,6 @@
   --astralis-color-pink-label:         var(--astralis-color-pink-300);
   --astralis-color-pink-subtle:        var(--astralis-color-pink-900);
   --astralis-color-pink-muted:         var(--astralis-color-pink-800);
-  --astralis-color-pink-emphasized:    var(--astralis-color-pink-700);
   --astralis-color-pink-stroke:        var(--astralis-color-pink-400);
   --astralis-color-pink-ring:          var(--astralis-color-pink-500);
 
@@ -317,7 +264,6 @@
   --astralis-color-brand-label:        var(--astralis-color-brand-300);
   --astralis-color-brand-subtle:       var(--astralis-color-brand-900);
   --astralis-color-brand-muted:        var(--astralis-color-brand-800);
-  --astralis-color-brand-emphasized:   var(--astralis-color-brand-700);
   --astralis-color-brand-stroke:       var(--astralis-color-brand-400);
   --astralis-color-brand-ring:         var(--astralis-color-brand-500);
 
@@ -326,7 +272,6 @@
   --astralis-color-error-label:        var(--astralis-color-error-300);
   --astralis-color-error-subtle:       var(--astralis-color-error-900);
   --astralis-color-error-muted:        var(--astralis-color-error-800);
-  --astralis-color-error-emphasized:   var(--astralis-color-error-700);
   --astralis-color-error-stroke:       var(--astralis-color-error-400);
   --astralis-color-error-ring:         var(--astralis-color-error-500);
 
@@ -335,7 +280,6 @@
   --astralis-color-warning-label:      var(--astralis-color-warning-300);
   --astralis-color-warning-subtle:     var(--astralis-color-warning-900);
   --astralis-color-warning-muted:      var(--astralis-color-warning-800);
-  --astralis-color-warning-emphasized: var(--astralis-color-warning-700);
   --astralis-color-warning-stroke:     var(--astralis-color-warning-400);
   --astralis-color-warning-ring:       var(--astralis-color-warning-500);
 
@@ -344,7 +288,6 @@
   --astralis-color-success-label:      var(--astralis-color-success-300);
   --astralis-color-success-subtle:     var(--astralis-color-success-900);
   --astralis-color-success-muted:      var(--astralis-color-success-800);
-  --astralis-color-success-emphasized: var(--astralis-color-success-700);
   --astralis-color-success-stroke:     var(--astralis-color-success-400);
   --astralis-color-success-ring:       var(--astralis-color-success-500);
 
@@ -353,7 +296,6 @@
   --astralis-color-info-label:         var(--astralis-color-info-300);
   --astralis-color-info-subtle:        var(--astralis-color-info-900);
   --astralis-color-info-muted:         var(--astralis-color-info-800);
-  --astralis-color-info-emphasized:    var(--astralis-color-info-700);
   --astralis-color-info-stroke:        var(--astralis-color-info-400);
   --astralis-color-info-ring:          var(--astralis-color-info-500);
 }

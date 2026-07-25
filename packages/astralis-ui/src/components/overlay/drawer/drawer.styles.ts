@@ -8,7 +8,7 @@ export const SCRIM_COLOR = "rgba(0, 0, 0, 0.5)";
 
 /** Position + which edges get a border, per placement. */
 export const drawerPanelVariants = cva(
-  "astralis:fixed astralis:z-high astralis:flex astralis:flex-col astralis:bg-surface-base astralis:text-label-base astralis:shadow-xl astralis:border-stroke-subtle astralis:outline-none",
+  "astralis:fixed astralis:z-high astralis:flex astralis:flex-col astralis:bg-surface-raised astralis:text-label-base astralis:shadow-xl astralis:border-stroke-base astralis:outline-none",
   {
     variants: {
       placement: {
