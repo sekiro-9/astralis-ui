@@ -1,0 +1,32 @@
+{
+  "name": "astralis-blocks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Source registry of Astralis blocks — section-level compositions delivered to consumers as copy-in source by the CLI.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Paul Andrew",
+  "exports": {
+    ".": "./src/index.ts",
+    "./registry.json": "./registry/index.json"
+  },
+  "files": [
+    "src",
+    "registry"
+  ],
+  "scripts": {
+    "build": "node scripts/build-registry.mjs",
+    "check:registry": "node scripts/build-registry.mjs --check",
+    "typecheck": "tsc -p tsconfig.json",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "pnpm run typecheck && pnpm run check:registry && pnpm run smoke"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "astralis-ui": "workspace:^",
+    "esbuild": "^0.25.12",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "~5.8.3"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "pricing-tiers-03",
+  "category": "pricing",
+  "family": "pricing-tiers",
+  "name": "Inverted recommended tier",
+  "description": "Three tiers where the recommended plan sits on an inverted surface to carry the most weight, with an oversized price and an annual-billing note under each. Ticks and secondary text adapt to whichever surface the card uses, and every call to action is pinned to the foot of its card.",
+  "tags": [
+    "three-tier",
+    "inverted-plan",
+    "annual-billing",
+    "large-price",
+    "feature-list"
+  ],
+  "files": [
+    "pricing-tiers-03.tsx"
+  ],
+  "component": "PricingTiers03",
+  "uses": [
+    "Badge",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "List",
+    "ListItem",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "pricing-tiers-03.tsx",
+      "content": "import {\n  Badge,\n  Box,\n  Button,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  List,\n  ListItem,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst tiers = [\n  {\n    name: \"Basic\",\n    price: \"$12\",\n    note: \"billed annually\",\n    description: \"One project, one collaborator.\",\n    cta: \"Choose Basic\",\n    featured: false,\n    features: [\"1 project\", \"2 GB storage\", \"Weekly backups\"],\n  },\n  {\n    name: \"Growth\",\n    price: \"$39\",\n    note: \"billed annually · save 20%\",\n    description: \"The plan most teams settle on.\",\n    cta: \"Choose Growth\",\n    featured: true,\n    features: [\n      \"10 projects\",\n      \"50 GB storage\",\n      \"Hourly backups\",\n      \"Audit log\",\n      \"Priority support\",\n    ],\n  },\n  {\n    name: \"Scale\",\n    price: \"$99\",\n    note: \"billed annually\",\n    description: \"High volume, with room to grow.\",\n    cta: \"Choose Scale\",\n    featured: false,\n    features: [\"Unlimited projects\", \"1 TB storage\", \"Continuous backups\"],\n  },\n];\n\n/**\n * Blocks bundle no icon library — raw SVG through Icon's BYO path. The tick\n * takes its colour from the card so it reads on both surfaces.\n */\nfunction CheckMark({ inverted }: { inverted?: boolean }) {\n  return (\n    <Icon size=\"sm\" color={inverted ? \"inverted\" : \"brand-solid\"} aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2.5\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M20 6 9 17l-5-5\" />\n      </svg>\n    </Icon>\n  );\n}\n\n/** Three tiers with the recommended plan inverted to carry the most weight. */\nexport function PricingTiers03() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          {/* ---- Section heading ---- */}\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"3\">\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              lineHeight=\"tight\"\n              letterSpacing=\"tight\"\n              align=\"center\"\n            >\n              Pay yearly, keep a fifth of it\n            </Heading>\n            <Box maxW=\"lg\">\n              <Text size=\"md\" color=\"muted\" align=\"center\" lineHeight=\"relaxed\">\n                Annual billing is 20% cheaper on every plan. Monthly is available at\n                checkout if you would rather not commit.\n              </Text>\n            </Box>\n          </Stack>\n\n          {/* ---- Tiers ---- */}\n          <Grid columns={{ base: \"1\", lg: \"3\" }} gap=\"6\" alignItems=\"stretch\">\n            {tiers.map((tier) => (\n              <Box\n                key={tier.name}\n                bg={tier.featured ? \"inverted\" : \"subtle\"}\n                border=\"normal\"\n                borderColor={tier.featured ? \"inverted\" : \"base\"}\n                rounded=\"2xl\"\n                shadow={tier.featured ? \"xl\" : \"sm\"}\n                p={{ base: \"6\", lg: \"8\" }}\n              >\n                <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"6\" h=\"full\">\n                  <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"4\">\n                    <Flex alignItems=\"center\" justifyContent=\"between\" gap=\"3\">\n                      <Heading\n                        as=\"h3\"\n                        size=\"md\"\n                        weight=\"semibold\"\n                        color={tier.featured ? \"inverted\" : \"base\"}\n                      >\n                        {tier.name}\n                      </Heading>\n                      {tier.featured && (\n                        <Badge variant=\"solid\" colorScheme=\"brand\" size=\"xs\">\n                          Best value\n                        </Badge>\n                      )}\n                    </Flex>\n\n                    <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"1\">\n                      <Text\n                        as=\"span\"\n                        size=\"5xl\"\n                        weight=\"semibold\"\n                        lineHeight=\"none\"\n                        color={tier.featured ? \"inverted\" : \"base\"}\n                      >\n                        {tier.price}\n                      </Text>\n                      {/* No inverted-muted token exists, so secondary text on the\n                          inverted card is the inverted label held back with opacity. */}\n                      <Box opacity={tier.featured ? \"high\" : \"max\"}>\n                        <Text size=\"xs\" color={tier.featured ? \"inverted\" : \"subtle\"}>\n                          {tier.note}\n                        </Text>\n                      </Box>\n                    </Stack>\n\n                    <Box opacity={tier.featured ? \"high\" : \"max\"}>\n                      <Text\n                        size=\"sm\"\n                        color={tier.featured ? \"inverted\" : \"muted\"}\n                        lineHeight=\"relaxed\"\n                      >\n                        {tier.description}\n                      </Text>\n                    </Box>\n                  </Stack>\n\n                  {/* The list absorbs the card's slack so the button is pinned\n                      to the bottom — the tiers carry 3, 5 and 3 features, so\n                      anything else steps the CTAs out of line. */}\n                  <List grow=\"1\" styleType=\"none\" spacing=\"3\">\n                    {tier.features.map((feature) => (\n                      <ListItem key={feature} icon={<CheckMark inverted={tier.featured} />}>\n                        <Box opacity={tier.featured ? \"high\" : \"max\"}>\n                          <Text size=\"sm\" color={tier.featured ? \"inverted\" : \"muted\"}>\n                            {feature}\n                          </Text>\n                        </Box>\n                      </ListItem>\n                    ))}\n                  </List>\n\n                  <Button\n                    size=\"md\"\n                    fullWidth\n                    variant={tier.featured ? \"solid\" : \"surface\"}\n                    colorScheme={tier.featured ? \"brand\" : \"gray\"}\n                  >\n                    {tier.cta}\n                  </Button>\n                </Stack>\n              </Box>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

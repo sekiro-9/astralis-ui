@@ -1,0 +1,39 @@
+{
+  "id": "pricing-tiers-01",
+  "category": "pricing",
+  "family": "pricing-tiers",
+  "name": "Three cards with highlighted plan",
+  "description": "Three separate pricing cards with a centred section heading. The recommended plan is lifted with a brand border, a solid call to action and a Most popular badge; ticked feature lists sit under a divider and every call to action is pinned to the foot of its card.",
+  "tags": [
+    "three-tier",
+    "highlighted-plan",
+    "feature-list",
+    "separate-cards",
+    "footnote"
+  ],
+  "files": [
+    "pricing-tiers-01.tsx"
+  ],
+  "component": "PricingTiers01",
+  "uses": [
+    "Badge",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "List",
+    "ListItem",
+    "Separator",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "pricing-tiers-01.tsx",
+      "content": "import {\n  Badge,\n  Box,\n  Button,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  List,\n  ListItem,\n  Separator,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst tiers = [\n  {\n    name: \"Starter\",\n    price: \"$0\",\n    cadence: \"free forever\",\n    description: \"Everything you need to ship a first project.\",\n    cta: \"Start for free\",\n    featured: false,\n    features: [\n      \"Up to 3 projects\",\n      \"Community support\",\n      \"1 GB asset storage\",\n      \"Core component library\",\n    ],\n  },\n  {\n    name: \"Team\",\n    price: \"$24\",\n    cadence: \"per editor / month\",\n    description: \"For teams shipping to production every week.\",\n    cta: \"Start 14-day trial\",\n    featured: true,\n    features: [\n      \"Unlimited projects\",\n      \"Priority support\",\n      \"100 GB asset storage\",\n      \"Shared design tokens\",\n      \"Role-based permissions\",\n    ],\n  },\n  {\n    name: \"Enterprise\",\n    price: \"Custom\",\n    cadence: \"billed annually\",\n    description: \"Procurement, security review and an SLA.\",\n    cta: \"Talk to sales\",\n    featured: false,\n    features: [\n      \"Everything in Team\",\n      \"SSO and SCIM\",\n      \"Dedicated environment\",\n      \"99.9% uptime SLA\",\n    ],\n  },\n];\n\n/** Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction CheckMark() {\n  return (\n    <Icon size=\"sm\" color=\"brand-solid\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2.5\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M20 6 9 17l-5-5\" />\n      </svg>\n    </Icon>\n  );\n}\n\n/** Three separate cards, the recommended plan lifted with a brand border. */\nexport function PricingTiers01() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          {/* ---- Section heading ---- */}\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"3\">\n            <Text\n              as=\"span\"\n              size=\"xs\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              Pricing\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              lineHeight=\"tight\"\n              letterSpacing=\"tight\"\n              align=\"center\"\n            >\n              Priced per editor, not per seat\n            </Heading>\n            <Box maxW=\"xl\">\n              <Text size=\"md\" color=\"muted\" align=\"center\" lineHeight=\"relaxed\">\n                Viewers are always free. You only pay for the people actually pushing\n                changes, and you can change plan whenever you like.\n              </Text>\n            </Box>\n          </Stack>\n\n          {/* ---- Tiers ---- */}\n          <Grid columns={{ base: \"1\", lg: \"3\" }} gap=\"6\" alignItems=\"stretch\">\n            {tiers.map((tier) => (\n              <Box\n                key={tier.name}\n                bg=\"subtle\"\n                border={tier.featured ? \"moderate\" : \"normal\"}\n                borderColor={tier.featured ? \"brand\" : \"base\"}\n                rounded=\"2xl\"\n                shadow={tier.featured ? \"lg\" : \"sm\"}\n                p={{ base: \"6\", lg: \"8\" }}\n              >\n                <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"6\" h=\"full\">\n                  <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"4\">\n                    <Flex alignItems=\"center\" justifyContent=\"between\" gap=\"3\">\n                      <Heading as=\"h3\" size=\"lg\" weight=\"semibold\">\n                        {tier.name}\n                      </Heading>\n                      {tier.featured && (\n                        <Badge variant=\"solid\" colorScheme=\"brand\" size=\"xs\">\n                          Most popular\n                        </Badge>\n                      )}\n                    </Flex>\n\n                    <Flex alignItems=\"baseline\" gap=\"2\" wrap=\"wrap\">\n                      <Text as=\"span\" size=\"4xl\" weight=\"semibold\" lineHeight=\"none\">\n                        {tier.price}\n                      </Text>\n                      <Text as=\"span\" size=\"sm\" color=\"muted\">\n                        {tier.cadence}\n                      </Text>\n                    </Flex>\n\n                    <Text size=\"sm\" color=\"muted\" lineHeight=\"relaxed\">\n                      {tier.description}\n                    </Text>\n                  </Stack>\n\n                  <Separator />\n\n                  {/* The list absorbs the card's slack so the button is pinned\n                      to the bottom. Placed above the button rather than below\n                      it, the CTAs would only line up while every tier happened\n                      to have the same number of features. */}\n                  <List grow=\"1\" styleType=\"none\" spacing=\"3\">\n                    {tier.features.map((feature) => (\n                      <ListItem key={feature} icon={<CheckMark />}>\n                        <Text size=\"sm\" color=\"muted\">\n                          {feature}\n                        </Text>\n                      </ListItem>\n                    ))}\n                  </List>\n\n                  <Button\n                    size=\"md\"\n                    fullWidth\n                    variant={tier.featured ? \"solid\" : \"surface\"}\n                    colorScheme={tier.featured ? \"brand\" : \"gray\"}\n                  >\n                    {tier.cta}\n                  </Button>\n                </Stack>\n              </Box>\n            ))}\n          </Grid>\n\n          <Text size=\"sm\" color=\"subtle\" align=\"center\">\n            All plans include unlimited viewers, SSL and a 30-day money-back guarantee.\n          </Text>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "blocks": [
+    {
+      "id": "features-grid-01",
+      "category": "features",
+      "family": "features-grid",
+      "name": "Three-column grid of bordered cards",
+      "description": "Six features three across as flat bordered cards, under a centred accent eyebrow and section heading. Each card stacks a tinted icon tile above its title and body copy, and takes its edge from a border rather than a shadow. Falls to two columns at sm and one at base.",
+      "tags": [
+        "six-up",
+        "icon-tiles",
+        "centred-heading",
+        "bordered-cards",
+        "accent-eyebrow"
+      ],
+      "files": [
+        "features-grid-01.tsx"
+      ],
+      "component": "FeaturesGrid01",
+      "uses": [
+        "Box",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "features-grid-02",
+      "category": "features",
+      "family": "features-grid",
+      "name": "Two-column bordered cards with side heading",
+      "description": "Four features as bordered cards on a tinted band. The section heading sits left with its call to action opposite on wide viewports, and each card runs a tinted icon tile inline beside the title, with room for a status badge. Two across from md, one below it.",
+      "tags": [
+        "four-up",
+        "bordered-cards",
+        "inline-icon",
+        "tinted-surface",
+        "heading-cta"
+      ],
+      "files": [
+        "features-grid-02.tsx"
+      ],
+      "component": "FeaturesGrid02",
+      "uses": [
+        "Badge",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "features-grid-03",
+      "category": "features",
+      "family": "features-grid",
+      "name": "Bento with lead tile and placeholder visual",
+      "description": "Asymmetric bento under a left-aligned section heading: a wide brand-tinted lead tile carrying a placeholder deploy-history visual, a tall bordered tile beside it, and two supporting cells. Spans are declared per breakpoint, so everything collapses to one column below lg.",
+      "tags": [
+        "bento",
+        "asymmetric",
+        "lead-tile",
+        "placeholder-visual",
+        "brand-panel"
+      ],
+      "files": [
+        "features-grid-03.tsx"
+      ],
+      "component": "FeaturesGrid03",
+      "uses": [
+        "Box",
+        "Container",
+        "Flex",
+        "Grid",
+        "GridItem",
+        "Heading",
+        "Icon",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "forgot-password-01",
+      "category": "auth",
+      "family": "forgot-password",
+      "name": "Single-field reset request",
+      "description": "Password reset request on a tinted band: envelope mark, an explanation of what happens next, one email field with a privacy-preserving hint, and a route back to sign-in.",
+      "tags": [
+        "centred",
+        "single-field",
+        "help-text",
+        "back-link",
+        "tinted-surface"
+      ],
+      "files": [
+        "forgot-password-01.tsx"
+      ],
+      "component": "ForgotPassword01",
+      "uses": [
+        "Box",
+        "Button",
+        "Container",
+        "FieldHelpText",
+        "FieldLabel",
+        "FieldRoot",
+        "Flex",
+        "Heading",
+        "Icon",
+        "Input",
+        "Link",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "hero-split-01",
+      "category": "hero",
+      "family": "hero-split",
+      "name": "Split with framed product shot",
+      "description": "Two-column hero: announcement pill, headline, dual call-to-action and a stat row on the left; a framed product screenshot on the right. Stacks to one column below lg.",
+      "tags": [
+        "media-right",
+        "dual-cta",
+        "announcement-pill",
+        "stats",
+        "light-surface"
+      ],
+      "files": [
+        "hero-split-01.tsx"
+      ],
+      "component": "HeroSplit01",
+      "uses": [
+        "AspectRatio",
+        "Badge",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "hero-split-02",
+      "category": "hero",
+      "family": "hero-split",
+      "name": "Media left with email capture",
+      "description": "Mirrored split on a tinted band: a placeholder chart on the left, and on the right an accent eyebrow, headline, inline email capture and a trusted-by logo row. Stacks to one column below lg with the media last.",
+      "tags": [
+        "media-left",
+        "email-capture",
+        "logo-strip",
+        "tinted-surface",
+        "accent-eyebrow"
+      ],
+      "files": [
+        "hero-split-02.tsx"
+      ],
+      "component": "HeroSplit02",
+      "uses": [
+        "AspectRatio",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "FlexItem",
+        "Grid",
+        "GridItem",
+        "Heading",
+        "Input",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "hero-split-03",
+      "category": "hero",
+      "family": "hero-split",
+      "name": "Split with checklist and testimonial",
+      "description": "Copy on the left with an accent eyebrow, headline and a ticked feature list; on the right a raised testimonial card floating on a brand-tinted panel. Stacks to one column below lg.",
+      "tags": [
+        "media-right",
+        "checklist",
+        "testimonial",
+        "brand-panel",
+        "single-cta"
+      ],
+      "files": [
+        "hero-split-03.tsx"
+      ],
+      "component": "HeroSplit03",
+      "uses": [
+        "Box",
+        "Button",
+        "CardBody",
+        "CardRoot",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "List",
+        "ListItem",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "login-01",
+      "category": "auth",
+      "family": "login",
+      "name": "Centred card with social sign-in",
+      "description": "Sign-in card on a tinted band: brand mark and heading above, then email and password fields with an inline forgot-password link, a keep-signed-in checkbox, and Google and GitHub providers below a divider.",
+      "tags": [
+        "centred",
+        "social-providers",
+        "remember-me",
+        "tinted-surface",
+        "panel-card"
+      ],
+      "files": [
+        "login-01.tsx"
+      ],
+      "component": "Login01",
+      "uses": [
+        "Box",
+        "Button",
+        "Checkbox",
+        "Container",
+        "FieldLabel",
+        "FieldRoot",
+        "Flex",
+        "FlexItem",
+        "Heading",
+        "Icon",
+        "Input",
+        "InputPassword",
+        "Link",
+        "Separator",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "pricing-tiers-01",
+      "category": "pricing",
+      "family": "pricing-tiers",
+      "name": "Three cards with highlighted plan",
+      "description": "Three separate pricing cards with a centred section heading. The recommended plan is lifted with a brand border, a solid call to action and a Most popular badge; ticked feature lists sit under a divider and every call to action is pinned to the foot of its card.",
+      "tags": [
+        "three-tier",
+        "highlighted-plan",
+        "feature-list",
+        "separate-cards",
+        "footnote"
+      ],
+      "files": [
+        "pricing-tiers-01.tsx"
+      ],
+      "component": "PricingTiers01",
+      "uses": [
+        "Badge",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "List",
+        "ListItem",
+        "Separator",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "pricing-tiers-02",
+      "category": "pricing",
+      "family": "pricing-tiers",
+      "name": "Joined panel with tinted plan",
+      "description": "Three tiers sharing one rounded panel rather than floating as separate cards. The recommended column is marked by a tinted background instead of a border, so nothing breaks the outer silhouette, and each call to action sits at the foot of its column.",
+      "tags": [
+        "three-tier",
+        "joined-panel",
+        "tinted-plan",
+        "compact",
+        "tinted-surface"
+      ],
+      "files": [
+        "pricing-tiers-02.tsx"
+      ],
+      "component": "PricingTiers02",
+      "uses": [
+        "Badge",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "List",
+        "ListItem",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "pricing-tiers-03",
+      "category": "pricing",
+      "family": "pricing-tiers",
+      "name": "Inverted recommended tier",
+      "description": "Three tiers where the recommended plan sits on an inverted surface to carry the most weight, with an oversized price and an annual-billing note under each. Ticks and secondary text adapt to whichever surface the card uses, and every call to action is pinned to the foot of its card.",
+      "tags": [
+        "three-tier",
+        "inverted-plan",
+        "annual-billing",
+        "large-price",
+        "feature-list"
+      ],
+      "files": [
+        "pricing-tiers-03.tsx"
+      ],
+      "component": "PricingTiers03",
+      "uses": [
+        "Badge",
+        "Box",
+        "Button",
+        "Container",
+        "Flex",
+        "Grid",
+        "Heading",
+        "Icon",
+        "List",
+        "ListItem",
+        "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "signup-01",
+      "category": "auth",
+      "family": "signup",
+      "name": "Centred card with value list",
+      "description": "Sign-up card on a tinted band: split first and last name row, work email, password with a strength hint, a terms checkbox, and a short ticked list of what the free tier includes.",
+      "tags": [
+        "centred",
+        "split-name-row",
+        "terms-consent",
+        "value-list",
+        "tinted-surface"
+      ],
+      "files": [
+        "signup-01.tsx"
+      ],
+      "component": "Signup01",
+      "uses": [
+        "Box",
+        "Button",
+        "Checkbox",
+        "Container",
+        "FieldHelpText",
+        "FieldLabel",
+        "FieldRoot",
+        "Flex",
+        "FlexItem",
+        "Heading",
+        "Icon",
+        "Input",
+        "InputPassword",
+        "Link",
+        "List",
+        "ListItem",
+        "Separator",
+        "Stack",
+        "Text"
+      ]
+    }
+  ]
+}
