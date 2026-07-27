@@ -48,6 +48,10 @@ import {
   zIndexTypes,
   positionTypes,
   borderWidthTypes,
+  borderTWidthTypes,
+  borderRWidthTypes,
+  borderBWidthTypes,
+  borderLWidthTypes,
   borderStyleTypes,
   shadowTypes,
   overflowTypes,
@@ -64,6 +68,14 @@ import {
   bottomTypes,
   leftTypes
 } from "../../../const/positioning-mappings";
+import {
+  flexBasisTypes,
+  flexTypes,
+  flexGrowTypes,
+  flexShrinkTypes,
+  orderTypes,
+  alignSelfTypes
+} from "../../../const/layout-mappings";
 
 /**
  * Single source of truth for Box's token maps. Shared by CVA (scalar resolution
@@ -115,6 +127,10 @@ export const boxVariantMap = {
     aspectRatio: aspectRatioTypes,
     shadow: shadowTypes,
     border: borderWidthTypes,
+    borderT: borderTWidthTypes,
+    borderR: borderRWidthTypes,
+    borderB: borderBWidthTypes,
+    borderL: borderLWidthTypes,
     borderStyle: borderStyleTypes,
     rounded: roundedCorners,
     roundedT: roundedTCorners,
@@ -128,6 +144,17 @@ export const boxVariantMap = {
     bg: bgColors,
     color: textColors,
     borderColor: borderColors,
+    // How the element behaves as a CHILD of a flex or grid parent. These are
+    // CSS properties of the item, not of the container, so they belong on every
+    // primitive rather than only on Flex.Item — otherwise sizing a Card or a
+    // nested Flex costs a wrapper node. Flex.Item / Grid.Item still declare the
+    // same keys and are matched first, so their behaviour is unchanged.
+    basis: flexBasisTypes,
+    flex: flexTypes,
+    grow: flexGrowTypes,
+    shrink: flexShrinkTypes,
+    order: orderTypes,
+    alignSelf: alignSelfTypes,
 } as const;
 
 export const boxVariants = cva("", {

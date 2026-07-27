@@ -974,6 +974,70 @@
 @utility border-thickest {
   border-width: var(--astralis-border-width-thickest);
 }
+/* Per-side border widths. Mirrors the `rounded` family, which already carries
+   T/R/B/L — a header rule or a table divider is a one-sided border, and the
+   all-sides utility above cannot express it. */
+@utility border-t-normal {
+  border-top-width: var(--astralis-border-width-normal);
+}
+@utility border-t-moderate {
+  border-top-width: var(--astralis-border-width-moderate);
+}
+@utility border-t-thick {
+  border-top-width: var(--astralis-border-width-thick);
+}
+@utility border-t-thicker {
+  border-top-width: var(--astralis-border-width-thicker);
+}
+@utility border-t-thickest {
+  border-top-width: var(--astralis-border-width-thickest);
+}
+@utility border-r-normal {
+  border-right-width: var(--astralis-border-width-normal);
+}
+@utility border-r-moderate {
+  border-right-width: var(--astralis-border-width-moderate);
+}
+@utility border-r-thick {
+  border-right-width: var(--astralis-border-width-thick);
+}
+@utility border-r-thicker {
+  border-right-width: var(--astralis-border-width-thicker);
+}
+@utility border-r-thickest {
+  border-right-width: var(--astralis-border-width-thickest);
+}
+@utility border-b-normal {
+  border-bottom-width: var(--astralis-border-width-normal);
+}
+@utility border-b-moderate {
+  border-bottom-width: var(--astralis-border-width-moderate);
+}
+@utility border-b-thick {
+  border-bottom-width: var(--astralis-border-width-thick);
+}
+@utility border-b-thicker {
+  border-bottom-width: var(--astralis-border-width-thicker);
+}
+@utility border-b-thickest {
+  border-bottom-width: var(--astralis-border-width-thickest);
+}
+@utility border-l-normal {
+  border-left-width: var(--astralis-border-width-normal);
+}
+@utility border-l-moderate {
+  border-left-width: var(--astralis-border-width-moderate);
+}
+@utility border-l-thick {
+  border-left-width: var(--astralis-border-width-thick);
+}
+@utility border-l-thicker {
+  border-left-width: var(--astralis-border-width-thicker);
+}
+@utility border-l-thickest {
+  border-left-width: var(--astralis-border-width-thickest);
+}
+
 
 /* Flex Direction Primitives */
 @utility flex-row {

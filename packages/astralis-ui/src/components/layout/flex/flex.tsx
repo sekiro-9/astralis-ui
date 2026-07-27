@@ -38,8 +38,13 @@ const FlexRoot = forwardRef(
     return (
       <Element
         className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
+          // Flex's own recipe FIRST, Box props second. `display` is the one key
+          // the two families share, and Flex's cva always emits `flex` — merged
+          // the other way round it silently ate an explicit display, so
+          // `<Flex display={{ base: "hidden", md: "flex" }} />` typechecked and
+          // then rendered visible at every width.
           resolveStyleProps(variantProps, { maps: flexVariantMap, variants: flexVariants }),
+          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
           className,
         )}
         ref={ref}

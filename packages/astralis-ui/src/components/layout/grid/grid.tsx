@@ -57,8 +57,10 @@ const GridRoot = forwardRef(
     return (
       <Element
         className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
+          // Grid's own recipe FIRST, Box props second — same reason as Flex:
+          // `display` is shared, and Grid's cva always emits `grid`.
           resolveStyleProps(variantProps, { maps: gridVariantMap, variants: gridVariants }),
+          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
           className,
         )}
         ref={ref}

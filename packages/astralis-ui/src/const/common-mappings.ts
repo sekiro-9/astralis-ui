@@ -60,6 +60,41 @@ export const borderWidthTypes = {
   thickest: "astralis:border-thickest",
 } as const;
 
+/* Per-side border widths, mirroring the rounded family. A header rule or a
+   table divider is a one-sided border; `border` alone cannot say that. */
+export const borderTWidthTypes = {
+  normal: "astralis:border-t-normal",
+  moderate: "astralis:border-t-moderate",
+  thick: "astralis:border-t-thick",
+  thicker: "astralis:border-t-thicker",
+  thickest: "astralis:border-t-thickest",
+} as const;
+
+export const borderRWidthTypes = {
+  normal: "astralis:border-r-normal",
+  moderate: "astralis:border-r-moderate",
+  thick: "astralis:border-r-thick",
+  thicker: "astralis:border-r-thicker",
+  thickest: "astralis:border-r-thickest",
+} as const;
+
+export const borderBWidthTypes = {
+  normal: "astralis:border-b-normal",
+  moderate: "astralis:border-b-moderate",
+  thick: "astralis:border-b-thick",
+  thicker: "astralis:border-b-thicker",
+  thickest: "astralis:border-b-thickest",
+} as const;
+
+export const borderLWidthTypes = {
+  normal: "astralis:border-l-normal",
+  moderate: "astralis:border-l-moderate",
+  thick: "astralis:border-l-thick",
+  thicker: "astralis:border-l-thicker",
+  thickest: "astralis:border-l-thickest",
+} as const;
+
+
 export const borderStyleTypes = {
   solid: "astralis:border-solid",
   dashed: "astralis:border-dashed",
