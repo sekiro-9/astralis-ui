@@ -6,7 +6,7 @@ export function GridSpan() {
   return (
     <Grid columns="4" rows="2" gap="3" w="full" maxW="md">
       <Grid.Item colSpan="2" rowSpan="2">
-        <Center bg="orange-solid" rounded="lg" size="full" minH="24">
+        <Center bg="orange" rounded="lg" size="full" minH="24">
           <Text size="sm" color="inverted">2 × 2</Text>
         </Center>
       </Grid.Item>

@@ -8,14 +8,14 @@ export function FlexDemo() {
       gap="4"
       w="full"
       maxW="lg"
-      bg="panel"
+      bg="subtle"
       p="4"
       rounded="xl"
       border="normal"
-      borderColor="subtle"
+      borderColor="base"
     >
       <Flex alignItems="center" gap="3">
-        <Box size="10" bg="brand-solid" rounded="full" />
+        <Box size="10" bg="brand" rounded="full" />
         <Box>
           <Text size="sm" weight="semibold">Nova Starling</Text>
           <Text size="xs" color="muted">Product designer</Text>

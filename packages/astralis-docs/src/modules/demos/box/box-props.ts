@@ -22,17 +22,18 @@ export const boxProps: PropRow[] = [
   },
   {
     prop: "bg",
-    type: `"base" | "panel" | "subtle" | … | "{hue}-solid/subtle/muted/emphasized" | "{hue}-50"–"{hue}-950"`,
-    description: "Background from semantic roles, palette roles, or raw shades. Transparent by default.",
+    type: `"base" | "subtle" | "muted" | "raised" | "inverted" | "{hue}" (solid) | "{hue}-subtle" | "{hue}-muted" | "{hue}-50"–"{hue}-950"`,
+    description:
+      "Background from semantic roles, palette roles, or raw shades. Transparent by default. base is the page, subtle the thing sitting on it, muted a filled control; raised is for floating layers only.",
   },
   {
     prop: "color",
-    type: `"base" | "muted" | "subtle" | "inverted" | status tokens …`,
+    type: `"base" | "muted" | "subtle" | "inverted" | "{hue}" (label) | "{hue}-solid" | "{hue}-contrast"`,
     description: "Text color token; children inherit it.",
   },
   {
     prop: "border · borderStyle · borderColor",
-    type: `"normal"–"thickest" · CSS styles · "base" | "subtle" | "{hue}-stroke" …`,
+    type: `"normal"–"thickest" · CSS styles · "base" | "subtle" | "muted" | "{hue}" (stroke)`,
     description: "Border width, style and color tokens.",
   },
   {
@@ -59,6 +60,12 @@ export const boxProps: PropRow[] = [
     prop: "opacity · overflow(X/Y) · cursor · pointerEvents · aspectRatio",
     type: "token maps",
     description: "Misc utilities, all typed.",
+  },
+  {
+    prop: "basis · flex · grow · shrink · order · alignSelf",
+    type: `sizing scale · "1" | "auto" | "initial" | "none" · boolean | "0" | "1" · "1"–"12" · "auto" | "start" | "center" | "end" | "stretch" | "baseline"`,
+    description:
+      "How the element behaves as a child of a flex or grid parent. On Box, so any primitive can size itself without a Flex.Item wrapper.",
   },
   {
     prop: "as",

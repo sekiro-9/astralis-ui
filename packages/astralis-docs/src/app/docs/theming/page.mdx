@@ -15,9 +15,9 @@ Astralis components never hard-code a color. They paint with **role tokens**
 
 ```css
 /* what a component actually uses */
-background: var(--astralis-color-surface-panel);
+background: var(--astralis-color-surface-base);
 color: var(--astralis-color-label-base);
-border-color: var(--astralis-color-stroke-subtle);
+border-color: var(--astralis-color-stroke-base);
 ```
 
 Each role points at a **primitive** (a raw shade like `gray-100`), and the
@@ -27,7 +27,7 @@ those variables at runtime. Nothing re-renders; the browser just repaints.
 | Layer | Examples | Job |
 | --- | --- | --- |
 | Primitives | `gray-100`, `blue-600`, `brand-500` | Raw shades — 11 palettes × 11 steps |
-| Semantic roles | `surface-panel`, `label-muted`, `stroke-subtle` | Neutral UI jobs, light/dark aware |
+| Semantic roles | `surface-base`, `label-muted`, `stroke-base` | Neutral UI jobs, light/dark aware |
 | Palette roles | `blue-solid`, `blue-subtle`, `blue-ring`, … | Same 8-role vocabulary for every hue |
 | Accent channel | `accent-solid`, `accent-ring`, … | A virtual palette — whatever `colorScheme` says |
 

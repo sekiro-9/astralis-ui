@@ -13,7 +13,7 @@ export function GridTemplate() {
       maxW="md"
     >
       <Grid.Item area="header">
-        <Center bg="green-solid" p="3" rounded="lg">
+        <Center bg="green" p="3" rounded="lg">
           <Text size="xs" color="inverted">header</Text>
         </Center>
       </Grid.Item>

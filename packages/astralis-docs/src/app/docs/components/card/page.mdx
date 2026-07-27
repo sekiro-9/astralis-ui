@@ -35,5 +35,10 @@ import { Card } from "astralis-ui";
 | `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding density for all sections. |
 | `hoverable` | `boolean` | `false` | Hover elevation. |
 
+Card takes no [style props](/docs/style-props) — those belong to the layout
+primitives. Sizing and placement are the job of whatever lays the card out: a
+`Grid` with `alignItems="stretch"` already gives a row of cards equal heights,
+and anything past that goes on a wrapping `Box`.
+
 `Card.Header` additionally takes `extra: ReactNode`; `Card.Title` renders an
 `h3` and `Card.Description` a `p` — both accept their native attributes.

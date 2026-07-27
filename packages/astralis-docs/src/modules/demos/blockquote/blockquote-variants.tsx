@@ -9,7 +9,7 @@ export function BlockquoteVariants() {
       <Blockquote variant="subtle">
         subtle — the rule plus a tinted panel behind the quote.
       </Blockquote>
-      <Blockquote variant="subtle" borderColor="brand-stroke">
+      <Blockquote variant="subtle" borderColor="brand">
         The rule color is just a Box prop — recolor it with borderColor.
       </Blockquote>
     </VStack>

@@ -16,7 +16,7 @@ export function FlexItem() {
         </Center>
       </Flex.Item>
       <Flex.Item order="first">
-        <Center bg="brand-solid" p="3" rounded="lg">
+        <Center bg="brand" p="3" rounded="lg">
           <Text size="xs" color="inverted">order first</Text>
         </Center>
       </Flex.Item>

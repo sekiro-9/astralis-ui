@@ -24,7 +24,7 @@ recomputed from your color (see [Theming](/docs/theming)).
 ## Roles — how components actually pick colors
 
 Components rarely touch a raw step like `blue-600`. Every palette exposes
-the same eight **roles**, and those are what variant styles are written
+the same seven **roles**, and those are what variant styles are written
 against:
 
 | Role | Job | Example use |
@@ -34,7 +34,6 @@ against:
 | `label` | Tinted text on neutral backgrounds | Link text, subtle-button label |
 | `subtle` | Faint tinted background | Badge background, hover wash |
 | `muted` | A step stronger than subtle | Subtle-button hover |
-| `emphasized` | Strongest tinted background | Active/pressed states |
 | `stroke` | Tinted border | Outline button border |
 | `ring` | Focus ring | Any focused control |
 
@@ -49,7 +48,7 @@ Two things make this vocabulary powerful:
 
 ## The accent channel
 
-`accent-*` is a ninth, *virtual* palette. It has the same eight roles but
+`accent-*` is a *virtual* palette. It has the same seven roles but
 no colors of its own — it forwards to whichever real palette the nearest
 `colorScheme` chose (brand by default). Components are written once against
 `accent-*` and recolor through it. The full mechanism is explained on the
@@ -62,12 +61,108 @@ neutral roles instead of any palette:
 
 | Family | Tokens | Job |
 | --- | --- | --- |
-| Surface | `base` · `subtle` · `muted` · `emphasized` · `panel` · `inverted` | Backgrounds, in rising strength; `panel` for cards/overlays |
-| Label | `base` · `muted` · `subtle` · `inverted` | Text, from primary to faintest |
-| Stroke | `base` · `subtle` · `muted` · `emphasized` · `inverted` | Borders and separators |
+| Surface | `base` · `subtle` · `muted` · `raised` · `inverted` | See the ladder below |
+| Label | `base` · `muted` · `subtle` · `inverted` | See the label ladder below |
+| Stroke | `base` · `subtle` · `muted` · `inverted` | See the stroke ladder below |
 
-Plus a status set (`warning`, `error`, `success`, `info`) across all three
-families — the same tokens Alert, Toast and form validation use.
+### The surface ladder
+
+Three neutrals, one rule each. You should never have to guess which to reach for.
+
+| Token | When |
+| --- | --- |
+| `base` | The page, and any control at rest — an input, a checkbox, an active tab |
+| `subtle` | Something sitting on the page but not floating — a card, a table header, an inactive item |
+| `muted` | Not interactive — disabled controls (with reduced opacity), and inert parts like a progress track or slider rail |
+
+**Hover is one step up the ladder from wherever the element rests.** A control
+resting on `base` hovers to `subtle`; something already at `subtle` hovers to
+`muted`. There is no separate hover token to memorise, and no component gets to
+pick its own answer.
+
+Two things the ladder does not cover. **`raised` is not a fourth neutral** — it
+is identical to `base` in light mode and one step lighter in dark, where a
+shadow cannot read. Floating layers only: menus, toasts, popovers, modals,
+drawers, listboxes. Cards never use it. And **`inverted`** is for the few things
+that must read against any surface at all — tooltips, the slider value bubble.
+
+### The label ladder
+
+Three tiers of text, ordered by contrast against the page.
+
+| Token | When |
+| --- | --- |
+| `base` | Body copy, headings, anything you actually read |
+| `muted` | Secondary text — descriptions, captions, help text |
+| `subtle` | The faintest tier that is still content: placeholders, empty states, listbox group headers, calendar weekday rows |
+
+**Every tier clears WCAG AA (4.5:1) on the page it sits on**, in both modes.
+`subtle` is deliberately the floor rather than "as light as it can go" — it
+paints placeholder text, and a placeholder nobody can read is a bug, not a
+style. If you want something genuinely decorative and unreadable, reach for
+`opacity`, not a lighter label token.
+
+One asymmetry worth knowing: dark is spaced one ramp step wider than light.
+The neutral ramp has nothing between gray-400 and gray-500 on a near-black
+page, so holding `muted` where light has it would have pushed `subtle` under
+the AA line.
+
+`inverted` is the fourth: text on an inverted surface, used by Tooltip and the
+slider value bubble.
+
+### The stroke ladder
+
+Strokes work differently, and the difference is deliberate. A default
+*background* is the absence of tint, so surfaces can only ever step up from
+`base`. A default *border* has to be visible — so `stroke-base` sits in the
+middle, with one step either side of it.
+
+| Token | When |
+| --- | --- |
+| `subtle` | A dividing line inside something that is already bordered — a card header rule, a drawer footer |
+| `base` | Every default border, and every control outline: cards, tables, inputs, checkboxes, panels, Separator |
+| `muted` | Stronger than the default — the hover border on an outline input |
+
+So the direction reads `subtle < base < muted`, ordered by contrast against the
+page in both light and dark. Hovering an outline control still means "one step
+up", exactly as it does for surfaces — it just starts from `base` rather than
+ending there.
+
+### Status colours are palettes, not neutrals
+
+`error`, `warning`, `success` and `info` are **not** part of the three families
+above. Those families are ladders measuring emphasis; a status colour carries
+meaning, which is a different axis entirely. So status lives where every other
+colour lives — as a palette with the same seven roles:
+
+```jsx
+<Text color="error" />       {/* error-label — the text role   */}
+<Box bg="success" />         {/* success-solid — the fill role  */}
+<Box borderColor="warning" />{/* warning-stroke — the line role */}
+```
+
+These are the same tokens `colorScheme="error"` rebinds onto the accent
+channel, so Alert, Toast and form validation all resolve to one set of values
+rather than two that drift apart.
+
+### Naming a hue picks the role that fits the property
+
+Every palette works this way, not just the status ones. The bare hue resolves
+to whichever role the CSS property actually wants — `solid` for a fill, `label`
+for text, `stroke` for a line — so the common case is one word:
+
+| | Bare form | Also available |
+| --- | --- | --- |
+| `bg` | `"blue"` → `blue-solid` | `blue-subtle` · `blue-muted` · `blue-50`–`blue-950` |
+| `color` | `"blue"` → `blue-label` | `blue-solid` · `blue-contrast` · `blue-50`–`blue-950` |
+| `borderColor` | `"blue"` → `blue-stroke` | `blue-50`–`blue-950` |
+
+Two things worth knowing. **`gray` has no bare form** — its `solid` is
+near-black in light and white in dark, which is never what `bg="gray"` would
+suggest, and the neutral ladder already covers those cases. And the numbered
+shades are the escape hatch, not the default: they are the only colour tokens
+that do **not** re-point in dark mode, so `bg="blue-500"` freezes one mode's
+decision into both.
 
 ## Using colors in your own code
 

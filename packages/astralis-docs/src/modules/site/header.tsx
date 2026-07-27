@@ -5,10 +5,28 @@ import { usePathname } from "next/navigation";
 import { Separator, Tag, ThemeToggle } from "astralis-ui";
 import { Logo } from "./logo";
 
+/**
+ * Each link owns its own active test — "Docs" covers every guide page except
+ * the component pages, which have their own entry, so the rule can't be
+ * derived from the href alone.
+ */
 const links = [
-  { title: "Docs", href: "/docs" },
-  { title: "Components", href: "/docs/components/button" },
-  { title: "Theme Builder", href: "/theme-builder" },
+  {
+    title: "Docs",
+    href: "/docs",
+    isActive: (path: string) => path.startsWith("/docs") && !path.startsWith("/docs/components"),
+  },
+  {
+    title: "Components",
+    href: "/docs/components/button",
+    isActive: (path: string) => path.startsWith("/docs/components"),
+  },
+  { title: "Blocks", href: "/blocks", isActive: (path: string) => path.startsWith("/blocks") },
+  {
+    title: "Theme Builder",
+    href: "/theme-builder",
+    isActive: (path: string) => path.startsWith("/theme-builder"),
+  },
 ];
 
 export function Header() {
@@ -21,12 +39,7 @@ export function Header() {
           <Logo />
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
             {links.map((link) => {
-              const active =
-                link.href === "/docs"
-                  ? pathname === "/docs" || (pathname.startsWith("/docs") && !pathname.startsWith("/docs/components"))
-                  : link.href === "/theme-builder"
-                    ? pathname.startsWith("/theme-builder")
-                    : pathname.startsWith("/docs/components");
+              const active = link.isActive(pathname);
               return (
                 <Link
                   key={link.href}

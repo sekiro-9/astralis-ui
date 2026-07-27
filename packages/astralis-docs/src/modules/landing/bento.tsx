@@ -43,7 +43,7 @@ function Cell({
     <CardRoot
       variant="outline"
       size="lg"
-      className={`flex flex-col hover:-translate-y-1 hover:border-stroke-muted hover:shadow-lg astralis:rounded-3xl astralis:bg-surface-panel ${className}`}
+      className={`flex flex-col hover:-translate-y-1 hover:border-stroke-base hover:shadow-lg astralis:rounded-3xl astralis:bg-surface-subtle ${className}`}
     >
       <CardHeader>
         {/* Prefixed only where it overrides a class the component sets

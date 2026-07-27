@@ -40,15 +40,15 @@ export async function CodeBlock({ code, lang = "tsx", filename }: CodeBlockProps
     <CodeBlockRoot
       variant="solid"
       code={trimmed}
-      className="group relative my-0 rounded-xl border border-stroke-subtle bg-surface-subtle dark:bg-panel"
+      className="group relative my-0 rounded-xl border border-stroke-base bg-surface-subtle dark:bg-raised"
     >
       {filename && (
-        <CodeBlockHeader className="border-stroke-subtle py-2.5 font-normal text-label-muted">
+        <CodeBlockHeader className="border-stroke-base py-2.5 font-normal text-label-muted">
           <CodeBlockTitle>{filename}</CodeBlockTitle>
         </CodeBlockHeader>
       )}
       <div className="absolute right-2.5 top-2.5 z-10 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-        <CodeBlockCopyTrigger className="border border-stroke-subtle bg-surface text-label-muted hover:text-label" />
+        <CodeBlockCopyTrigger className="border border-stroke-base bg-surface text-label-muted hover:text-label" />
       </div>
       <CodeBlockContent className="shiki docs-scroll p-4 text-[13px] leading-relaxed">
         <CodeBlockCode highlightedHtml={inner} />

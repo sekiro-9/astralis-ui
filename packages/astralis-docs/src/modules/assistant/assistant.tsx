@@ -323,7 +323,7 @@ export function Assistant() {
               ) : (
                 <div
                   key={i}
-                  className="mr-4 min-w-0 max-w-[calc(100%-1rem)] self-start rounded-2xl rounded-bl-md border border-stroke-subtle bg-surface-panel px-3.5 py-2.5"
+                  className="mr-4 min-w-0 max-w-[calc(100%-1rem)] self-start rounded-2xl rounded-bl-md border border-stroke-base bg-surface-raised px-3.5 py-2.5"
                 >
                   <AssistantMarkdown>{m.text}</AssistantMarkdown>
                   {m.suggestions && m.suggestions.length > 0 && (
@@ -342,7 +342,7 @@ export function Assistant() {
             )}
 
             {(pending || live) && (
-              <div className="mr-4 min-w-0 max-w-[calc(100%-1rem)] self-start rounded-2xl rounded-bl-md border border-stroke-subtle bg-surface-panel px-3.5 py-2.5">
+              <div className="mr-4 min-w-0 max-w-[calc(100%-1rem)] self-start rounded-2xl rounded-bl-md border border-stroke-base bg-surface-raised px-3.5 py-2.5">
                 {thinking ? <TypingDots /> : <AssistantMarkdown>{revealed}</AssistantMarkdown>}
               </div>
             )}

@@ -11,7 +11,7 @@ export function FlexAlign() {
             justifyContent=&quot;{justify}&quot;
           </Text>
           <Flex justifyContent={justify} gap="2" bg="subtle" p="2" rounded="lg">
-            <Box size="8" bg="brand-solid" rounded="md" />
+            <Box size="8" bg="brand" rounded="md" />
             <Box size="8" bg="brand-muted" rounded="md" />
             <Box size="8" bg="brand-subtle" rounded="md" />
           </Flex>

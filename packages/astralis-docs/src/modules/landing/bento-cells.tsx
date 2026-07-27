@@ -24,7 +24,7 @@ export function BentoResponsiveCell() {
   return (
     <HStack gap="3" alignItems="center" w="full">
       <Box
-        bg={{ base: "brand-subtle", md: "brand-solid" }}
+        bg={{ base: "brand-subtle", md: "brand" }}
         rounded={{ base: "md", md: "full" }}
         p={{ base: "3", md: "4" }}
       />

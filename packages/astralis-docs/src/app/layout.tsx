@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { createRequire } from "node:module";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { AstralisProvider } from "astralis-ui";
-import { Header } from "@/modules/site/header";
-import { Assistant } from "@/modules/assistant/assistant";
+import { SiteChrome } from "@/modules/site/site-chrome";
 import "astralis-ui/styles.css";
 import "./globals.css";
 
@@ -52,9 +51,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <AstralisProvider defaultTheme="system">
-          <Header />
-          {children}
-          <Assistant />
+          <SiteChrome>{children}</SiteChrome>
         </AstralisProvider>
       </body>
     </html>

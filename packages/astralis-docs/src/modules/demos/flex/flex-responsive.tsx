@@ -10,7 +10,7 @@ export function FlexResponsive() {
       <Box bg="teal-muted" p="4" rounded="lg">
         <Text size="sm">Two</Text>
       </Box>
-      <Box bg="teal-emphasized" p="4" rounded="lg">
+      <Box bg="teal-muted" p="4" rounded="lg">
         <Text size="sm">Three</Text>
       </Box>
     </Flex>

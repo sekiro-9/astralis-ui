@@ -6,7 +6,8 @@ const nextConfig: NextConfig = {
   // Support both .ts/.tsx and .md/.mdx page files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   
-  transpilePackages: ["astralis-ui"],
+  // astralis-blocks ships raw TS/TSX on purpose — its source IS the artifact.
+  transpilePackages: ["astralis-ui", "astralis-blocks"],
   
   // Point Turbopack root to the workspace root directory
   turbopack: {

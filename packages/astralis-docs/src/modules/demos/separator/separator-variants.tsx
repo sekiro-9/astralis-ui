@@ -17,7 +17,7 @@ export function SeparatorVariants() {
       </VStack>
       <VStack gap="1" alignItems="stretch">
         <Text as="span" size="xs" color="muted">colored via borderColor</Text>
-        <Separator borderColor="brand-stroke" border="moderate" />
+        <Separator borderColor="brand" border="moderate" />
       </VStack>
     </VStack>
   );

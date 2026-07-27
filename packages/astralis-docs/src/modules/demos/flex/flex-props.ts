@@ -38,7 +38,10 @@ export const flexProps: PropRow[] = [
   },
 ];
 
-/** Keep in sync with flexItemVariants */
+/**
+ * Keep in sync with flexItemVariants. Box declares the same props, so these
+ * work on any primitive — Flex.Item is the spelling, not the only route.
+ */
 export const flexItemProps: PropRow[] = [
   {
     prop: "basis",

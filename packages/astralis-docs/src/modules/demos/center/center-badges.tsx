@@ -13,7 +13,7 @@ export function CenterBadges() {
       <Center size="12" bg="red-subtle" rounded="xl">
         <Icon as={Bell} size="sm" />
       </Center>
-      <Center size="12" bg="purple-solid" rounded="lg">
+      <Center size="12" bg="purple" rounded="lg">
         <Icon as={Rocket} size="sm" color="inverted" />
       </Center>
       <Center px="3" h="8" bg="subtle" rounded="full">

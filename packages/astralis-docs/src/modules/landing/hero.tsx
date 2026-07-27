@@ -30,8 +30,8 @@ function brandOverride(hex: string, mode: "light" | "dark"): CSSProperties {
   const shade = (step: number) => shades[`--astralis-color-brand-${step}`];
   const roles =
     mode === "dark"
-      ? { label: shade(300), subtle: shade(900), muted: shade(800), emphasized: shade(700), stroke: shade(400) }
-      : { label: shade(700), subtle: shade(100), muted: shade(200), emphasized: shade(300), stroke: shade(500) };
+      ? { label: shade(300), subtle: shade(900), muted: shade(800), stroke: shade(400) }
+      : { label: shade(700), subtle: shade(100), muted: shade(200), stroke: shade(500) };
 
   return {
     ...shades,
@@ -39,14 +39,12 @@ function brandOverride(hex: string, mode: "light" | "dark"): CSSProperties {
     "--astralis-color-brand-label": roles.label,
     "--astralis-color-brand-subtle": roles.subtle,
     "--astralis-color-brand-muted": roles.muted,
-    "--astralis-color-brand-emphasized": roles.emphasized,
     "--astralis-color-brand-stroke": roles.stroke,
     "--astralis-color-brand-ring": shade(500),
     "--astralis-color-accent-solid": shade(500),
     "--astralis-color-accent-label": roles.label,
     "--astralis-color-accent-subtle": roles.subtle,
     "--astralis-color-accent-muted": roles.muted,
-    "--astralis-color-accent-emphasized": roles.emphasized,
     "--astralis-color-accent-stroke": roles.stroke,
     "--astralis-color-accent-ring": shade(500),
   } as CSSProperties;
@@ -77,7 +75,7 @@ export function Hero() {
         {/* Copy + CTAs + picker */}
         <div className="flex flex-col items-start">
           <Entrance delay={0}>
-            <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-stroke-subtle bg-surface/60 px-4 py-2 text-xs font-medium text-label-muted backdrop-blur">
+            <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-stroke-base bg-surface/60 px-4 py-2 text-xs font-medium text-label-muted backdrop-blur">
               <Sparkles size={13} className="text-accent-label" />
               62 components · precompiled CSS · React 19
             </p>
@@ -114,7 +112,7 @@ export function Hero() {
                   style={{ backgroundColor: swatch.hex }}
                 />
               ))}
-              <label className="relative ml-1 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed border-stroke-emphasized text-label-muted transition-all duration-200 hover:scale-110 hover:text-label">
+              <label className="relative ml-1 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed border-stroke-base text-label-muted transition-all duration-200 hover:scale-110 hover:text-label">
                 <span className="text-base leading-none">+</span>
                 <input
                   type="color"
@@ -191,12 +189,12 @@ export function Hero() {
 
           {/* Floating satellites */}
           <div className="animate-float-slower absolute -left-8 -top-6 hidden lg:block">
-            <div className="rounded-2xl border border-stroke-subtle bg-panel/90 p-3 shadow-lg backdrop-blur">
+            <div className="rounded-2xl border border-stroke-base bg-raised/90 p-3 shadow-lg backdrop-blur">
               <Tag colorScheme="brand" variant="solid" size="sm">Shipped ✦</Tag>
             </div>
           </div>
           <div className="animate-float-slow absolute -bottom-8 -right-4 hidden lg:block" style={{ animationDelay: "1.6s" }}>
-            <div className="flex items-center gap-2.5 rounded-2xl border border-stroke-subtle bg-panel/90 px-4 py-3 shadow-lg backdrop-blur">
+            <div className="flex items-center gap-2.5 rounded-2xl border border-stroke-base bg-raised/90 px-4 py-3 shadow-lg backdrop-blur">
               <Avatar name="Nova Starling" size="xs" />
               <span className="text-xs text-label-muted">Nova deployed <span className="font-medium text-accent-label">v0.1</span></span>
             </div>

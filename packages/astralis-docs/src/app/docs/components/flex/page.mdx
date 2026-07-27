@@ -27,8 +27,11 @@ the cross axis — the same vocabulary as CSS, minus the `flex-` prefixes.
 
 ## Flex items
 
-For per-child control, wrap children in `Flex.Item` — it exposes `basis`,
-`grow`, `shrink`, `order` and `alignSelf`.
+`basis`, `flex`, `grow`, `shrink`, `order` and `alignSelf` describe how an
+element behaves as a *child*, so they live on [Box](/docs/components/box) and
+work on any primitive — `<Flex shrink="0">` needs no wrapper. `Flex.Item`
+declares the same props and stays the clearer spelling when a plain `div` is
+all you wanted.
 
 <ComponentPreview name="flex-item" />
 
