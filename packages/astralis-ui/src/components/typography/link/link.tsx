@@ -1,39 +1,13 @@
-import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import type { ElementType } from "react";
 import { astralisMerge } from "../../../utils/astralis-merge";
-import { accentClass, type ColorScheme } from "../../../const/color-schemes";
+import { resolveStyleProps } from "../../../utils/responsive";
+import { accentClass } from "../../../const/color-schemes";
+import { textVariantMap } from "../text/text.styles";
+import { linkHoverColor, linkTypographyVariants, linkVariants } from "./link.styles";
+import type { LinkProps } from "./link.types";
 
-export const linkVariants = cva(
-  "astralis:cursor-pointer astralis:rounded-sm astralis:text-accent-label astralis:transition-colors " +
-    "astralis:hover:text-accent-solid astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
-  {
-    variants: {
-      variant: {
-        underline: "astralis:underline astralis:underline-offset-2",
-        hover: "astralis:hover:underline astralis:underline-offset-2",
-        plain: "",
-      },
-    },
-    defaultVariants: { variant: "hover" },
-  },
-);
-
-export type LinkProps<T extends ElementType = "a"> = {
-  /** Render as a router link component (e.g. Next's `Link`). */
-  as?: T;
-  /** Hue (via the accent channel). @default "brand" */
-  colorScheme?: ColorScheme;
-  /** Opens in a new tab with `rel="noopener noreferrer"` and an ↗ marker. */
-  external?: boolean;
-  className?: string;
-  /** React 19: ref is a regular prop — no forwardRef, no polymorphic cast. */
-  ref?: Ref<HTMLElement>;
-  children: ReactNode;
-} & VariantProps<typeof linkVariants> &
-  Omit<ComponentPropsWithoutRef<T>, "as" | "children" | "className" | "ref">;
-
-/** An inline text link with accent-channel coloring and external-link handling. */
-export function Link<T extends ElementType = "a">({
+/** An inline text link: Text's typography, plus accent colouring and external handling. */
+export function Link<C extends ElementType = "a">({
   as,
   variant,
   colorScheme = "brand",
@@ -41,20 +15,61 @@ export function Link<T extends ElementType = "a">({
   className = "",
   ref,
   children,
+  size,
+  weight,
+  align,
+  color,
+  casing,
+  lineHeight,
+  letterSpacing,
+  fontFamily,
+  fontStyle,
+  textDecoration,
+  truncate,
+  lineClamp,
   ...rest
-}: LinkProps<T>) {
+}: LinkProps<C>) {
   const Element = (as || "a") as ElementType;
   const externalProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
 
   return (
     <Element
       ref={ref}
-      className={astralisMerge(linkVariants({ variant }), accentClass(colorScheme), className)}
+      className={astralisMerge(
+        linkVariants({ variant }),
+        // Only shift colour on hover when the colour is ours to shift. With an
+        // explicit `color` the affordance falls to `variant`'s underline.
+        color === undefined ? linkHoverColor : "",
+        accentClass(colorScheme),
+        // Typography last, so an explicit prop beats the accent label colour.
+        resolveStyleProps(
+          {
+            size,
+            weight,
+            align,
+            color,
+            casing,
+            lineHeight,
+            letterSpacing,
+            fontFamily,
+            fontStyle,
+            textDecoration,
+            truncate,
+            lineClamp: truncate ? undefined : lineClamp,
+          },
+          { maps: textVariantMap, variants: linkTypographyVariants },
+        ),
+        className,
+      )}
       {...externalProps}
       {...rest}
     >
       {children}
-      {external && <span aria-hidden="true" className="astralis:ml-0.5 astralis:align-super astralis:text-2xs">↗</span>}
+      {external && (
+        <span aria-hidden="true" className="astralis:ml-0.5 astralis:align-super astralis:text-2xs">
+          ↗
+        </span>
+      )}
     </Element>
   );
 }
