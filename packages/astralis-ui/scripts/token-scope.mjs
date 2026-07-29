@@ -46,6 +46,59 @@ export function collectAllTokens() {
   return tokens;
 }
 
+/**
+ * The interaction-state scope: classes the state engine can prefix with
+ * `hover:` / `focus-visible:` / `active:`.
+ *
+ * Deliberately narrower than the responsive scope — only the props that PAINT
+ * (see STATE_STYLE_MAPS in utils/interaction-state.ts). Granting states to
+ * every style prop measured at +45.9 KB brotli and +33s per CSS build, to buy
+ * `hover:padding`; this subset costs a few KB. Keep in step with
+ * STATE_STYLE_MAPS — the coverage gate fails loudly if they drift.
+ */
+const STATE_SOURCE_MAPS = [
+  "bgColors",
+  "textColors",
+  "borderColors",
+  "shadowTypes",
+  "opacityTypes",
+];
+
+export const STATE_VARIANTS = ["hover", "focus-visible", "active"];
+
+/** Slice out `export const <name> = { ... }` blocks (brace-balanced). */
+function namedBlocks(text, names) {
+  const blocks = [];
+  for (const name of names) {
+    const re = new RegExp(`export const ${name}(?:\\s*:[^=]+)? = \\{`, "g");
+    let m;
+    while ((m = re.exec(text))) {
+      let depth = 0;
+      let i = m.index + m[0].length - 1;
+      for (; i < text.length; i++) {
+        if (text[i] === "{") depth++;
+        else if (text[i] === "}") {
+          depth--;
+          if (depth === 0) break;
+        }
+      }
+      blocks.push(text.slice(m.index, i + 1));
+    }
+  }
+  return blocks;
+}
+
+/** Only classes reachable by the runtime interaction-state engine. */
+export function collectStateTokens() {
+  const tokens = new Set();
+  for (const file of collectFiles(join(SRC, "const"))) {
+    for (const block of namedBlocks(readFileSync(file, "utf8"), STATE_SOURCE_MAPS)) {
+      tokensInText(block, tokens);
+    }
+  }
+  return tokens;
+}
+
 /** Slice out `export const <name>Map = { ... }` blocks (brace-balanced). */
 function mapBlocks(text) {
   const blocks = [];

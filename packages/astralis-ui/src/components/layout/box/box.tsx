@@ -2,10 +2,17 @@ import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
 import type { BoxProps } from "./box.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { STATE_PROP_NAMES } from "../../../utils/interaction-state";
 import { boxVariants, boxVariantMap } from "./box.styles";
 
-/** Derived from the token map so the runtime split can never drift from the styles. */
-export const BOX_VARIANT_KEYS = Object.keys(boxVariantMap);
+/**
+ * Derived from the token map so the runtime split can never drift from the
+ * styles. The interaction-state props ride along: every Box-composing
+ * primitive already routes these keys into `resolveStyleProps`, which resolves
+ * both layers — so states work everywhere from one place, and `hover` can
+ * never leak onto the DOM as an attribute.
+ */
+export const BOX_VARIANT_KEYS = [...Object.keys(boxVariantMap), ...STATE_PROP_NAMES];
 
 type BoxComponent = <T extends ElementType = "div">(
   props: BoxProps<T> & { ref?: Ref<any> },

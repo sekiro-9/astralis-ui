@@ -16,25 +16,33 @@
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { collectResponsiveTokens } from "./token-scope.mjs";
+import { collectResponsiveTokens, collectStateTokens, STATE_VARIANTS } from "./token-scope.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BREAKPOINTS = ["sm", "md", "lg", "xl"];
 const PREFIX = "astralis:";
 
 const utils = [...collectResponsiveTokens()].sort();
+const stateUtils = [...collectStateTokens()].sort();
 const bpGroup = `{${BREAKPOINTS.join(",")}}`;
+const stateGroup = `{${STATE_VARIANTS.join(",")}}`;
 
 const lines = [
   "/* ==========================================================================",
   "   AUTO-GENERATED — DO NOT EDIT BY HAND",
   "   Source: scripts/gen-responsive-safelist.mjs",
-  "   Force-generates sm/md/lg/xl variants for every RESPONSIVE design-token",
-  "   utility (const maps + *Map style blocks) so the runtime responsive",
-  "   engine always has matching CSS.",
+  "   Force-generates the variants the runtime engines build by string",
+  "   concatenation, which Tailwind's source scanner can never see:",
+  "     - sm/md/lg/xl for every RESPONSIVE token (const maps + *Map blocks)",
+  "     - hover/focus-visible/active/disabled for every STATE token (the",
+  "       properties that paint — see utils/interaction-state.ts)",
   "   ========================================================================== */",
   "",
+  "/* --- responsive --- */",
   ...utils.map((util) => `@source inline("${PREFIX}${bpGroup}:${util}");`),
+  "",
+  "/* --- interaction states --- */",
+  ...stateUtils.map((util) => `@source inline("${PREFIX}${stateGroup}:${util}");`),
   "",
 ];
 
@@ -42,5 +50,6 @@ const outFile = join(__dirname, "..", "src", "_responsive-safelist.css");
 writeFileSync(outFile, lines.join("\n"));
 
 console.log(
-  `[astralis] responsive safelist: ${utils.length} utilities x ${BREAKPOINTS.length} breakpoints -> ${outFile}`,
+  `[astralis] safelist: ${utils.length} utilities x ${BREAKPOINTS.length} breakpoints` +
+    ` + ${stateUtils.length} x ${STATE_VARIANTS.length} states -> ${outFile}`,
 );

@@ -16,7 +16,12 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { collectAllTokens, collectResponsiveTokens } from "./token-scope.mjs";
+import {
+  collectAllTokens,
+  collectResponsiveTokens,
+  collectStateTokens,
+  STATE_VARIANTS,
+} from "./token-scope.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -24,6 +29,7 @@ const BREAKPOINTS = ["sm", "md", "lg", "xl"];
 
 const all = collectAllTokens();
 const responsive = collectResponsiveTokens();
+const stateful = collectStateTokens();
 
 // Every class selector defined in the compiled CSS (unescape \x sequences).
 const css = readFileSync(join(PKG, "dist", "styles.css"), "utf8");
@@ -48,6 +54,17 @@ for (const bare of all) {
   }
 }
 
+// Interaction states are resolved from the same token maps, so every stateful
+// token must carry all four variants or `hover={{ bg: … }}` silently no-ops.
+for (const bare of stateful) {
+  for (const state of STATE_VARIANTS) {
+    if (!defined.has(`astralis:${state}:${bare}`)) {
+      missing.push(`astralis:${bare}  [${state} variant missing]`);
+      break;
+    }
+  }
+}
+
 if (missing.length) {
   console.error(`[astralis] CSS COVERAGE FAILURE — ${missing.length} class(es) referenced in source but absent from dist/styles.css:`);
   for (const line of missing.sort()) console.error("  " + line);
@@ -56,5 +73,6 @@ if (missing.length) {
 }
 
 console.log(
-  `[astralis] css coverage: ${all.size} base classes + ${responsive.size} responsive x ${BREAKPOINTS.length} breakpoints all present in dist/styles.css`,
+  `[astralis] css coverage: ${all.size} base classes + ${responsive.size} responsive x ${BREAKPOINTS.length} breakpoints` +
+    ` + ${stateful.size} stateful x ${STATE_VARIANTS.length} states all present in dist/styles.css`,
 );

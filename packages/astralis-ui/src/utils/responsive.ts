@@ -14,6 +14,8 @@
    from the same token map CVA already uses (single source of truth).
    ========================================================================== */
 
+import { isStateProp, resolveStateStyles } from "./interaction-state";
+
 /** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
 export const BREAKPOINTS = ["sm", "md", "lg", "xl"] as const;
 
@@ -86,6 +88,16 @@ export function resolveStyleProps(
   for (const key in props) {
     const value = props[key];
     if (value === undefined) continue;
+
+    // Interaction states are objects too, but keyed by style prop rather than
+    // breakpoint. Handled here — rather than in each component's prop split —
+    // so every Box-composing primitive gets them from one place and none can
+    // leak `hover` onto the DOM as an attribute.
+    if (isStateProp(key)) {
+      const cls = resolveStateStyles(key, value);
+      if (cls) responsive.push(cls);
+      continue;
+    }
 
     if (isResponsiveObject(value)) {
       const map = maps[key];

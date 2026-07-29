@@ -74,3 +74,56 @@ describe("display on a layout container", () => {
     );
   });
 });
+
+/**
+ * Interaction states are resolved by the same engine as responsive props, so
+ * they share the same silent-failure mode: an unrecognised state prop becomes a
+ * DOM attribute, and an unrecognised token inside one vanishes without a trace.
+ */
+describe("interaction-state props", () => {
+  it("resolve to state-prefixed classes", () => {
+    const { container } = render(
+      <Box bg="base" hover={{ bg: "subtle" }} focusVisible={{ borderColor: "brand" }} />,
+    );
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining([
+        "astralis:bg-surface-base",
+        "astralis:hover:bg-surface-subtle",
+        "astralis:focus-visible:border-brand-stroke",
+      ]),
+    );
+  });
+
+  it("never become DOM attributes", () => {
+    const { container } = render(
+      <Box hover={{ bg: "subtle" }} active={{ opacity: "high" }} />,
+    );
+    const el = container.firstElementChild!;
+
+    expect(el.hasAttribute("hover")).toBe(false);
+    expect(el.hasAttribute("active")).toBe(false);
+    expect(el.hasAttribute("focusVisible")).toBe(false);
+  });
+
+  it("reach every Box-composing primitive, not just Box", () => {
+    const { container } = render(<Flex hover={{ bg: "subtle" }} />);
+
+    expect(classesOf(container)).toContain("astralis:hover:bg-surface-subtle");
+  });
+
+  it("leave `disabled` as a real HTML attribute", () => {
+    // `disabled` is deliberately NOT a state prop: it collides with the native
+    // attribute, and :disabled only matches form controls.
+    const { container } = render(<Box as="button" disabled />);
+
+    expect(container.firstElementChild!.hasAttribute("disabled")).toBe(true);
+  });
+
+  it("drop a token the base layer could not paint", () => {
+    // @ts-expect-error — the type is the contract; this must not compile.
+    const { container } = render(<Box hover={{ bg: "not-a-token" }} />);
+
+    expect(classesOf(container).some((c) => c.includes("hover:"))).toBe(false);
+  });
+});
