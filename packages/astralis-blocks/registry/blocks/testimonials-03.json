@@ -1,0 +1,34 @@
+{
+  "id": "testimonials-03",
+  "category": "testimonials",
+  "name": "Light cards on an inverted band",
+  "description": "The quote-card skeleton on an inverted closing band: the heading inverts with the surface while the cards flip to the light base to read as spotlights. Star rating, quote, and avatar attribution on a divider. Three across from md, one below.",
+  "tags": [
+    "three-up",
+    "inverted-band",
+    "light-cards",
+    "star-rating",
+    "avatar"
+  ],
+  "files": [
+    "testimonials-03.tsx"
+  ],
+  "component": "Testimonials03",
+  "uses": [
+    "Avatar",
+    "Box",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "testimonials-03.tsx",
+      "content": "import {\n  Avatar,\n  Box,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst testimonials = [\n  {\n    quote:\n      \"The migration paid for itself in the first sprint. We deleted more CSS than we wrote, and nothing regressed.\",\n    name: \"Hannah Cole\",\n    role: \"Engineering Lead, Bright\",\n  },\n  {\n    quote:\n      \"Every component we needed was already there, already accessible, already themeable. It felt like cheating.\",\n    name: \"Omar Haddad\",\n    role: \"Founder, Stacksmith\",\n  },\n  {\n    quote:\n      \"Our contrast and focus bugs went to zero. The defaults are the accessibility review.\",\n    name: \"Ingrid Voss\",\n    role: \"Accessibility Lead, Cartogram\",\n  },\n];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction StarRow() {\n  return (\n    <Flex gap=\"0.5\" aria-label=\"Rated 5 out of 5\">\n      {Array.from({ length: 5 }).map((_, i) => (\n        <Icon key={i} size=\"sm\" color=\"yellow-solid\" aria-hidden=\"true\">\n          <svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n            <path d=\"M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 18l-5.8 3 1.1-6.5L2.6 9.3l6.5-.9L12 2.5Z\" />\n          </svg>\n        </Icon>\n      ))}\n    </Flex>\n  );\n}\n\n/**\n * The quote-card skeleton on an inverted closing band — the heading inverts\n * with the surface, and the cards flip to the light base surface so they read\n * as spotlights against the dark. Inside a light card the normal label ladder\n * applies, so the attribution needs no inverted handling. Three across from md.\n */\nexport function Testimonials03() {\n  return (\n    <Box as=\"section\" bg=\"inverted\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"inverted\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              Why teams switch\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              color=\"inverted\"\n              align=\"center\"\n            >\n              The last component library you'll migrate to\n            </Heading>\n          </Stack>\n\n          <Grid\n            columns={{ base: \"1\", md: \"3\" }}\n            gap={{ base: \"5\", lg: \"6\" }}\n            alignItems=\"stretch\"\n          >\n            {testimonials.map((item) => (\n              <Box\n                key={item.name}\n                as=\"figure\"\n                bg=\"base\"\n                rounded=\"2xl\"\n                p={{ base: \"6\", lg: \"7\" }}\n              >\n                <Flex direction=\"column\" alignItems=\"start\" gap=\"5\" h=\"full\">\n                  <StarRow />\n\n                  <Box as=\"blockquote\" flex=\"1\">\n                    <Text size=\"md\" color=\"base\" lineHeight=\"relaxed\">\n                      {item.quote}\n                    </Text>\n                  </Box>\n\n                  <Flex\n                    as=\"figcaption\"\n                    alignItems=\"center\"\n                    gap=\"3\"\n                    w=\"full\"\n                    pt=\"5\"\n                    borderT=\"normal\"\n                    borderColor=\"subtle\"\n                  >\n                    <Avatar name={item.name} size=\"md\" />\n                    <Stack direction=\"vertical\" gap=\"0.5\">\n                      <Text as=\"span\" size=\"sm\" weight=\"medium\">\n                        {item.name}\n                      </Text>\n                      <Text as=\"span\" size=\"sm\" color=\"muted\">\n                        {item.role}\n                      </Text>\n                    </Stack>\n                  </Flex>\n                </Flex>\n              </Box>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "testimonials-02",
+  "category": "testimonials",
+  "name": "Raised cards on a tinted band",
+  "description": "The quote-card skeleton with a softer treatment: a tinted band carrying raised, borderless cards with a decorative quotation glyph and the avatar attribution moved to the top. Three across from md, one below.",
+  "tags": [
+    "three-up",
+    "raised-cards",
+    "tinted-band",
+    "quote-glyph",
+    "avatar"
+  ],
+  "files": [
+    "testimonials-02.tsx"
+  ],
+  "component": "Testimonials02",
+  "uses": [
+    "Avatar",
+    "Box",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "testimonials-02.tsx",
+      "content": "import {\n  Avatar,\n  Box,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst testimonials = [\n  {\n    quote:\n      \"Astralis is the first system where the design tokens and the code tokens are the same tokens. Nothing gets lost in translation.\",\n    name: \"Lena Ortiz\",\n    role: \"Principal Designer\",\n    company: \"Foundry\",\n  },\n  {\n    quote:\n      \"We onboarded three new engineers last quarter and none of them asked how to theme a component. It's just props.\",\n    name: \"Marcus Reid\",\n    role: \"VP Engineering\",\n    company: \"Tallwood\",\n  },\n  {\n    quote:\n      \"The moment the whole app re-themed from one seed, our brand team stopped filing tickets and started experimenting.\",\n    name: \"Yuki Tanaka\",\n    role: \"Brand Systems\",\n    company: \"Hopper\",\n  },\n];\n\n/**\n * The same quote-card skeleton as grid-01, given a softer treatment: a tinted\n * band with raised (shadowed, borderless) cards, a decorative quotation glyph,\n * and the attribution moved up top. Three across from md.\n *\n * `raised` is exactly the role a shadowed card sits in — a layer floating above\n * the tinted band rather than drawn on it — so the cards take `bg=\"raised\"`.\n */\nexport function Testimonials02() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              Loved by builders\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              align=\"center\"\n            >\n              In the words of the people shipping it\n            </Heading>\n          </Stack>\n\n          <Grid\n            columns={{ base: \"1\", md: \"3\" }}\n            gap={{ base: \"5\", lg: \"6\" }}\n            alignItems=\"stretch\"\n          >\n            {testimonials.map((item) => (\n              <Box\n                key={item.name}\n                as=\"figure\"\n                bg=\"raised\"\n                rounded=\"2xl\"\n                shadow=\"md\"\n                p={{ base: \"6\", lg: \"8\" }}\n              >\n                <Flex direction=\"column\" alignItems=\"start\" gap=\"5\" h=\"full\">\n                  {/* Attribution up top for this treatment. */}\n                  <Flex as=\"figcaption\" alignItems=\"center\" gap=\"3\">\n                    <Avatar name={item.name} size=\"md\" />\n                    <Stack direction=\"vertical\" gap=\"0.5\">\n                      <Text as=\"span\" size=\"sm\" weight=\"medium\">\n                        {item.name}\n                      </Text>\n                      <Text as=\"span\" size=\"sm\" color=\"muted\">\n                        {item.role} · {item.company}\n                      </Text>\n                    </Stack>\n                  </Flex>\n\n                  {/* Oversized quotation mark, decorative — the brand hue marks\n                      it as accent, not body copy. lineHeight=\"none\" keeps it from\n                      adding a tall line box above the quote. */}\n                  <Text\n                    as=\"span\"\n                    size=\"6xl\"\n                    weight=\"semibold\"\n                    color=\"brand\"\n                    lineHeight=\"none\"\n                    aria-hidden=\"true\"\n                  >\n                    &ldquo;\n                  </Text>\n\n                  <Box as=\"blockquote\" flex=\"1\">\n                    <Text size={{ base: \"md\", lg: \"lg\" }} color=\"base\" lineHeight=\"relaxed\">\n                      {item.quote}\n                    </Text>\n                  </Box>\n                </Flex>\n              </Box>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

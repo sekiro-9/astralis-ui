@@ -1,0 +1,38 @@
+{
+  "id": "contact-03",
+  "category": "contact",
+  "name": "Inverted pitch panel beside a form",
+  "description": "The contact split with the pitch pulled into an inverted panel — a dark card carrying the heading and contact lines with light icon chips, beside a two-column form on the base surface. Stacks below lg.",
+  "tags": [
+    "split",
+    "inverted-panel",
+    "icon-chips",
+    "form",
+    "two-column"
+  ],
+  "files": [
+    "contact-03.tsx"
+  ],
+  "component": "Contact03",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "FieldLabel",
+    "FieldRoot",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "Input",
+    "InputTextarea",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "contact-03.tsx",
+      "content": "import {\n  Box,\n  Button,\n  Container,\n  FieldLabel,\n  FieldRoot,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  Input,\n  InputTextarea,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nconst details = [\n  {\n    label: \"Email us\",\n    value: \"hello@astralis.dev\",\n    path: \"M4 6h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm0 2 8 5 8-5\",\n  },\n  {\n    label: \"Call us\",\n    value: \"+1 (555) 000-1234\",\n    path: \"M6 3h3l2 5-2.5 1.5a11 11 0 0 0 5 5L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2Z\",\n  },\n  {\n    label: \"Visit us\",\n    value: \"128 Palette St, San Francisco\",\n    path: \"M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z\",\n  },\n];\n\n/**\n * The contact split with the pitch pulled into an inverted panel — a dark card\n * carrying the heading and contact lines beside the form on the base surface.\n *\n * On the inverted panel the accent channel no longer applies, so the icon tiles\n * flip to the light base surface (a light chip on the dark card) and the labels\n * are dimmed with `opacity` on their wrapper rather than a muted colour, since\n * the label ladder has no inverted-muted rung. Stacks below `lg`.\n */\nexport function Contact03() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Grid\n          columns={{ base: \"1\", lg: \"2\" }}\n          gap={{ base: \"10\", lg: \"12\" }}\n          alignItems=\"stretch\"\n        >\n          {/* ---- Inverted pitch panel ---- */}\n          <Box bg=\"inverted\" rounded=\"3xl\" p={{ base: \"8\", sm: \"10\", lg: \"12\" }}>\n            <Stack direction=\"vertical\" alignItems=\"start\" gap=\"8\" h=\"full\">\n              <Stack direction=\"vertical\" alignItems=\"start\" gap=\"4\">\n                <Heading\n                  as=\"h2\"\n                  size={{ base: \"3xl\", lg: \"4xl\" }}\n                  weight=\"semibold\"\n                  color=\"inverted\"\n                >\n                  Get in touch\n                </Heading>\n                <Box maxW=\"sm\" opacity=\"high\">\n                  <Text size={{ base: \"md\", lg: \"lg\" }} color=\"inverted\" lineHeight=\"relaxed\">\n                    Tell us what you're building and we'll point you at the right\n                    person — usually within a business day.\n                  </Text>\n                </Box>\n              </Stack>\n\n              <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"5\">\n                {details.map((item) => (\n                  <Flex key={item.label} alignItems=\"center\" gap=\"4\">\n                    <Flex\n                      alignItems=\"center\"\n                      justifyContent=\"center\"\n                      shrink=\"0\"\n                      size=\"10\"\n                      rounded=\"lg\"\n                      bg=\"base\"\n                    >\n                      <Icon size=\"sm\" color=\"brand\" aria-hidden=\"true\">\n                        <svg\n                          viewBox=\"0 0 24 24\"\n                          fill=\"none\"\n                          stroke=\"currentColor\"\n                          strokeWidth=\"1.75\"\n                          strokeLinecap=\"round\"\n                          strokeLinejoin=\"round\"\n                        >\n                          <path d={item.path} />\n                        </svg>\n                      </Icon>\n                    </Flex>\n                    <Stack direction=\"vertical\" gap=\"0.5\">\n                      <Box opacity=\"high\">\n                        <Text as=\"span\" size=\"sm\" color=\"inverted\">\n                          {item.label}\n                        </Text>\n                      </Box>\n                      <Text as=\"span\" size=\"md\" weight=\"medium\" color=\"inverted\">\n                        {item.value}\n                      </Text>\n                    </Stack>\n                  </Flex>\n                ))}\n              </Stack>\n            </Stack>\n          </Box>\n\n          {/* ---- Form ---- */}\n          <Stack as=\"form\" direction=\"vertical\" alignItems=\"stretch\" gap=\"5\">\n            <Grid columns={{ base: \"1\", sm: \"2\" }} gap=\"5\">\n              <FieldRoot>\n                <FieldLabel>First name</FieldLabel>\n                <Input name=\"firstName\" placeholder=\"Ada\" autoComplete=\"given-name\" required />\n              </FieldRoot>\n              <FieldRoot>\n                <FieldLabel>Last name</FieldLabel>\n                <Input name=\"lastName\" placeholder=\"Lovelace\" autoComplete=\"family-name\" required />\n              </FieldRoot>\n            </Grid>\n\n            <FieldRoot>\n              <FieldLabel>Work email</FieldLabel>\n              <Input\n                type=\"email\"\n                name=\"email\"\n                placeholder=\"you@company.com\"\n                autoComplete=\"email\"\n                required\n              />\n            </FieldRoot>\n\n            <FieldRoot>\n              <FieldLabel>Company</FieldLabel>\n              <Input name=\"company\" placeholder=\"Acme Inc.\" autoComplete=\"organization\" />\n            </FieldRoot>\n\n            <FieldRoot>\n              <FieldLabel>Message</FieldLabel>\n              <InputTextarea\n                name=\"message\"\n                placeholder=\"Tell us a little about your project…\"\n                rows={5}\n                required\n              />\n            </FieldRoot>\n\n            <Button type=\"submit\" size=\"md\" fullWidth>\n              Send message\n            </Button>\n          </Stack>\n        </Grid>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

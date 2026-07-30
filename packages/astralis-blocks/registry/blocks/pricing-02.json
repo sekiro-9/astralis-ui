@@ -1,0 +1,37 @@
+{
+  "id": "pricing-02",
+  "category": "pricing",
+  "name": "Joined panel with tinted plan",
+  "description": "Three tiers sharing one rounded panel rather than floating as separate cards. The recommended column is marked by a tinted background instead of a border, so nothing breaks the outer silhouette, and each call to action sits at the foot of its column.",
+  "tags": [
+    "three-tier",
+    "joined-panel",
+    "tinted-plan",
+    "compact",
+    "tinted-surface"
+  ],
+  "files": [
+    "pricing-02.tsx"
+  ],
+  "component": "Pricing02",
+  "uses": [
+    "Badge",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "List",
+    "ListItem",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "pricing-02.tsx",
+      "content": "import {\n  Badge,\n  Box,\n  Button,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  List,\n  ListItem,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst tiers = [\n  {\n    name: \"Hobby\",\n    price: \"$0\",\n    cadence: \"/ month\",\n    description: \"For side projects and prototypes.\",\n    cta: \"Get started\",\n    featured: false,\n    features: [\"1 workspace\", \"5 GB bandwidth\", \"Community support\"],\n  },\n  {\n    name: \"Pro\",\n    price: \"$18\",\n    cadence: \"/ month\",\n    description: \"For freelancers shipping client work.\",\n    cta: \"Choose Pro\",\n    featured: true,\n    features: [\n      \"10 workspaces\",\n      \"500 GB bandwidth\",\n      \"Email support in 24h\",\n      \"Custom domains\",\n    ],\n  },\n  {\n    name: \"Studio\",\n    price: \"$64\",\n    cadence: \"/ month\",\n    description: \"For agencies running many clients.\",\n    cta: \"Choose Studio\",\n    featured: false,\n    features: [\"Unlimited workspaces\", \"2 TB bandwidth\", \"Shared billing\"],\n  },\n];\n\n/** Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction CheckMark() {\n  return (\n    <Icon size=\"sm\" color=\"brand-solid\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2.5\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M20 6 9 17l-5-5\" />\n      </svg>\n    </Icon>\n  );\n}\n\n/**\n * The same three tiers as one joined panel rather than floating cards. The\n * recommended column is marked by a tinted background instead of a border, so\n * nothing breaks the outer silhouette.\n */\nexport function Pricing02() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"5xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"12\" }}>\n          {/* ---- Section heading ---- */}\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"3\">\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              lineHeight=\"tight\"\n              letterSpacing=\"tight\"\n              align=\"center\"\n            >\n              Simple plans, no surprises\n            </Heading>\n            <Box maxW=\"lg\">\n              <Text size=\"md\" color=\"muted\" align=\"center\" lineHeight=\"relaxed\">\n                Every plan bills monthly and cancels in one click. Move up or down\n                whenever the work changes.\n              </Text>\n            </Box>\n          </Stack>\n\n          {/* ---- Joined panel ----\n              One rounded, clipped container; the columns sit flush inside it\n              with no gap, so the panel reads as a single object. */}\n          <Box\n            bg=\"base\"\n            border=\"normal\"\n            borderColor=\"base\"\n            rounded=\"2xl\"\n            shadow=\"sm\"\n            overflow=\"hidden\"\n          >\n            {/* No `gap` prop at all: the spacing scale starts at 0.5, so there\n                is no zero token — omitting it leaves CSS's `normal`, which is\n                0 for grid, and the columns sit flush. */}\n            <Grid columns={{ base: \"1\", lg: \"3\" }} alignItems=\"stretch\">\n              {tiers.map((tier) => (\n                <Box\n                  key={tier.name}\n                  bg={tier.featured ? \"subtle\" : \"transparent\"}\n                  p={{ base: \"6\", lg: \"8\" }}\n                >\n                  <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"5\" h=\"full\">\n                    <Flex alignItems=\"center\" gap=\"2\">\n                      <Heading as=\"h3\" size=\"md\" weight=\"semibold\">\n                        {tier.name}\n                      </Heading>\n                      {tier.featured && (\n                        <Badge variant=\"subtle\" colorScheme=\"brand\" size=\"xs\">\n                          Recommended\n                        </Badge>\n                      )}\n                    </Flex>\n\n                    <Flex alignItems=\"baseline\" gap=\"1\">\n                      <Text as=\"span\" size=\"3xl\" weight=\"semibold\" lineHeight=\"none\">\n                        {tier.price}\n                      </Text>\n                      <Text as=\"span\" size=\"sm\" color=\"muted\">\n                        {tier.cadence}\n                      </Text>\n                    </Flex>\n\n                    <Text size=\"sm\" color=\"muted\" lineHeight=\"relaxed\">\n                      {tier.description}\n                    </Text>\n\n                    {/* The list absorbs the column's slack so the button is\n                        pinned to the bottom. Without it the buttons sit\n                        wherever each feature list happens to end, and tiers\n                        with different feature counts step out of line. */}\n                    <List grow=\"1\" styleType=\"none\" spacing=\"2.5\">\n                      {tier.features.map((feature) => (\n                        <ListItem key={feature} icon={<CheckMark />}>\n                          <Text size=\"sm\" color=\"muted\">\n                            {feature}\n                          </Text>\n                        </ListItem>\n                      ))}\n                    </List>\n\n                    <Button\n                      size=\"md\"\n                      fullWidth\n                      variant={tier.featured ? \"solid\" : \"outline\"}\n                      colorScheme={tier.featured ? \"brand\" : \"gray\"}\n                    >\n                      {tier.cta}\n                    </Button>\n                  </Stack>\n                </Box>\n              ))}\n            </Grid>\n          </Box>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

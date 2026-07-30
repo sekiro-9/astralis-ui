@@ -1,0 +1,34 @@
+{
+  "id": "team-03",
+  "category": "team",
+  "name": "Heading beside a dense grid",
+  "description": "The team skeleton split two ways: a heading column with an intro and careers call to action on the left, a dense grid of rounded-avatar members on the right. Stacks into one column below lg.",
+  "tags": [
+    "split",
+    "side-heading",
+    "dense-grid",
+    "rounded-avatars",
+    "careers-cta"
+  ],
+  "files": [
+    "team-03.tsx"
+  ],
+  "component": "Team03",
+  "uses": [
+    "Avatar",
+    "Box",
+    "Button",
+    "Container",
+    "Grid",
+    "GridItem",
+    "Heading",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "team-03.tsx",
+      "content": "import {\n  Avatar,\n  Box,\n  Button,\n  Container,\n  Grid,\n  GridItem,\n  Heading,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst members = [\n  { name: \"Mara Feld\", role: \"CEO\" },\n  { name: \"Diego Salas\", role: \"CTO\" },\n  { name: \"Priya Nair\", role: \"Design\" },\n  { name: \"Tom Becker\", role: \"Engineering\" },\n  { name: \"Aïcha Benali\", role: \"Product\" },\n  { name: \"Sam Whitfield\", role: \"Design Systems\" },\n  { name: \"Yuki Tanaka\", role: \"Frontend\" },\n  { name: \"Omar Haddad\", role: \"DevRel\" },\n  { name: \"Ingrid Voss\", role: \"Accessibility\" },\n];\n\n/**\n * The team skeleton split two ways: a heading column that stays put on the left\n * and the member grid on the right, so the section reads as a statement with\n * the faces as evidence. Rounded avatars for a squarer, denser look.\n *\n * One stacked column below lg, where the heading sits above the grid.\n */\nexport function Team03() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Grid\n          columns={{ base: \"1\", lg: \"3\" }}\n          gap={{ base: \"10\", lg: \"16\" }}\n          alignItems=\"start\"\n        >\n          {/* ---- Heading column ---- */}\n          <GridItem colSpan=\"1\">\n            <Stack direction=\"vertical\" alignItems=\"start\" gap=\"5\">\n              <Text\n                as=\"span\"\n                size=\"sm\"\n                weight=\"semibold\"\n                color=\"brand\"\n                casing=\"uppercase\"\n                letterSpacing=\"wider\"\n              >\n                Careers\n              </Text>\n              <Heading as=\"h2\" size={{ base: \"3xl\", lg: \"4xl\" }} weight=\"semibold\">\n                A team worth joining\n              </Heading>\n              <Text size={{ base: \"md\", lg: \"lg\" }} color=\"muted\" lineHeight=\"relaxed\">\n                Nineteen people across six time zones, all shipping the same\n                design system. We're hiring across engineering and design.\n              </Text>\n              <Button size=\"md\">View open roles</Button>\n            </Stack>\n          </GridItem>\n\n          {/* ---- Member grid ---- */}\n          <GridItem colSpan={{ base: \"1\", lg: \"2\" }}>\n            <Grid columns={{ base: \"2\", sm: \"3\" }} gap={{ base: \"6\", lg: \"8\" }}>\n              {members.map((member) => (\n                <Stack key={member.name} direction=\"vertical\" alignItems=\"start\" gap=\"3\">\n                  <Avatar name={member.name} size=\"xl\" shape=\"rounded\" />\n                  <Stack direction=\"vertical\" gap=\"0.5\">\n                    <Text as=\"span\" size=\"sm\" weight=\"medium\">\n                      {member.name}\n                    </Text>\n                    <Text as=\"span\" size=\"sm\" color=\"muted\">\n                      {member.role}\n                    </Text>\n                  </Stack>\n                </Stack>\n              ))}\n            </Grid>\n          </GridItem>\n        </Grid>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

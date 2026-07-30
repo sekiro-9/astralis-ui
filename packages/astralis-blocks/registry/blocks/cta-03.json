@@ -1,0 +1,35 @@
+{
+  "id": "cta-03",
+  "category": "cta",
+  "name": "Brand-tinted panel with email capture",
+  "description": "A brand-tinted bordered panel: uppercase eyebrow, headline, one line of copy, then an inline email field and submit button with fine print beneath. Field and button stack below sm.",
+  "tags": [
+    "centred",
+    "email-capture",
+    "brand-tinted",
+    "eyebrow",
+    "newsletter"
+  ],
+  "files": [
+    "cta-03.tsx"
+  ],
+  "component": "Cta03",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "FlexItem",
+    "Heading",
+    "Input",
+    "Link",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "cta-03.tsx",
+      "content": "import {\n  Box,\n  Button,\n  Container,\n  Flex,\n  FlexItem,\n  Heading,\n  Input,\n  Link,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\n/**\n * Brand-tinted panel with an inline email capture. The tint comes from the\n * accent channel's subtle rung with its matching stroke, so the panel repaints\n * with the theme seed instead of hard-coding a hue.\n *\n * The form submits nowhere as written — point it at your own endpoint, or drop\n * an `onSubmit` on the form and mark the file `\"use client\"`.\n */\nexport function Cta03() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"5xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Box\n          bg=\"brand-subtle\"\n          border=\"normal\"\n          borderColor=\"brand\"\n          rounded=\"3xl\"\n          p={{ base: \"8\", sm: \"12\", lg: \"14\" }}\n        >\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"8\">\n            <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n              <Text\n                as=\"span\"\n                size=\"sm\"\n                weight=\"semibold\"\n                color=\"brand\"\n                casing=\"uppercase\"\n                letterSpacing=\"wider\"\n              >\n                Changelog\n              </Text>\n\n              <Heading\n                as=\"h2\"\n                size={{ base: \"3xl\", lg: \"4xl\" }}\n                weight=\"semibold\"\n                align=\"center\"\n              >\n                Every release, in your inbox\n              </Heading>\n\n              <Box maxW=\"lg\">\n                <Text size=\"md\" color=\"muted\" align=\"center\" lineHeight=\"relaxed\">\n                  New components, token changes and migration notes — one short\n                  email a month, nothing else.\n                </Text>\n              </Box>\n            </Stack>\n\n            {/* The form gets its own measure so the field never stretches to the\n                full panel width on a wide viewport. */}\n            <Box w=\"full\" maxW=\"md\">\n              <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"3\">\n                <Flex\n                  as=\"form\"\n                  direction={{ base: \"column\", sm: \"row\" }}\n                  alignItems=\"stretch\"\n                  gap=\"3\"\n                >\n                  {/* No visible label, so the field carries its own name.\n                      FieldLabel is the better answer whenever there is room. */}\n                  <FlexItem flex=\"1\">\n                    <Input\n                      type=\"email\"\n                      name=\"email\"\n                      size=\"lg\"\n                      placeholder=\"you@company.com\"\n                      autoComplete=\"email\"\n                      aria-label=\"Email address\"\n                      required\n                    />\n                  </FlexItem>\n                  <Button type=\"submit\" size=\"lg\">\n                    Subscribe\n                  </Button>\n                </Flex>\n\n                <Text size=\"xs\" color=\"subtle\" align=\"center\">\n                  Unsubscribe in one click. Read our{\" \"}\n                  <Link href=\"#privacy\" size=\"xs\">\n                    privacy policy\n                  </Link>\n                  .\n                </Text>\n              </Stack>\n            </Box>\n          </Stack>\n        </Box>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

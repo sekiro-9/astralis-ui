@@ -1,0 +1,34 @@
+{
+  "id": "navbar-03",
+  "category": "navbar",
+  "name": "Floating pill with centred links",
+  "description": "The same bar inset from the page edges as a rounded, bordered card rather than a full-bleed strip. Wordmark left, centred links, one call to action right, and a disclosure that opens inside the pill below md. Uses the raised surface, so it lifts in dark mode where a shadow alone would not read.",
+  "tags": [
+    "sticky",
+    "floating-pill",
+    "centred-links",
+    "single-action",
+    "raised-surface"
+  ],
+  "files": [
+    "navbar-03.tsx"
+  ],
+  "component": "Navbar03",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Icon",
+    "Link",
+    "Separator",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "navbar-03.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  Box,\n  Button,\n  Container,\n  Flex,\n  Icon,\n  Link,\n  Separator,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst links = [\n  { label: \"Overview\", href: \"#overview\" },\n  { label: \"Integrations\", href: \"#integrations\" },\n  { label: \"Security\", href: \"#security\" },\n  { label: \"Blog\", href: \"#blog\" },\n];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction MenuIcon({ open }: { open: boolean }) {\n  return (\n    <Icon size=\"md\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"1.75\"\n        strokeLinecap=\"round\"\n      >\n        {open ? <path d=\"m6 6 12 12M18 6 6 18\" /> : <path d=\"M4 7h16M4 12h16M4 17h16\" />}\n      </svg>\n    </Icon>\n  );\n}\n\n/** Neutral nav link — see navbar-01 for why the scheme is gray. */\nfunction NavLink({ href, label }: { href: string; label: string }) {\n  return (\n    <Link href={href} colorScheme=\"gray\" variant=\"plain\" size=\"sm\" weight=\"medium\">\n      {label}\n    </Link>\n  );\n}\n\n/**\n * Floating pill: the same bar contents inset from the page edges as a rounded,\n * bordered card rather than a full-bleed strip.\n *\n * The pill is `raised`, not `base` — it is a layer floating over the page, and\n * that is exactly the token's job: identical to base in light, one step lighter\n * in dark, where the shadow alone would not read.\n */\nexport function Navbar03() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Box as=\"header\" position=\"sticky\" top=\"0\" zIndex=\"high\" pt=\"4\" pb=\"2\">\n      <Container maxW=\"5xl\" px={{ base: \"4\", lg: \"6\" }}>\n        <Box\n          bg=\"raised\"\n          border=\"normal\"\n          borderColor=\"base\"\n          rounded=\"2xl\"\n          shadow=\"lg\"\n          overflow=\"hidden\"\n        >\n          <Flex\n            alignItems=\"center\"\n            justifyContent=\"between\"\n            gap=\"6\"\n            h=\"14\"\n            px={{ base: \"4\", lg: \"5\" }}\n          >\n            <Flex alignItems=\"center\" gap=\"2.5\">\n              <Flex\n                alignItems=\"center\"\n                justifyContent=\"center\"\n                shrink=\"0\"\n                size=\"7\"\n                rounded=\"md\"\n                bg=\"brand\"\n              >\n                <Text as=\"span\" size=\"xs\" weight=\"semibold\" color=\"brand-contrast\">\n                  A\n                </Text>\n              </Flex>\n              <Text as=\"span\" size=\"sm\" weight=\"semibold\" letterSpacing=\"tight\">\n                Astralis\n              </Text>\n            </Flex>\n\n            <Flex\n              as=\"nav\"\n              aria-label=\"Main\"\n              alignItems=\"center\"\n              gap=\"6\"\n              display={{ base: \"hidden\", md: \"flex\" }}\n            >\n              {links.map((link) => (\n                <NavLink key={link.label} {...link} />\n              ))}\n            </Flex>\n\n            <Box display={{ base: \"hidden\", md: \"block\" }}>\n              <Button size=\"sm\">Get started</Button>\n            </Box>\n\n            <Box\n              as=\"button\"\n              type=\"button\"\n              aria-label={open ? \"Close menu\" : \"Open menu\"}\n              aria-expanded={open}\n              onClick={() => setOpen((o) => !o)}\n              display={{ base: \"inline-flex\", md: \"hidden\" }}\n              cursor=\"pointer\"\n              p=\"2\"\n              rounded=\"md\"\n              bg=\"transparent\"\n              hover={{ bg: \"subtle\" }}\n              focusVisible={{ borderColor: \"brand\" }}\n            >\n              <MenuIcon open={open} />\n            </Box>\n          </Flex>\n\n          {open && (\n            <Box as=\"nav\" aria-label=\"Main\" display={{ base: \"block\", md: \"hidden\" }}>\n              <Separator />\n              <Stack\n                direction=\"vertical\"\n                alignItems=\"stretch\"\n                gap=\"4\"\n                px={{ base: \"4\", lg: \"5\" }}\n                py=\"5\"\n              >\n                {links.map((link) => (\n                  <NavLink key={link.label} {...link} />\n                ))}\n                <Button size=\"md\" fullWidth>\n                  Get started\n                </Button>\n              </Stack>\n            </Box>\n          )}\n        </Box>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

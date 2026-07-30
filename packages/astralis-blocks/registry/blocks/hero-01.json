@@ -1,0 +1,35 @@
+{
+  "id": "hero-01",
+  "category": "hero",
+  "name": "Split with framed product shot",
+  "description": "Two-column hero: announcement pill, headline, dual call-to-action and a stat row on the left; a framed product screenshot on the right. Stacks to one column below lg.",
+  "tags": [
+    "media-right",
+    "dual-cta",
+    "announcement-pill",
+    "stats",
+    "light-surface"
+  ],
+  "files": [
+    "hero-01.tsx"
+  ],
+  "component": "Hero01",
+  "uses": [
+    "AspectRatio",
+    "Badge",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "hero-01.tsx",
+      "content": "import {\n  AspectRatio,\n  Badge,\n  Box,\n  Button,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst stats = [\n  { value: \"62\", label: \"Components\" },\n  { value: \"11\", label: \"Themeable palettes\" },\n  { value: \"0kb\", label: \"Runtime CSS\" },\n];\n\n/**\n * Two-column hero — copy on the left, a framed product shot on the right.\n * Collapses to a single stacked column below `lg`.\n */\nexport function Hero01() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      {/* Container defaults to px=\"4\". That reads as cramped for a hero at any\n          width below the 6xl cap, where there is no centring margin to sit in. */}\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Grid\n          columns={{ base: \"1\", lg: \"2\" }}\n          gap={{ base: \"12\", lg: \"16\" }}\n          alignItems=\"center\"\n        >\n          {/* ---------------------------------------------------------- */}\n          {/* Copy                                                       */}\n          {/* ---------------------------------------------------------- */}\n          <Stack direction=\"vertical\" alignItems=\"start\" gap=\"6\">\n            <Flex\n              as=\"a\"\n              href=\"#changelog\"\n              alignItems=\"center\"\n              gap=\"2\"\n              pl=\"1.5\"\n              pr=\"3\"\n              py=\"1.5\"\n              bg=\"subtle\"\n              border=\"normal\"\n              borderColor=\"base\"\n              rounded=\"full\"\n              hover={{ bg: \"muted\", borderColor: \"muted\" }}\n              focusVisible={{ borderColor: \"brand\" }}\n            >\n              <Badge variant=\"solid\" colorScheme=\"brand\" size=\"xs\">\n                New\n              </Badge>\n              <Text as=\"span\" size=\"sm\" color=\"muted\">\n                Realtime collaboration is live\n              </Text>\n            </Flex>\n\n            <Heading\n              as=\"h1\"\n              size={{ base: \"4xl\", lg: \"6xl\" }}\n              weight=\"semibold\"\n              lineHeight=\"tight\"\n              letterSpacing=\"tight\"\n            >\n              Ship the product, not another button\n            </Heading>\n\n            {/* Measure lives on the layout primitive — Text exposes only its own\n                typography recipe, not Box's style props. */}\n            <Box maxW=\"xl\">\n              <Text size={{ base: \"md\", lg: \"lg\" }} color=\"muted\" lineHeight=\"relaxed\">\n                Accessible primitives, semantic design tokens, and one theme seed that\n                repaints every surface you build. No runtime styling, no design debt.\n              </Text>\n            </Box>\n\n            <Flex gap=\"3\" wrap=\"wrap\">\n              <Button size=\"lg\">Start building</Button>\n              <Button size=\"lg\" variant=\"surface\" colorScheme=\"gray\">\n                Read the docs\n              </Button>\n            </Flex>\n\n            <Flex gap=\"8\" wrap=\"wrap\" pt=\"2\">\n              {stats.map((stat) => (\n                <Stack key={stat.label} direction=\"vertical\" gap=\"0.5\">\n                  <Text size=\"2xl\" weight=\"semibold\" lineHeight=\"none\">\n                    {stat.value}\n                  </Text>\n                  <Text size=\"sm\" color=\"muted\">\n                    {stat.label}\n                  </Text>\n                </Stack>\n              ))}\n            </Flex>\n          </Stack>\n\n          {/* ---------------------------------------------------------- */}\n          {/* Media                                                      */}\n          {/* ---------------------------------------------------------- */}\n          <Box\n            bg=\"subtle\"\n            border=\"normal\"\n            borderColor=\"base\"\n            rounded=\"2xl\"\n            shadow=\"xl\"\n            overflow=\"hidden\"\n          >\n            {/* Window chrome — the tinted bar reads as a frame without a divider. */}\n            <Flex alignItems=\"center\" gap=\"2\" bg=\"subtle\" px=\"4\" py=\"3\">\n              <Box size=\"2.5\" bg=\"muted\" rounded=\"full\" />\n              <Box size=\"2.5\" bg=\"muted\" rounded=\"full\" />\n              <Box size=\"2.5\" bg=\"muted\" rounded=\"full\" />\n            </Flex>\n\n            <AspectRatio ratio=\"landscape\">\n              {/* Placeholder UI. Swap for your own screenshot:\n                  <img src=\"/product.png\" alt=\"Product dashboard\" /> */}\n              <Stack direction=\"vertical\" gap=\"3\" bg=\"base\" p=\"5\">\n                <Box w=\"32\" h=\"3\" bg=\"muted\" rounded=\"full\" />\n                <Box w=\"48\" h=\"3\" bg=\"muted\" rounded=\"full\" />\n                <Grid columns=\"3\" gap=\"3\" pt=\"2\">\n                  <Box h=\"16\" bg=\"brand-subtle\" rounded=\"lg\" />\n                  <Box h=\"16\" bg=\"subtle\" rounded=\"lg\" />\n                  <Box h=\"16\" bg=\"subtle\" rounded=\"lg\" />\n                </Grid>\n                <Box h=\"12\" bg=\"subtle\" rounded=\"lg\" />\n              </Stack>\n            </AspectRatio>\n          </Box>\n        </Grid>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "cta-02",
+  "category": "cta",
+  "name": "Inverted band with side actions",
+  "description": "A full-bleed inverted band that closes the page: heading and supporting copy on the left, a solid action and an arrow link on the right. Stacks into one column below lg.",
+  "tags": [
+    "inverted",
+    "full-bleed",
+    "side-actions",
+    "arrow-link",
+    "split"
+  ],
+  "files": [
+    "cta-02.tsx"
+  ],
+  "component": "Cta02",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Heading",
+    "Icon",
+    "Link",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "cta-02.tsx",
+      "content": "import {\n  Box,\n  Button,\n  Container,\n  Flex,\n  Heading,\n  Icon,\n  Link,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction ArrowRight() {\n  return (\n    <Icon size=\"xs\" color=\"inherit\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"M5 12h13M13 6l6 6-6 6\" />\n      </svg>\n    </Icon>\n  );\n}\n\n/**\n * Inverted full-bleed band: copy on the left, actions on the right. The band\n * runs edge to edge and closes the page, so it takes no rounding — the panel\n * *is* the section.\n *\n * On an inverted fill the accent channel no longer applies, so the secondary\n * action is a Link with `color=\"inverted\"` rather than a ghost Button. The\n * explicit colour holds in both states and the underline carries the hover.\n */\nexport function Cta02() {\n  return (\n    <Box as=\"section\" bg=\"inverted\" py={{ base: \"14\", lg: \"20\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Flex\n          direction={{ base: \"column\", lg: \"row\" }}\n          alignItems={{ base: \"start\", lg: \"center\" }}\n          justifyContent=\"between\"\n          gap={{ base: \"8\", lg: \"12\" }}\n        >\n          <Stack direction=\"vertical\" alignItems=\"start\" gap=\"3\">\n            <Heading\n              as=\"h2\"\n              size={{ base: \"2xl\", lg: \"3xl\" }}\n              weight=\"semibold\"\n              color=\"inverted\"\n            >\n              Your next component library is already themed\n            </Heading>\n\n            {/* `opacity` on the wrapper rather than a dimmer colour: the label\n                ladder has no inverted-muted rung, and dimming the fill keeps\n                the copy tied to the heading above it. */}\n            <Box maxW=\"xl\" opacity=\"high\">\n              <Text size=\"md\" color=\"inverted\" lineHeight=\"relaxed\">\n                Swap the seed, keep the components. Every surface, border and\n                label re-derives from the same three ladders.\n              </Text>\n            </Box>\n          </Stack>\n\n          {/* shrink=\"0\" so the actions never compress once the heading wraps. */}\n          <Flex alignItems=\"center\" gap=\"6\" shrink=\"0\" wrap=\"wrap\">\n            <Button size=\"lg\">Get started free</Button>\n\n            <Link href=\"#contact\" color=\"inverted\" variant=\"hover\">\n              <Flex as=\"span\" alignItems=\"center\" gap=\"1.5\">\n                <Text as=\"span\" size=\"sm\" weight=\"medium\" color=\"inherit\">\n                  Talk to sales\n                </Text>\n                <ArrowRight />\n              </Flex>\n            </Link>\n          </Flex>\n        </Flex>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

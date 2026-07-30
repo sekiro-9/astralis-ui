@@ -1,0 +1,37 @@
+{
+  "id": "footer-02",
+  "category": "footer",
+  "name": "Newsletter capture with three columns",
+  "description": "Five-column grid on the page surface: brand, blurb and an inline newsletter form take two columns, then three columns of links. The bottom row pairs the copyright with legal links rather than social icons.",
+  "tags": [
+    "three-columns",
+    "newsletter",
+    "email-capture",
+    "legal-row",
+    "base-surface"
+  ],
+  "files": [
+    "footer-02.tsx"
+  ],
+  "component": "Footer02",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "FlexItem",
+    "Grid",
+    "GridItem",
+    "Input",
+    "Link",
+    "Separator",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "footer-02.tsx",
+      "content": "import {\n  Box,\n  Button,\n  Container,\n  Flex,\n  FlexItem,\n  Grid,\n  GridItem,\n  Input,\n  Link,\n  Separator,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst columns = [\n  {\n    heading: \"Platform\",\n    links: [\"Overview\", \"Workflows\", \"Analytics\", \"Enterprise\"],\n  },\n  {\n    heading: \"Resources\",\n    links: [\"Documentation\", \"Guides\", \"Support\", \"Community\"],\n  },\n  {\n    heading: \"Company\",\n    links: [\"About\", \"Careers\", \"Press\", \"Contact\"],\n  },\n];\n\nconst legal = [\"Privacy\", \"Terms\", \"Cookies\"];\n\nfunction FooterLink({ label }: { label: string }) {\n  return (\n    <Link href=\"#\" colorScheme=\"gray\" variant=\"plain\" size=\"sm\">\n      {label}\n    </Link>\n  );\n}\n\n/**\n * Newsletter capture on the left, three link columns on the right. The capture\n * spans two of five columns so the form keeps a usable width before the grid\n * collapses at `lg`.\n */\nexport function Footer02() {\n  return (\n    <Box as=\"footer\" bg=\"base\" py={{ base: \"14\", lg: \"20\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"12\", lg: \"16\" }}>\n          <Grid\n            columns={{ base: \"1\", sm: \"3\", lg: \"5\" }}\n            gap={{ base: \"10\", lg: \"8\" }}\n            alignItems=\"start\"\n          >\n            {/* ---- Brand + newsletter ---- */}\n            <GridItem colSpan={{ base: \"1\", sm: \"3\", lg: \"2\" }}>\n              <Stack direction=\"vertical\" alignItems=\"start\" gap=\"5\">\n                <Flex alignItems=\"center\" gap=\"2.5\">\n                  <Flex\n                    alignItems=\"center\"\n                    justifyContent=\"center\"\n                    shrink=\"0\"\n                    size=\"8\"\n                    rounded=\"lg\"\n                    bg=\"brand\"\n                  >\n                    <Text as=\"span\" size=\"sm\" weight=\"semibold\" color=\"brand-contrast\">\n                      A\n                    </Text>\n                  </Flex>\n                  <Text as=\"span\" size=\"md\" weight=\"semibold\" letterSpacing=\"tight\">\n                    Astralis\n                  </Text>\n                </Flex>\n\n                <Stack direction=\"vertical\" alignItems=\"start\" gap=\"3\">\n                  <Text size=\"sm\" weight=\"semibold\">\n                    Changelog, monthly\n                  </Text>\n                  <Box maxW=\"xs\">\n                    <Text size=\"sm\" color=\"muted\" lineHeight=\"relaxed\">\n                      What shipped, what broke and what we learned. No launch\n                      announcements from other companies.\n                    </Text>\n                  </Box>\n                </Stack>\n\n                {/* Wire this to your own handler — it posts nowhere as written. */}\n                <Flex as=\"form\" gap=\"2\" wrap=\"wrap\" w=\"full\" maxW=\"sm\">\n                  {/* Input carries no style props, so the wrapper does the growing. */}\n                  <FlexItem flex=\"1\" minW=\"40\">\n                    <Input\n                      type=\"email\"\n                      name=\"email\"\n                      size=\"md\"\n                      placeholder=\"you@company.com\"\n                      aria-label=\"Email address\"\n                      required\n                    />\n                  </FlexItem>\n                  <Button type=\"submit\" size=\"md\">\n                    Subscribe\n                  </Button>\n                </Flex>\n              </Stack>\n            </GridItem>\n\n            {/* ---- Link columns ---- */}\n            {columns.map((column) => (\n              <Stack key={column.heading} direction=\"vertical\" alignItems=\"start\" gap=\"3\">\n                <Text as=\"span\" size=\"sm\" weight=\"semibold\">\n                  {column.heading}\n                </Text>\n                <Stack as=\"ul\" direction=\"vertical\" alignItems=\"start\" gap=\"2.5\">\n                  {column.links.map((label) => (\n                    <Box as=\"li\" key={label}>\n                      <FooterLink label={label} />\n                    </Box>\n                  ))}\n                </Stack>\n              </Stack>\n            ))}\n          </Grid>\n\n          <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"6\">\n            <Separator />\n            <Flex\n              direction={{ base: \"column\", sm: \"row\" }}\n              alignItems={{ base: \"start\", sm: \"center\" }}\n              justifyContent=\"between\"\n              gap=\"4\"\n            >\n              <Text size=\"sm\" color=\"subtle\">\n                © 2026 Astralis Labs Ltd.\n              </Text>\n              <Flex alignItems=\"center\" gap=\"5\" wrap=\"wrap\">\n                {legal.map((label) => (\n                  <FooterLink key={label} label={label} />\n                ))}\n              </Flex>\n            </Flex>\n          </Stack>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

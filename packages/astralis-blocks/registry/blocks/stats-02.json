@@ -1,0 +1,36 @@
+{
+  "id": "stats-02",
+  "category": "stats",
+  "name": "KPI cards with trend indicators",
+  "description": "A dashboard-flavoured KPI band on a tinted surface: four bordered cards, each composing a Stat — label, value, a signed trend indicator and a note. Four across from md, two below.",
+  "tags": [
+    "four-up",
+    "kpi-cards",
+    "stat-component",
+    "trend-indicator",
+    "tinted-band"
+  ],
+  "files": [
+    "stats-02.tsx"
+  ],
+  "component": "Stats02",
+  "uses": [
+    "Box",
+    "Container",
+    "Grid",
+    "Heading",
+    "Stack",
+    "Stat",
+    "StatHelpText",
+    "StatIndicator",
+    "StatLabel",
+    "StatValue",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "stats-02.tsx",
+      "content": "import {\n  Box,\n  Container,\n  Grid,\n  Heading,\n  Stack,\n  Stat,\n  StatIndicator,\n  StatLabel,\n  StatValue,\n  StatHelpText,\n  Text,\n} from \"astralis-ui\";\n\nconst kpis = [\n  { label: \"Monthly active teams\", value: \"8,420\", trend: \"increase\" as const, delta: \"12.5%\", note: \"vs last month\" },\n  { label: \"Median build time\", value: \"1.4s\", trend: \"decrease\" as const, delta: \"8.1%\", note: \"faster\" },\n  { label: \"Bundle size\", value: \"0 kb\", trend: \"decrease\" as const, delta: \"100%\", note: \"no runtime CSS\" },\n  { label: \"Uptime\", value: \"99.98%\", trend: \"increase\" as const, delta: \"0.2%\", note: \"last 90 days\" },\n];\n\n/**\n * A dashboard-flavoured KPI band: four bordered cards, each pairing a `Stat`\n * with a trend indicator. This is exactly what `Stat` is scoped for — a compact\n * value with a label, a signed change, and a note.\n *\n * `Stat` has no flat `StatRoot` export, so the root is the compound `Stat`\n * itself — safe here because a plain `Stat` tag is a real component, unlike the\n * dotted sub-component access that breaks across the RSC boundary. The children\n * are the flat exports. Four across from md, two below.\n */\nexport function Stats02() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              This quarter\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              align=\"center\"\n            >\n              The numbers behind the release\n            </Heading>\n          </Stack>\n\n          <Grid columns={{ base: \"2\", md: \"4\" }} gap={{ base: \"4\", lg: \"6\" }} alignItems=\"stretch\">\n            {kpis.map((kpi) => (\n              <Box\n                key={kpi.label}\n                bg=\"base\"\n                border=\"normal\"\n                borderColor=\"base\"\n                rounded=\"2xl\"\n                p={{ base: \"5\", lg: \"6\" }}\n              >\n                <Stat>\n                  <StatLabel>{kpi.label}</StatLabel>\n                  <StatValue>{kpi.value}</StatValue>\n                  <StatHelpText>\n                    <StatIndicator type={kpi.trend}>{kpi.delta}</StatIndicator>{\" \"}\n                    {kpi.note}\n                  </StatHelpText>\n                </Stat>\n              </Box>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

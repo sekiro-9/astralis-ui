@@ -1,0 +1,35 @@
+{
+  "id": "team-02",
+  "category": "team",
+  "name": "Bordered cards with bios",
+  "description": "The team skeleton with more to say: bordered cards on a tinted band, each pairing an avatar and role with a short bio and a social row pinned to the bottom. Three across from md, one below.",
+  "tags": [
+    "three-up",
+    "bordered-cards",
+    "bio",
+    "tinted-band",
+    "social-row"
+  ],
+  "files": [
+    "team-02.tsx"
+  ],
+  "component": "Team02",
+  "uses": [
+    "Avatar",
+    "Box",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "Link",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "team-02.tsx",
+      "content": "import {\n  Avatar,\n  Box,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  Link,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst members = [\n  {\n    name: \"Mara Feld\",\n    role: \"Co-founder & CEO\",\n    bio: \"Previously led platform at Northwind. Believes the best design system is the one nobody has to think about.\",\n  },\n  {\n    name: \"Diego Salas\",\n    role: \"Co-founder & CTO\",\n    bio: \"Compiler nerd turned frontend. Wrote the first version of the token engine on a train.\",\n  },\n  {\n    name: \"Priya Nair\",\n    role: \"Head of Design\",\n    bio: \"Ran design systems at Loom Labs. Cares more about contrast ratios than anyone should.\",\n  },\n  {\n    name: \"Tom Becker\",\n    role: \"Head of Engineering\",\n    bio: \"Ships fast, deletes faster. Keeps the bundle honest and the CI green.\",\n  },\n  {\n    name: \"Aïcha Benali\",\n    role: \"Product Lead\",\n    bio: \"Turns a wall of feature requests into a roadmap that fits on one page.\",\n  },\n  {\n    name: \"Sam Whitfield\",\n    role: \"Design Systems\",\n    bio: \"Lives in the space between Figma and the codebase, making sure the two agree.\",\n  },\n];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nconst socials = [\n  {\n    label: \"GitHub\",\n    path: \"M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z\",\n  },\n  {\n    label: \"X\",\n    path: \"M18.9 2H22l-7.1 8.1L23.2 22h-6.5l-5.1-6.6L5.8 22H2.7l7.6-8.7L1.8 2h6.6l4.6 6.1L18.9 2Z\",\n  },\n];\n\nfunction SocialRow({ name }: { name: string }) {\n  return (\n    <Flex alignItems=\"center\" gap=\"3\">\n      {socials.map((item) => (\n        <Link\n          key={item.label}\n          href=\"#\"\n          colorScheme=\"gray\"\n          variant=\"plain\"\n          aria-label={`${name} on ${item.label}`}\n        >\n          <Icon size=\"sm\" color=\"inherit\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n              <path d={item.path} />\n            </svg>\n          </Icon>\n        </Link>\n      ))}\n    </Flex>\n  );\n}\n\n/**\n * The same team skeleton with more to say: bordered cards on a tinted band,\n * each pairing an avatar with a short bio and a social row pinned to the\n * bottom. The card is a flex column so those rows line up across the grid\n * regardless of bio length. Three across from md, one below.\n */\nexport function Team02() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              Leadership\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              align=\"center\"\n            >\n              Who you'll be working with\n            </Heading>\n          </Stack>\n\n          <Grid\n            columns={{ base: \"1\", md: \"3\" }}\n            gap={{ base: \"5\", lg: \"6\" }}\n            alignItems=\"stretch\"\n          >\n            {members.map((member) => (\n              <Box\n                key={member.name}\n                bg=\"base\"\n                border=\"normal\"\n                borderColor=\"base\"\n                rounded=\"2xl\"\n                p={{ base: \"6\", lg: \"7\" }}\n              >\n                <Flex direction=\"column\" alignItems=\"start\" gap=\"4\" h=\"full\">\n                  <Flex alignItems=\"center\" gap=\"4\">\n                    <Avatar name={member.name} size=\"lg\" />\n                    <Stack direction=\"vertical\" gap=\"0.5\">\n                      <Text as=\"span\" size=\"md\" weight=\"medium\">\n                        {member.name}\n                      </Text>\n                      <Text as=\"span\" size=\"sm\" color=\"muted\">\n                        {member.role}\n                      </Text>\n                    </Stack>\n                  </Flex>\n\n                  {/* flex=\"1\" lives on the Box — Text carries only its own\n                      typography recipe, so the growth wrapper is a Box. */}\n                  <Box flex=\"1\">\n                    <Text size=\"sm\" color=\"muted\" lineHeight=\"relaxed\">\n                      {member.bio}\n                    </Text>\n                  </Box>\n\n                  <SocialRow name={member.name} />\n                </Flex>\n              </Box>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

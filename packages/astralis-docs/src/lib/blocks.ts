@@ -9,22 +9,17 @@ export interface BlockCategoryGroup {
   entries: BlockSummary[];
 }
 
-export interface BlockFamilyGroup {
-  family: string;
-  label: string;
-  entries: BlockSummary[];
-}
-
 /**
  * Overrides for category slugs that title-casing gets wrong. Anything not
  * listed falls through to `titleCase`, so a new section type needs no entry.
  */
 const CATEGORY_LABEL_OVERRIDES: Record<string, string> = {
-  auth: "Authentication",
   faq: "FAQ",
   cta: "Call to action",
   navbar: "Navigation",
   logos: "Logo clouds",
+  signup: "Sign up",
+  "forgot-password": "Forgot password",
 };
 
 /** `hero-split` -> `Hero Split`, `pricing` -> `Pricing`. */
@@ -65,23 +60,3 @@ export function groupByCategory(all: BlockSummary[]): BlockCategoryGroup[] {
     .sort((a, b) => a.label.localeCompare(b.label));
 }
 
-/** Families are registry slugs (`hero-split`, `login`) — title-case for display. */
-export function familyLabel(family: string): string {
-  return titleCase(family);
-}
-
-/** The families present in a set of blocks, for the second tab row. */
-export function groupByFamily(entries: BlockSummary[]): BlockFamilyGroup[] {
-  const byFamily = new Map<string, BlockSummary[]>();
-  for (const meta of entries) {
-    byFamily.set(meta.family, [...(byFamily.get(meta.family) ?? []), meta]);
-  }
-
-  return [...byFamily.entries()]
-    .map(([family, blocksInFamily]) => ({
-      family,
-      label: familyLabel(family),
-      entries: blocksInFamily,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
-}

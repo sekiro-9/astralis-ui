@@ -1,0 +1,34 @@
+{
+  "id": "cta-01",
+  "category": "cta",
+  "name": "Centred panel with dual actions",
+  "description": "A tinted bordered panel on a narrow measure: release badge, headline, one line of copy, then a primary and secondary action with a row of assurances underneath. Actions stack below sm.",
+  "tags": [
+    "centred",
+    "dual-cta",
+    "tinted-panel",
+    "badge",
+    "assurances"
+  ],
+  "files": [
+    "cta-01.tsx"
+  ],
+  "component": "Cta01",
+  "uses": [
+    "Badge",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Heading",
+    "Icon",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "cta-01.tsx",
+      "content": "import {\n  Badge,\n  Box,\n  Button,\n  Container,\n  Flex,\n  Heading,\n  Icon,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst assurances = [\"Free for 14 days\", \"No credit card\", \"Cancel anytime\"];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction CheckMark() {\n  return (\n    <Icon size=\"xs\" color=\"brand\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"2.5\"\n        strokeLinecap=\"round\"\n        strokeLinejoin=\"round\"\n      >\n        <path d=\"m4 12.5 5.5 5.5L20 6.5\" />\n      </svg>\n    </Icon>\n  );\n}\n\n/**\n * Centred closing panel: eyebrow badge, headline, one line of copy, a pair of\n * actions, then the small print that answers the objection the button raises.\n *\n * The panel is a tinted surface with a border rather than a shadow — it sits\n * *on* the page rather than floating above it, which is what `raised` would\n * claim. The section keeps `bg=\"base\"` so the panel has something to sit on.\n */\nexport function Cta01() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      {/* A closing panel wants a narrower measure than a hero: the copy is one\n          sentence and the actions belong under it, not beside it. */}\n      <Container maxW=\"4xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Box\n          bg=\"subtle\"\n          border=\"normal\"\n          borderColor=\"base\"\n          rounded=\"3xl\"\n          p={{ base: \"8\", sm: \"12\", lg: \"16\" }}\n        >\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"7\">\n            <Badge variant=\"surface\" colorScheme=\"brand\" size=\"sm\">\n              v1.0 is out\n            </Badge>\n\n            <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n              <Heading\n                as=\"h2\"\n                size={{ base: \"3xl\", lg: \"4xl\" }}\n                weight=\"semibold\"\n                align=\"center\"\n              >\n                Start with the tokens, not the tickets\n              </Heading>\n\n              {/* Measure lives on the layout primitive — Text exposes only its\n                  own typography recipe, not Box's style props. */}\n              <Box maxW=\"xl\">\n                <Text\n                  size={{ base: \"md\", lg: \"lg\" }}\n                  color=\"muted\"\n                  align=\"center\"\n                  lineHeight=\"relaxed\"\n                >\n                  One theme seed repaints every surface you build. Install the\n                  package, pick a palette, and ship the product instead of the\n                  button.\n                </Text>\n              </Box>\n            </Stack>\n\n            {/* Stacked actions below sm, where two buttons side by side each get\n                too narrow to read. */}\n            <Flex\n              direction={{ base: \"column\", sm: \"row\" }}\n              alignItems=\"center\"\n              justifyContent=\"center\"\n              gap=\"3\"\n            >\n              <Button size=\"lg\">Start building</Button>\n              <Button size=\"lg\" variant=\"surface\" colorScheme=\"gray\">\n                Book a walkthrough\n              </Button>\n            </Flex>\n\n            <Flex justifyContent=\"center\" gap={{ base: \"4\", sm: \"6\" }} wrap=\"wrap\">\n              {assurances.map((assurance) => (\n                <Flex key={assurance} alignItems=\"center\" gap=\"1.5\">\n                  <CheckMark />\n                  <Text as=\"span\" size=\"sm\" color=\"muted\">\n                    {assurance}\n                  </Text>\n                </Flex>\n              ))}\n            </Flex>\n          </Stack>\n        </Box>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -28,8 +28,8 @@ try {
     [
       'import { renderToStaticMarkup } from "react-dom/server";',
       ...blocks.map(
-        ({ id, category, family, component, files }) =>
-          `import { ${component} } from "./${category}/${family}/${id}/${files[0].replace(/\.tsx$/, "")}";`,
+        ({ id, category, component, files }) =>
+          `import { ${component} } from "./${category}/${id}/${files[0].replace(/\.tsx$/, "")}";`,
       ),
       "",
       `const cases = [${blocks.map(({ id, component }) => `["${id}", ${component}]`).join(", ")}] as const;`,

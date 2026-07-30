@@ -1,0 +1,31 @@
+{
+  "id": "stats-01",
+  "category": "stats",
+  "name": "Centred marketing numbers",
+  "description": "A marketing stats band: oversized numbers with captions under a centred heading, four across on desktop and two on mobile. On the base surface.",
+  "tags": [
+    "four-up",
+    "centred",
+    "oversized-numbers",
+    "marketing",
+    "heading"
+  ],
+  "files": [
+    "stats-01.tsx"
+  ],
+  "component": "Stats01",
+  "uses": [
+    "Box",
+    "Container",
+    "Grid",
+    "Heading",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "stats-01.tsx",
+      "content": "import {\n  Box,\n  Container,\n  Grid,\n  Heading,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst metrics = [\n  { value: \"62\", label: \"Components\" },\n  { value: \"11\", label: \"Themeable palettes\" },\n  { value: \"99.8%\", label: \"Lighthouse a11y\" },\n  { value: \"0kb\", label: \"Runtime CSS\" },\n];\n\n/**\n * A marketing stats band — oversized numbers under a centred heading, four\n * across on desktop and two on mobile.\n *\n * The numbers are `Text`, not `Stat`: Stat's value is fixed at `text-3xl` for a\n * dashboard KPI, which reads small at hero scale. See\n * reports/astralis-api-updates.md.\n */\nexport function Stats01() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              By the numbers\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              align=\"center\"\n            >\n              Built to disappear into your product\n            </Heading>\n          </Stack>\n\n          <Grid columns={{ base: \"2\", lg: \"4\" }} gap={{ base: \"10\", lg: \"8\" }}>\n            {metrics.map((metric) => (\n              <Stack key={metric.label} direction=\"vertical\" alignItems=\"center\" gap=\"2\">\n                <Text\n                  as=\"span\"\n                  size={{ base: \"4xl\", lg: \"5xl\" }}\n                  weight=\"semibold\"\n                  color=\"base\"\n                  lineHeight=\"none\"\n                  letterSpacing=\"tight\"\n                >\n                  {metric.value}\n                </Text>\n                <Text as=\"span\" size=\"sm\" color=\"muted\" align=\"center\">\n                  {metric.label}\n                </Text>\n              </Stack>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "hero-02",
+  "category": "hero",
+  "name": "Media left with email capture",
+  "description": "Mirrored split on a tinted band: a placeholder chart on the left, and on the right an accent eyebrow, headline, inline email capture and a trusted-by logo row. Stacks to one column below lg with the media last.",
+  "tags": [
+    "media-left",
+    "email-capture",
+    "logo-strip",
+    "tinted-surface",
+    "accent-eyebrow"
+  ],
+  "files": [
+    "hero-02.tsx"
+  ],
+  "component": "Hero02",
+  "uses": [
+    "AspectRatio",
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "FlexItem",
+    "Grid",
+    "GridItem",
+    "Heading",
+    "Input",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "hero-02.tsx",
+      "content": "import {\n  AspectRatio,\n  Box,\n  Button,\n  Container,\n  Flex,\n  FlexItem,\n  Grid,\n  GridItem,\n  Heading,\n  Input,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst logos = [\"Northwind\", \"Acme\", \"Contoso\", \"Initech\"];\n\n/** Bar heights for the placeholder chart, as a percentage of the plot area. */\nconst bars = [42, 68, 55, 84, 72, 96];\n\n/**\n * Two-column hero with the media on the left and an email capture on the right,\n * over a tinted band. Stacks to one column below `lg`, media last.\n */\nexport function Hero02() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Grid\n          columns={{ base: \"1\", lg: \"2\" }}\n          gap={{ base: \"12\", lg: \"16\" }}\n          alignItems=\"center\"\n        >\n          {/* ---------------------------------------------------------- */}\n          {/* Media — ordered first on wide screens, last when stacked.   */}\n          {/* ---------------------------------------------------------- */}\n          <GridItem\n            order={{ base: \"2\", lg: \"1\" }}\n            bg=\"base\"\n            border=\"normal\"\n            borderColor=\"base\"\n            rounded=\"2xl\"\n            shadow=\"lg\"\n            overflow=\"hidden\"\n          >\n            <AspectRatio ratio=\"landscape\">\n              {/* Placeholder chart. Swap for your own screenshot:\n                  <img src=\"/dashboard.png\" alt=\"Revenue dashboard\" /> */}\n              <Stack direction=\"vertical\" gap=\"5\" bg=\"base\" p=\"6\">\n                <Stack direction=\"vertical\" gap=\"2\">\n                  <Box w=\"24\" h=\"2.5\" bg=\"muted\" rounded=\"full\" />\n                  <Box w=\"40\" h=\"2.5\" bg=\"muted\" rounded=\"full\" />\n                </Stack>\n\n                <Flex alignItems=\"end\" justifyContent=\"between\" gap=\"3\" h=\"40\">\n                  {bars.map((height, index) => (\n                    <Box\n                      key={height}\n                      w=\"full\"\n                      h=\"full\"\n                      rounded=\"md\"\n                      bg={index === bars.length - 1 ? \"brand\" : \"muted\"}\n                      style={{ height: `${height}%` }}\n                    />\n                  ))}\n                </Flex>\n              </Stack>\n            </AspectRatio>\n          </GridItem>\n\n          {/* ---------------------------------------------------------- */}\n          {/* Copy                                                        */}\n          {/* ---------------------------------------------------------- */}\n          <GridItem order={{ base: \"1\", lg: \"2\" }}>\n            <Stack direction=\"vertical\" alignItems=\"start\" gap=\"6\">\n            <Flex alignItems=\"center\" gap=\"3\">\n              <Box w=\"8\" h=\"0.5\" bg=\"brand\" rounded=\"full\" />\n              <Text\n                as=\"span\"\n                size=\"xs\"\n                weight=\"semibold\"\n                color=\"brand\"\n                casing=\"uppercase\"\n                letterSpacing=\"wider\"\n              >\n                Analytics, finally readable\n              </Text>\n            </Flex>\n\n            <Heading\n              as=\"h1\"\n              size={{ base: \"4xl\", lg: \"5xl\" }}\n              weight=\"semibold\"\n              lineHeight=\"tight\"\n              letterSpacing=\"tight\"\n            >\n              Every number your team argues about, in one place\n            </Heading>\n\n            <Box maxW=\"lg\">\n              <Text size={{ base: \"md\", lg: \"lg\" }} color=\"muted\" lineHeight=\"relaxed\">\n                Connect a warehouse, pick the metrics that matter, and ship a dashboard\n                your whole company can read without a training session.\n              </Text>\n            </Box>\n\n            {/* Wire this up to your own handler — it posts nowhere as written. */}\n            <Flex as=\"form\" gap=\"2\" wrap=\"wrap\" w=\"full\" maxW=\"md\">\n              {/* Input carries no style props, so the wrapper does the growing\n                  — the field takes the slack, the button keeps its width. */}\n              <FlexItem flex=\"1\" minW=\"48\">\n                <Input\n                  type=\"email\"\n                  name=\"email\"\n                  size=\"lg\"\n                  placeholder=\"you@company.com\"\n                  aria-label=\"Work email\"\n                  required\n                />\n              </FlexItem>\n              <Button type=\"submit\" size=\"lg\">\n                Get early access\n              </Button>\n            </Flex>\n\n            <Text size=\"xs\" color=\"subtle\">\n              Free for 30 days. No card, no sales call.\n            </Text>\n\n            <Stack direction=\"vertical\" gap=\"3\" pt=\"2\">\n              <Text size=\"xs\" color=\"subtle\" casing=\"uppercase\" letterSpacing=\"wider\">\n                Already trusted by\n              </Text>\n              <Flex gap=\"6\" wrap=\"wrap\" alignItems=\"center\">\n                {logos.map((logo) => (\n                  <Text key={logo} size=\"sm\" weight=\"semibold\" color=\"subtle\">\n                    {logo}\n                  </Text>\n                ))}\n              </Flex>\n            </Stack>\n            </Stack>\n          </GridItem>\n        </Grid>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

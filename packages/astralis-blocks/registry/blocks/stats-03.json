@@ -1,0 +1,32 @@
+{
+  "id": "stats-03",
+  "category": "stats",
+  "name": "Inverted split with a 2×2 grid",
+  "description": "The stats skeleton as an inverted closing band, split two ways: framing copy on the left, a 2×2 grid of oversized numbers on the right. Stacks into one column below lg.",
+  "tags": [
+    "split",
+    "inverted-band",
+    "2x2-grid",
+    "oversized-numbers",
+    "side-heading"
+  ],
+  "files": [
+    "stats-03.tsx"
+  ],
+  "component": "Stats03",
+  "uses": [
+    "Box",
+    "Container",
+    "Grid",
+    "GridItem",
+    "Heading",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "stats-03.tsx",
+      "content": "import {\n  Box,\n  Container,\n  Grid,\n  GridItem,\n  Heading,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst metrics = [\n  { value: \"3.2M\", label: \"Components rendered daily\" },\n  { value: \"40%\", label: \"Less CSS shipped, on average\" },\n  { value: \"11\", label: \"Palettes from one seed\" },\n  { value: \"<1 day\", label: \"Median migration time\" },\n];\n\n/**\n * The stats skeleton as an inverted closing band, split two ways: the framing\n * on the left, a 2×2 grid of oversized numbers on the right. The heading and\n * numbers invert with the surface; the captions dim via `opacity` on their\n * wrapper, since the label ladder has no inverted-muted rung. Stacks below `lg`.\n */\nexport function Stats03() {\n  return (\n    <Box as=\"section\" bg=\"inverted\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Grid\n          columns={{ base: \"1\", lg: \"2\" }}\n          gap={{ base: \"12\", lg: \"16\" }}\n          alignItems=\"center\"\n        >\n          {/* ---- Framing ---- */}\n          <GridItem colSpan=\"1\">\n            <Stack direction=\"vertical\" alignItems=\"start\" gap=\"4\">\n              <Text\n                as=\"span\"\n                size=\"sm\"\n                weight=\"semibold\"\n                color=\"inverted\"\n                casing=\"uppercase\"\n                letterSpacing=\"wider\"\n              >\n                Proof, not promises\n              </Text>\n              <Heading\n                as=\"h2\"\n                size={{ base: \"3xl\", lg: \"4xl\" }}\n                weight=\"semibold\"\n                color=\"inverted\"\n              >\n                Teams ship more and style less\n              </Heading>\n              <Box maxW=\"md\" opacity=\"high\">\n                <Text size={{ base: \"md\", lg: \"lg\" }} color=\"inverted\" lineHeight=\"relaxed\">\n                  Every number here comes out of production apps built on the same\n                  primitives you'd install today.\n                </Text>\n              </Box>\n            </Stack>\n          </GridItem>\n\n          {/* ---- Numbers ---- */}\n          <GridItem colSpan=\"1\">\n            <Grid columns=\"2\" gap={{ base: \"8\", lg: \"10\" }}>\n              {metrics.map((metric) => (\n                <Stack key={metric.label} direction=\"vertical\" alignItems=\"start\" gap=\"2\">\n                  <Text\n                    as=\"span\"\n                    size={{ base: \"4xl\", lg: \"5xl\" }}\n                    weight=\"semibold\"\n                    color=\"inverted\"\n                    lineHeight=\"none\"\n                    letterSpacing=\"tight\"\n                  >\n                    {metric.value}\n                  </Text>\n                  <Box opacity=\"high\">\n                    <Text as=\"span\" size=\"sm\" color=\"inverted\">\n                      {metric.label}\n                    </Text>\n                  </Box>\n                </Stack>\n              ))}\n            </Grid>\n          </GridItem>\n        </Grid>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

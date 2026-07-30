@@ -31,7 +31,11 @@ export const BLOCK_CATEGORIES = [
   "contact",
   "navbar",
   "footer",
-  "auth",
+  // Auth screens are three separate sections, not one: the id is what a
+  // consumer types, and `login-01` says what `auth-01` could not.
+  "login",
+  "signup",
+  "forgot-password",
   "dashboard",
   "content",
 ] as const;
@@ -41,24 +45,20 @@ export type BlockCategory = (typeof BLOCK_CATEGORIES)[number];
 /**
  * Hand-authored block metadata (`meta.ts`).
  *
- * Two levels, no more: a `category` (the section) holds `family` groupings
- * (the structural skeleton), and each family numbers its variations.
+ * One level: a `category` (the section) holds numbered blocks.
  *
- *     hero  ->  hero-split  ->  hero-split-01, hero-split-02, …
- *     auth  ->  login       ->  login-01, login-02, …
+ *     hero   ->  hero-01, hero-02, hero-03
+ *     login  ->  login-01, login-02, …
  *
- * - `id`     what a consumer types (`astralis add hero-split-01`) and the key
- *            the docs and Studio look blocks up by. Always `{family}-{nn}`.
- * - `family` the structural skeleton. A genuinely different layout earns a new
- *            family; a different visual treatment of the SAME skeleton earns
- *            the next number instead.
- * - `name`   the human label on the docs card. This is where a variation gets
- *            to be descriptive — the id stays boring on purpose.
+ * - `id`    what a consumer types (`astralis add hero-01`) and the key the docs
+ *           and Studio look blocks up by. Always `{category}-{nn}`.
+ * - `name`  the human label on the docs card. This is where a block gets to be
+ *           descriptive — the id stays boring on purpose, so "which one is it"
+ *           is answered by the card rather than encoded in the slug.
  */
 export interface BlockMeta {
   id: string;
   category: BlockCategory;
-  family: string;
   name: string;
   description: string;
   /** Free-form facets for docs filtering, e.g. "media-right", "dual-cta". */

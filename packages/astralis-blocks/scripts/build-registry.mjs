@@ -4,9 +4,8 @@
    Blocks ship as SOURCE: the CLI writes the files into a consumer's project,
    so the registry is a catalogue of text, not a bundle of components.
 
-   This script walks src/{category}/{family}/{id}/ — e.g. hero/hero-split/
-   hero-split-01 — validates each block
-   against the authoring rules, and emits three artifacts:
+   This script walks src/{category}/{id}/ — e.g. hero/hero-01 — validates each
+   block against the authoring rules, and emits three artifacts:
 
      registry/index.json          catalogue only (no source) — docs list, CLI --list
      registry/blocks/{id}.json    metadata + file contents  — CLI `add`
@@ -43,7 +42,9 @@ const CATEGORIES = [
   "contact",
   "navbar",
   "footer",
-  "auth",
+  "login",
+  "signup",
+  "forgot-password",
   "dashboard",
   "content",
 ];
@@ -92,14 +93,14 @@ function deriveImports(source) {
 /* Authoring rules — the gates that keep copied-out blocks clean               */
 /* -------------------------------------------------------------------------- */
 
-function validate(meta, { id, category, family, dir, entry, source, files }) {
+function validate(meta, { id, category, dir, entry, source, files }) {
   if (meta.id !== id) fail(id, `meta.id is "${meta.id}" but the folder is "${id}"`);
   if (meta.category !== category) fail(id, `meta.category is "${meta.category}" but it lives under "${category}"`);
-  if (meta.family !== family) fail(id, `meta.family is "${meta.family}" but it lives under "${family}"`);
-  // The id is the family plus a zero-padded counter — nothing else. Padding
+  if ("family" in meta) fail(id, "meta.family is gone — blocks are numbered per category now");
+  // The id is the category plus a zero-padded counter — nothing else. Padding
   // keeps 02 sorting before 10 in the registry, on disk and in the gallery.
-  if (!new RegExp(`^${family}-\\d{2}$`).test(id)) {
-    fail(id, `id must be "${family}-{nn}" with a two-digit counter, e.g. "${family}-01"`);
+  if (!new RegExp(`^${category}-\\d{2}$`).test(id)) {
+    fail(id, `id must be "${category}-{nn}" with a two-digit counter, e.g. "${category}-01"`);
   }
   if (!files.includes(entry)) fail(id, `missing entry file "${entry}" in ${relative(ROOT, dir)}`);
   if (!meta.name?.trim()) fail(id, "meta.name is required — it is the docs card label");
@@ -144,42 +145,40 @@ const dirsIn = (path) =>
 const blocks = [];
 
 for (const category of dirsIn(SRC).filter((name) => CATEGORIES.includes(name))) {
-  for (const family of dirsIn(join(SRC, category))) {
-    for (const id of dirsIn(join(SRC, category, family))) {
-      const dir = join(SRC, category, family, id);
-      const entry = `${id}.tsx`;
-      const metaFile = join(dir, "meta.ts");
+  for (const id of dirsIn(join(SRC, category))) {
+    const dir = join(SRC, category, id);
+    const entry = `${id}.tsx`;
+    const metaFile = join(dir, "meta.ts");
 
-      if (!existsSync(metaFile)) {
-        fail(id, `no meta.ts in ${relative(ROOT, dir)}`);
-        continue;
-      }
-
-      const files = readdirSync(dir)
-        .filter((name) => name.endsWith(".tsx") || name.endsWith(".ts"))
-        .filter((name) => name !== "meta.ts")
-        .sort((a, b) => (a === entry ? -1 : b === entry ? 1 : a.localeCompare(b)));
-
-      const source = existsSync(join(dir, entry)) ? readFileSync(join(dir, entry), "utf8") : "";
-      const meta = (await loadMeta(metaFile)).default;
-
-      validate(meta, { id, category, family, dir, entry, source, files });
-
-      const component = deriveComponent(source);
-      if (!component) fail(id, `no exported component found in ${entry} — expected \`export function Xxx()\``);
-
-      blocks.push({
-        ...meta,
-        files,
-        component: component ?? "",
-        uses: deriveUses(source),
-        contents: files.map((name) => ({
-          path: name,
-          content: readFileSync(join(dir, name), "utf8"),
-        })),
-        dir,
-      });
+    if (!existsSync(metaFile)) {
+      fail(id, `no meta.ts in ${relative(ROOT, dir)}`);
+      continue;
     }
+
+    const files = readdirSync(dir)
+      .filter((name) => name.endsWith(".tsx") || name.endsWith(".ts"))
+      .filter((name) => name !== "meta.ts")
+      .sort((a, b) => (a === entry ? -1 : b === entry ? 1 : a.localeCompare(b)));
+
+    const source = existsSync(join(dir, entry)) ? readFileSync(join(dir, entry), "utf8") : "";
+    const meta = (await loadMeta(metaFile)).default;
+
+    validate(meta, { id, category, dir, entry, source, files });
+
+    const component = deriveComponent(source);
+    if (!component) fail(id, `no exported component found in ${entry} — expected \`export function Xxx()\``);
+
+    blocks.push({
+      ...meta,
+      files,
+      component: component ?? "",
+      uses: deriveUses(source),
+      contents: files.map((name) => ({
+        path: name,
+        content: readFileSync(join(dir, name), "utf8"),
+      })),
+      dir,
+    });
   }
 }
 
@@ -208,12 +207,12 @@ const generated = [
   'import type { JSX } from "react";',
   'import type { BlockRegistryEntry } from "./registry";',
   ...blocks.map(
-    ({ id, component, category, family, files }) =>
-      `import { ${component} } from "./${category}/${family}/${id}/${files[0].replace(/\.tsx$/, "")}";`,
+    ({ id, component, category, files }) =>
+      `import { ${component} } from "./${category}/${id}/${files[0].replace(/\.tsx$/, "")}";`,
   ),
   ...blocks.map(
-    ({ id, category, family }) =>
-      `import ${camel(id)}Meta from "./${category}/${family}/${id}/meta";`,
+    ({ id, category }) =>
+      `import ${camel(id)}Meta from "./${category}/${id}/meta";`,
   ),
   "",
   "export interface BlockEntry {",

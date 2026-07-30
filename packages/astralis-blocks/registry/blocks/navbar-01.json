@@ -1,0 +1,33 @@
+{
+  "id": "navbar-01",
+  "category": "navbar",
+  "name": "Sticky bar with inline links",
+  "description": "Sticky header on the page surface: wordmark on the left, inline navigation in the middle, and a text sign-in beside a solid call to action on the right. Below md the links and actions collapse into a disclosure panel under a hairline.",
+  "tags": [
+    "sticky",
+    "inline-links",
+    "dual-action",
+    "mobile-disclosure",
+    "hairline"
+  ],
+  "files": [
+    "navbar-01.tsx"
+  ],
+  "component": "Navbar01",
+  "uses": [
+    "Box",
+    "Button",
+    "Container",
+    "Flex",
+    "Icon",
+    "Link",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "navbar-01.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  Box,\n  Button,\n  Container,\n  Flex,\n  Icon,\n  Link,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst links = [\n  { label: \"Features\", href: \"#features\" },\n  { label: \"Pricing\", href: \"#pricing\" },\n  { label: \"Docs\", href: \"#docs\" },\n  { label: \"Changelog\", href: \"#changelog\" },\n];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nfunction MenuIcon({ open }: { open: boolean }) {\n  return (\n    <Icon size=\"md\" aria-hidden=\"true\">\n      <svg\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        stroke=\"currentColor\"\n        strokeWidth=\"1.75\"\n        strokeLinecap=\"round\"\n      >\n        {open ? <path d=\"m6 6 12 12M18 6 6 18\" /> : <path d=\"M4 7h16M4 12h16M4 17h16\" />}\n      </svg>\n    </Icon>\n  );\n}\n\n/**\n * `colorScheme=\"gray\"` rather than the default brand: a nav link is neutral\n * text that darkens on hover, not an accent link. Size and weight go straight\n * on the Link, which carries Text's typography props.\n */\nfunction NavLink({ href, label }: { href: string; label: string }) {\n  return (\n    <Link href={href} colorScheme=\"gray\" variant=\"plain\" size=\"sm\" weight=\"medium\">\n      {label}\n    </Link>\n  );\n}\n\nfunction Wordmark() {\n  return (\n    <Flex alignItems=\"center\" gap=\"2.5\">\n      <Flex\n        alignItems=\"center\"\n        justifyContent=\"center\"\n        shrink=\"0\"\n        size=\"8\"\n        rounded=\"lg\"\n        bg=\"brand\"\n      >\n        <Text as=\"span\" size=\"sm\" weight=\"semibold\" color=\"brand-contrast\">\n          A\n        </Text>\n      </Flex>\n      <Text as=\"span\" size=\"md\" weight=\"semibold\" letterSpacing=\"tight\">\n        Astralis\n      </Text>\n    </Flex>\n  );\n}\n\n/**\n * Sticky bar: wordmark, inline links, then sign-in and a call to action. Links\n * and actions collapse into a disclosure panel below `md`.\n *\n * The hairlines are one-sided borders: `borderB` on the bar, `borderT` on the\n * panel, so each rule belongs to the element it bounds rather than being an\n * extra node between them.\n */\nexport function Navbar01() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Box\n      as=\"header\"\n      position=\"sticky\"\n      top=\"0\"\n      zIndex=\"high\"\n      bg=\"base\"\n      borderB=\"normal\"\n      borderColor=\"base\"\n    >\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Flex alignItems=\"center\" justifyContent=\"between\" gap=\"6\" h=\"16\">\n          <Wordmark />\n\n          {/* Inline links — hidden below md, where the panel takes over. */}\n          <Flex\n            as=\"nav\"\n            aria-label=\"Main\"\n            alignItems=\"center\"\n            gap=\"7\"\n            display={{ base: \"hidden\", md: \"flex\" }}\n          >\n            {links.map((link) => (\n              <NavLink key={link.label} {...link} />\n            ))}\n          </Flex>\n\n          <Flex alignItems=\"center\" gap=\"3\" display={{ base: \"hidden\", md: \"flex\" }}>\n            <Button size=\"sm\" variant=\"text\" colorScheme=\"gray\">\n              Sign in\n            </Button>\n            <Button size=\"sm\">Get started</Button>\n          </Flex>\n\n          {/* Local state only — wire the links to your own routing. */}\n          <Box\n            as=\"button\"\n            type=\"button\"\n            aria-label={open ? \"Close menu\" : \"Open menu\"}\n            aria-expanded={open}\n            onClick={() => setOpen((o) => !o)}\n            display={{ base: \"inline-flex\", md: \"hidden\" }}\n            cursor=\"pointer\"\n            p=\"2\"\n            rounded=\"md\"\n            bg=\"transparent\"\n            hover={{ bg: \"subtle\" }}\n            focusVisible={{ borderColor: \"brand\" }}\n          >\n            <MenuIcon open={open} />\n          </Box>\n        </Flex>\n      </Container>\n\n      {open && (\n        <Box\n          as=\"nav\"\n          aria-label=\"Main\"\n          borderT=\"normal\"\n          borderColor=\"subtle\"\n          display={{ base: \"block\", md: \"hidden\" }}\n        >\n          <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n            <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"4\" py=\"5\">\n              {links.map((link) => (\n                <NavLink key={link.label} {...link} />\n              ))}\n              <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"2.5\" pt=\"2\">\n                <Button size=\"md\" variant=\"surface\" colorScheme=\"gray\" fullWidth>\n                  Sign in\n                </Button>\n                <Button size=\"md\" fullWidth>\n                  Get started\n                </Button>\n              </Stack>\n            </Stack>\n          </Container>\n        </Box>\n      )}\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

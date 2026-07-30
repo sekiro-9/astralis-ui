@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Badge, Code, Heading, List, ListItem, Separator, Text } from "astralis-ui";
 import { CopyCommand } from "@/modules/docs/copy-command";
-import { categoryLabel, familyLabel, type BlockSummary } from "@/lib/blocks";
+import { categoryLabel, type BlockSummary } from "@/lib/blocks";
 import { BackLink } from "./back-link";
 import { BlockWorkbench } from "./block-workbench";
 
@@ -30,7 +30,7 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
             <Text size="xs" color="subtle" weight="medium" casing="uppercase" letterSpacing="wider">
-              {categoryLabel(meta.category)} · {familyLabel(meta.family)}
+              {categoryLabel(meta.category)}
             </Text>
             <Heading as="h1" size="2xl" weight="semibold" letterSpacing="tight" className="astralis:mt-1.5">
               {meta.name}

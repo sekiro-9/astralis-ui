@@ -1,0 +1,35 @@
+{
+  "id": "team-01",
+  "category": "team",
+  "name": "Centred portraits, four up",
+  "description": "A borderless four-up grid of centred portraits with name, role and a small social row beneath each, under a centred heading. Two across at sm, four at lg, one below.",
+  "tags": [
+    "four-up",
+    "centred-portraits",
+    "borderless",
+    "social-row",
+    "avatar"
+  ],
+  "files": [
+    "team-01.tsx"
+  ],
+  "component": "Team01",
+  "uses": [
+    "Avatar",
+    "Box",
+    "Container",
+    "Flex",
+    "Grid",
+    "Heading",
+    "Icon",
+    "Link",
+    "Stack",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "team-01.tsx",
+      "content": "import {\n  Avatar,\n  Box,\n  Container,\n  Flex,\n  Grid,\n  Heading,\n  Icon,\n  Link,\n  Stack,\n  Text,\n} from \"astralis-ui\";\n\nconst members = [\n  { name: \"Mara Feld\", role: \"Co-founder & CEO\" },\n  { name: \"Diego Salas\", role: \"Co-founder & CTO\" },\n  { name: \"Priya Nair\", role: \"Head of Design\" },\n  { name: \"Tom Becker\", role: \"Head of Engineering\" },\n  { name: \"Aïcha Benali\", role: \"Product Lead\" },\n  { name: \"Sam Whitfield\", role: \"Design Systems\" },\n  { name: \"Yuki Tanaka\", role: \"Frontend Lead\" },\n  { name: \"Omar Haddad\", role: \"Developer Relations\" },\n];\n\n/* Blocks bundle no icon library — raw SVG through Icon's BYO path. */\nconst socials = [\n  {\n    label: \"GitHub\",\n    path: \"M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.5 9.5 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z\",\n  },\n  {\n    label: \"LinkedIn\",\n    path: \"M6.94 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0ZM3.5 8.5h3.9V21H3.5V8.5Zm6.5 0h3.7v1.7h.05c.52-.9 1.8-1.9 3.7-1.9 3.9 0 4.6 2.4 4.6 5.6V21h-3.9v-5.4c0-1.3 0-3-1.9-3s-2.15 1.4-2.15 2.9V21H10V8.5Z\",\n  },\n];\n\nfunction SocialRow({ name }: { name: string }) {\n  return (\n    <Flex alignItems=\"center\" gap=\"3\">\n      {socials.map((item) => (\n        <Link\n          key={item.label}\n          href=\"#\"\n          colorScheme=\"gray\"\n          variant=\"plain\"\n          aria-label={`${name} on ${item.label}`}\n        >\n          <Icon size=\"sm\" color=\"inherit\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"currentColor\">\n              <path d={item.path} />\n            </svg>\n          </Icon>\n        </Link>\n      ))}\n    </Flex>\n  );\n}\n\n/**\n * A borderless four-up grid of centred portraits — the simplest team layout,\n * for a page that just needs to put faces to names. Avatars fall back to\n * initials with a deterministic hue; pass `src` for real photos.\n *\n * Two across from sm, four from lg, one below.\n */\nexport function Team01() {\n  return (\n    <Box as=\"section\" bg=\"base\" py={{ base: \"16\", lg: \"24\" }}>\n      <Container maxW=\"6xl\" px={{ base: \"6\", lg: \"8\" }}>\n        <Stack direction=\"vertical\" alignItems=\"stretch\" gap={{ base: \"10\", lg: \"14\" }}>\n          <Stack direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n            <Text\n              as=\"span\"\n              size=\"sm\"\n              weight=\"semibold\"\n              color=\"brand\"\n              casing=\"uppercase\"\n              letterSpacing=\"wider\"\n            >\n              Our team\n            </Text>\n            <Heading\n              as=\"h2\"\n              size={{ base: \"3xl\", lg: \"4xl\" }}\n              weight=\"semibold\"\n              align=\"center\"\n            >\n              The people behind the product\n            </Heading>\n            <Box maxW=\"xl\">\n              <Text size={{ base: \"md\", lg: \"lg\" }} color=\"muted\" align=\"center\" lineHeight=\"relaxed\">\n                A small team of engineers and designers who would rather ship the\n                product than the button.\n              </Text>\n            </Box>\n          </Stack>\n\n          <Grid\n            columns={{ base: \"1\", sm: \"2\", lg: \"4\" }}\n            gap={{ base: \"8\", lg: \"10\" }}\n            alignItems=\"start\"\n          >\n            {members.map((member) => (\n              <Stack key={member.name} direction=\"vertical\" alignItems=\"center\" gap=\"4\">\n                <Avatar name={member.name} size=\"2xl\" />\n                <Stack direction=\"vertical\" alignItems=\"center\" gap=\"1\">\n                  <Text as=\"span\" size=\"md\" weight=\"medium\">\n                    {member.name}\n                  </Text>\n                  <Text as=\"span\" size=\"sm\" color=\"muted\">\n                    {member.role}\n                  </Text>\n                </Stack>\n                <SocialRow name={member.name} />\n              </Stack>\n            ))}\n          </Grid>\n        </Stack>\n      </Container>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

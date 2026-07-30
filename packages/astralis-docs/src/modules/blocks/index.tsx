@@ -1,8 +1,7 @@
 "use client";
 
 import { Tabs, Text } from "astralis-ui";
-import { groupByFamily, type BlockCategoryGroup, type BlockSummary } from "@/lib/blocks";
-import { useMediaQuery } from "@/lib/use-media-query";
+import { type BlockCategoryGroup, type BlockSummary } from "@/lib/blocks";
 import { BlockCard } from "./components/block-card";
 
 interface BlockGalleryProps {
@@ -37,73 +36,10 @@ function Count({ value }: { value: number }) {
 }
 
 /**
- * The second tab row: families within whichever category is showing.
+ * The block gallery: one row of category tabs over a grid of live thumbnails.
  *
- * One instance per category panel rather than a single shared row — the outer
- * Tabs unmounts inactive panels, so switching category tears this down and the
- * family selection resets to "All" instead of stranding the grid on a family
- * the new category does not contain.
- */
-function FamilyTabs({ entries }: { entries: BlockSummary[] }) {
-  const families = groupByFamily(entries);
-  /*
-   * `orientation` changes the DOM structure, not just styling, so a breakpoint
-   * class cannot do this. Below `lg` a 176px rail would leave the grid ~127px
-   * wide, so the tabs lie back down.
-   */
-  const vertical = useMediaQuery("(min-width: 1024px)");
-  const panelClass = vertical ? "min-w-0 flex-1" : "pt-6";
-
-  return (
-    /* Vertical: the root lays list and panel out as a row, so the rail sits
-       beside the grid with the active indicator running down its inner edge. */
-    <Tabs
-      defaultValue="all"
-      variant="line"
-      size="sm"
-      orientation={vertical ? "vertical" : "horizontal"}
-      className={vertical ? "astralis:gap-6 mt-2" : "astralis:gap-0 mt-2"}
-    >
-      {/* Fixed rail width — letting it size to its content would shift the grid
-          sideways every time a category with longer family names is selected. */}
-      <Tabs.List
-        aria-label="Block families"
-        className={vertical ? "w-44 shrink-0" : "self-start"}
-      >
-        <Tabs.Trigger value="all" className={vertical ? "astralis:justify-between" : ""}>
-          All
-          <Count value={entries.length} />
-        </Tabs.Trigger>
-        {families.map((group) => (
-          <Tabs.Trigger
-            key={group.family}
-            value={group.family}
-            className={vertical ? "astralis:justify-between" : ""}
-          >
-            {group.label}
-            <Count value={group.entries.length} />
-          </Tabs.Trigger>
-        ))}
-      </Tabs.List>
-
-      {/* Vertical: min-w-0 so the grid can shrink inside the flex row rather
-          than overflowing — grid items refuse to go below their content width.
-          Horizontal: the panel needs its own breathing room under the rail. */}
-      <Tabs.Content value="all" className={panelClass}>
-        <Grid entries={entries} />
-      </Tabs.Content>
-      {families.map((group) => (
-        <Tabs.Content key={group.family} value={group.family} className={panelClass}>
-          <Grid entries={group.entries} />
-        </Tabs.Content>
-      ))}
-    </Tabs>
-  );
-}
-
-/**
- * The block gallery: category tabs, then family tabs, over a grid of live
- * thumbnails.
+ * Blocks are numbered per category, so there is no second grouping level — the
+ * card name carries what the id deliberately does not.
  *
  * Panels are NOT kept mounted — each card holds an iframe, so mounting every
  * category at once would boot a browsing context for every block in the
@@ -126,12 +62,12 @@ export function BlockGallery({ groups, all }: BlockGalleryProps) {
       </Tabs.List>
 
       <Tabs.Content value="all">
-        <FamilyTabs entries={all} />
+        <Grid entries={all} />
       </Tabs.Content>
       
       {groups.map((group) => (
         <Tabs.Content key={group.category} value={group.category}>
-          <FamilyTabs entries={group.entries} />
+          <Grid entries={group.entries} />
         </Tabs.Content>
       ))}
     </Tabs>

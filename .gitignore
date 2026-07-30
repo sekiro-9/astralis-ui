@@ -17,6 +17,9 @@ node_modules/
 # Internal audit/roadmap reports
 reports/
 
+# Scratch app used for side-by-side comparisons against Chakra
+chakra-app/
+
 # Production builds
 dist/
 **/dist/
