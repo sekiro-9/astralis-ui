@@ -845,6 +845,17 @@
   max-block-size: --value(--size-*);
 }
 
+/* Scroll without a visible scrollbar. Used by scrollable tab bars, where the
+   affordance is the scroll buttons (and swipe on touch) rather than a bar that
+   would sit on top of the active-tab indicator. Not a Tailwind built-in. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Intrinsic-sizing flex-basis values the default basis utility doesn't ship. */
 @utility basis-fit {
   flex-basis: fit-content;

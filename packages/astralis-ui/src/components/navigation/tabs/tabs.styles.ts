@@ -4,10 +4,45 @@ import { cva } from "class-variance-authority";
 /* List — the tablist + its track / container per variant              */
 /* ------------------------------------------------------------------ */
 
+/**
+ * The row that holds the tablist and its scroll buttons.
+ *
+ * `min-w-0` is the load-bearing part: without it a flex item refuses to shrink
+ * below its content, so a long tab row pushes the whole PAGE wider instead of
+ * scrolling inside itself.
+ */
+export const tabsListWrapperVariants = cva("astralis:flex astralis:min-w-0", {
+  variants: {
+    orientation: {
+      horizontal: "astralis:flex-row astralis:items-center astralis:max-w-full",
+      vertical: "astralis:flex-col astralis:items-stretch",
+    },
+  },
+  defaultVariants: { orientation: "horizontal" },
+});
+
+/**
+ * A scroll button. Shown only when the tab row actually overflows, and only on
+ * that side — the MUI `scrollButtons="auto"` model. Ant Design collapses
+ * overflow into a dropdown instead, which hides the fact that more tabs exist;
+ * arrows keep that discoverable.
+ */
+export const tabsScrollButtonVariants = cva(
+  "astralis:flex astralis:items-center astralis:justify-center astralis:shrink-0 " +
+    "astralis:size-7 astralis:rounded-md astralis:cursor-pointer astralis:text-label-muted " +
+    "astralis:transition-colors astralis:hover:bg-surface-subtle astralis:hover:text-label-base " +
+    "astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
+);
+
 export const tabsListVariants = cva("astralis:flex astralis:relative astralis:gap-1", {
   variants: {
     orientation: {
-      horizontal: "astralis:flex-row astralis:items-center",
+      // Scrolls inside itself rather than widening its parent. The scrollbar is
+      // hidden because it would sit on top of the active-tab indicator; the
+      // affordance is the buttons on desktop and swipe on touch.
+      horizontal:
+        "astralis:flex-row astralis:items-center astralis:min-w-0 astralis:flex-1 " +
+        "astralis:overflow-x-auto astralis:scrollbar-none astralis:scroll-smooth",
       vertical: "astralis:flex-col astralis:items-stretch",
     },
     variant: { line: "", subtle: "", segmented: "astralis:p-1", outline: "", plain: "" },
