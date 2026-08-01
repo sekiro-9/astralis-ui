@@ -23,11 +23,22 @@ import { loadSpec, loadPalette, semanticCss } from "./gen-semantic-css.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TOKENS = join(__dirname, "..", "src", "theme", "tokens");
 
+/**
+ * Read with line endings normalized to LF.
+ *
+ * The generated CSS is compared byte-for-byte against what the generator would
+ * emit, and the generator always writes LF. On Windows `core.autocrlf` checks
+ * the committed file out as CRLF, so every line differed and the gate failed
+ * against artifacts that were in fact correct. Comparing content, not the
+ * checkout's line-ending convention.
+ */
+const read = (file) => readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+
 const spec = await loadSpec();
 const failures = [];
 
 /* --- 1. semantic.css is in sync ---------------------------------------- */
-const onDisk = readFileSync(join(TOKENS, "semantic.css"), "utf8");
+const onDisk = read(join(TOKENS, "semantic.css"));
 const expected = semanticCss(spec, loadPalette());
 if (onDisk !== expected) {
   failures.push(
@@ -38,7 +49,7 @@ if (onDisk !== expected) {
 
 /* --- 2. scale tables mirror the authored CSS --------------------------- */
 const parseScale = (file, prefix) => {
-  const css = readFileSync(join(TOKENS, file), "utf8");
+  const css = read(join(TOKENS, file));
   const out = {};
   const re = new RegExp(`--astralis-${prefix}-([a-z0-9\\\\.]+):\\s*([0-9.]+)rem;`, "g");
   for (const m of css.matchAll(re)) out[m[1].replace("\\", "")] = parseFloat(m[2]);
@@ -59,7 +70,7 @@ const compare = (label, table, actual) => {
 };
 
 const parseMs = (file, prefix) => {
-  const css = readFileSync(join(TOKENS, file), "utf8");
+  const css = read(join(TOKENS, file));
   const out = {};
   const re = new RegExp(`--astralis-${prefix}-([a-z]+):\\s*([0-9.]+)ms;`, "g");
   for (const m of css.matchAll(re)) out[m[1]] = parseFloat(m[2]);
@@ -80,7 +91,7 @@ compare("RADIUS_SCALE", spec.RADIUS_SCALE, parseScale("border.css", "border-radi
  * corresponding seed field a silent no-op. Assert every group against the real
  * @theme mapping in tailwind-entry.css.
  */
-const entry = readFileSync(join(__dirname, "..", "src", "tailwind-entry.css"), "utf8");
+const entry = read(join(__dirname, "..", "src", "tailwind-entry.css"));
 const themeMap = new Map(); // tailwind name -> astralis source name
 for (const m of entry.matchAll(/^\s*--([a-z0-9-]+):\s*var\(--astralis-([a-z0-9\\./-]+)\);/gim)) {
   themeMap.set(m[1], m[2].replace(/\\/g, ""));

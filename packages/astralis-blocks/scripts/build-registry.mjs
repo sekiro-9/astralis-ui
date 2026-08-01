@@ -52,13 +52,28 @@ const CATEGORIES = [
 const errors = [];
 const fail = (id, message) => errors.push(`  ${id}: ${message}`);
 
+/**
+ * Read a file with its line endings normalized to LF.
+ *
+ * A block's source is embedded verbatim inside the registry JSON, so whatever
+ * the working copy holds becomes part of the published artifact. On Windows
+ * `core.autocrlf` checks the .tsx files out as CRLF, which baked `\r\n` into
+ * every `content` string — the artifact then differed from the committed one
+ * purely because of who generated it, `--check` failed on all 36 blocks, and
+ * `astralis add` would have written CRLF source into consumer repos.
+ *
+ * Normalizing on read makes the artifact a function of the source content
+ * alone, independent of the checkout.
+ */
+const read = (file) => readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+
 /* -------------------------------------------------------------------------- */
 /* Source derivation                                                          */
 /* -------------------------------------------------------------------------- */
 
 /** Evaluates a `meta.ts` by stripping its types — it must have no value imports. */
 function loadMeta(file) {
-  const { code } = transformSync(readFileSync(file, "utf8"), {
+  const { code } = transformSync(read(file), {
     loader: "ts",
     format: "esm",
     // Type-only imports are erased; a value import would survive and blow up
@@ -160,7 +175,7 @@ for (const category of dirsIn(SRC).filter((name) => CATEGORIES.includes(name))) 
       .filter((name) => name !== "meta.ts")
       .sort((a, b) => (a === entry ? -1 : b === entry ? 1 : a.localeCompare(b)));
 
-    const source = existsSync(join(dir, entry)) ? readFileSync(join(dir, entry), "utf8") : "";
+    const source = existsSync(join(dir, entry)) ? read(join(dir, entry)) : "";
     const meta = (await loadMeta(metaFile)).default;
 
     validate(meta, { id, category, dir, entry, source, files });
@@ -175,7 +190,7 @@ for (const category of dirsIn(SRC).filter((name) => CATEGORIES.includes(name))) 
       uses: deriveUses(source),
       contents: files.map((name) => ({
         path: name,
-        content: readFileSync(join(dir, name), "utf8"),
+        content: read(join(dir, name)),
       })),
       dir,
     });
@@ -283,7 +298,7 @@ const artifacts = [
 
 if (CHECK) {
   const stale = artifacts.filter(
-    ([path, content]) => !existsSync(path) || readFileSync(path, "utf8") !== content,
+    ([path, content]) => !existsSync(path) || read(path) !== content,
   );
   if (stale.length) {
     console.error(
