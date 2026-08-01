@@ -1,5 +1,14 @@
 import type { ReactNode } from "react";
-import { Badge, Code, Heading, List, ListItem, Separator, Text } from "astralis-ui";
+import {
+  Code,
+  Flex,
+  Heading,
+  List,
+  ListItem,
+  Separator,
+  Tag,
+  Text,
+} from "astralis-ui";
 import { CopyCommand } from "@/modules/docs/copy-command";
 import { categoryLabel, type BlockSummary } from "@/lib/blocks";
 import { BackLink } from "./back-link";
@@ -27,31 +36,31 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
       <div className="flex flex-col gap-4">
         <BackLink href="/blocks">All blocks</BackLink>
 
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="max-w-2xl">
-            <Text size="xs" color="subtle" weight="medium" casing="uppercase" letterSpacing="wider">
-              {categoryLabel(meta.category)}
-            </Text>
-            <Heading as="h1" size="2xl" weight="semibold" letterSpacing="tight" className="astralis:mt-1.5">
+        {/* Name and install command share a line: the command is the one thing
+            a reader came here to act on, and the description said nothing the
+            preview below does not show. It still feeds the page metadata. */}
+        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+          <div className="min-w-0 flex items-center gap-3">
+            <Heading as="h1" size="2xl" weight="semibold" letterSpacing="tight">
               {meta.name}
             </Heading>
-            <Text color="muted" lineHeight="relaxed" className="astralis:mt-2">
-              {meta.description}
-            </Text>
+            <Tag size="sm" variant="subtle" colorScheme="brand">
+              {categoryLabel(meta.category)}
+            </Tag>
           </div>
           <CopyCommand command={command} />
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant="outline" size="xs" className="font-mono lowercase">
-            {meta.id}
-          </Badge>
+        {/* Tag, not Badge: Badge is the status pill (Active, Beta), Tag is the
+            keyword chip. The id is not repeated here — it is right above in the
+            install command. */}
+        <Flex wrap="wrap" alignItems="center" gap="1.5">
           {meta.tags.map((tag) => (
-            <Badge key={tag} variant="subtle" colorScheme="gray" size="xs">
+            <Tag key={tag} size="sm" variant="subtle" colorScheme="gray">
               {tag}
-            </Badge>
+            </Tag>
           ))}
-        </div>
+        </Flex>
       </div>
 
       <BlockWorkbench id={meta.id} name={meta.name} code={code} />
@@ -65,11 +74,12 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
 
         {/* `as="ol"`: List renders a <ul> by default, and numbered steps are an
             ordered list — decimal markers alone don't carry that to a reader. */}
-        <List as="ol" styleType="decimal" spacing="3" className="astralis:ps-5">
+        <List as="ol" styleType="decimal" spacing="3" className="astralis:pl-5">
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
-              Run the command — it writes <Code>components/blocks/{filename}</Code> and leaves
-              the rest of your project untouched.
+              Run the command — it writes{" "}
+              <Code>components/blocks/{filename}</Code> and leaves the rest of
+              your project untouched.
             </Text>
             <div className="mt-2">
               <CopyCommand command={command} />
@@ -77,14 +87,15 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
           </ListItem>
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
-              Import it where you need it. The block only depends on <Code>astralis-ui</Code>,
-              so it compiles in any React project — no extra packages, no framework lock-in.
+              Import it where you need it. The block only depends on{" "}
+              <Code>astralis-ui</Code>, so it compiles in any React project — no
+              extra packages, no framework lock-in.
             </Text>
           </ListItem>
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
-              Edit it. The copy, links and layout are plain JSX in your repo now — this is your
-              file, not a dependency to configure around.
+              Edit it. The copy, links and layout are plain JSX in your repo now
+              — this is your file, not a dependency to configure around.
             </Text>
           </ListItem>
         </List>

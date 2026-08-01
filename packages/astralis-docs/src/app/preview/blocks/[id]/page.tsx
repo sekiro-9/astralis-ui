@@ -25,6 +25,18 @@ export default async function BlockPreviewPage({
 
   const Block = entry.component;
 
+  // Where the block sits when it is shorter than the frame. Page-edge furniture
+  // reads wrong floating in the middle: a navbar belongs against the top, a
+  // footer against the bottom. Everything else — heroes, mid-page sections —
+  // centres. A single auto margin pins to the opposite edge and still collapses
+  // to zero once the block outgrows the viewport, so tall blocks are unaffected.
+  const placement =
+    entry.meta.category === "navbar"
+      ? "mb-auto"
+      : entry.meta.category === "footer"
+        ? "mt-auto"
+        : "my-auto";
+
   return (
     <>
       {/*
@@ -36,20 +48,17 @@ export default async function BlockPreviewPage({
       */}
       <style>{`nextjs-portal { display: none; }`}</style>
       {/*
-        Centre the block when it is shorter than the window, so opening a
-        preview in its own tab does not leave it stranded against the top edge.
+        Place the block when it is shorter than the window, so opening a preview
+        in its own tab does not leave it stranded — centred for a mid-page
+        section, pinned to the matching edge for a navbar or footer (see
+        `placement`).
 
-        `my-auto` rather than `justify-center`: auto margins collapse to zero
-        once the block outgrows the viewport, whereas centred flex content
-        overflows in both directions and clips its own top out of reach.
-
-        Neither affects the iframes — their height is measured FROM the block,
-        so there is never free space to distribute.
+        Auto margins rather than `justify-*`: they collapse to zero once the
+        block outgrows the viewport, whereas centred flex content overflows in
+        both directions and clips its own top out of reach.
       */}
       <div className="flex min-h-screen flex-col">
-        {/* Measurement target: the thumbnail sizes itself to this element's
-            height so a card crops to the block instead of a fixed canvas. */}
-        <div data-block-frame className="my-auto">
+        <div data-block-frame className={placement}>
           <Block />
         </div>
       </div>

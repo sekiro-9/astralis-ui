@@ -23,6 +23,33 @@ For client-side routing, pass your router's component:
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | `"underline" \| "hover" \| "plain"` | `"hover"` | Underline behavior. |
-| `colorScheme` | all 11 schemes | `"brand"` | Hue (via the accent channel). |
+| `colorScheme` | all 15 schemes | `"brand"` | Hue (via the accent channel). |
 | `external` | `boolean` | `false` | New tab + `rel="noopener noreferrer"` + ↗ marker. |
 | `as` | `ElementType` | `"a"` | Router link component. |
+
+A link is text with special highlighting, so it also takes every
+[Text](/docs/components/text) typography prop — `size`, `weight`, `color`,
+`casing`, `align`, `lineHeight`, `letterSpacing` — each responsive.
+
+Unlike Text it defaults none of them. A bare `<Link>` emits no type classes at
+all, so it inherits from the paragraph around it, which is what an inline link
+should do:
+
+```jsx
+<Text size="sm">
+  Small copy with an <Link href="#">inline link</Link> that stays small.
+</Text>
+
+<Link href="#" size="lg" weight="semibold">A large standalone link</Link>
+```
+
+Setting `color` explicitly holds it in **both** states — the hover colour shift
+is dropped rather than swapping your colour out from under you, and `variant`'s
+underline carries the affordance instead. That is what makes a link usable on a
+surface the accent channel does not cover:
+
+```jsx
+<Box bg="inverted" p="6">
+  <Link href="#" color="inverted" variant="hover">Readable on the inverted fill</Link>
+</Box>
+```

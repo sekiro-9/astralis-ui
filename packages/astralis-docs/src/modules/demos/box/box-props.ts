@@ -32,9 +32,10 @@ export const boxProps: PropRow[] = [
     description: "Text color token; children inherit it.",
   },
   {
-    prop: "border · borderStyle · borderColor",
+    prop: "border (+ borderT/R/B/L) · borderStyle · borderColor",
     type: `"normal"–"thickest" · CSS styles · "base" | "subtle" | "muted" | "{hue}" (stroke)`,
-    description: "Border width, style and color tokens.",
+    description:
+      "Border width, style and color tokens. Per-side widths mirror rounded — borderB is a header rule, borderT a footer one.",
   },
   {
     prop: "rounded (+ roundedT/R/B/L, corner variants)",

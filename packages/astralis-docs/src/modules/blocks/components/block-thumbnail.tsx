@@ -36,6 +36,7 @@ interface BlockThumbnailProps {
 export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -44,7 +45,14 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
     // Measure on commit rather than waiting for the observer's first delivery:
     // ResizeObserver callbacks run in the rendering lifecycle, so a card in a
     // backgrounded or non-compositing tab would sit at scale 0 indefinitely.
-    const measure = () => setScale(wrapper.getBoundingClientRect().width / FRAME_WIDTH);
+    const measure = () => {
+      const width = wrapper.getBoundingClientRect().width;
+      // A card filtered out of the active category is `display: none` and
+      // measures 0. Holding the last good scale means it is already correct
+      // when its category comes back, instead of collapsing to zero and
+      // flashing while it is re-measured.
+      if (width > 0) setScale(width / FRAME_WIDTH);
+    };
     measure();
 
     const observer = new ResizeObserver(measure);
@@ -64,14 +72,17 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
         loading={eager ? "eager" : "lazy"}
         tabIndex={-1}
         scrolling="no"
+        onLoad={() => setLoaded(true)}
         className="pointer-events-none absolute left-0 top-0 origin-top-left border-0"
         style={{
           width: FRAME_WIDTH,
           height: FRAME_HEIGHT,
           transform: `scale(${scale})`,
-          // Until the first measurement lands, a scale of 0 would flash the
-          // frame at full size in the corner of the card.
-          visibility: scale ? "visible" : "hidden",
+          // Two things have to be true before the frame is worth showing: it
+          // has a measured scale (at 0 it would flash full-size in the corner
+          // of the card) and its document has painted (revealing on scale
+          // alone showed a blank white page first).
+          visibility: scale && loaded ? "visible" : "hidden",
         }}
       />
     </div>
