@@ -4,32 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Separator, Tag, ThemeToggle } from "astralis-ui";
 import { Logo } from "./logo";
+import { MobileNav } from "./mobile-nav";
+import { navLinks as links } from "./nav-links";
 
-/**
- * Each link owns its own active test — "Docs" covers every guide page except
- * the component pages, which have their own entry, so the rule can't be
- * derived from the href alone.
- */
-const links = [
-  {
-    title: "Docs",
-    href: "/docs",
-    isActive: (path: string) => path.startsWith("/docs") && !path.startsWith("/docs/components"),
-  },
-  {
-    title: "Components",
-    href: "/docs/components/button",
-    isActive: (path: string) => path.startsWith("/docs/components"),
-  },
-  { title: "Blocks", href: "/blocks", isActive: (path: string) => path.startsWith("/blocks") },
-  {
-    title: "Theme Builder",
-    href: "/theme-builder",
-    isActive: (path: string) => path.startsWith("/theme-builder"),
-  },
-];
-
-export function Header() {
+export function Header({ version }: { version: string }) {
   const pathname = usePathname();
 
   return (
@@ -58,8 +36,10 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Read from astralis-ui's package.json, not typed in — it read
+              0.2.0 for two releases after the library moved on. */}
           <Tag variant="subtle" colorScheme="brand">
-            0.2.0
+            {version}
           </Tag>
           {/* Prefixed: vertical brings h-full + self-stretch, and only a
               prefixed class merges against them. */}
@@ -68,6 +48,7 @@ export function Header() {
             className="mx-1 hidden sm:block astralis:h-4 astralis:self-center"
           />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
+          <MobileNav />
         </div>
       </div>
     </header>

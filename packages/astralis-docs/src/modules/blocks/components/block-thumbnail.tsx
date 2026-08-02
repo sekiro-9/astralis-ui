@@ -22,7 +22,19 @@ interface BlockThumbnailProps {
 }
 
 /**
- * A live, scaled-down desktop render of a block.
+ * A scaled-down desktop render of a block.
+ *
+ * The frame loads a prerendered static document, not the app's /preview route.
+ * That route is a full Next.js page — 17 subresources and 2.34 MB decoded per
+ * frame, 36 frames deep, to paint 95 DOM nodes. The gallery was booting React
+ * 36 times to show a picture. `scripts/gen-block-thumbnails.mjs` renders each
+ * block once at build time into markup plus one shared stylesheet, with no
+ * JavaScript bundle at all.
+ *
+ * It stays an iframe because that is what keeps the render honest: the block's
+ * `lg:` breakpoints resolve against the frame's 1440px width rather than the
+ * browser's, and `min-h-screen` resolves to the frame rather than the page.
+ * Rendering inline would break both.
  *
  * The iframe is laid out at a real 1440px and shrunk with `scale()`, rather
  * than being given the card's width directly — a 380px-wide iframe would
@@ -35,8 +47,26 @@ interface BlockThumbnailProps {
  */
 export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [scale, setScale] = useState(0);
   const [loaded, setLoaded] = useState(false);
+
+  // Not an onLoad prop. These documents are static HTML and finish loading in
+  // single-digit milliseconds — routinely before hydration attaches a React
+  // listener, so the event is missed and the frame stays hidden forever. The
+  // old Next.js preview route took ~880ms and always lost that race, which is
+  // why an onLoad prop appeared to work. Check the state first, then subscribe.
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    if (frame.contentDocument?.readyState === "complete") {
+      setLoaded(true);
+      return;
+    }
+    const onLoad = () => setLoaded(true);
+    frame.addEventListener("load", onLoad);
+    return () => frame.removeEventListener("load", onLoad);
+  }, []);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -67,12 +97,12 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
       style={{ aspectRatio: `${FRAME_WIDTH} / ${FRAME_HEIGHT}` }}
     >
       <iframe
-        src={`/preview/blocks/${id}`}
+        ref={frameRef}
+        src={`/block-thumbs/${id}.html`}
         title={`${name} preview`}
         loading={eager ? "eager" : "lazy"}
         tabIndex={-1}
         scrolling="no"
-        onLoad={() => setLoaded(true)}
         className="pointer-events-none absolute left-0 top-0 origin-top-left border-0"
         style={{
           width: FRAME_WIDTH,

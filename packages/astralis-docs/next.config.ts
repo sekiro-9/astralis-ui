@@ -42,6 +42,18 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Gallery thumbnails, regenerated on every build. Same reasoning as
+        // above — the grid remounts its frames whenever the page does, and a
+        // remount should repaint from memory rather than refetch 36 documents.
+        source: "/block-thumbs/:file*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=300, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
 };

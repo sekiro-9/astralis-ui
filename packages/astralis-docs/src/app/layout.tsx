@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { createRequire } from "node:module";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { AstralisProvider } from "astralis-ui";
 import { SiteChrome } from "@/modules/site/site-chrome";
@@ -20,6 +21,19 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
 });
+
+/**
+ * The version badge reads the library's own package.json rather than a string
+ * in the header, which had gone stale by two releases.
+ *
+ * Read off disk rather than resolved through the module graph: astralis-ui
+ * does not export its package.json, and a `require.resolve` call is something
+ * Turbopack tries to follow at build time and fails on. The workspace-relative
+ * path is the same assumption scripts/gen-block-thumbnails.mjs already makes.
+ */
+const uiVersion: string = JSON.parse(
+  readFileSync(join(process.cwd(), "..", "astralis-ui", "package.json"), "utf8"),
+).version;
 
 export const metadata: Metadata = {
   title: {
@@ -51,7 +65,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <AstralisProvider defaultTheme="system">
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome version={uiVersion}>{children}</SiteChrome>
         </AstralisProvider>
       </body>
     </html>

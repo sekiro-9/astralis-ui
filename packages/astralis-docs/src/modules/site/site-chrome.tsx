@@ -13,14 +13,20 @@ import { Assistant } from "@/modules/assistant/assistant";
  * layout intact — the alternative is moving every existing route into a
  * `(site)` group just to get a second root layout.
  */
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  version,
+}: {
+  children: React.ReactNode;
+  version: string;
+}) {
   const bare = usePathname().startsWith("/preview");
 
   if (bare) return <>{children}</>;
 
   return (
     <>
-      <Header />
+      <Header version={version} />
       {children}
       <Assistant />
     </>
