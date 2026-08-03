@@ -1,3 +1,5 @@
+import { tooltipProps } from "@/modules/demos/tooltip/tooltip-props";
+
 export const metadata = {
   title: "Tooltip",
   description: "Supplementary text on hover or focus — delayed, collision-aware, never interactive.",
@@ -30,14 +32,7 @@ clickable, use a [Popover](/docs/components/popover).
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `side` | `"top" \| "right" \| "bottom" \| "left"` | `"top"` | Preferred placement; flips on collision. |
-| `align` | `"start" \| "center" \| "end"` | `"center"` | Alignment along the side. |
-| `sideOffset` | `number` | `6` | Gap from the trigger, in pixels. |
-| `delay` | `number` | `300` | Hover delay before showing (ms). |
-| `avoidCollisions` | `boolean` | `true` | Flip/shift to stay in the viewport. |
-| `open` / `defaultOpen` / `onOpenChange` | — | — / `false` / — | Controlled API. |
+<PropsTable rows={tooltipProps} />
 
 `Tooltip.Content` additionally takes `withArrow` (default `false`).
 

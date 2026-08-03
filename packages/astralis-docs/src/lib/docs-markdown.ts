@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { navigation } from "./navigation";
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE, COLOR_SCHEMES } from "@/modules/demos/color-schemes";
 
 /**
  * Agent-consumable markdown for every docs page: the source MDX with imports
@@ -90,7 +91,7 @@ function mdxToMarkdown(mdxPath: string): string {
 
   // Render each props table from its data module as a markdown table.
   md = md.replace(/<PropsTable\s+rows=\{([A-Za-z0-9_]+)\}\s*\/>/g, (tag, ident: string) => {
-    const rows = loadPropRows(importPaths.get(ident));
+    const rows = loadPropRows(importPaths.get(ident), ident);
     return rows ? propsTableMarkdown(rows) : tag;
   });
 
@@ -108,22 +109,75 @@ function mdxPathFor(slug: string, kind: DocEntry["kind"]): string | null {
 }
 
 /**
- * Load a `*-props.ts` data module by evaluating its array literal. These
- * files are our own build-time constants (plain object/string literals, no
- * logic), so a Function-constructor eval is safe and spares us a TS parser.
+ * Constants a `*-props.ts` module may reference in a `type` field. The eval
+ * below has no module system, so anything shared has to be handed in by name.
+ * Keep this in step with what those modules actually import.
  */
-function loadPropRows(importPath: string | undefined): PropRow[] | null {
+const PROP_ROW_SCOPE: Record<string, unknown> = { COLOR_SCHEME_TYPE, COLOR_SCHEMES };
+
+/**
+ * Load one exported array from a `*-props.ts` data module. These files are our
+ * own build-time constants (plain object/string literals, no logic), so a
+ * Function-constructor eval is safe and spares us a TS parser.
+ *
+ * Must be anchored to `ident`: several modules export two arrays (flex/grid/
+ * modal/steps each have a root and a parts table), and the previous greedy
+ * `/=\s*(\[[\s\S]*\])\s*;/` ran from the first `[` to the last `];` — it
+ * swallowed the `export const` between them, threw, and silently leaked the
+ * raw `<PropsTable …/>` tag into llms.txt and every MCP `get_component`
+ * response. Silent because the failure path returns the tag unchanged.
+ */
+function loadPropRows(importPath: string | undefined, ident: string): PropRow[] | null {
   if (!importPath?.startsWith("@/")) return null;
   const file = join(SRC_DIR, importPath.slice(2) + ".ts");
   if (!existsSync(file)) return null;
-  const literal = readFileSync(file, "utf8").match(/=\s*(\[[\s\S]*\])\s*;/)?.[1];
+  const source = readFileSync(file, "utf8");
+
+  // Find `export const <ident> ... = [` and take exactly that array.
+  const start = source.match(new RegExp(`export\\s+const\\s+${ident}\\b[^=]*=\\s*\\[`));
+  if (start?.index === undefined) return null;
+  const literal = sliceArrayLiteral(source, start.index + start[0].length - 1);
   if (!literal) return null;
+
   try {
-    const rows = new Function(`return ${literal};`)() as PropRow[];
+    const names = Object.keys(PROP_ROW_SCOPE);
+    const rows = new Function(...names, `return ${literal};`)(
+      ...names.map((n) => PROP_ROW_SCOPE[n]),
+    ) as PropRow[];
     return Array.isArray(rows) ? rows : null;
   } catch {
     return null;
   }
+}
+
+/**
+ * The array literal starting at `open` (which must index a `[`), matched by
+ * bracket depth. String- and comment-aware, because a `]` inside a description
+ * or a `//` comment would otherwise end the slice early.
+ */
+function sliceArrayLiteral(source: string, open: number): string | null {
+  let depth = 0;
+  let quote: string | null = null;
+  for (let i = open; i < source.length; i++) {
+    const ch = source[i];
+    if (quote) {
+      if (ch === "\\") i++;
+      else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === "`") quote = ch;
+    else if (ch === "/" && source[i + 1] === "/") {
+      const nl = source.indexOf("\n", i);
+      if (nl === -1) return null;
+      i = nl;
+    } else if (ch === "/" && source[i + 1] === "*") {
+      const end = source.indexOf("*/", i + 2);
+      if (end === -1) return null;
+      i = end + 1;
+    } else if (ch === "[") depth++;
+    else if (ch === "]" && --depth === 0) return source.slice(open, i + 1);
+  }
+  return null;
 }
 
 function propsTableMarkdown(rows: PropRow[]): string {

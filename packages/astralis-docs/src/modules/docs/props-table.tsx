@@ -6,11 +6,33 @@
 // component it gets the real module, so the compound API resolves.
 import { Code, Table, Text } from "astralis-ui";
 
+/**
+ * Optional playground control for a prop. Omit it and the control is derived
+ * from `type` (see lib/playground/controls.ts) — this exists only for the rows
+ * derivation can't read, like `colorScheme`, whose `type` is deliberately the
+ * prose "all 15 schemes" rather than fifteen quoted literals in a table cell.
+ *
+ * `omit` documents a prop in the table while keeping it out of the panel.
+ *
+ * Kept here beside PropRow rather than in the playground lib so the row shape
+ * has one home and there's no import cycle. NOTE: docs-markdown.ts evaluates
+ * these modules with `new Function` and no module system, so any identifier
+ * used here must be registered in its PROP_ROW_SCOPE.
+ */
+export type PropControl =
+  | { kind: "chips"; options: readonly string[] }
+  | { kind: "select"; options: readonly string[] }
+  | { kind: "switch" }
+  | { kind: "text" }
+  | { kind: "number" }
+  | { kind: "omit" };
+
 export interface PropRow {
   prop: string;
   type: string;
   default?: string;
   description: string;
+  control?: PropControl;
 }
 
 export function PropsTable({ rows }: { rows: PropRow[] }) {

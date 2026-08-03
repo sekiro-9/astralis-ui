@@ -1,3 +1,5 @@
+import { multiSelectProps } from "@/modules/demos/multi-select/multi-select-props";
+
 export const metadata = {
   title: "MultiSelect",
   description: "Multi-value selection with removable tags, inline search, and an optional cap.",
@@ -27,16 +29,7 @@ interaction set people know from tag pickers.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `options` | `{ value, label, disabled? }[]` or grouped | `[]` | Option data; same group shape as [Select](/docs/components/select). |
-| `value` / `defaultValue` / `onChange` | `Array<string \| number>` / same / `(values) => void` | — / `[]` / — | Controlled / uncontrolled API. |
-| `max` | `number` | — | Cap on selected items. |
-| `clearable` | `boolean` | `false` | Clear-all button. |
-| `name` | `string` | — | Renders one hidden input per selected value (repeated name) for native `<form>` submission. |
-| `placeholder` / `emptyText` / `loading` | — | — | Same behavior as Select. |
-| `variant` / `size` / `colorScheme` | — | `"outline"` / `"md"` / `"brand"` | Styling; colorScheme tints the tags. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited from [Field](/docs/components/field). |
+<PropsTable rows={multiSelectProps} />
 
 ## Keyboard
 

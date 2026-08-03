@@ -1,3 +1,5 @@
+import { tableProps } from "@/modules/demos/table/table-props";
+
 export const metadata = {
   title: "Table",
   description: "A semantic table with striping, hover states, sticky headers and two variants.",
@@ -24,13 +26,7 @@ own scroll container.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"line" \| "outline"` | `"line"` | Subtle row dividers, or a bordered box. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Cell padding and text size. |
-| `striped` | `boolean` | `false` | Alternate row backgrounds. |
-| `interactive` | `boolean` | `false` | Row highlight on hover. |
-| `stickyHeader` | `boolean` | `false` | Header pins while the body scrolls. |
+<PropsTable rows={tableProps} />
 
 `Table.Head` defaults `scope="col"`; `Table.Caption` takes
 `placement: "top" | "bottom"` (default bottom). All parts forward their

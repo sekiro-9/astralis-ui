@@ -1,3 +1,5 @@
+import { spinnerProps } from "@/modules/demos/spinner/spinner-props";
+
 export const metadata = {
   title: "Spinner",
   description: "An indeterminate loading indicator with a screen-reader label built in.",
@@ -23,11 +25,7 @@ The arc paints with the accent channel, so any scheme works.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | `"md"` | Diameter. |
-| `colorScheme` | all 15 schemes | `"brand"` | Hue of the spinning arc. |
-| `label` | `string` | `"Loading…"` | Visually-hidden text announced to screen readers. |
+<PropsTable rows={spinnerProps} />
 
 ## Accessibility
 

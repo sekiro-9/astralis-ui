@@ -1,3 +1,5 @@
+import { avatarProps } from "@/modules/demos/avatar/avatar-props";
+
 export const metadata = {
   title: "Avatar",
   description: "User images with graceful fallbacks, status badges, and overlapping groups.",
@@ -32,15 +34,7 @@ the same color) → silhouette icon. `Avatar.Badge` anchors a status dot.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `src` / `alt` | `string` | — | The image, with its alt text. |
-| `name` | `string` | — | Drives initials and the deterministic hue. |
-| `icon` | `ReactNode` | silhouette | Custom fallback when no image or name. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl" \| "2xl"` | `"md"` | Diameter. |
-| `shape` | `"circle" \| "rounded" \| "square"` | `"circle"` | Outline shape. |
-| `colorScheme` | all 15 schemes | from name | Explicit hue override. |
-| `ring` | `boolean` | `false` | Border ring (automatic inside a Group). |
+<PropsTable rows={avatarProps} />
 
 ### Avatar.Group
 

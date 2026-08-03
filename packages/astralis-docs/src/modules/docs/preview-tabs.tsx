@@ -6,10 +6,13 @@ import { Tabs } from "astralis-ui";
 interface PreviewTabsProps {
   preview: ReactNode;
   code: ReactNode;
+  /** Live prop editor. Omitted for demos with no playground entry — the
+      trigger is then absent entirely rather than rendered empty. */
+  playground?: ReactNode;
   align?: "center" | "start";
 }
 
-export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProps) {
+export function PreviewTabs({ preview, code, playground, align = "center" }: PreviewTabsProps) {
   return (
     /* keepMounted: both panels stay mounted (hidden) so demo state survives a
        tab switch — the reason this was hand-rolled before Tabs had the prop. */
@@ -25,11 +28,12 @@ export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProp
       <Tabs.List aria-label="Demo view" className="self-start">
         <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
         <Tabs.Trigger value="code">Code</Tabs.Trigger>
+        {playground && <Tabs.Trigger value="playground">Playground</Tabs.Trigger>}
       </Tabs.List>
 
       <Tabs.Content value="preview">
         <div
-          className={`preview-grid flex min-h-44 flex-wrap gap-4 rounded-xl border border-stroke-subtle p-8 sm:p-10 ${
+          className={`preview-grid flex min-h-44 flex-wrap gap-4 rounded-xl border border-stroke-base p-8 sm:p-10 ${
             align === "center" ? "items-center justify-center" : "items-start justify-start"
           }`}
         >
@@ -38,6 +42,8 @@ export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProp
       </Tabs.Content>
 
       <Tabs.Content value="code">{code}</Tabs.Content>
+
+      {playground && <Tabs.Content value="playground">{playground}</Tabs.Content>}
     </Tabs>
   );
 }

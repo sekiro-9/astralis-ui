@@ -1,3 +1,5 @@
+import { separatorProps } from "@/modules/demos/separator/separator-props";
+
 export const metadata = {
   title: "Separator",
   description: "A dividing line between content — horizontal or vertical, with semantic role built in.",
@@ -33,10 +35,7 @@ Line style via `variant`; color and thickness come from the Box border props.
 Separator extends [Box](/docs/components/box) — use `borderColor` / `border`
 to restyle the line.
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Line direction; also sets `aria-orientation`. |
-| `variant` | `"solid" \| "dashed" \| "dotted"` | `"solid"` | Line style. |
+<PropsTable rows={separatorProps} />
 
 ## Accessibility
 

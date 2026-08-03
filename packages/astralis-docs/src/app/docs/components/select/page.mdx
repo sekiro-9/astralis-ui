@@ -1,3 +1,5 @@
+import { selectProps } from "@/modules/demos/select/select-props";
+
 export const metadata = {
   title: "Select",
   description: "A custom dropdown with search, groups, clearing, and full keyboard navigation.",
@@ -31,19 +33,7 @@ Options come in as data — flat `{ value, label }` items or
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `options` | `{ value, label }[]` or `{ group, options }[]` | `[]` | The option data. |
-| `value` / `defaultValue` / `onChange` | `string \| number \| null` / same / `(value) => void` | — / `null` / — | Controlled / uncontrolled API. |
-| `placeholder` | `string` | `"Select an option"` | Trigger text when empty. |
-| `searchable` | `boolean` | `false` | Filter input inside the dropdown. |
-| `clearable` | `boolean` | `false` | × button when a value is selected (also fires `onClear`). |
-| `loading` | `boolean` | `false` | Spinner instead of the chevron. |
-| `emptyText` | `string` | `"No options"` | Shown when nothing matches. |
-| `name` | `string` | — | Renders a hidden input so the value submits with native `<form>`s. |
-| `variant` / `size` | `"outline" \| "filled"` / `"sm" \| "md" \| "lg"` | `"outline"` / `"md"` | Styling. |
-| `colorScheme` | all 15 schemes | `"brand"` | Highlight and focus-ring hue. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited from [Field](/docs/components/field). |
+<PropsTable rows={selectProps} />
 
 ## Keyboard
 

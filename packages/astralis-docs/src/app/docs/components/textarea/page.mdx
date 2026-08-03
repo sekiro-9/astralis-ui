@@ -1,3 +1,5 @@
+import { textareaProps } from "@/modules/demos/textarea/textarea-props";
+
 export const metadata = {
   title: "Textarea",
   description: "A multi-line text field with variants, character count, and Field integration.",
@@ -18,13 +20,7 @@ import { Textarea } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Text and padding scale. |
-| `variant` | `"outline" \| "filled" \| "underline" \| "unstyled"` | `"outline"` | Visual style. |
-| `rows` | `number` | `4` | Initial visible lines. |
-| `showCount` | `boolean` | `false` | Character counter (pairs with `maxLength`). |
-| `invalid` / `disabled` / `readOnly` | `boolean` | from [Field](/docs/components/field) | State plumbing. |
+<PropsTable rows={textareaProps} />
 
 Inside a [Field](/docs/components/field), the label association, `required`,
 and help/error `aria-describedby` wiring all come for free.

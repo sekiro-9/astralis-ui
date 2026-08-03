@@ -1,3 +1,5 @@
+import { dataListProps } from "@/modules/demos/data-list/data-list-props";
+
 export const metadata = {
   title: "Data List",
   description: "Key–value pairs in a semantic description list, horizontal or stacked.",
@@ -30,10 +32,7 @@ narrow columns and cards.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Label beside or above the value. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Text and rhythm scale. |
+<PropsTable rows={dataListProps} />
 
 `Item`, `Label` and `Value` take only `className` — they're layout, the
 semantics come free.

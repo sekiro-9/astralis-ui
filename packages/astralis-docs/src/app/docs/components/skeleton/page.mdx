@@ -1,3 +1,5 @@
+import { skeletonProps } from "@/modules/demos/skeleton/skeleton-props";
+
 export const metadata = {
   title: "Skeleton",
   description: "A pulsing placeholder that holds space while content loads.",
@@ -24,11 +26,7 @@ content occupy the same slot, so nothing jumps when data arrives.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"text" \| "circle" \| "rect"` | `"text"` | Placeholder shape (size `circle`/`rect` via className or style). |
-| `animated` | `boolean` | `true` | Pulse animation — automatically pauses under `prefers-reduced-motion`. |
-| `loaded` | `boolean` | `false` | Render children instead of the placeholder. |
+<PropsTable rows={skeletonProps} />
 
 ## Accessibility
 

@@ -1,3 +1,5 @@
+import { progressProps } from "@/modules/demos/progress/progress-props";
+
 export const metadata = {
   title: "Progress",
   description: "Determinate or indeterminate progress, as a linear bar or a circular ring.",
@@ -21,14 +23,7 @@ import { Progress } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | `number` | — | Current progress. **Omit entirely for indeterminate.** |
-| `max` | `number` | `100` | The value that counts as 100%. |
-| `shape` | `"line" \| "circle"` | `"line"` | Bar or ring. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Bar height / ring diameter. |
-| `colorScheme` | all 15 schemes | `"brand"` | Hue of the filled portion. |
-| `showValueLabel` | `boolean` | `false` | Percentage text (hidden while indeterminate). |
+<PropsTable rows={progressProps} />
 
 ## Accessibility
 

@@ -1,3 +1,5 @@
+import { radioProps } from "@/modules/demos/radio/radio-props";
+
 export const metadata = {
   title: "Radio",
   description: "Single-select options, managed by a group with automatic name wiring.",
@@ -28,12 +30,7 @@ one auto-generated `name` so the browser treats them as a set, and fires
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | `string \| number` | — | Required; identifies the option. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Circle size. |
-| `colorScheme` | all 15 schemes | `"brand"` | Selected hue. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited from [Field](/docs/components/field). |
+<PropsTable rows={radioProps} />
 
 ### Radio.Group
 

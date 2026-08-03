@@ -1,3 +1,5 @@
+import { switchProps } from "@/modules/demos/switch/switch-props";
+
 export const metadata = {
   title: "Switch",
   description: "A binary toggle with real switch semantics — for settings that apply immediately.",
@@ -28,13 +30,7 @@ form. The API is the native checkbox event model: `checked` +
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `checked` / `defaultChecked` / `onChange` | `boolean` / `boolean` / `(e) => void` | — / `false` / — | Controlled / uncontrolled API. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Track and thumb dimensions. |
-| `colorScheme` | all 15 schemes | `"brand"` | On-state hue. |
-| `children` | `ReactNode` | — | Label rendered beside the track. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited from [Field](/docs/components/field). |
+<PropsTable rows={switchProps} />
 
 ## Keyboard
 

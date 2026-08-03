@@ -1,3 +1,5 @@
+import { timelineProps } from "@/modules/demos/timeline/timeline-props";
+
 export const metadata = {
   title: "Timeline",
   description: "A vertical sequence of events with indicators, connectors and per-item colors.",
@@ -28,11 +30,7 @@ the completed step above turns green.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"solid" \| "subtle" \| "outline"` | `"solid"` | Indicator fill style. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Indicator diameter and text scale. |
-| `colorScheme` | `"brand" \| "gray" \| "red" \| "green" \| "blue" \| "purple"` | `"brand"` | Default indicator hue; overridable per Indicator. |
+<PropsTable rows={timelineProps} />
 
 Connector lines render automatically between items and are hidden after the
 last one. Empty indicators are `aria-hidden` decorative dots.

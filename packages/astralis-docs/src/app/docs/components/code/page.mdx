@@ -1,3 +1,5 @@
+import { codeProps } from "@/modules/demos/code/code-props";
+
 export const metadata = {
   title: "Code",
   description: "An inline code chip for identifiers and commands in prose.",
@@ -25,7 +27,4 @@ For multi-line snippets, use [Code Block](/docs/components/code-block).
 
 Code extends [Box](/docs/components/box).
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"subtle" \| "solid" \| "outline"` | `"subtle"` | Tinted, strongly tinted, or bordered — all track the active theme. |
-| `size` | `"sm" \| "md" \| "lg"` | `"sm"` | Font size step. |
+<PropsTable rows={codeProps} />

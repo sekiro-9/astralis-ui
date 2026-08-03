@@ -1,3 +1,5 @@
+import { comboboxProps } from "@/modules/demos/combobox/combobox-props";
+
 export const metadata = {
   title: "Combobox",
   description: "A filterable single-value picker on the ARIA combobox pattern.",
@@ -26,16 +28,7 @@ option machinery, so `options` shapes are interchangeable.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `options` | `Array<{label, value, disabled?} \| {group, options}>` | `[]` | Flat or grouped options. |
-| `value` / `defaultValue` | `string \| number \| null` | — | Controlled / uncontrolled selection. |
-| `onChange` | `(value) => void` | — | Fires on commit (pick or clear). |
-| `onInputChange` | `(text) => void` | — | Fires on every filter keystroke. |
-| `clearable` | `boolean` | `false` | ✕ button when a value is selected. |
-| `name` | `string` | — | Hidden input for native form submission. |
-| `emptyText` | `string` | `"No matches"` | Shown when nothing matches. |
-| `size` / `variant` / `colorScheme` / `invalid` / `disabled` / `readOnly` / `loading` | — | as Select | Shared styling + state system. |
+<PropsTable rows={comboboxProps} />
 
 ## Keyboard
 

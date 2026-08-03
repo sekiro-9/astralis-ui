@@ -1,3 +1,5 @@
+import { drawerProps } from "@/modules/demos/drawer/drawer-props";
+
 export const metadata = {
   title: "Drawer",
   description: "An edge-anchored dialog that slides in from any side — settings panels, carts, mobile nav.",
@@ -33,13 +35,7 @@ fading in the center. If the content is a critical decision, use
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — / `false` / — | Controlled / initial state and callback. |
-| `placement` | `"left" \| "right" \| "top" \| "bottom"` | `"right"` | Edge to slide from. |
-| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | Width (left/right) or height (top/bottom). |
-| `closeOnOverlayClick` | `boolean` | `true` | Dismiss on backdrop click. |
-| `closeOnEsc` | `boolean` | `true` | Dismiss on Escape. |
+<PropsTable rows={drawerProps} />
 
 The parts (`Trigger`, `Content`, `Header`, `Body`, `Footer`, `Title`,
 `Description`, `Close`, `CloseButton`) behave exactly as documented on

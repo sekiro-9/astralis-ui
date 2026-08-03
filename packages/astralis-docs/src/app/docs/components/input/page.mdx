@@ -1,3 +1,5 @@
+import { inputProps } from "@/modules/demos/input/input-props";
+
 export const metadata = {
   title: "Input",
   description: "Text inputs with four variants, plus Password, Search and TextArea built in.",
@@ -39,11 +41,7 @@ itself automatically.
 
 Inputs accept all native attributes of their element, plus:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"outline" \| "filled" \| "underline" \| "unstyled"` | `"outline"` | Visual style. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Height and padding. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited automatically inside a [Field](/docs/components/field). |
+<PropsTable rows={inputProps} />
 
 | Sub-component | Extra props |
 | --- | --- |

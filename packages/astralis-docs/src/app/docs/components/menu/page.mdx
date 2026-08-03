@@ -1,3 +1,5 @@
+import { menuProps } from "@/modules/demos/menu/menu-props";
+
 export const metadata = {
   title: "Menu",
   description: "An action menu on the APG menu-button pattern — roving focus, typeahead, and full keyboard support.",
@@ -23,13 +25,7 @@ import { Menu } from "astralis-ui";
 
 ### `<Menu>` (root)
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `open` / `defaultOpen` / `onOpenChange` | — | — | Controlled/uncontrolled open state. |
-| `side` | `"top" \| "bottom" \| "left" \| "right"` | `"bottom"` | Preferred side (flips on collision). |
-| `align` | `"start" \| "center" \| "end"` | `"start"` | Alignment along the trigger. |
-| `sideOffset` | `number` | `6` | Gap to the trigger, px. |
-| `closeOnSelect` | `boolean` | `true` | Close after an item activates. |
+<PropsTable rows={menuProps} />
 
 ### `<Menu.Item>`
 

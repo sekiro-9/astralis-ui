@@ -1,3 +1,5 @@
+import { cardProps } from "@/modules/demos/card/card-props";
+
 export const metadata = {
   title: "Card",
   description: "A content container with header, body and footer sections in four variants.",
@@ -29,11 +31,7 @@ import { Card } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"elevated" \| "outline" \| "filled" \| "unstyled"` | `"elevated"` | Shadowed, bordered, tinted, or bare. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding density for all sections. |
-| `hoverable` | `boolean` | `false` | Hover elevation. |
+<PropsTable rows={cardProps} />
 
 Card takes no [style props](/docs/style-props) — those belong to the layout
 primitives. Sizing and placement are the job of whatever lays the card out: a

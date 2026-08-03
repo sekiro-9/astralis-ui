@@ -1,3 +1,5 @@
+import { fieldProps } from "@/modules/demos/field/field-props";
+
 export const metadata = {
   title: "Field",
   description: "The form-field wrapper — label wiring, help text, error messages, and state that flows into any input.",
@@ -32,13 +34,7 @@ border, and your swap from `HelpText` to `ErrorText`.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `invalid` | `boolean` | `false` | Error styling + `aria-invalid` on the child input. |
-| `disabled` | `boolean` | `false` | Disables the child input. |
-| `required` | `boolean` | `false` | Appends `*` to the label, sets `aria-required`. |
-| `readOnly` | `boolean` | `false` | Read-only state. |
-| `id` | `string` | auto | Explicit id for the label/input pair. |
+<PropsTable rows={fieldProps} />
 
 `Field.Label`, `Field.HelpText` and `Field.ErrorText` accept their native
 element attributes.

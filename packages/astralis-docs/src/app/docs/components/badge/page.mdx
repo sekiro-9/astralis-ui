@@ -1,3 +1,5 @@
+import { badgeProps } from "@/modules/demos/badge/badge-props";
+
 export const metadata = {
   title: "Badge",
   description: "A small status label in the standard variant and color-scheme families.",
@@ -25,8 +27,4 @@ Badge with [Float](/docs/components/float).
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"solid" \| "subtle" \| "surface" \| "outline"` | `"subtle"` | Visual style. |
-| `colorScheme` | all 15 schemes | `"gray"` | Hue. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"sm"` | Text and padding scale. |
+<PropsTable rows={badgeProps} />

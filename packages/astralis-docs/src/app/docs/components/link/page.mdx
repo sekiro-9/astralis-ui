@@ -1,3 +1,5 @@
+import { linkProps } from "@/modules/demos/link/link-props";
+
 export const metadata = {
   title: "Link",
   description: "An inline text link with accent-channel coloring and external-link handling.",
@@ -20,12 +22,7 @@ For client-side routing, pass your router's component:
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"underline" \| "hover" \| "plain"` | `"hover"` | Underline behavior. |
-| `colorScheme` | all 15 schemes | `"brand"` | Hue (via the accent channel). |
-| `external` | `boolean` | `false` | New tab + `rel="noopener noreferrer"` + ↗ marker. |
-| `as` | `ElementType` | `"a"` | Router link component. |
+<PropsTable rows={linkProps} />
 
 A link is text with special highlighting, so it also takes every
 [Text](/docs/components/text) typography prop — `size`, `weight`, `color`,

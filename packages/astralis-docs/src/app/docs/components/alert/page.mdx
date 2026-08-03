@@ -1,3 +1,5 @@
+import { alertProps } from "@/modules/demos/alert/alert-props";
+
 export const metadata = {
   title: "Alert",
   description: "A status banner for inline feedback — info, success, warning, and error.",
@@ -21,13 +23,7 @@ import { Alert } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `status` | `"info" \| "success" \| "warning" \| "error"` | `"info"` | Picks the icon, hue, and ARIA role. |
-| `variant` | `"subtle" \| "solid" \| "outline" \| "left-accent"` | `"subtle"` | Fill treatment. |
-| `colorScheme` | all 15 schemes | from `status` | Hue override (info→blue, success→green, warning→orange, error→red). |
-| `icon` | `ReactNode \| false` | status icon | Replace or hide the leading icon. |
-| `onClose` | `() => void` | — | Renders the ✕ dismiss button. |
+<PropsTable rows={alertProps} />
 
 ### Parts
 

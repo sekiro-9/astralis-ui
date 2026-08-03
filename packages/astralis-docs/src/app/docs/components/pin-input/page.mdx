@@ -1,3 +1,5 @@
+import { pinInputProps } from "@/modules/demos/pin-input/pin-input-props";
+
 export const metadata = {
   title: "Pin Input",
   description: "OTP and PIN entry with auto-advance, smart backspace, and paste spreading.",
@@ -29,17 +31,7 @@ code.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `length` | `number` | `4` | Number of boxes. |
-| `value` / `defaultValue` / `onChange` | `string` / `string` / `(value: string) => void` | — / `""` / — | The combined code. |
-| `onComplete` | `(value: string) => void` | — | Fires when all boxes are filled. |
-| `type` | `"numeric" \| "alpha" \| "alphanumeric"` | `"numeric"` | Character validation. |
-| `mask` | `boolean` | `false` | Bullet display, password-style. |
-| `variant` / `size` | `"outline" \| "filled"` / `"sm" \| "md" \| "lg"` | `"outline"` / `"md"` | Styling. |
-| `placeholder` | `string` | `"○"` | Shown in empty boxes. |
-| `autoFocus` | `boolean` | `false` | Focus the first box on mount. |
-| `invalid` / `disabled` / `readOnly` | `boolean` | `false` | State flags — inherited from [Field](/docs/components/field). |
+<PropsTable rows={pinInputProps} />
 
 ## Keyboard
 

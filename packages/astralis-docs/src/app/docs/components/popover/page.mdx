@@ -1,3 +1,5 @@
+import { popoverProps } from "@/modules/demos/popover/popover-props";
+
 export const metadata = {
   title: "Popover",
   description: "An interactive floating panel anchored to its trigger — for content too rich for a tooltip.",
@@ -32,14 +34,7 @@ interactive → Popover; blocking decision → [Modal](/docs/components/modal).
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `side` | `"top" \| "right" \| "bottom" \| "left"` | `"bottom"` | Preferred placement; flips on collision. |
-| `align` | `"start" \| "center" \| "end"` | `"center"` | Alignment along the side. |
-| `sideOffset` / `alignOffset` | `number` | `8` / `0` | Pixel gaps on each axis. |
-| `avoidCollisions` | `boolean` | `true` | Flip/shift to stay in the viewport. |
-| `closeOnEsc` / `closeOnOutsidePointer` | `boolean` | `true` | Dismissal behavior. |
-| `open` / `defaultOpen` / `onOpenChange` | — | — / `false` / — | Controlled API. |
+<PropsTable rows={popoverProps} />
 
 `Popover.Content` takes `withArrow`; `Popover.Trigger` and `Popover.Close`
 wrap a single element, like Modal's.

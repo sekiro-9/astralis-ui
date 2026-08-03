@@ -1,3 +1,5 @@
+import { headingProps } from "@/modules/demos/heading/heading-props";
+
 export const metadata = {
   title: "Heading",
   description: "Semantic headings built on Text, with per-level size and weight defaults.",
@@ -34,8 +36,4 @@ Heading levels are for the document outline; size is for the design. Override
 Heading accepts every [Text](/docs/components/text) prop except `paragraph`,
 plus:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `as` | `"h1" \| "h2" \| "h3" \| "h4" \| "h5" \| "h6"` | `"h2"` | Heading level; sets the default size and weight. |
-| `size` | Text sizes | per level | `h1` → `4xl`, `h2` → `3xl`, `h3` → `2xl`, `h4` → `xl`, `h5` → `lg`, `h6` → `md`. |
-| `weight` | Text weights | per level | Bold for h1–h3, semibold for h4–h6. |
+<PropsTable rows={headingProps} />

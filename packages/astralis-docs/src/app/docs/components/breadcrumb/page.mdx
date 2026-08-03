@@ -1,3 +1,5 @@
+import { breadcrumbProps } from "@/modules/demos/breadcrumb/breadcrumb-props";
+
 export const metadata = {
   title: "Breadcrumb",
   description: "A hierarchy trail with automatic separators and current-page semantics.",
@@ -24,9 +26,7 @@ by hand, so they can't drift out of sync.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `separator` | `ReactNode` | chevron | Glyph between items (rendered `aria-hidden`). |
+<PropsTable rows={breadcrumbProps} />
 
 ### Parts
 

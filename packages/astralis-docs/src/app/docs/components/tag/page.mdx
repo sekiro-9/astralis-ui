@@ -1,3 +1,5 @@
+import { tagProps } from "@/modules/demos/tag/tag-props";
+
 export const metadata = {
   title: "Tag",
   description: "Chips for labels and filters — closable, checkable, and groupable.",
@@ -26,13 +28,7 @@ for exclusive choices.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"solid" \| "subtle" \| "surface" \| "outline"` | `"subtle"` | Same family as Button/Badge. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"md"` | Chip size (same scale as Badge). |
-| `colorScheme` | all 15 schemes | `"gray"` | Hue. |
-| `startElement` / `endElement` | `ReactNode` | — | Leading / trailing slots (endElement yields to the close button). |
-| `closable` / `onClose` | `boolean` / `() => void` | — | Adds the ✕ remove button. |
+<PropsTable rows={tagProps} />
 
 ### Tag.Group
 
