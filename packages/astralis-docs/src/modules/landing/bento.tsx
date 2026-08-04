@@ -115,7 +115,7 @@ export function Bento() {
               <DataListItem
                 key={row.token}
                 /* Additive — Item sets only flex/gap, so no prefix needed. */
-                className="items-center justify-between border-b border-stroke-subtle pb-2 last:border-b-0 last:pb-0"
+                className="items-center justify-between border-b border-stroke-base pb-2 last:border-b-0 last:pb-0"
               >
                 {/* Prefixed: overrides the horizontal Label's fixed w-40, which
                     would crop these long token names. */}
@@ -124,11 +124,11 @@ export function Bento() {
                 </DataListLabel>
                 <DataListValue className="flex items-center gap-1.5 astralis:flex-none">
                   <span
-                    className="size-3.5 rounded-full border border-stroke-subtle"
+                    className="size-3.5 rounded-full border border-stroke-base"
                     style={{ backgroundColor: row.light }}
                   />
                   <span
-                    className="size-3.5 rounded-full border border-stroke-subtle"
+                    className="size-3.5 rounded-full border border-stroke-base"
                     style={{ backgroundColor: row.dark }}
                   />
                 </DataListValue>

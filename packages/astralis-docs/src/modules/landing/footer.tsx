@@ -22,7 +22,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-stroke-subtle">
+    <footer className="border-t border-stroke-base">
       <div className="mx-auto flex max-w-screen-xl flex-col gap-12 px-6 py-20 sm:flex-row sm:justify-between lg:px-12">
         <div className="max-w-xs">
           <Logo />
@@ -50,7 +50,7 @@ export function Footer() {
           ))}
         </div>
       </div>
-      <div className="border-t border-stroke-subtle">
+      <div className="border-t border-stroke-base">
         <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6 text-xs text-label-subtle lg:px-12">
           <span>© 2026 Astralis UI</span>
           <span>v0.1 — in development</span>

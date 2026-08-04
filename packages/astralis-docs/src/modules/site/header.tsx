@@ -11,7 +11,7 @@ export function Header({ version }: { version: string }) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stroke-subtle bg-surface/75 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-stroke-base bg-surface/75 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-8">
           <Logo />

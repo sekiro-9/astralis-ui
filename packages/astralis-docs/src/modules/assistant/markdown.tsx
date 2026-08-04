@@ -22,7 +22,7 @@ function FencedCode({ code, lang }: { code: string; lang: string }) {
   const html = useShikiHtml(code, lang);
 
   return (
-    <CodeBlockRoot variant="solid" size="sm" className="my-2 rounded-lg border border-stroke-subtle">
+    <CodeBlockRoot variant="solid" size="sm" className="my-2 rounded-lg border border-stroke-base">
       <CodeBlockContent className="shiki docs-scroll leading-relaxed">
         {html != null ? <CodeBlockCode highlightedHtml={html} /> : <CodeBlockCode>{code}</CodeBlockCode>}
       </CodeBlockContent>

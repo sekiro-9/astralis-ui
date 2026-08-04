@@ -14,8 +14,17 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
  * dependency- and React-free so it can run in Node and in React Server
  * Components. Names are rollup chunk names — the path under src/, no extension.
  * scripts/check-server-safe.mjs asserts the built output still matches.
+ *
+ * const/color-schemes is here for the same reason: it's a plain array plus a
+ * string helper, published as the "astralis-ui/color-schemes" subpath so build
+ * scripts and Server Components can read the hue list as actual data.
  */
-const SERVER_SAFE = new Set(["theme/theme-math", "theme/token-spec", "theme/serialize"]);
+const SERVER_SAFE = new Set([
+  "theme/theme-math",
+  "theme/token-spec",
+  "theme/serialize",
+  "const/color-schemes",
+]);
 
 const dirname =
   typeof __dirname !== "undefined"

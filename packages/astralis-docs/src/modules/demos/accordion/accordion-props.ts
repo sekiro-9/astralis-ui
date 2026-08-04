@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with accordion.types.ts */
 export const accordionProps: PropRow[] = [
@@ -22,7 +23,7 @@ export const accordionProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: `"gray" | "brand" | … (all 11 schemes)`,
+    type: COLOR_SCHEME_TYPE,
     default: `"gray"`,
     description: "Accent hue for focus rings and highlights.",
   },

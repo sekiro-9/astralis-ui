@@ -47,7 +47,7 @@ export function Logo() {
       <AstralisMark className="size-6 transition-transform duration-500 group-hover:rotate-45" />
       <span className="font-display text-[15px] font-semibold tracking-tight">
         Astralis
-        <span className="ml-1.5 rounded-md border border-stroke-subtle bg-surface-subtle px-1.5 py-0.5 align-middle text-[10px] font-medium uppercase tracking-widest text-label-muted">
+        <span className="ml-1.5 rounded-md border border-stroke-base bg-surface-subtle px-1.5 py-0.5 align-middle text-[10px] font-medium uppercase tracking-widest text-label-muted">
           UI
         </span>
       </span>

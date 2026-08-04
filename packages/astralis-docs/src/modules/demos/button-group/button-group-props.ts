@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with packages/astralis-ui/src/components/buttons/button-group/button-group.types.ts */
 export const buttonGroupProps: PropRow[] = [
@@ -28,7 +29,7 @@ export const buttonGroupProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: `"brand" | "gray" | "red" | "orange" | "yellow" | "green" | "teal" | "blue" | "cyan" | "purple" | "pink"`,
+    type: COLOR_SCHEME_TYPE,
     description: "Shared hue pushed onto every child Button.",
   },
   {

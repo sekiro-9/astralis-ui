@@ -49,7 +49,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
   };
 
   return (
-    <div className="preview-grid relative min-h-0 overflow-hidden rounded-2xl border border-stroke-subtle max-lg:h-[70vh]">
+    <div className="preview-grid relative min-h-0 overflow-hidden rounded-2xl border border-stroke-base max-lg:h-[70vh]">
       <div
         ref={viewportRef}
         className="absolute inset-0 overflow-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -83,7 +83,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
         </div>
       </div>
 
-      <div className="absolute bottom-3 right-3 rounded-xl border border-stroke-subtle bg-surface/90 p-1 shadow-sm backdrop-blur">
+      <div className="absolute bottom-3 right-3 rounded-xl border border-stroke-base bg-surface/90 p-1 shadow-sm backdrop-blur">
         <ButtonGroup size="sm" variant="text" colorScheme="gray" spacing="none">
           <Button
             aria-label="Zoom out"

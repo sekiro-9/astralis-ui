@@ -53,7 +53,7 @@ export function Toc() {
       <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">
         On this page
       </p>
-      <ul className="flex flex-col border-l border-stroke-subtle">
+      <ul className="flex flex-col border-l border-stroke-base">
         {entries.map((entry) => {
           const active = entry.id === activeId;
           return (

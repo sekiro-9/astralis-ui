@@ -30,7 +30,7 @@ export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
           </Text>
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="min-w-0 [&_figure]:h-full">{panel.code}</div>
-            <div className="preview-grid flex min-h-56 items-center justify-center rounded-xl border border-stroke-subtle p-8">
+            <div className="preview-grid flex min-h-56 items-center justify-center rounded-xl border border-stroke-base p-8">
               {panel.preview}
             </div>
           </div>

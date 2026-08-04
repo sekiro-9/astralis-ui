@@ -58,10 +58,10 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
     <div
       data-theme-preview
       style={vars}
-      className="overflow-hidden rounded-2xl border border-stroke-subtle bg-surface shadow-lg"
+      className="overflow-hidden rounded-2xl border border-stroke-base bg-surface shadow-lg"
     >
       {/* App chrome */}
-      <div className="flex items-center justify-between border-b border-stroke-subtle px-6 py-3">
+      <div className="flex items-center justify-between border-b border-stroke-base px-6 py-3">
         <div className="flex items-center gap-3">
           <span className="size-6 rounded-lg bg-accent-solid" aria-hidden="true" />
           <Heading as="h5" size="sm">

@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with packages/astralis-ui/src/components/buttons/button/button.types.ts */
 export const buttonProps: PropRow[] = [
@@ -11,7 +12,7 @@ export const buttonProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: `"brand" | "gray" | "red" | "orange" | "yellow" | "green" | "teal" | "blue" | "cyan" | "purple" | "pink"`,
+    type: COLOR_SCHEME_TYPE,
     default: `"brand"`,
     description: "Hue the variant paints with. Use gray for a neutral button.",
   },

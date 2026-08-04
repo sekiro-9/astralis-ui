@@ -83,7 +83,7 @@ export function ColorControlRow({
         <Tooltip>
           <Tooltip.Trigger>
             <label
-              className="relative size-7 cursor-pointer overflow-hidden rounded-full border border-stroke-subtle"
+              className="relative size-7 cursor-pointer overflow-hidden rounded-full border border-stroke-base"
               aria-label={`Custom ${label.toLowerCase()} color`}
               style={{ background: "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)" }}
             >

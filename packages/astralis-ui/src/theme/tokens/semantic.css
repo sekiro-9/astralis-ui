@@ -30,7 +30,7 @@
   /* ---- GLOBAL: Strokes (Borders) ---- */
   --astralis-color-stroke-base:        var(--astralis-color-gray-300);
   --astralis-color-stroke-muted:       var(--astralis-color-gray-400);
-  --astralis-color-stroke-subtle:      var(--astralis-color-gray-100);
+  --astralis-color-stroke-subtle:      var(--astralis-color-gray-200);
   --astralis-color-stroke-inverted:    var(--astralis-color-black);
 
   /* ---- PER-PALETTE ROLES (light) ---- */

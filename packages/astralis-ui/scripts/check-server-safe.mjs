@@ -23,7 +23,15 @@ import { dirname, join } from "node:path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = join(__dirname, "..", "dist");
 
-const SERVER_SAFE = ["theme/theme-math.js", "theme/token-spec.js", "theme/serialize.js"];
+const SERVER_SAFE = [
+  "theme/theme-math.js",
+  "theme/token-spec.js",
+  "theme/serialize.js",
+  // The colorScheme hue list, published as the "astralis-ui/color-schemes"
+  // subpath. Server-safe so build scripts and Server Components get the actual
+  // array — a client reference would make COLOR_SCHEMES.map() fail at render.
+  "const/color-schemes.js",
+];
 /** A representative client module — proves the banner is still applied at all. */
 const CLIENT = ["theme/provider.js"];
 

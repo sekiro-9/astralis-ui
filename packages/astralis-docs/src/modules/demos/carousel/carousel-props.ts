@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with carousel.types.ts */
 export const carouselProps: PropRow[] = [
@@ -70,7 +71,7 @@ export const carouselProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: `"brand" | "gray" | … (all 11 schemes)`,
+    type: COLOR_SCHEME_TYPE,
     default: `"brand"`,
     description: "Active indicator and focus-ring hue.",
   },

@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with tabs.types.ts */
 export const tabsProps: PropRow[] = [
@@ -15,7 +16,7 @@ export const tabsProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: "ColorScheme",
+    type: COLOR_SCHEME_TYPE,
     default: `"brand"`,
     description: "Hue for the active tab, sliding indicator, and focus rings (via the accent channel).",
   },

@@ -71,7 +71,7 @@ const components: MDXComponents = {
   h1: (props) => (
     <h1 className="font-display text-3xl font-semibold tracking-tight text-label" {...props} />
   ),
-  h2: AnchorHeading("h2", "font-display mt-12 mb-4 border-t border-stroke-subtle pt-10 text-xl font-semibold tracking-tight text-label"),
+  h2: AnchorHeading("h2", "font-display mt-12 mb-4 border-t border-stroke-base pt-10 text-xl font-semibold tracking-tight text-label"),
   h3: AnchorHeading("h3", "font-display mt-8 mb-3 text-base font-semibold text-label"),
   p: (props) => (
     <p className="my-4 leading-7 text-label-muted [h1+&]:mt-3 [h1+&]:text-lg [h1+&]:text-label-muted" {...props} />

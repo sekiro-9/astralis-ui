@@ -9,7 +9,7 @@ import { Reveal } from "./reveal";
 /* Two opposing streams of real, rendered components. */
 export function Showcase() {
   return (
-    <section className="border-y border-stroke-subtle bg-surface-subtle/50 py-24 lg:py-28">
+    <section className="border-y border-stroke-base bg-surface-subtle/50 py-24 lg:py-28">
       <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
         <Reveal>
           <div className="mb-14 flex flex-wrap items-end justify-between gap-4">

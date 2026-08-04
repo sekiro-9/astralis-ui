@@ -44,7 +44,7 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 
 export function StatsStrip() {
   return (
-    <section className="border-y border-stroke-subtle bg-surface-subtle/40">
+    <section className="border-y border-stroke-base bg-surface-subtle/40">
       <div className="mx-auto grid max-w-screen-xl grid-cols-2 gap-x-8 gap-y-10 px-6 py-16 md:grid-cols-4 lg:px-12 lg:py-20">
         {numbers.map((item) => (
           <Stat key={item.label} className="text-center astralis:items-center astralis:gap-2">

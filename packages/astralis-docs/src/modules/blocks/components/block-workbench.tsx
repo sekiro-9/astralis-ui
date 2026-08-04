@@ -133,7 +133,7 @@ export function BlockWorkbench({ id, name, code }: BlockWorkbenchProps) {
       </div>
 
       <Tabs.Content value="preview">
-        <div className="overflow-hidden rounded-xl border border-stroke-subtle bg-surface-subtle p-0 sm:p-4">
+        <div className="overflow-hidden rounded-xl border border-stroke-base bg-surface-subtle p-0 sm:p-4">
           <iframe
             ref={frameRef}
             src={`/preview/blocks/${id}`}

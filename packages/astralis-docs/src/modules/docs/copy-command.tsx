@@ -27,7 +27,7 @@ export function CopyCommand({ command }: CopyCommandProps) {
     <CodeBlockRoot
       variant="outline"
       code={command}
-      className="astralis:inline-flex astralis:w-auto astralis:max-w-full astralis:flex-row astralis:items-center astralis:gap-1 astralis:rounded-md astralis:border-stroke-subtle astralis:bg-surface-subtle astralis:py-1 astralis:pl-3 astralis:pr-1"
+      className="astralis:inline-flex astralis:w-auto astralis:max-w-full astralis:flex-row astralis:items-center astralis:gap-1 astralis:rounded-md astralis:border-stroke-base astralis:bg-surface-subtle astralis:py-1 astralis:pl-3 astralis:pr-1"
     >
       <CodeBlockContent className="astralis:min-w-0 astralis:p-0">
         <CodeBlockCode className="astralis:text-xs astralis:text-label-muted">

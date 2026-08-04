@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /** Keep in sync with pagination.types.ts */
 export const paginationProps: PropRow[] = [
@@ -39,7 +40,7 @@ export const paginationProps: PropRow[] = [
   },
   {
     prop: "colorScheme",
-    type: `"brand" | "gray" | … (all 11 schemes)`,
+    type: COLOR_SCHEME_TYPE,
     default: `"brand"`,
     description: "Active page and focus-ring hue.",
   },

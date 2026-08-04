@@ -8,7 +8,7 @@ export default function DocsLayout({
 }>) {
   return (
     <div className="mx-auto flex max-w-screen-2xl px-4 lg:px-8">
-      <aside className="docs-scroll sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto border-r border-stroke-subtle py-8 pr-3 lg:block">
+      <aside className="docs-scroll sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 shrink-0 overflow-y-auto border-r border-stroke-base py-8 pr-3 lg:block">
         <Sidebar />
       </aside>
 

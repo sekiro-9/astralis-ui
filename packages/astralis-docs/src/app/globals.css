@@ -111,7 +111,9 @@ body {
   min-width: 100%;
 }
 
-/* Subtle dot grid behind component previews. */
+/* Subtle dot grid behind component previews. `stroke-subtle` sits one step
+   under `stroke-base`, so the texture stays quieter than the card border it
+   renders inside. */
 .preview-grid {
   background-image: radial-gradient(var(--astralis-color-stroke-subtle) 1px, transparent 1px);
   background-size: 16px 16px;

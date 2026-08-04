@@ -206,10 +206,17 @@ export const GLOBAL_SEMANTICS: Record<string, [string, string]> = {
    * when it sat at gray-200 the light ramp read subtle < muted < base, and a
    * base-to-muted hover made the border fainter in light while strengthening
    * it in dark, from one line of code.
+   *
+   * `subtle` is gray-200 in light, not gray-100: the two modes were not
+   * symmetric. gray-100 (#f4f4f5) on a white page is ~1.1:1 — four values out
+   * of 255, invisible on most screens — while the dark side's gray-900 on
+   * near-black has roughly twice that separation and always read correctly. A
+   * divider you cannot see is not subtle, it is missing. gray-200 lands at
+   * ~1.27:1 and still sits well under `base`, so the ramp above is unchanged.
    */
   "stroke-base": ["gray-300", "gray-800"],
   "stroke-muted": ["gray-400", "gray-700"],
-  "stroke-subtle": ["gray-100", "gray-900"],
+  "stroke-subtle": ["gray-200", "gray-900"],
   "stroke-inverted": ["black", "white"],
 };
 
