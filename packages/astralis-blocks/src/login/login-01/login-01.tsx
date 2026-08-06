@@ -63,7 +63,7 @@ function LockMark() {
 }
 
 /** Centred sign-in card with social providers. */
-export function Auth01() {
+export function Login01() {
   return (
     /* An auth screen is a whole page, not a strip: it owns the viewport and
        centres its panel on both axes. `py` still guards the panel from the

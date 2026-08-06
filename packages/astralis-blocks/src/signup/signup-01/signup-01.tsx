@@ -62,7 +62,7 @@ function SparkMark() {
 }
 
 /** Centred sign-up card with a short value list under the form. */
-export function Auth02() {
+export function Signup01() {
   return (
     /* An auth screen is a whole page, not a strip: it owns the viewport and
        centres its panel on both axes. `py` still guards the panel from the

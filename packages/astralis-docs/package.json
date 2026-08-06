@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm run gen:thumbs && next dev",
-    "build": "pnpm run gen:thumbs && next build",
+    "dev": "pnpm run gen:thumbs && pnpm run gen:registry && next dev",
+    "build": "pnpm run gen:thumbs && pnpm run gen:registry && next build",
     "gen:thumbs": "node scripts/gen-block-thumbnails.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "gen:registry": "node scripts/gen-block-registry.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

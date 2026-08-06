@@ -20,8 +20,10 @@ reports/
 # Scratch app used for side-by-side comparisons against Chakra
 chakra-app/
 
-# Block thumbnails — prerendered from the blocks on every dev/build
+# Generated from the blocks on every dev/build — thumbnails, and the public
+# block registry that `astralis add` fetches from.
 packages/astralis-docs/public/block-thumbs/
+packages/astralis-docs/public/r/
 
 # Production builds
 dist/

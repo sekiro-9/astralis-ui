@@ -21,18 +21,18 @@ import { Features03 } from "./features/features-03/features-03";
 import { Footer01 } from "./footer/footer-01/footer-01";
 import { Footer02 } from "./footer/footer-02/footer-02";
 import { Footer03 } from "./footer/footer-03/footer-03";
-import { Auth03 } from "./forgot-password/forgot-password-01/forgot-password-01";
+import { ForgotPassword01 } from "./forgot-password/forgot-password-01/forgot-password-01";
 import { Hero01 } from "./hero/hero-01/hero-01";
 import { Hero02 } from "./hero/hero-02/hero-02";
 import { Hero03 } from "./hero/hero-03/hero-03";
-import { Auth01 } from "./login/login-01/login-01";
+import { Login01 } from "./login/login-01/login-01";
 import { Navbar01 } from "./navbar/navbar-01/navbar-01";
 import { Navbar02 } from "./navbar/navbar-02/navbar-02";
 import { Navbar03 } from "./navbar/navbar-03/navbar-03";
 import { Pricing01 } from "./pricing/pricing-01/pricing-01";
 import { Pricing02 } from "./pricing/pricing-02/pricing-02";
 import { Pricing03 } from "./pricing/pricing-03/pricing-03";
-import { Auth02 } from "./signup/signup-01/signup-01";
+import { Signup01 } from "./signup/signup-01/signup-01";
 import { Stats01 } from "./stats/stats-01/stats-01";
 import { Stats02 } from "./stats/stats-02/stats-02";
 import { Stats03 } from "./stats/stats-03/stats-03";
@@ -224,10 +224,10 @@ export const blocks = {
     meta: {
       ...forgotPassword01Meta,
       files: ["forgot-password-01.tsx"],
-      component: "Auth03",
+      component: "ForgotPassword01",
       uses: ["Box","Button","Container","FieldHelpText","FieldLabel","FieldRoot","Flex","Heading","Icon","Input","Link","Stack","Text"],
     },
-    component: Auth03,
+    component: ForgotPassword01,
   },
   "hero-01": {
     meta: {
@@ -260,10 +260,10 @@ export const blocks = {
     meta: {
       ...login01Meta,
       files: ["login-01.tsx"],
-      component: "Auth01",
+      component: "Login01",
       uses: ["Box","Button","Checkbox","Container","FieldLabel","FieldRoot","Flex","FlexItem","Heading","Icon","Input","InputPassword","Link","Separator","Stack","Text"],
     },
-    component: Auth01,
+    component: Login01,
   },
   "navbar-01": {
     meta: {
@@ -323,10 +323,10 @@ export const blocks = {
     meta: {
       ...signup01Meta,
       files: ["signup-01.tsx"],
-      component: "Auth02",
+      component: "Signup01",
       uses: ["Box","Button","Checkbox","Container","FieldHelpText","FieldLabel","FieldRoot","Flex","FlexItem","Heading","Icon","Input","InputPassword","Link","List","ListItem","Separator","Stack","Text"],
     },
-    component: Auth02,
+    component: Signup01,
   },
   "stats-01": {
     meta: {

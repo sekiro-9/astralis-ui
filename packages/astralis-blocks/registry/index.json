@@ -458,7 +458,7 @@
       "files": [
         "forgot-password-01.tsx"
       ],
-      "component": "Auth03",
+      "component": "ForgotPassword01",
       "uses": [
         "Box",
         "Button",
@@ -582,7 +582,7 @@
       "files": [
         "login-01.tsx"
       ],
-      "component": "Auth01",
+      "component": "Login01",
       "uses": [
         "Box",
         "Button",
@@ -794,7 +794,7 @@
       "files": [
         "signup-01.tsx"
       ],
-      "component": "Auth02",
+      "component": "Signup01",
       "uses": [
         "Box",
         "Button",

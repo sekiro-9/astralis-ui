@@ -51,7 +51,7 @@ function ArrowLeftMark() {
 }
 
 /** Single-field password reset request, with a route back to sign-in. */
-export function Auth03() {
+export function ForgotPassword01() {
   return (
     /* An auth screen is a whole page, not a strip: it owns the viewport and
        centres its panel on both axes. `py` still guards the panel from the
