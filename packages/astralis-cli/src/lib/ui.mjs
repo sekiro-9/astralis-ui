@@ -19,10 +19,23 @@ export const ok = (message) => console.log(`${green("✓")} ${message}`);
 export const warn = (message) => console.log(`${yellow("!")} ${message}`);
 export const info = (message) => console.log(`${cyan("→")} ${message}`);
 
-/** Print the error and exit non-zero — the CLI's only failure path. */
+/** Thrown by fail() once the message is printed — index.mjs stops quietly on it. */
+export class CliExit extends Error {}
+
+/**
+ * Print the error and stop — the CLI's only failure path.
+ *
+ * Sets an exit code and unwinds rather than calling process.exit(): on Windows,
+ * process.exit() after any fetch() trips a libuv assertion
+ * (`!(handle->flags & UV_HANDLE_CLOSING)`) and reports exit 127 instead of 1.
+ * Verified in isolation — fetch alone is clean, exit alone is clean, only the
+ * pair crashes. Unwinding lets the event loop drain, which also means finally
+ * blocks and closePrompts() actually run.
+ */
 export function fail(message) {
   console.error(`${red("✗")} ${message}`);
-  process.exit(1);
+  process.exitCode = 1;
+  throw new CliExit(message);
 }
 
 /*

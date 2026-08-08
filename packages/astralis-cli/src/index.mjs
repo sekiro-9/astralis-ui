@@ -2,11 +2,12 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
-import { bold, cyan, dim, fail, closePrompts } from "./lib/ui.mjs";
+import { bold, cyan, dim, fail, closePrompts, CliExit } from "./lib/ui.mjs";
 
 const COMMANDS = {
   create: () => import("./commands/create.mjs"),
   init: () => import("./commands/init.mjs"),
+  add: () => import("./commands/add.mjs"),
   theme: () => import("./commands/theme.mjs"),
   "connect-mcp": () => import("./commands/connect-mcp.mjs"),
 };
@@ -23,6 +24,10 @@ ${bold("Commands")}
                     ${dim("--framework next|vite · extra args pass to the scaffolder")}
   ${cyan("init")}            wire astralis-ui into this project (Next.js or Vite)
                     ${dim("--dry-run   show the changes without writing")}
+  ${cyan("add <block>...")}  copy a block's source into this project
+                    ${dim("--list      every available block, by category")}
+                    ${dim("--dir <path>   where to write (default [src/]components/blocks)")}
+                    ${dim("--overwrite · --dry-run · --registry <url>")}
   ${cyan("theme")}           generate a static theme stylesheet from a seed
                     ${dim("--brand/--gray <hex> · --font-heading/-body/-mono <stack>")}
                     ${dim("--radius/--spacing/--font-scale/--motion <n>")}
@@ -38,18 +43,22 @@ ${bold("Docs")}  ${cyan("https://astralis-zeta.vercel.app/docs")}
 
 const [command, ...rest] = process.argv.slice(2);
 
-if (!command || command === "--help" || command === "-h" || command === "help") {
-  console.log(HELP);
-} else if (command === "--version" || command === "-v") {
-  const pkg = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"));
-  console.log(pkg.version);
-} else if (COMMANDS[command]) {
-  const { run } = await COMMANDS[command]();
-  try {
+try {
+  if (!command || command === "--help" || command === "-h" || command === "help") {
+    console.log(HELP);
+  } else if (command === "--version" || command === "-v") {
+    const pkg = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"));
+    console.log(pkg.version);
+  } else if (COMMANDS[command]) {
+    const { run } = await COMMANDS[command]();
     await run(rest);
-  } finally {
-    closePrompts();
+  } else {
+    fail(`Unknown command "${command}" — run ${cyan("astralis --help")}.`);
   }
-} else {
-  fail(`Unknown command "${command}" — run ${cyan("astralis --help")}.`);
+} catch (error) {
+  // fail() has already printed and set the exit code; anything else is a bug
+  // and deserves its stack.
+  if (!(error instanceof CliExit)) throw error;
+} finally {
+  closePrompts();
 }

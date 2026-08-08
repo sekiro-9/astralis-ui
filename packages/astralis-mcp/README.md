@@ -2,11 +2,11 @@
 
 MCP server for [Astralis UI](https://astralis-zeta.vercel.app) — lets AI
 coding agents (Claude Code, Cursor, …) look up the library's **current**
-component APIs, full props tables, runnable demo source and theming guides
-instead of guessing from training data.
+component APIs, full props tables, runnable demo source, theming guides and
+block sources instead of guessing from training data.
 
-Reads the docs site's machine-readable endpoints, so answers can never drift
-from what the documentation actually says.
+Reads the docs site's machine-readable endpoints and its block registry, so
+answers can never drift from what the documentation actually ships.
 
 ## Setup
 
@@ -37,6 +37,8 @@ No install step — `npx` fetches and runs it on demand.
 | `get_guide` | A guide page: `installation`, `quick-start`, `theming`, `colors`, `responsive`, `style-props`, `tokens` |
 | `search_docs` | Full-text search across everything, with snippets |
 | `get_theming` | The complete theming + design-token reference in one call |
+| `list_blocks` | Every block — prebuilt page sections — with id, description, category and the components it composes. Filterable by category |
+| `get_block` | One block's metadata plus the complete source of its files, ready to write into a project |
 
 ## Options
 

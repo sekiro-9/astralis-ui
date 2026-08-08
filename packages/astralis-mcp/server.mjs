@@ -4,8 +4,9 @@
  * instead of hallucinated ones.
  *
  * Data source: the deployed docs site's machine-readable endpoints
- * (/llms.txt, /docs/components/*.md, /docs/*.md) — the same single pipeline
- * that renders the human docs, so answers can never drift from the site.
+ * (/llms.txt, /docs/components/*.md, /docs/*.md) and its block registry
+ * (/r/index.json, /r/{id}.json) — the same single pipeline that renders the
+ * human docs, so answers can never drift from the site.
  * Point ASTRALIS_DOCS_URL at a local dev server (http://localhost:3000)
  * when working on unpublished docs.
  *
@@ -74,6 +75,29 @@ async function listPages() {
     });
   }
   return pages;
+}
+
+/**
+ * The block registry, served as static JSON by the same docs deploy
+ * (astralis-docs/scripts/gen-block-registry.mjs). Reusing fetchText means
+ * blocks get the same cache, timeout and local-dev override as the docs.
+ */
+async function fetchJson(path) {
+  return JSON.parse(await fetchText(path));
+}
+
+async function blockCatalogue() {
+  return (await fetchJson("/r/index.json")).blocks;
+}
+
+/** One registry item, source included. Null when the id is unknown. */
+async function blockItem(id) {
+  if (!/^[a-z0-9-]+$/.test(id)) return null;
+  try {
+    return await fetchJson(`/r/${id}.json`);
+  } catch {
+    return null;
+  }
 }
 
 async function pageMarkdown(slug, kind) {
@@ -171,6 +195,78 @@ server.tool(
         pageMarkdown("tokens", "guide"),
       ]);
       return asText([theming ?? "", "\n---\n", tokens ?? ""].join("\n"));
+    } catch (err) {
+      return offline(err);
+    }
+  },
+);
+
+/* ---------- blocks ---------- */
+
+server.tool(
+  "list_blocks",
+  "List every Astralis block — prebuilt page sections (hero, pricing, dashboard, login…) composed from Astralis UI components. Each entry has id, name, description, category and the components it composes. Call this first to discover valid block ids. Pass a category to narrow the list.",
+  {
+    category: z
+      .string()
+      .optional()
+      .describe("Optional filter, e.g. 'hero', 'pricing', 'dashboard', 'login'"),
+  },
+  async ({ category }) => {
+    try {
+      const blocks = await blockCatalogue();
+      if (!category) return asText(JSON.stringify(blocks, null, 2));
+
+      const wanted = category.toLowerCase();
+      const filtered = blocks.filter((b) => b.category === wanted);
+      if (filtered.length) return asText(JSON.stringify(filtered, null, 2));
+
+      const categories = [...new Set(blocks.map((b) => b.category))].sort();
+      return asError(`No blocks in category "${category}". Categories: ${categories.join(", ")}.`);
+    } catch (err) {
+      return offline(err);
+    }
+  },
+);
+
+server.tool(
+  "get_block",
+  "One Astralis block: its metadata plus the complete source of every file it contains, ready to write into a project. A block depends only on astralis-ui — no other packages, no Tailwind config, no per-block setup. Use an id from list_blocks.",
+  { id: z.string().describe("Block id, e.g. 'hero-01', 'pricing-02', 'dashboard-03'") },
+  async ({ id }) => {
+    try {
+      const block = await blockItem(id);
+      if (!block) {
+        const ids = (await blockCatalogue()).map((b) => b.id);
+        return asError(`Unknown block "${id}". Valid ids: ${ids.join(", ")}.`);
+      }
+
+      /*
+       * Markdown rather than raw JSON: the payload is mostly source code, and
+       * fenced blocks keep an agent from having to unescape a JSON string
+       * before it can write the file.
+       */
+      const sections = [
+        `# ${block.name}`,
+        "",
+        block.description,
+        "",
+        `- **id** \`${block.id}\`  ·  **category** \`${block.category}\``,
+        `- **exports** \`${block.component}\``,
+        `- **composes** ${block.uses.map((u) => `\`${u}\``).join(", ")}`,
+        `- **preview** ${SITE}/blocks/${block.id}`,
+        "",
+        `Install with \`astralis add ${block.id}\`, or write the files below yourself —`,
+        `they belong to the project once copied. The only dependency is \`astralis-ui\`.`,
+        "",
+      ];
+
+      for (const file of block.contents) {
+        const lang = file.path.endsWith(".tsx") || file.path.endsWith(".ts") ? "tsx" : "";
+        sections.push(`## ${file.path}`, "", `\`\`\`${lang}`, file.content.trimEnd(), "```", "");
+      }
+
+      return asText(sections.join("\n"));
     } catch (err) {
       return offline(err);
     }
