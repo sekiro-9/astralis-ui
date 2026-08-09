@@ -69,7 +69,7 @@
     "gen:semantic": "node scripts/gen-semantic-css.mjs",
     "check:tokens": "node scripts/check-token-sync.mjs",
     "dev:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./dist/styles.css",
-    "build": "vite build && node scripts/check-server-safe.mjs && pnpm run build:css",
+    "build": "pnpm run check:types && vite build && node scripts/check-server-safe.mjs && pnpm run build:css",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs",
     "test": "vitest run --project unit",
@@ -80,7 +80,8 @@
     "storybook:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./src/index.css",
     "build-storybook": "concurrently \"pnpm run build-storybook:css\" \"storybook build\"",
     "build-storybook:css": "pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./src/index.css",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "check:types": "tsc -p tsconfig.build.json --noEmit"
   },
   "peerDependencies": {
     "react": "^19.1.1",

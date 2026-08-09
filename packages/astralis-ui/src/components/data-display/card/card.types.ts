@@ -1,4 +1,5 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type { PlacementProps } from "../../../utils/placement";
 
 export type CardSize = "sm" | "md" | "lg";
 export type CardVariant = "elevated" | "outline" | "filled" | "unstyled";
@@ -8,12 +9,17 @@ export type CardVariant = "elevated" | "outline" | "filled" | "unstyled";
 /* ------------------------------------------------------------------ */
 
 /**
- * Card is a data-display component, not a layout primitive — so it takes its
- * own recipe props, NOT Box's style props. Sizing and placement belong to
- * whatever lays it out: a Grid with `alignItems="stretch"` already gives a row
- * of cards equal heights, and anything beyond that is a wrapper's job.
+ * Card owns how it LOOKS — variant, size, hoverable — and its parent owns
+ * WHERE IT SITS. So it takes its own recipe props plus the placement set
+ * (w/h/min/max, flex-item, margin), and none of Box's paint props: repainting
+ * a Card's background or border from the outside would defeat the variants.
+ *
+ * Placement has to be here rather than "a wrapper's job" because the component
+ * cannot know it — only the composition can. Without it, stretching a Card in
+ * a row cost an extra node purely to reach one prop, which is why no block
+ * used Card at all.
  */
-export interface CardRootProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Visual style of the card */
   variant?: CardVariant;
   /** Controls padding and border-radius */

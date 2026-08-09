@@ -1,4 +1,5 @@
 import { boxProps } from "@/modules/demos/box/box-props";
+import { placementProps } from "@/modules/demos/box/placement-props";
 
 export const metadata = {
   title: "Style Props",
@@ -39,10 +40,51 @@ Container, AspectRatio, Float**) extends Box, so all of them accept all of
 these props on top of their own. Typography components (**Text, Heading**)
 carry the relevant subset.
 
-Higher-level components (Button, Card, Modal…) deliberately do *not* take
-style props — their look is the design system's job, adjusted through
-`variant`, `size` and `colorScheme`. For layout around them, wrap them in a
-Box.
+## Paint and placement
+
+Everything else follows one rule:
+
+> **A component owns how it looks. Its parent owns where it sits and how big it is.**
+
+**Paint** is how something looks on its own — `bg`, `color`, `borderColor`,
+`rounded`, `shadow`, and the padding *inside* it. Higher-level components
+(Button, Card, Select, Alert…) do **not** take these. Their appearance is the
+design system's job, adjusted through `variant`, `size` and `colorScheme`.
+Repainting one from the outside would defeat the variants it ships with.
+
+**Placement** is how big something is and where it sits *inside its parent* —
+width and height, the flex-item props, and margin. A component cannot know
+these: only the composition can. So every component that can be a child
+accepts them.
+
+The test, if you're unsure which one you're reaching for:
+
+> If I moved this component to a different page, would the prop still be right?
+
+`variant="outline"` still is — that's paint. `w="full"` depends entirely on
+what's around it — that's placement.
+
+<PropsTable rows={placementProps} />
+
+Padding is paint but margin is placement, which looks inconsistent until you
+say it out loud: padding is space *inside* a component, which its recipe owns;
+margin is space *between* it and its siblings, which only the parent can
+decide.
+
+### One name, two meanings
+
+`size` is the exception worth knowing. On Box it sets width **and** height. On
+a component with its own scale — Card, Button, Badge — it selects that scale.
+They are different props that happen to share a name, so a component with a
+recipe `size` does not inherit Box's.
+
+Container has no scale of its own, so `size` there used to fall through to
+Box's and silently constrain the height. It is now a type error; use `maxW`.
+
+```tsx
+<Container size="lg">   {/* error — Container has no size */}
+<Container maxW="4xl">  {/* what you meant */}
+```
 
 ## The prop families
 

@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
+import type { PlacementProps } from "../../../utils/placement";
 
 export type SelectSize = "sm" | "md" | "lg";
 export type SelectVariant = "outline" | "filled";
@@ -17,7 +18,31 @@ export interface SelectOptionGroup {
 
 export type SelectOptionOrGroup = SelectOptionItem | SelectOptionGroup;
 
-export interface SelectProps {
+/**
+ * Extends the trigger's own button props so anything a caller passes — most
+ * importantly `aria-label` — actually reaches the `role="combobox"` element.
+ * Previously every prop was destructured explicitly with no rest, so a label
+ * passed from outside was silently dropped and the only way to name a Select
+ * was a Field wrapper.
+ *
+ * PlacementProps land on the wrapper: the parent decides how wide the control
+ * is, the recipe decides how it looks.
+ */
+export interface SelectProps
+  extends Omit<
+      ComponentPropsWithoutRef<"button">,
+      | "value"
+      | "defaultValue"
+      | "onChange"
+      | "size"
+      | "disabled"
+      | "id"
+      | "className"
+      | "name"
+      | "placeholder"
+      | "children"
+    >,
+    PlacementProps {
   /** List of options or option groups */
   options?: SelectOptionOrGroup[];
   /** Controlled selected value */

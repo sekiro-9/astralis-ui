@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { useFieldContext } from "../../field/field.context";
 import { selectTrigger } from "../select.styles";
 import { flattenOptions, isGroup, OptionRow } from "../../shared/options";
+import { splitPlacement } from "../../../../utils/placement";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SearchIcon, SpinnerIcon } from "../../../icon/internal-icons";
@@ -45,6 +46,7 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
       name,
       className = "",
       id: idProp,
+      ...props
     },
     ref,
   ) => {
@@ -180,10 +182,14 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
       }
     };
 
+    // Placement classes for the wrapper; everything left over (aria-label and
+    // friends) is spread onto the combobox button itself.
+    const { placementClass, rest } = splitPlacement(props);
+
     const showClear = clearable && selectedValue != null && !isDisabled && !isReadOnly;
 
     return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), className)}>
+      <div className={astralisMerge("astralis:relative astralis:w-full", placementClass, accentClass(colorScheme), className)}>
         {/* Native form bridge — the trigger is a <button>, so without this
             the selected value would never reach <form> submission. */}
         {name != null && (
@@ -204,6 +210,7 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
             if (!isDisabled && !isReadOnly && !loading) setIsOpen((o) => !o);
           }}
           onKeyDown={handleKeyDown}
+          {...rest}
           className={astralisMerge(
             selectTrigger({ size, variant, invalid: !!isInvalid }),
             isReadOnly && "astralis:cursor-default astralis:bg-surface-muted",
