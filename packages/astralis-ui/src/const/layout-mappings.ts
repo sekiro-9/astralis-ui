@@ -379,6 +379,7 @@ export const orderTypes = {
 } as const;
 
 export const gapTypes = {
+  "0": "astralis:gap-0",
   "0.5": "astralis:gap-0.5",
   "1": "astralis:gap-1",
   "1.5": "astralis:gap-1.5",
@@ -416,6 +417,7 @@ export const gapTypes = {
 } as const;
 
 export const rowGapTypes = {
+  "0": "astralis:gap-y-0",
   "0.5": "astralis:gap-y-0.5",
   "1": "astralis:gap-y-1",
   "1.5": "astralis:gap-y-1.5",
@@ -453,6 +455,7 @@ export const rowGapTypes = {
 } as const;
 
 export const columnGapTypes = {
+  "0": "astralis:gap-x-0",
   "0.5": "astralis:gap-x-0.5",
   "1": "astralis:gap-x-1",
   "1.5": "astralis:gap-x-1.5",

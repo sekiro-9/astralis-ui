@@ -6,6 +6,16 @@ export type TagSize = "xs" | "sm" | "md" | "lg";
 export type TagVariant = "solid" | "subtle" | "surface" | "outline";
 export type TagColorScheme = ColorScheme;
 
+/**
+ * **Tag is for labels** — a keyword the thing carries: a topic, a category, a
+ * filter, a selected value. That's why it can be removed (`closable`),
+ * selected (`Tag.Checkable`) and grouped (`Tag.Group`).
+ *
+ * For a state the thing is *in* rather than a keyword it *carries* — `Active`,
+ * `Beta`, `3 unread` — reach for `Badge`. The two render nearly the same chip
+ * (Tag is rounded, Badge is pill-shaped), so the name is the only thing
+ * telling a reader which one you meant: pick by meaning, not by radius.
+ */
 export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, "color">, PlacementProps {
   children?: ReactNode;
   size?: TagSize;

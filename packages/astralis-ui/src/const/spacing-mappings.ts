@@ -1,4 +1,5 @@
 export const pSpacing = {
+  "0": "astralis:p-0",
   "0.5": "astralis:p-0.5",
   "1": "astralis:p-1",
   "1.5": "astralis:p-1.5",
@@ -36,6 +37,7 @@ export const pSpacing = {
 } as const;
 
 export const pySpacing = {
+  "0": "astralis:py-0",
   "0.5": "astralis:py-0.5",
   "1": "astralis:py-1",
   "1.5": "astralis:py-1.5",
@@ -73,6 +75,7 @@ export const pySpacing = {
 } as const;
 
 export const pxSpacing = {
+  "0": "astralis:px-0",
   "0.5": "astralis:px-0.5",
   "1": "astralis:px-1",
   "1.5": "astralis:px-1.5",
@@ -110,6 +113,7 @@ export const pxSpacing = {
 } as const;
 
 export const ptSpacing = {
+  "0": "astralis:pt-0",
   "0.5": "astralis:pt-0.5",
   "1": "astralis:pt-1",
   "1.5": "astralis:pt-1.5",
@@ -147,6 +151,7 @@ export const ptSpacing = {
 } as const;
 
 export const pbSpacing = {
+  "0": "astralis:pb-0",
   "0.5": "astralis:pb-0.5",
   "1": "astralis:pb-1",
   "1.5": "astralis:pb-1.5",
@@ -184,6 +189,7 @@ export const pbSpacing = {
 } as const;
 
 export const plSpacing = {
+  "0": "astralis:pl-0",
   "0.5": "astralis:pl-0.5",
   "1": "astralis:pl-1",
   "1.5": "astralis:pl-1.5",
@@ -221,6 +227,7 @@ export const plSpacing = {
 } as const;
 
 export const prSpacing = {
+  "0": "astralis:pr-0",
   "0.5": "astralis:pr-0.5",
   "1": "astralis:pr-1",
   "1.5": "astralis:pr-1.5",
@@ -258,6 +265,7 @@ export const prSpacing = {
 } as const;
 
 export const mSpacing = {
+  "0": "astralis:m-0",
   "0.5": "astralis:m-0.5",
   "1": "astralis:m-1",
   "1.5": "astralis:m-1.5",
@@ -292,9 +300,11 @@ export const mSpacing = {
   "72": "astralis:m-72",
   "80": "astralis:m-80",
   "96": "astralis:m-96",
+  "auto": "astralis:m-auto",
 } as const;
 
 export const mySpacing = {
+  "0": "astralis:my-0",
   "0.5": "astralis:my-0.5",
   "1": "astralis:my-1",
   "1.5": "astralis:my-1.5",
@@ -329,9 +339,11 @@ export const mySpacing = {
   "72": "astralis:my-72",
   "80": "astralis:my-80",
   "96": "astralis:my-96",
+  "auto": "astralis:my-auto",
 } as const;
 
 export const mxSpacing = {
+  "0": "astralis:mx-0",
   "0.5": "astralis:mx-0.5",
   "1": "astralis:mx-1",
   "1.5": "astralis:mx-1.5",
@@ -366,9 +378,11 @@ export const mxSpacing = {
   "72": "astralis:mx-72",
   "80": "astralis:mx-80",
   "96": "astralis:mx-96",
+  "auto": "astralis:mx-auto",
 } as const;
 
 export const mtSpacing = {
+  "0": "astralis:mt-0",
   "0.5": "astralis:mt-0.5",
   "1": "astralis:mt-1",
   "1.5": "astralis:mt-1.5",
@@ -403,9 +417,11 @@ export const mtSpacing = {
   "72": "astralis:mt-72",
   "80": "astralis:mt-80",
   "96": "astralis:mt-96",
+  "auto": "astralis:mt-auto",
 } as const;
 
 export const mbSpacing = {
+  "0": "astralis:mb-0",
   "0.5": "astralis:mb-0.5",
   "1": "astralis:mb-1",
   "1.5": "astralis:mb-1.5",
@@ -440,9 +456,11 @@ export const mbSpacing = {
   "72": "astralis:mb-72",
   "80": "astralis:mb-80",
   "96": "astralis:mb-96",
+  "auto": "astralis:mb-auto",
 } as const;
 
 export const mlSpacing = {
+  "0": "astralis:ml-0",
   "0.5": "astralis:ml-0.5",
   "1": "astralis:ml-1",
   "1.5": "astralis:ml-1.5",
@@ -477,9 +495,11 @@ export const mlSpacing = {
   "72": "astralis:ml-72",
   "80": "astralis:ml-80",
   "96": "astralis:ml-96",
+  "auto": "astralis:ml-auto",
 } as const;
 
 export const mrSpacing = {
+  "0": "astralis:mr-0",
   "0.5": "astralis:mr-0.5",
   "1": "astralis:mr-1",
   "1.5": "astralis:mr-1.5",
@@ -514,5 +534,6 @@ export const mrSpacing = {
   "72": "astralis:mr-72",
   "80": "astralis:mr-80",
   "96": "astralis:mr-96",
+  "auto": "astralis:mr-auto",
 } as const;
 

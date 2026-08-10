@@ -1,4 +1,5 @@
 export const hSizing = {
+  "0": "astralis:h-0",
   "0.5": "astralis:h-0.5",
   "1": "astralis:h-1",
   "1.5": "astralis:h-1.5",
@@ -85,6 +86,7 @@ export const hSizing = {
 } as const;
 
 export const minHSizing = {
+  "0": "astralis:min-h-0",
   "0.5": "astralis:min-h-0.5",
   "1": "astralis:min-h-1",
   "1.5": "astralis:min-h-1.5",
@@ -171,6 +173,7 @@ export const minHSizing = {
 } as const;
 
 export const maxHSizing = {
+  "0": "astralis:max-h-0",
   "0.5": "astralis:max-h-0.5",
   "1": "astralis:max-h-1",
   "1.5": "astralis:max-h-1.5",
@@ -257,6 +260,7 @@ export const maxHSizing = {
 } as const;
 
 export const wSizing = {
+  "0": "astralis:w-0",
   "0.5": "astralis:w-0.5",
   "1": "astralis:w-1",
   "1.5": "astralis:w-1.5",
@@ -344,6 +348,7 @@ export const wSizing = {
 } as const;
 
 export const minWSizing = {
+  "0": "astralis:min-w-0",
   "0.5": "astralis:min-w-0.5",
   "1": "astralis:min-w-1",
   "1.5": "astralis:min-w-1.5",
@@ -431,6 +436,7 @@ export const minWSizing = {
 } as const;
 
 export const maxWSizing = {
+  "0": "astralis:max-w-0",
   "0.5": "astralis:max-w-0.5",
   "1": "astralis:max-w-1",
   "1.5": "astralis:max-w-1.5",
@@ -517,6 +523,7 @@ export const maxWSizing = {
 } as const;
 
 export const inlineSizing = {
+  "0": "astralis:w-0",
   "0.5": "astralis:inline-0.5",
   "1": "astralis:inline-1",
   "1.5": "astralis:inline-1.5",
@@ -604,6 +611,7 @@ export const inlineSizing = {
 } as const;
 
 export const minInlineSizing = {
+  "0": "astralis:min-w-0",
   "0.5": "astralis:min-inline-0.5",
   "1": "astralis:min-inline-1",
   "1.5": "astralis:min-inline-1.5",
@@ -691,6 +699,7 @@ export const minInlineSizing = {
 } as const;
 
 export const maxInlineSizing = {
+  "0": "astralis:max-w-0",
   "0.5": "astralis:max-inline-0.5",
   "1": "astralis:max-inline-1",
   "1.5": "astralis:max-inline-1.5",
@@ -777,6 +786,7 @@ export const maxInlineSizing = {
 } as const;
 
 export const blockSizing = {
+  "0": "astralis:h-0",
   "0.5": "astralis:block-0.5",
   "1": "astralis:block-1",
   "1.5": "astralis:block-1.5",
@@ -863,6 +873,7 @@ export const blockSizing = {
 } as const;
 
 export const minBlockSizing = {
+  "0": "astralis:min-h-0",
   "0.5": "astralis:min-block-0.5",
   "1": "astralis:min-block-1",
   "1.5": "astralis:min-block-1.5",
@@ -949,6 +960,7 @@ export const minBlockSizing = {
 } as const;
 
 export const maxBlockSizing = {
+  "0": "astralis:max-h-0",
   "0.5": "astralis:max-block-0.5",
   "1": "astralis:max-block-1",
   "1.5": "astralis:max-block-1.5",
@@ -1034,6 +1046,7 @@ export const maxBlockSizing = {
 } as const;
 
 export const sizeSizing = {
+  "0": "astralis:size-0",
   "0.5": "astralis:size-0.5",
   "1": "astralis:size-1",
   "1.5": "astralis:size-1.5",

@@ -23,6 +23,8 @@ export {
 /* 3️⃣ Types */
 export type {
   StatProps,
+  StatSize,
+  StatAlign,
   StatLabelProps,
   StatValueProps,
   StatHelpTextProps,

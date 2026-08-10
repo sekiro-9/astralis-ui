@@ -1,12 +1,21 @@
 import type { StatIndicatorProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { resolveStyleProps } from "../../../../utils/responsive";
+import { useStatSize } from "../stat.context";
+import { statHelpSizeMap, statIndicatorVariants } from "../stat.styles";
 
 export function StatIndicator({ type = "increase", children, className = "" }: StatIndicatorProps) {
   const isIncrease = type === "increase";
+  const size = useStatSize();
+
   return (
     <span
       className={astralisMerge(
-        "astralis:inline-flex astralis:items-center astralis:gap-1 astralis:text-sm astralis:font-medium",
+        // The indicator sits on the help-text line, so it rides that rung.
+        resolveStyleProps(
+          { size },
+          { maps: { size: statHelpSizeMap }, variants: statIndicatorVariants },
+        ),
         isIncrease ? "astralis:text-green-solid" : "astralis:text-red-solid",
         className,
       )}

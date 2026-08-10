@@ -35,9 +35,14 @@ export const flexVariantMap = {
 
 export const flexVariants = cva("astralis:flex", {
   variants: flexVariantMap,
+  // Every default here restates a CSS initial value, so a bare <Flex> behaves
+  // exactly like `display: flex` and nothing more. `alignItems` is NOT in this
+  // list on purpose: CSS initialises align-items to `stretch`, and defaulting
+  // it to `start` here silently stopped children stretching — it broke three
+  // dashboard shells with valid props, valid classes and a clean typecheck.
+  // Pass `alignItems` explicitly when a layout depends on it.
   defaultVariants: {
     direction: "row",
-    alignItems: "start",
     justifyContent: "start",
     wrap: "nowrap"
   }

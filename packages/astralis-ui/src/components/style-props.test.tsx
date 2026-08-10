@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import { Box, Flex, Grid } from "./index";
+import { Box, Flex, Grid, Stack, HStack, VStack } from "./index";
 
 /**
  * A guarantee that is easy to break silently, because breaking it still
@@ -72,6 +72,100 @@ describe("display on a layout container", () => {
     expect(classesOf(container)).toEqual(
       expect.arrayContaining(["astralis:flex", "astralis:flex-col", "astralis:gap-4"]),
     );
+  });
+});
+
+/*
+ * The one default that used to contradict CSS. `alignItems: "start"` in Flex's
+ * defaultVariants meant a bare <Flex> refused to stretch its children — valid
+ * props, valid classes, non-empty markup, clean typecheck, collapsed layout.
+ * These assertions are the only gate that can see it, so they're deliberately
+ * written against the ABSENCE of a class.
+ */
+describe("cross-axis alignment defaults", () => {
+  it("leaves a bare Flex at CSS's stretch — no items-* class at all", () => {
+    const { container } = render(<Flex />);
+
+    expect(classesOf(container).some((c) => /^astralis:items-/.test(c))).toBe(false);
+  });
+
+  it("leaves VStack children stretching to the column width", () => {
+    const { container } = render(<VStack />);
+
+    expect(classesOf(container).some((c) => /^astralis:items-/.test(c))).toBe(false);
+  });
+
+  it("keeps HStack's centred preset, which is a choice rather than a default", () => {
+    const { container } = render(<HStack />);
+
+    expect(classesOf(container)).toContain("astralis:items-center");
+  });
+
+  it("still honours an explicit alignItems", () => {
+    const { container } = render(<Flex alignItems="start" />);
+
+    expect(classesOf(container)).toContain("astralis:items-start");
+  });
+});
+
+describe("Stack direction", () => {
+  it("translates the axis vocabulary to flex directions", () => {
+    const { container } = render(<Stack direction="horizontal" />);
+
+    expect(classesOf(container)).toContain("astralis:flex-row");
+  });
+
+  it("accepts a breakpoint map — the stack-then-row layout Flex used to own", () => {
+    const { container } = render(<Stack direction={{ base: "vertical", md: "horizontal" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis:flex-col", "astralis:md:flex-row"]),
+    );
+  });
+
+  it("never leaks the axis word onto the DOM", () => {
+    const { container } = render(<Stack direction={{ base: "vertical", md: "horizontal" }} />);
+
+    expect(container.firstElementChild!.hasAttribute("direction")).toBe(false);
+  });
+});
+
+/*
+ * The values a layout author reaches for by reflex. Each was absent from its
+ * scale, so the canonical spelling was a compile error and blocks grew spacer
+ * elements instead.
+ */
+describe("scale sentinels", () => {
+  it("pushes a flex item with an auto margin", () => {
+    const { container } = render(<Box ml="auto" />);
+
+    expect(classesOf(container)).toContain("astralis:ml-auto");
+  });
+
+  it("centres a fixed-width block with mx auto", () => {
+    const { container } = render(<Box w="md" mx="auto" />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis:w-md", "astralis:mx-auto"]),
+    );
+  });
+
+  it("allows min-width zero, the flex truncation fix", () => {
+    const { container } = render(<Box minW="0" />);
+
+    expect(classesOf(container)).toContain("astralis:min-w-0");
+  });
+
+  it("allows a zero gap to be stated rather than omitted", () => {
+    const { container } = render(<Flex gap="0" />);
+
+    expect(classesOf(container)).toContain("astralis:gap-0");
+  });
+
+  it("allows zero padding", () => {
+    const { container } = render(<Box p="0" />);
+
+    expect(classesOf(container)).toContain("astralis:p-0");
   });
 });
 
