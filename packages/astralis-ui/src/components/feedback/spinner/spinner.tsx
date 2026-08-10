@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import type { Ref } from "react";
 import type { SpinnerProps } from "./spinner.types";
 import { spinnerVariants } from "./spinner.styles";
@@ -18,12 +19,14 @@ export function Spinner({
   ref,
   ...rest
 }: SpinnerProps & { ref?: Ref<HTMLSpanElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     return (
       <span
         ref={ref}
         role="status"
-        className={astralisMerge(spinnerVariants({ size }), accentClass(colorScheme), className)}
-        {...rest}
+        className={astralisMerge(spinnerVariants({ size }), accentClass(colorScheme), placementClass, className)}
+        {...domProps}
       >
         <SpinnerIcon className="astralis:size-full astralis:animate-spin" />
         {label ? <span className="astralis:sr-only">{label}</span> : null}

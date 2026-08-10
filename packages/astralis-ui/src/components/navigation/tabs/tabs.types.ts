@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 import type {
@@ -7,7 +8,7 @@ import type {
   TabsActivationMode,
 } from "./tabs.context";
 
-export interface TabsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange"> {
+export interface TabsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange">, PlacementProps {
   /** Controlled active value. */
   value?: string;
   /** Uncontrolled initial value. */

@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode, HTMLAttributes } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -5,7 +6,7 @@ export type TagSize = "xs" | "sm" | "md" | "lg";
 export type TagVariant = "solid" | "subtle" | "surface" | "outline";
 export type TagColorScheme = ColorScheme;
 
-export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, "color"> {
+export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, "color">, PlacementProps {
   children?: ReactNode;
   size?: TagSize;
   variant?: TagVariant;

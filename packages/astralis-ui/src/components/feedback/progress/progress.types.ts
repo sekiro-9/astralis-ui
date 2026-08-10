@@ -1,10 +1,11 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type ProgressShape = "line" | "circle";
 export type ProgressSize = "sm" | "md" | "lg";
 
-export interface ProgressProps extends ComponentPropsWithoutRef<"div"> {
+export interface ProgressProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /**
    * Current progress. Omit it entirely for an indeterminate animation
    * (unknown duration).

@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -5,7 +6,7 @@ export type PaginationVariant = "solid" | "outline" | "subtle" | "plain";
 export type PaginationSize = "xs" | "sm" | "md" | "lg";
 export type PaginationRounded = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
-export interface PaginationProps {
+export interface PaginationProps extends PlacementProps {
   /** Current page (controlled). */
   page?: number;
   /** Initial page when uncontrolled. @default 1 */

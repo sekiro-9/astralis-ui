@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useState, useId, useMemo, useCallback, type KeyboardEvent } from "react";
 import { AccordionContext } from "../accordion.context";
 import { accordionRootVariants } from "../accordion.styles";
@@ -22,7 +23,9 @@ export function AccordionRoot({
   headingLevel = 3,
   onValueChange,
   className = "",
+  ...rest
 }: AccordionProps) {
+  const { placementClass } = splitPlacement(rest);
   const rootId = useId();
   const [internalValue, setInternalValue] = useState<string | string[] | undefined>(defaultValue);
   const currentValue = value ?? internalValue;
@@ -94,7 +97,7 @@ export function AccordionRoot({
     <AccordionContext.Provider value={ctx}>
       <div
         onKeyDown={handleKeyDown}
-        className={astralisMerge(accordionRootVariants({ variant }), accentClass(colorScheme), className)}
+        className={astralisMerge(accordionRootVariants({ variant }), accentClass(colorScheme), placementClass, className)}
       >
         {children}
       </div>

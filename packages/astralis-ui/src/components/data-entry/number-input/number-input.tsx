@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { useEffect, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import type { NumberInputProps } from "./number-input.types";
 import { inputVariants } from "../input/input.styles";
@@ -37,6 +38,8 @@ export function NumberInput({
   ref,
   ...rest
 }: NumberInputProps & { ref?: Ref<HTMLInputElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     const field = useFieldContext();
     const isInvalid = invalidProp ?? field?.invalid;
     const isDisabled = disabledProp ?? field?.disabled;
@@ -91,8 +94,10 @@ export function NumberInput({
       else if (e.key === "Enter") { commit(text.trim() === "" ? null : Number(text)); }
     };
 
+    // Placement sits on the wrapper, not the input: the wrapper is what a
+    // parent lays out, and the steppers are positioned against it.
     return (
-      <div className="astralis:relative astralis:w-full">
+      <div className={astralisMerge("astralis:relative astralis:w-full", placementClass)}>
         <input
           ref={ref}
           id={id}
@@ -120,7 +125,7 @@ export function NumberInput({
             !hideSteppers && "astralis:pr-8",
             className,
           )}
-          {...rest}
+          {...domProps}
         />
         {!hideSteppers && (
           <div

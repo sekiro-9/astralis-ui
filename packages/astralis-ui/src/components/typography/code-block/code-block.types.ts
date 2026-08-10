@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export type CodeBlockSize = "sm" | "md" | "lg";
@@ -7,7 +8,7 @@ export type CodeBlockVariant = "subtle" | "solid" | "outline";
 /* CodeBlockRoot                                                        */
 /* ------------------------------------------------------------------ */
 
-export interface CodeBlockRootProps extends HTMLAttributes<HTMLDivElement> {
+export interface CodeBlockRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Visual style of the container */
   variant?: CodeBlockVariant;
   /** Controls the content's font size and padding */

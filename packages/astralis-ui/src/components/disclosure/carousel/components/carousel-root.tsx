@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
 import { CarouselContext } from "../carousel.context";
@@ -30,7 +31,9 @@ export function CarouselRoot({
   className = "",
   style,
   children,
+  ...rest
 }: CarouselProps) {
+  const { placementClass } = splitPlacement(rest);
   const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultIndex);
   const [slideCount, setSlideCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
@@ -117,7 +120,7 @@ export function CarouselRoot({
         onKeyDown={handleKeyDown}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={astralisMerge(layout, "astralis:outline-none", accentClass(colorScheme), className)}
+        className={astralisMerge(layout, "astralis:outline-none", accentClass(colorScheme), placementClass, className)}
         style={style}
       >
         {children}

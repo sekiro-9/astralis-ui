@@ -1,9 +1,10 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode } from "react";
 
 export type DataListOrientation = "horizontal" | "vertical";
 export type DataListSize = "sm" | "md" | "lg";
 
-export interface DataListProps {
+export interface DataListProps extends PlacementProps {
   children: ReactNode;
   /** `horizontal` lays label + value side by side; `vertical` stacks them. @default "horizontal" */
   orientation?: DataListOrientation;

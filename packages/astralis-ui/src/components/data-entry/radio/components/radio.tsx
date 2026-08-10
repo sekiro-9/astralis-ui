@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useState } from "react";
 import type { ChangeEvent, Ref } from "react";
 import { useRadioGroupContext } from "../radio.context";
@@ -58,6 +59,9 @@ export function RadioBase({
 
     const sz = radioSizes[size];
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <label
         className={astralisMerge(
@@ -68,7 +72,7 @@ export function RadioBase({
             : isReadOnly
               ? "astralis:cursor-default"
               : "astralis:cursor-pointer",
-          className,
+          placementClass, className,
         )}
       >
         <input
@@ -84,7 +88,7 @@ export function RadioBase({
           aria-readonly={isReadOnly || undefined}
           onChange={handleChange}
           className="astralis:sr-only astralis:peer"
-          {...props}
+          {...domProps}
         />
 
         <span

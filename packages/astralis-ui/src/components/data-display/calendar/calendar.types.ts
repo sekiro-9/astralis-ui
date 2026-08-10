@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type {
   ButtonHTMLAttributes,
   CSSProperties,
@@ -16,7 +17,7 @@ export type CalendarRangeValue = {
 export type CalendarValue = Date | Date[] | CalendarRangeValue | null;
 
 export interface CalendarRootProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "defaultValue"> {
+  extends Omit<HTMLAttributes<HTMLDivElement>, "defaultValue">, PlacementProps {
   selectionMode?: CalendarSelectionMode;
   value?: CalendarValue;
   defaultValue?: CalendarValue;

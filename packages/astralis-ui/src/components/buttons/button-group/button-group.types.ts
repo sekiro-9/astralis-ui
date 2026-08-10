@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, HTMLAttributes } from "react";
 import type { VariantProps } from "class-variance-authority";
 import type { buttonGroupVariants } from "./button-group.styles";
@@ -8,7 +9,7 @@ type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
 
 export interface ButtonGroupProps
   extends Omit<HTMLAttributes<HTMLDivElement>, "color">,
-    VariantProps<typeof buttonGroupVariants> {
+    VariantProps<typeof buttonGroupVariants>, PlacementProps {
   children?: ReactNode;
   /** Shared size applied to every child Button (each can still override). */
   size?: ButtonSize;

@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type {
   ReactNode,
   HTMLAttributes,
@@ -8,7 +9,7 @@ import type {
 export type TableVariant = "line" | "outline";
 export type TableSize = "sm" | "md" | "lg";
 
-export interface TableProps extends HTMLAttributes<HTMLTableElement> {
+export interface TableProps extends HTMLAttributes<HTMLTableElement>, PlacementProps {
   children: ReactNode;
   variant?: TableVariant;
   size?: TableSize;

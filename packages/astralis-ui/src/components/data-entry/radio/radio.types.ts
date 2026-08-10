@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, InputHTMLAttributes, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -6,7 +7,7 @@ export type RadioSize = "sm" | "md" | "lg";
 export interface RadioProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type"
-> {
+>, PlacementProps {
   /** Visual size */
   size?: RadioSize;
   /** Hue the selected radio paints with (via the accent channel). @default "brand" */

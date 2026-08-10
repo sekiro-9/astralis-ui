@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { useMemo, type HTMLAttributes, type Ref } from "react";
 import { buttonGroupVariants } from "./button-group.styles";
 import { ButtonGroupContext, type ButtonGroupContextValue } from "./button-group.context";
@@ -23,6 +24,8 @@ export function ButtonGroup({
   ref,
   ...props
 }: ButtonGroupProps & { ref?: Ref<HTMLDivElement> }) {
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
     const shared = useMemo<ButtonGroupContextValue>(
       () => ({ size, variant, colorScheme, disabled }),
       [size, variant, colorScheme, disabled]
@@ -35,9 +38,10 @@ export function ButtonGroup({
           role={role}
           className={astralisMerge(
             buttonGroupVariants({ orientation, attached, spacing }),
+            placementClass,
             className
           )}
-          {...(props as HTMLAttributes<HTMLDivElement>)}
+          {...(domProps as HTMLAttributes<HTMLDivElement>)}
         >
           {children}
         </div>

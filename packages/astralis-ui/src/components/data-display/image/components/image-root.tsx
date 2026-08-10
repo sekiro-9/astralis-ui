@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useState, type Ref } from "react";
 import { ImageLightbox } from "./image-lightbox";
 import {
@@ -29,7 +30,10 @@ export function ImageRoot({
   onError,
   ariaLabel,
   ref,
+  ...rest
 }: ImageProps & { ref?: Ref<HTMLImageElement> }) {
+    const { placementClass } = splitPlacement(rest);
+
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setIsError] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -111,7 +115,7 @@ export function ImageRoot({
           preview ? "astralis:cursor-zoom-in" : "",
           aspectRatio
             ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full"
-            : "",
+            : placementClass,
           className,
         ]
           .filter(Boolean)
@@ -120,8 +124,15 @@ export function ImageRoot({
       />
     );
 
+    /*
+     * Placement goes on whichever element is outermost. With an aspectRatio
+     * the image is absolutely positioned inside the ratio box, so a width on
+     * the image itself would do nothing — it belongs on the box.
+     */
     const wrapped = aspectRatio ? (
-      <div style={{ ...ratioStyle, width, ...style }}>{imageElement}</div>
+      <div className={placementClass} style={{ ...ratioStyle, width, ...style }}>
+        {imageElement}
+      </div>
     ) : (
       imageElement
     );

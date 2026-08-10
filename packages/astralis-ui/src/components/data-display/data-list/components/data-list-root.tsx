@@ -1,13 +1,15 @@
+import { splitPlacement } from "../../../../utils/placement";
 import type { DataListProps } from "../data-list.types";
 import { DataListContext } from "../data-list.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 const gapForSize = { sm: "astralis:gap-2", md: "astralis:gap-3", lg: "astralis:gap-4" } as const;
 
-export function DataListRoot({ children, orientation = "horizontal", size = "md", className = "" }: DataListProps) {
+export function DataListRoot({ children, orientation = "horizontal", size = "md", className = "", ...rest }: DataListProps) {
+  const { placementClass } = splitPlacement(rest);
   return (
     <DataListContext.Provider value={{ orientation, size }}>
-      <dl className={astralisMerge("astralis:flex astralis:flex-col", gapForSize[size], className)}>{children}</dl>
+      <dl className={astralisMerge("astralis:flex astralis:flex-col", gapForSize[size], placementClass, className)}>{children}</dl>
     </DataListContext.Provider>
   );
 }

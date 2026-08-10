@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { CSSProperties, ReactNode } from "react";
 
 export type QrCodeSize = "sm" | "md" | "lg" | "xl";
@@ -8,7 +9,7 @@ export type QrCodeStatus = "active" | "loading" | "expired" | "scanned";
 /* QrCodeRoot                                                           */
 /* ------------------------------------------------------------------ */
 
-export interface QrCodeRootProps {
+export interface QrCodeRootProps extends PlacementProps {
   /** The string value to encode in the QR code */
   value: string;
   /** Preset size */

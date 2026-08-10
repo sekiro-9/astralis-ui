@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { forwardRef, type ElementType, type Ref, type ReactNode } from "react";
 import type { TextProps, TextSize, TextWeight } from "./text.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
@@ -55,6 +56,9 @@ const Text = forwardRef(
     const Element = (paragraph ? "p" : as || "p") as ElementType;
     const elementStr = typeof Element === "string" ? Element : "";
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <Element
         className={astralisMerge(
@@ -77,10 +81,10 @@ const Text = forwardRef(
             },
             { maps: textVariantMap, variants: textVariants },
           ),
-          className,
+          placementClass, className,
         )}
         ref={ref}
-        {...props}
+        {...domProps}
       >
         {children}
       </Element>

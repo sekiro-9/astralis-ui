@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ColorScheme } from "../../../const/color-schemes";
 import type { InputSize, InputVariant } from "../input/input.types";
 
@@ -14,7 +15,7 @@ export interface ComboboxOptionGroup {
 
 export type ComboboxOptionOrGroup = ComboboxOptionItem | ComboboxOptionGroup;
 
-export interface ComboboxProps {
+export interface ComboboxProps extends PlacementProps {
   options?: ComboboxOptionOrGroup[];
   /** Controlled selected value; `null` = nothing selected. */
   value?: string | number | null;

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import {
   useCallback,
   useEffect,
@@ -126,9 +127,11 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
       name,
       className = "",
       id: idProp,
+      ...rest
     },
     ref,
   ) => {
+    const { placementClass } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -285,7 +288,7 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     const showClear = clearable && selectedValues.length > 0 && !isDisabled && !isReadOnly;
 
     return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), className)}>
+      <div className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), placementClass, className)}>
         {/* Native form bridge — one hidden input per selected value (repeated
             name), so the selection reaches <form> submission. */}
         {name != null &&

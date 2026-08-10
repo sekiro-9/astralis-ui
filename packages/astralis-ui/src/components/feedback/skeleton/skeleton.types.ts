@@ -1,8 +1,9 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef } from "react";
 
 export type SkeletonVariant = "text" | "circle" | "rect";
 
-export interface SkeletonProps extends ComponentPropsWithoutRef<"div"> {
+export interface SkeletonProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /**
    * Placeholder shape: `text` is a line the height of body text, `circle`
    * suits avatars (size it square via className/style), `rect` is a generic

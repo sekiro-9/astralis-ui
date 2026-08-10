@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { InputHTMLAttributes, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -6,7 +7,7 @@ export type SwitchSize = "sm" | "md" | "lg";
 export interface SwitchProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type"
-> {
+>, PlacementProps {
   /** Visual size of the toggle */
   size?: SwitchSize;
   /** Hue the "on" track paints with (via the accent channel). @default "brand" */

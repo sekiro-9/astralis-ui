@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -7,7 +8,7 @@ export type AccordionSize = "sm" | "md" | "lg";
 export type AccordionIndicatorPosition = "start" | "end";
 export type AccordionHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export interface AccordionProps {
+export interface AccordionProps extends PlacementProps {
   children?: ReactNode;
   /** `single` keeps one item open; `multiple` allows many. */
   type?: AccordionType;

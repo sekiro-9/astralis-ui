@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { Children, Fragment, isValidElement } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ChevronRightIcon } from "../../../icon/internal-icons";
@@ -27,12 +28,14 @@ export function BreadcrumbRoot({
   const items = Children.toArray(children).filter(isValidElement);
   const glyph = separator ?? <ChevronRightIcon className={breadcrumbSeparatorIcon} />;
 
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
   return (
     <nav
       ref={ref}
       aria-label="Breadcrumb"
-      className={astralisMerge(breadcrumbVariants(), className)}
-      {...rest}
+      className={astralisMerge(breadcrumbVariants(), placementClass, className)}
+      {...domProps}
     >
       <ol className={breadcrumbListVariants()}>
         {items.map((child, index) => (

@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, InputHTMLAttributes, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -6,7 +7,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 export interface CheckboxProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type"
-> {
+>, PlacementProps {
   /** Whether the checkbox is checked (controlled) */
   checked?: boolean;
   /** Default checked state (uncontrolled) */

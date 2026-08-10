@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
 import { buttonVariants, buttonColorClasses } from "./button.styles";
 import type { ButtonProps } from "./button.types";
@@ -110,6 +111,9 @@ const ButtonImpl = forwardRef(
         ? { "aria-disabled": true, tabIndex: -1 }
         : {};
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <Element
         ref={ref}
@@ -117,10 +121,10 @@ const ButtonImpl = forwardRef(
           buttonVariants({ size, rounded, fullWidth, isDisabledOrLoading, isIconOnly }),
           buttonColorClasses(variant),
           accentClass(colorScheme),
-          className
+          placementClass, className
         )}
         {...disabledProps}
-        {...props}
+        {...domProps}
       >
         {leftSlot}
         {label && <span className="astralis:inline-flex astralis:items-center">{label}</span>}

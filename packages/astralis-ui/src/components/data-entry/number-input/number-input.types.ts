@@ -1,8 +1,9 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef } from "react";
 import type { InputSize, InputVariant } from "../input/input.types";
 
 export interface NumberInputProps
-  extends Omit<ComponentPropsWithoutRef<"input">, "size" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step"> {
+  extends Omit<ComponentPropsWithoutRef<"input">, "size" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step">, PlacementProps {
   /** Controlled numeric value; `null` = empty. */
   value?: number | null;
   defaultValue?: number | null;

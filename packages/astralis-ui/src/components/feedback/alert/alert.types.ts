@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -6,7 +7,7 @@ import type { FeedbackStatus } from "../status";
 export type AlertStatus = FeedbackStatus;
 export type AlertVariant = "subtle" | "solid" | "outline" | "left-accent";
 
-export interface AlertProps extends ComponentPropsWithoutRef<"div"> {
+export interface AlertProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /** Meaning of the alert — picks the icon, hue and ARIA role. @default "info" */
   status?: AlertStatus;
   /** Fill treatment. @default "subtle" */

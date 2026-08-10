@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type {
   InputHTMLAttributes,
   ReactNode,
@@ -10,7 +11,7 @@ export type InputVariant = "outline" | "filled" | "underline" | "unstyled";
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size"
-> {
+>, PlacementProps {
   /** Visual size of the input */
   size?: InputSize;
   /** Visual variant */

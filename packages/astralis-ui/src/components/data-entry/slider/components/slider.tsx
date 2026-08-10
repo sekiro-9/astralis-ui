@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import {
   useCallback,
   useEffect,
@@ -187,7 +188,9 @@ export function SliderBase({
   className = "",
   id: idProp,
   ref,
+  ...rest
 }: SliderProps & { ref?: Ref<HTMLDivElement> }) {
+  const { placementClass } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -293,6 +296,7 @@ export function SliderBase({
           hasLabels && "astralis:mb-6",
           isDisabled && "astralis:opacity-moderate",
           isReadOnly && "astralis:opacity-high",
+          placementClass,
           className,
         )}
       >
@@ -351,7 +355,9 @@ export function RangeSliderBase({
   readOnly: readOnlyProp,
   className = "",
   ref,
+  ...rest
 }: RangeSliderProps & { ref?: Ref<HTMLDivElement> }) {
+  const { placementClass } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -470,6 +476,7 @@ export function RangeSliderBase({
           hasLabels && "astralis:mb-6",
           isDisabled && "astralis:opacity-moderate",
           isReadOnly && "astralis:opacity-high",
+          placementClass,
           className,
         )}
       >

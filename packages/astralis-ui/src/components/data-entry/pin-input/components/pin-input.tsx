@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useRef, useState } from "react";
 import { useFieldContext } from "../../field/field.context";
 import { pinCell } from "../pin-input.styles";
@@ -36,7 +37,10 @@ export function PinInputBase({
   autoFocus = false,
   className = "",
   id: idProp,
+  ...rest
 }: PinInputProps) {
+  const { placementClass } = splitPlacement(rest);
+
   const field = useFieldContext();
   const isDisabled = disabledProp ?? field?.disabled;
   const isInvalid = invalidProp ?? field?.invalid;
@@ -174,7 +178,7 @@ export function PinInputBase({
     <div
       role="group"
       aria-label="PIN input"
-      className={astralisMerge("astralis:flex astralis:items-center astralis:gap-2", className)}
+      className={astralisMerge("astralis:flex astralis:items-center astralis:gap-2", placementClass, className)}
     >
       {Array.from({ length }, (_, i) => (
         <input

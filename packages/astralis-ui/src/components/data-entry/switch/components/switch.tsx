@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useState } from "react";
 import type { ChangeEvent, Ref } from "react";
 import { useFieldContext } from "../../field/field.context";
@@ -47,6 +48,9 @@ export function SwitchBase({
 
     const sz = switchSizes[size];
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <label
         className={astralisMerge(
@@ -57,7 +61,7 @@ export function SwitchBase({
             : isReadOnly
               ? "astralis:cursor-default"
               : "astralis:cursor-pointer",
-          className,
+          placementClass, className,
         )}
       >
         <input
@@ -74,7 +78,7 @@ export function SwitchBase({
           aria-checked={isChecked}
           onChange={handleChange}
           className="astralis:sr-only astralis:peer"
-          {...props}
+          {...domProps}
         />
 
         <span aria-hidden="true" className={astralisMerge(sz.track, switchTrack, switchTrackColor(isChecked, !!isInvalid))}>

@@ -1,10 +1,11 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type TimelineSize = "sm" | "md" | "lg";
 export type TimelineVariant = "solid" | "subtle" | "outline";
 
-export interface TimelineProps {
+export interface TimelineProps extends PlacementProps {
   children: ReactNode;
   size?: TimelineSize;
   variant?: TimelineVariant;

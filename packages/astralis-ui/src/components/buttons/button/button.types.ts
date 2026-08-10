@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, ElementType, ComponentPropsWithoutRef } from "react";
 import type { VariantProps } from "class-variance-authority";
 import { buttonVariants, type ButtonVariant, type ButtonColorScheme } from "./button.styles";
@@ -10,7 +11,8 @@ export type ButtonLoaderPlacement = "start" | "end";
  */
 interface ButtonOwnProps
   // Structural CVA variants (size/rounded/fullWidth), minus the flags Button derives itself.
-  extends Omit<VariantProps<typeof buttonVariants>, "isDisabledOrLoading" | "isIconOnly"> {
+  extends Omit<VariantProps<typeof buttonVariants>, "isDisabledOrLoading" | "isIconOnly">,
+    PlacementProps {
   /** Visual style. `surface` is the bordered sibling of `subtle`; `text` is the ghost style. */
   variant?: ButtonVariant;
   /** Hue the variant paints with. Defaults to `brand`; use `gray` for a neutral button. */

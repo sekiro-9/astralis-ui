@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../utils/placement";
 import type { HTMLAttributes, Ref } from "react";
 import { astralisMerge } from "../../utils/astralis-merge";
 import { textColors } from "../../const/color-mappings";
@@ -23,11 +24,13 @@ function Icon({
   ref,
   ...rest
 }: IconProps & { ref?: Ref<SVGSVGElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     const isToken = typeof size === "string";
     const classes = astralisMerge(
       iconVariants({ size: isToken ? size : undefined }),
       color ? textColors[color] : "",
-      className,
+      placementClass, className,
     );
     const mergedStyle = isToken ? style : { width: size, height: size, ...style };
     const a11y = (rest as { "aria-label"?: string })["aria-label"]
@@ -42,7 +45,7 @@ function Icon({
           style={mergedStyle}
           {...(strokeWidth != null ? { strokeWidth } : {})}
           {...a11y}
-          {...rest}
+          {...domProps}
         />
       );
     }

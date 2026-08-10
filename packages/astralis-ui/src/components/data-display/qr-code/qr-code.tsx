@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { useEffect, useRef, useState, useCallback } from "react";
 import QRCode from "qrcode";
 import type { QrCodeRootProps, QrCodeSize } from "./qr-code.types";
@@ -54,7 +55,9 @@ export function QrCodeRoot({
   downloadFileName = "qrcode",
   className = "",
   style,
+  ...rest
 }: QrCodeRootProps) {
+  const { placementClass } = splitPlacement(rest);
   const px = pixelSize ?? SIZE_PX[size];
   const svgRef = useRef<HTMLDivElement>(null);
   const [svgString, setSvgString] = useState<string>("");
@@ -116,6 +119,7 @@ export function QrCodeRoot({
     <div
       className={[
         "astralis:inline-flex astralis:flex-col astralis:items-center astralis:gap-3",
+        placementClass,
         className,
       ]
         .filter(Boolean)

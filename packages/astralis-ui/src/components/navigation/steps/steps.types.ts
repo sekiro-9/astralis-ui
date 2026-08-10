@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, ComponentPropsWithoutRef } from "react";
 import type {
   StepsOrientation,
@@ -10,7 +11,7 @@ import type {
 /* Root                                                                */
 /* ------------------------------------------------------------------ */
 
-export interface StepsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange"> {
+export interface StepsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange">, PlacementProps {
   /** Controlled active step index (0-based). */
   step?: number;
   /** Uncontrolled initial step index. */

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import type { Ref } from "react";
 import type { TagProps } from "../tag.types";
 import { tagVariants, closeIconSize } from "../tag.styles";
@@ -20,12 +21,14 @@ export function TagRoot({
   ref,
   ...rest
 }: TagProps & { ref?: Ref<HTMLSpanElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     return (
       <span
         ref={ref}
-        className={astralisMerge(tagVariants({ size, variant }), accentClass(colorScheme), className)}
+        className={astralisMerge(tagVariants({ size, variant }), accentClass(colorScheme), placementClass, className)}
         style={style}
-        {...rest}
+        {...domProps}
       >
         {startElement && <span className="astralis:shrink-0 astralis:inline-flex">{startElement}</span>}
         <span className="astralis:truncate">{children}</span>

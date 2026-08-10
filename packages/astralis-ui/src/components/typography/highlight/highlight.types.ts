@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { VariantProps } from "class-variance-authority";
 import type { ComponentPropsWithoutRef } from "react";
 import type { highlightMarkVariants } from "./highlight.styles";
@@ -14,5 +15,6 @@ export interface HighlightCustomProps {
 }
 
 export type HighlightProps = HighlightCustomProps &
+  PlacementProps &
   VariantProps<typeof highlightMarkVariants> &
   Omit<ComponentPropsWithoutRef<"span">, keyof HighlightCustomProps>;

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import type { CSSProperties, Ref } from "react";
 import type { ProgressProps } from "./progress.types";
 import {
@@ -33,6 +34,8 @@ export function Progress({
   ref,
   ...rest
 }: ProgressProps & { ref?: Ref<HTMLDivElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     const indeterminate = value == null;
     const percent = indeterminate ? 0 : Math.min(100, Math.max(0, (value / max) * 100));
     const valueText = `${Math.round(percent)}%`;
@@ -58,9 +61,9 @@ export function Progress({
           className={astralisMerge(
             "astralis:relative astralis:inline-flex astralis:items-center astralis:justify-center",
             accentClass(colorScheme),
-            className,
+            placementClass, className,
           )}
-          {...rest}
+          {...domProps}
         >
           <svg
             width={px}
@@ -93,8 +96,13 @@ export function Progress({
     return (
       <div
         ref={ref}
-        className={astralisMerge("astralis:flex astralis:items-center astralis:gap-3", accentClass(colorScheme), className)}
-        {...rest}
+        className={astralisMerge(
+          "astralis:flex astralis:items-center astralis:gap-3",
+          accentClass(colorScheme),
+          placementClass,
+          className,
+        )}
+        {...domProps}
       >
         <div {...ariaProps} className={progressTrackVariants({ size })}>
           <div

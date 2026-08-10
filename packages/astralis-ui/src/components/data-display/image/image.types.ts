@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { CSSProperties, ReactNode } from "react";
 
 export type ImageObjectFit =
@@ -22,7 +23,7 @@ export type ImageAspectRatio =
   | "wide"
   | (string & {});
 
-export interface ImageProps {
+export interface ImageProps extends PlacementProps {
   src: string;
   alt: string;
   className?: string;

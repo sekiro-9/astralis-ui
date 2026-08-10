@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { HTMLAttributes, LabelHTMLAttributes } from "react";
 
 export interface FieldContextValue {
@@ -27,7 +28,7 @@ export interface FieldContextValue {
   setHasErrorText: (present: boolean) => void;
 }
 
-export interface FieldRootProps extends HTMLAttributes<HTMLDivElement> {
+export interface FieldRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Marks the field as invalid — turns border red, shows error text */
   invalid?: boolean;
   /** Disables the entire field and its children */

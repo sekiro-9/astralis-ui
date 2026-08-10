@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -21,7 +22,7 @@ export type MultiSelectOptionOrGroup =
   | MultiSelectOptionItem
   | MultiSelectOptionGroup;
 
-export interface MultiSelectProps {
+export interface MultiSelectProps extends PlacementProps {
   options?: MultiSelectOptionOrGroup[];
   /** Controlled array of selected values */
   value?: Array<string | number>;

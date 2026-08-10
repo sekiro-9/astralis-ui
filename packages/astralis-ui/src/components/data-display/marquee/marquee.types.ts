@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export type MarqueeDirection = "left" | "right" | "up" | "down";
@@ -6,7 +7,7 @@ export type MarqueeDirection = "left" | "right" | "up" | "down";
 /* MarqueeRoot                                                          */
 /* ------------------------------------------------------------------ */
 
-export interface MarqueeRootProps extends HTMLAttributes<HTMLDivElement> {
+export interface MarqueeRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Scroll direction */
   direction?: MarqueeDirection;
   /** Scroll speed in pixels per second */

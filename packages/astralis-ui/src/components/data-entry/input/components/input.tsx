@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import type { Ref } from "react";
 import { useFieldContext } from "../../field/field.context";
 import { useInputGroupContext } from "../input.context";
@@ -25,6 +26,9 @@ export function InputBase({
     const isRequired = field?.required;
     const id = idProp ?? field?.id;
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <input
         ref={ref}
@@ -40,9 +44,9 @@ export function InputBase({
           inputVariants({ size, variant, invalid: !!isInvalid }),
           group.hasPrefix && "astralis:pl-9",
           group.hasSuffix && "astralis:pr-9",
-          className,
+          placementClass, className,
         )}
-        {...props}
+        {...domProps}
       />
     );
 }

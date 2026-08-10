@@ -1,10 +1,11 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
 
 /* ------------------------------------------------------------------ */
 /* Root                                                                */
 /* ------------------------------------------------------------------ */
 
-export interface BreadcrumbProps extends ComponentPropsWithoutRef<"nav"> {
+export interface BreadcrumbProps extends ComponentPropsWithoutRef<"nav">, PlacementProps {
   /** Glyph between items. @default chevron */
   separator?: ReactNode;
   children: ReactNode;

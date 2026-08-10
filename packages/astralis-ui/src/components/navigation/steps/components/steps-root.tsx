@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useMemo, useState } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { StepsContext } from "../steps.context";
@@ -57,6 +58,8 @@ export function StepsRoot({
     [step, setStep, count, orientation, variant, size, linear, labelPlacement, clickable],
   );
 
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
   return (
     <StepsContext.Provider value={ctx}>
       <div
@@ -65,9 +68,9 @@ export function StepsRoot({
         className={astralisMerge(
           "astralis:flex astralis:flex-col astralis:gap-6",
           orientation === "horizontal" && "astralis:w-full",
-          className,
+          placementClass, className,
         )}
-        {...rest}
+        {...domProps}
       >
         {children}
       </div>

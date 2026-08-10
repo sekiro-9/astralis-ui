@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useMemo, useState, type Ref } from "react";
 import { CalendarContext } from "../calendar.context";
 import type {
@@ -80,6 +81,8 @@ export function CalendarRoot({
   ref,
   ...props
 }: CalendarRootProps & { ref?: Ref<HTMLDivElement> }) {
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
     const initialMonth = startOfMonth(defaultMonth ?? new Date());
 
     const [visibleMonth, setVisibleMonth] = useState(initialMonth);
@@ -217,12 +220,13 @@ export function CalendarRoot({
           className={[
             "astralis:inline-flex astralis:flex-col astralis:gap-3 astralis:rounded-xl astralis:border astralis:border-stroke-base astralis:bg-surface-base astralis:p-3",
             SIZE_MAP[size],
+            placementClass,
             className,
           ]
             .filter(Boolean)
             .join(" ")}
           style={style}
-          {...props}
+          {...domProps}
         >
           {children ?? (
             <>

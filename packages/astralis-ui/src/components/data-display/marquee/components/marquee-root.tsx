@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useId, useRef, useState, type Ref } from "react";
 import type { MarqueeRootProps } from "../marquee.types";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
@@ -47,6 +48,8 @@ export function MarqueeRoot({
   ref,
   ...rest
 }: MarqueeRootProps & { ref?: Ref<HTMLDivElement> }) {
+    const { placementClass, rest: domProps } = splitPlacement(rest);
+
     const uid = useId();
     const trackRef = useRef<HTMLDivElement>(null);
     const [duration, setDuration] = useState(8);
@@ -125,7 +128,7 @@ export function MarqueeRoot({
       <div
         ref={ref}
         id={`astralis-marquee-${uid}`}
-        className={["astralis:overflow-hidden astralis:w-full", className]
+        className={["astralis:overflow-hidden astralis:w-full", placementClass, className]
           .filter(Boolean)
           .join(" ")}
         style={{ ...outerStyle, ...gradientMaskStyle }}
@@ -133,7 +136,7 @@ export function MarqueeRoot({
         onMouseLeave={() => pauseOnHover && setPaused(false)}
         onFocus={() => pauseOnFocus && setPaused(true)}
         onBlur={() => pauseOnFocus && setPaused(false)}
-        {...rest}
+        {...domProps}
       >
         <div
           ref={trackRef}

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import type { Ref } from "react";
 import type { AlertProps, AlertSectionProps } from "./alert.types";
 import { alertVariants, alertIconClasses, alertTitleClasses, alertDescriptionClasses, alertCloseClasses } from "./alert.styles";
@@ -17,6 +18,8 @@ function AlertRoot({
   ref,
   ...rest
 }: AlertProps & { ref?: Ref<HTMLDivElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
     const StatusIcon = STATUS_ICON[status];
 
     return (
@@ -27,9 +30,9 @@ function AlertRoot({
         className={astralisMerge(
           alertVariants({ variant }),
           accentClass(colorScheme ?? STATUS_SCHEME[status]),
-          className,
+          placementClass, className,
         )}
-        {...rest}
+        {...domProps}
       >
         {icon !== false && (
           <span aria-hidden="true" className={alertIconClasses}>

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useId, useMemo, useState } from "react";
 import FieldContext from "../field.context";
 import type { FieldRootProps } from "../field.types";
@@ -39,13 +40,16 @@ export function FieldRoot({
     };
   }, [id, invalid, disabled, required, readOnly, helpTextId, errorTextId, hasHelpText, hasErrorText]);
 
+  const { placementClass, rest: domProps } = splitPlacement(props);
+
+
   return (
     <FieldContext.Provider value={ctx}>
       <div
         data-invalid={invalid ? "" : undefined}
         data-disabled={disabled ? "" : undefined}
-        className={astralisMerge("astralis:flex astralis:flex-col astralis:gap-1.5", className)}
-        {...props}
+        className={astralisMerge("astralis:flex astralis:flex-col astralis:gap-1.5", placementClass, className)}
+        {...domProps}
       >
         {children}
       </div>

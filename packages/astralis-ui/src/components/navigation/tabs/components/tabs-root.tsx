@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useId, useMemo, useState } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
@@ -44,6 +45,8 @@ export function TabsRoot({
     [value, setValue, orientation, variant, size, fitted, rounded, activationMode, keepMounted, loop, baseId],
   );
 
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
   return (
     <TabsContext.Provider value={ctx}>
       <div
@@ -55,9 +58,9 @@ export function TabsRoot({
           // Rebinds the accent channel for the whole subtree — the indicator
           // and active-trigger styles paint with accent-* tokens.
           accentClass(colorScheme),
-          className,
+          placementClass, className,
         )}
-        {...rest}
+        {...domProps}
       >
         {children}
       </div>

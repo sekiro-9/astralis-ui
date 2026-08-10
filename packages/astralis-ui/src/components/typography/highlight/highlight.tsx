@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import { Fragment, type Ref } from "react";
 import type { HighlightProps } from "./highlight.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
@@ -46,8 +47,10 @@ function Highlight({
       });
     }
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
     return (
-      <span ref={ref} className={className} {...props}>
+      <span ref={ref} className={astralisMerge(placementClass, className)} {...domProps}>
         {nodes}
       </span>
     );

@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, Ref, RefObject } from "react";
 import { useCheckboxGroupContext } from "../checkbox.context";
@@ -66,6 +67,9 @@ export function CheckboxBase({
     const sz = checkboxSizes[size];
     const active = isChecked || indeterminate;
 
+    const { placementClass, rest: domProps } = splitPlacement(props);
+
+
     return (
       <label
         className={astralisMerge(
@@ -76,7 +80,7 @@ export function CheckboxBase({
             : isReadOnly
               ? "astralis:cursor-default"
               : "astralis:cursor-pointer",
-          className,
+          placementClass, className,
         )}
       >
         <input
@@ -92,7 +96,7 @@ export function CheckboxBase({
           aria-readonly={isReadOnly || undefined}
           onChange={handleChange}
           className="astralis:sr-only astralis:peer"
-          {...props}
+          {...domProps}
         />
 
         <span

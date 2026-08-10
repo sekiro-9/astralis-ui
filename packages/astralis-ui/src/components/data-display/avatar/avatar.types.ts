@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { CSSProperties, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -5,7 +6,7 @@ export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type AvatarShape = "circle" | "rounded" | "square";
 export type AvatarStatus = "online" | "away" | "busy" | "offline";
 
-export interface AvatarProps {
+export interface AvatarProps extends PlacementProps {
   src?: string;
   alt?: string;
   /** Name — used for initials and (unless `colorScheme` is set) a deterministic hue. */

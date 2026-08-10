@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type SliderSize = "sm" | "md" | "lg";
@@ -7,7 +8,7 @@ export interface SliderMark {
   label?: string;
 }
 
-export interface SliderProps {
+export interface SliderProps extends PlacementProps {
   min?: number;
   max?: number;
   step?: number;

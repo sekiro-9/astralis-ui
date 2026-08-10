@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, CSSProperties } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -6,7 +7,7 @@ export type CarouselOrientation = "horizontal" | "vertical";
 export type CarouselIndicatorVariant = "dot" | "line" | "number";
 export type CarouselSize = "sm" | "md" | "lg";
 
-export interface CarouselProps {
+export interface CarouselProps extends PlacementProps {
   /** Active leading-slide index (controlled). */
   index?: number;
   /** Initial index when uncontrolled. @default 0 */

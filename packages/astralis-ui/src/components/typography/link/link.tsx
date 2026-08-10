@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../utils/placement";
 import type { ElementType } from "react";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
@@ -29,6 +30,8 @@ export function Link<C extends ElementType = "a">({
   lineClamp,
   ...rest
 }: LinkProps<C>) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+
   const Element = (as || "a") as ElementType;
   const externalProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
 
@@ -59,10 +62,10 @@ export function Link<C extends ElementType = "a">({
           },
           { maps: textVariantMap, variants: linkTypographyVariants },
         ),
-        className,
+        placementClass, className,
       )}
       {...externalProps}
-      {...rest}
+      {...domProps}
     >
       {children}
       {external && (

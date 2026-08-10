@@ -1,3 +1,4 @@
+import type { PlacementProps } from "../../../utils/placement";
 import type { VariantProps } from "class-variance-authority";
 import type { ElementType, ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ResponsiveProp, Responsive } from "../../../utils/responsive";
@@ -15,6 +16,7 @@ interface TextCustomProps<C extends ElementType = "p"> {
 }
 
 type TextBaseProps<C extends ElementType = "p"> = TextCustomProps<C> &
+  PlacementProps &
   Responsive<Omit<VariantProps<typeof textVariants>, "lineClamp">>;
 
 export type TextProps<C extends ElementType = "p"> = TextBaseProps<C> & 

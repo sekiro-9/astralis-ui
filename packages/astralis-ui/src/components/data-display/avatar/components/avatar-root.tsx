@@ -1,3 +1,4 @@
+import { splitPlacement } from "../../../../utils/placement";
 import { useState } from "react";
 import { useAvatarGroupContext } from "../avatar.context";
 import { avatarVariants } from "../avatar.styles";
@@ -15,7 +16,9 @@ function hueFromName(name: string): ColorScheme {
 
 export function AvatarRoot({
   src, alt, name, icon, size, shape, colorScheme, ring, children, className = "", style,
+  ...rest
 }: AvatarProps) {
+  const { placementClass } = splitPlacement(rest);
   const [imgError, setImgError] = useState(false);
   const group = useAvatarGroupContext();
 
@@ -37,6 +40,7 @@ export function AvatarRoot({
         accentClass(hue),
         showImage ? "" : "astralis:bg-accent-muted astralis:text-accent-label",
         resolvedRing ? "astralis:ring-2 astralis:ring-surface-base" : "",
+        placementClass,
         className,
       )}
       style={style}
