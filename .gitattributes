@@ -1,0 +1,38 @@
+# Line endings are normalised to LF in the repository.
+#
+# Why this file exists: several build steps compare a generated artifact
+# byte-for-byte against the checked-in copy (the block registry's --check mode,
+# the token-sync gate). Without normalisation, a Windows checkout rewrites
+# those files to CRLF, the comparison fails, and the build reports a stale
+# registry that is not actually stale. Every `git` invocation also prints a
+# "LF will be replaced by CRLF" warning per file.
+#
+# `text=auto` lets git detect text files and store them with LF; `eol=lf` on
+# the generated formats keeps them LF in the working tree too, so the
+# byte-for-byte gates see what the generator wrote.
+* text=auto
+
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.jsx   text eol=lf
+*.mjs   text eol=lf
+*.cjs   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.md    text eol=lf
+*.mdx   text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.svg   text eol=lf
+
+# Binary — never touch these.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.pdf   binary
