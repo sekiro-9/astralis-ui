@@ -1,7 +1,10 @@
 import { parseArgs } from "node:util";
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 import { themeCss, validateSeed, isEmptySeed } from "astralis-ui/serialize";
-import { ok, fail, cyan, dim } from "../lib/ui.mjs";
+import { ok, warn, fail, cyan, dim } from "../lib/ui.mjs";
+import { readPackageJson, detectFramework, findEntryFile } from "../lib/detect.mjs";
+import { addImports } from "../lib/edits.mjs";
 
 /**
  * Renders a theme seed as a stylesheet — the static equivalent of
@@ -58,8 +61,10 @@ const USAGE = `Usage: astralis theme [options]
     --motion <n>           duration multiplier (0 disables transitions)
 
   Output
-    --out <file>           default: astralis-theme.css
+    --out <file>           default: src/astralis-theme.css, or
+                           astralis-theme.css in a project with no src/
     --force                overwrite an existing file
+    --no-import            write the file but don't touch the entry point
 
   A bare hex is shorthand for --brand:   astralis theme "#8b5cf6"`;
 
@@ -72,7 +77,10 @@ export async function run(argv) {
         ...Object.fromEntries(
           [...Object.keys(STRING_FLAGS), ...Object.keys(NUMBER_FLAGS)].map((f) => [f, { type: "string" }]),
         ),
-        out: { type: "string", default: "astralis-theme.css" },
+        // No default: the destination depends on whether the project has a
+        // src/, resolved below so `--out` can still override it.
+        out: { type: "string" },
+        "no-import": { type: "boolean", default: false },
         force: { type: "boolean", default: false },
         help: { type: "boolean", default: false },
       },
@@ -112,19 +120,56 @@ export async function run(argv) {
     fail(`Invalid theme options:\n${issues.map((i) => `    ${i.field}: ${i.message}`).join("\n")}`);
   }
 
-  if (existsSync(values.out) && !values.force) {
-    fail(`${values.out} already exists — pass --force to overwrite.`);
+  const cwd = process.cwd();
+  const posix = (p) => p.split("\\").join("/");
+
+  /*
+   * Default next to the code that imports it, not at the project root — the
+   * same rule `astralis add` follows for blocks. A stylesheet dropped beside
+   * package.json is not where anyone looks for one.
+   */
+  const out = values.out ?? (existsSync(join(cwd, "src")) ? join("src", "astralis-theme.css") : "astralis-theme.css");
+
+  if (existsSync(out) && !values.force) {
+    fail(`${posix(out)} already exists — pass --force to overwrite.`);
   }
 
-  writeFileSync(values.out, themeCss(seed));
-  ok(`wrote ${cyan(values.out)}`);
+  writeFileSync(out, themeCss(seed));
+  ok(`wrote ${cyan(posix(out))}`);
 
+  /*
+   * Import it too. A generated stylesheet nobody imports changes nothing, and
+   * the failure is invisible: the file exists, the command reported success,
+   * and the brand colour is simply never applied.
+   *
+   * It goes after the last existing import, which puts it after
+   * `astralis-ui/styles.css` — the order the override depends on.
+   */
   const usesFont = seed.fontHeading || seed.fontBody || seed.fontMono;
-  console.log(
-    `\nImport it after the library stylesheet:\n` +
+  const pkg = readPackageJson(cwd);
+  const entry = pkg ? findEntryFile(cwd, detectFramework(pkg)) : null;
+
+  if (!values["no-import"] && entry) {
+    const specifier = posix(relative(dirname(entry.path), join(cwd, out)));
+    const line = `import "${specifier.startsWith(".") ? specifier : `./${specifier}`}";`;
+    const result = addImports(readFileSync(entry.path, "utf8"), [line]);
+
+    if (result.changed) {
+      writeFileSync(entry.path, result.source);
+      ok(`imported in ${cyan(entry.relative)} ${dim("(after the library stylesheet)")}`);
+    } else {
+      ok(`already imported in ${cyan(entry.relative)}`);
+    }
+  } else if (!values["no-import"]) {
+    warn("No Next.js or Vite entry point found — import it yourself:");
+    console.log(
       `  ${cyan('import "astralis-ui/styles.css";')}\n` +
-      `  ${cyan(`import "./${values.out}";`)}\n` +
-      (usesFont ? `${dim("Custom fonts must be loaded by your app (next/font or a <link>).")}\n` : "") +
-      `${dim("Runtime alternative: <AstralisProvider tokens={…}> — same math.")}`,
-  );
+        `  ${cyan(`import "./${posix(out)}";`)}  ${dim("← must come second")}`,
+    );
+  }
+
+  if (usesFont) {
+    console.log(dim("\nCustom fonts must be loaded by your app (next/font or a <link>)."));
+  }
+  console.log(dim("Runtime alternative: <AstralisProvider tokens={…}> — same math."));
 }

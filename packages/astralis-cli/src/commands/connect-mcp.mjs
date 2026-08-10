@@ -97,6 +97,8 @@ async function connectViaCommand(client) {
     return;
   }
 
+  // Safe to hand the terminal over: prompts run in a child process, so this
+  // one has never read stdin and is not holding the console.
   const result = spawnSync(cmdline, { stdio: "inherit", shell: true });
   if (result.status === 0) {
     ok(`Connected ${client.label} to the Astralis docs server.`);

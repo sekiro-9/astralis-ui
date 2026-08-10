@@ -1,4 +1,5 @@
-import readline from "node:readline/promises";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 /**
  * Terminal output helpers — raw ANSI, no dependencies. Colors switch off for
@@ -29,8 +30,7 @@ export class CliExit extends Error {}
  * process.exit() after any fetch() trips a libuv assertion
  * (`!(handle->flags & UV_HANDLE_CLOSING)`) and reports exit 127 instead of 1.
  * Verified in isolation — fetch alone is clean, exit alone is clean, only the
- * pair crashes. Unwinding lets the event loop drain, which also means finally
- * blocks and closePrompts() actually run.
+ * pair crashes. Unwinding lets the event loop drain, so finally blocks run.
  */
 export function fail(message) {
   console.error(`${red("✗")} ${message}`);
@@ -38,38 +38,30 @@ export function fail(message) {
   throw new CliExit(message);
 }
 
-/*
- * One shared readline for the whole process, draining lines through a queue.
- * readline reads ahead, so with piped input it emits the next line's `line`
- * event in the gap between one prompt resolving and the next registering its
- * listener (e.g. select → confirm) — a per-question `rl.question` loses it. A
- * standing `line` listener queues those reads instead. Callers run
- * closePrompts() when done so the open stream stops keeping the process alive.
+const PROMPT_CHILD = fileURLToPath(new URL("./prompt-child.mjs", import.meta.url));
+
+/**
+ * Read one line from the user, in a child process that exits immediately.
+ *
+ * This CLI must never read its own stdin. On Windows libuv services a TTY on a
+ * dedicated thread blocked in ReadConsoleInputW, and once started that thread
+ * cannot be stopped — not by readline.close(), not by pause(), not by dropping
+ * listeners. A process that has read stdin even once keeps consuming console
+ * input records for the rest of its life, starving any interactive child it
+ * later spawns. `astralis create` asked which framework, then handed over to
+ * create-vite, whose arrow-key menu drew perfectly and never received a
+ * keystroke; Ctrl+C did not reach it either.
+ *
+ * Isolated in a child, the read thread dies when the child exits and the
+ * terminal is clean for the scaffolder. Piped input still works: the child
+ * inherits the same stdin, and each prompt consumes one line.
  */
-let sharedRl = null;
-let lineQueue = [];
-let lineWaiter = null;
-
-function ask(promptText) {
-  if (!sharedRl) {
-    sharedRl = readline.createInterface({ input: process.stdin, output: process.stdout });
-    sharedRl.on("line", (line) => {
-      if (lineWaiter) { const resolve = lineWaiter; lineWaiter = null; resolve(line); }
-      else lineQueue.push(line);
-    });
-    // EOF (piped input exhausted): unblock a pending prompt with an empty answer.
-    sharedRl.on("close", () => { if (lineWaiter) { const resolve = lineWaiter; lineWaiter = null; resolve(""); } });
-  }
-  process.stdout.write(promptText);
-  if (lineQueue.length) return Promise.resolve(lineQueue.shift());
-  return new Promise((resolve) => { lineWaiter = resolve; });
-}
-
-export function closePrompts() {
-  sharedRl?.close();
-  sharedRl = null;
-  lineQueue = [];
-  lineWaiter = null;
+export function ask(promptText) {
+  const result = spawnSync(process.execPath, [PROMPT_CHILD, promptText], {
+    stdio: ["inherit", "pipe", "inherit"],
+    encoding: "utf8",
+  });
+  return (result.stdout ?? "").trim();
 }
 
 /** y/N prompt; default no. */

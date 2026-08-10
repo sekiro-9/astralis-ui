@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
-import { bold, cyan, dim, fail, closePrompts, CliExit } from "./lib/ui.mjs";
+import { bold, cyan, dim, fail, CliExit } from "./lib/ui.mjs";
 
 const COMMANDS = {
   create: () => import("./commands/create.mjs"),
@@ -19,10 +19,13 @@ ${bold("Usage")}
   astralis <command> [options]
 
 ${bold("Commands")}
-  ${cyan("create <name>")}   scaffold a new project (official create-next-app /
-                  create-vite prompts) and wire Astralis into it
-                    ${dim("--framework next|vite · extra args pass to the scaffolder")}
-  ${cyan("init")}            wire astralis-ui into this project (Next.js or Vite)
+  ${cyan("create <name>")}   scaffold a new project with the official scaffolder
+                  (create-next-app / create-vite) and wire Astralis into it
+                    ${dim("--framework next|vite   Next.js, or React via Vite")}
+                    ${dim("--no-starter            keep the scaffolder's demo page")}
+                    ${dim("extra args pass straight to the scaffolder")}
+  ${cyan("init")}            wire astralis-ui into an existing React project
+                    ${dim("Next.js, or React + Vite")}
                     ${dim("--dry-run   show the changes without writing")}
   ${cyan("add <block>...")}  copy a block's source into this project
                     ${dim("--list      every available block, by category")}
@@ -59,6 +62,4 @@ try {
   // fail() has already printed and set the exit code; anything else is a bug
   // and deserves its stack.
   if (!(error instanceof CliExit)) throw error;
-} finally {
-  closePrompts();
 }

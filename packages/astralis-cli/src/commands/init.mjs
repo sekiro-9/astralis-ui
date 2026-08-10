@@ -21,7 +21,12 @@ const MANUAL_SNIPPET = `
     3. Wrap your app:  <AstralisProvider defaultTheme="system">…</AstralisProvider>
   Full guide: ${cyan("https://astralis-zeta.vercel.app/docs/installation")}`;
 
-export async function run(argv) {
+/**
+ * `nested` is set when `create` calls this as its wiring step. It suppresses
+ * the sign-off, because create prints its own "Next steps" immediately after —
+ * two closing blocks in one run read as the command finishing twice.
+ */
+export async function run(argv, { nested = false } = {}) {
   const { values } = parseArgs({
     args: argv,
     options: { "dry-run": { type: "boolean", default: false } },
@@ -34,20 +39,58 @@ export async function run(argv) {
 
   const framework = detectFramework(pkg);
   if (!framework) {
-    warn("Couldn't detect Next.js or Vite in this project.");
+    // Be specific about which half is missing. A Vue + Vite app used to be
+    // told "couldn't detect Vite", which is untrue and points at the wrong
+    // problem — Vite is there, React is not.
+    const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+    if (deps.vite) {
+      warn("This is a Vite project, but not a React one.");
+      console.log(
+        dim("  Astralis is a React library — react and react-dom are its peer dependencies."),
+      );
+    } else {
+      warn("Couldn't detect Next.js or a React + Vite project here.");
+    }
     console.log(MANUAL_SNIPPET);
     return;
   }
   const pm = detectPackageManager(cwd);
-  info(`${bold(framework === "next" ? "Next.js" : "Vite")} project, ${bold(pm)}${dryRun ? dim("  (dry run — nothing will be written)") : ""}`);
+
+  /*
+   * Step output is buffered until we know whether anything actually changed.
+   * Re-running init on an already-wired project used to print a checklist of
+   * things it had not done, followed by a sign-off — reading like work when
+   * the honest answer is "nothing to do".
+   *
+   * The moment a real change happens we flush and switch to printing live, so
+   * a package-manager install still streams in order.
+   */
+  const steps = [];
+  let printing = false;
+  let changed = false;
+  const step = (fn) => (printing ? fn() : steps.push(fn));
+  const flush = () => {
+    for (const fn of steps) fn();
+    steps.length = 0;
+    printing = true;
+  };
+
+  step(() =>
+    info(
+      `${bold(framework === "next" ? "Next.js" : "Vite")} project, ${bold(pm)}${dryRun ? dim("  (dry run — nothing will be written)") : ""}`,
+    ),
+  );
 
   // 1. Dependency
   const hasDep = Boolean(pkg.dependencies?.["astralis-ui"] ?? pkg.devDependencies?.["astralis-ui"]);
   if (hasDep) {
-    ok("astralis-ui already in dependencies");
+    step(() => ok("astralis-ui already in dependencies"));
   } else if (dryRun) {
-    info(`would run: ${pm} add astralis-ui`);
+    changed = true;
+    step(() => info(`would run: ${pm} add astralis-ui`));
   } else {
+    changed = true;
+    flush();
     info(`installing astralis-ui with ${pm}…`);
     // One command string: pm binaries are .cmd shims on Windows (need a shell),
     // and shell+args-array triggers Node's unescaped-args deprecation.
@@ -69,15 +112,17 @@ export async function run(argv) {
   const notes = [];
   const apply = (result, label) => {
     source = result.source;
-    if (result.changed) ok(`${label} ${dim(`(${entry.relative})`)}`);
-    else if (result.note) notes.push(`${label}: ${result.note}`);
-    else ok(`${label} — already present`);
+    if (result.changed) {
+      changed = true;
+      step(() => ok(`${label} ${dim(`(${entry.relative})`)}`));
+    } else if (result.note) notes.push(`${label}: ${result.note}`);
+    else step(() => ok(`${label} — already present`));
   };
 
   apply(addImports(source, [PROVIDER_IMPORT, STYLES_IMPORT]), "imports added");
 
   if (source.includes("<AstralisProvider")) {
-    ok("AstralisProvider already wraps this file");
+    step(() => ok("AstralisProvider already wraps this file"));
   } else if (framework === "next") {
     apply(
       wrapJsx(source, "{children}", '<AstralisProvider defaultTheme="system">', "</AstralisProvider>"),
@@ -98,12 +143,27 @@ export async function run(argv) {
 
   // 3. Write
   if (source !== original) {
-    if (dryRun) info(`would update ${entry.relative}`);
+    if (dryRun) step(() => info(`would update ${entry.relative}`));
     else writeFileSync(entry.path, source);
   }
 
+  /*
+   * Nothing to do, and nothing that needed the reader's attention: say so in
+   * one line instead of listing the steps that were already satisfied.
+   */
+  if (!changed && notes.length === 0) {
+    ok("astralis-ui is already present in this project");
+    if (nested) return;
+    console.log(`Nothing to scaffold.\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
+    return;
+  }
+
+  flush();
+
   for (const note of notes) warn(note);
   if (notes.length > 0) console.log(MANUAL_SNIPPET);
+
+  if (nested) return;
 
   console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
 }
