@@ -21,9 +21,19 @@ import { Badge } from "astralis-ui";
 
 <ComponentPreview name="badge-variants" align="start" />
 
-Badges are static labels — for removable or selectable chips use
-[Tag](/docs/components/tag), and for counts anchored to a corner combine a
-Badge with [Float](/docs/components/float).
+## Badge or Tag?
+
+The two render nearly the same chip — Badge is pill-shaped, Tag is rounded —
+so the radius won't tell you which to reach for. The meaning does:
+
+- **Badge is a state the thing is *in*** — `Active`, `Beta`, `Failed`,
+  `3 unread`. Read-only, which is why it has no close button and no group.
+- **[Tag](/docs/components/tag) is a label the thing *carries*** — a topic, a
+  category, a filter. That's why it can be removed, selected and grouped.
+
+Pick by meaning, not by shape: a reader who sees `Badge` should know the chip
+describes status without having to check what it says. For counts anchored to
+a corner, combine a Badge with [Float](/docs/components/float).
 
 ## Props
 

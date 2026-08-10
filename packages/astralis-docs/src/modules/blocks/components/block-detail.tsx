@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  Box,
   Code,
   Flex,
   Heading,
@@ -8,6 +9,7 @@ import {
   Separator,
   Tag,
   Text,
+  VStack,
 } from "astralis-ui";
 import { CopyCommand } from "@/modules/docs/copy-command";
 import { categoryLabel, type BlockSummary } from "@/lib/blocks";
@@ -32,24 +34,27 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
   const command = `astralis add ${meta.id}`;
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
+    <VStack gap="8">
+      <VStack gap="4">
         <BackLink href="/blocks">All blocks</BackLink>
 
         {/* Name and install command share a line: the command is the one thing
             a reader came here to act on, and the description said nothing the
             preview below does not show. It still feeds the page metadata. */}
-        <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-          <div className="min-w-0 flex items-center gap-3">
+        <Flex wrap="wrap" alignItems="end" justifyContent="between" columnGap="6" rowGap="3">
+          {/* `minW="0"` lets a long block name shrink instead of shoving the
+              install command off the row. This was a raw div until the sizing
+              scale gained its zero. */}
+          <Flex minW="0" alignItems="center" gap="3">
             <Heading as="h1" size="2xl" weight="semibold" letterSpacing="tight">
               {meta.name}
             </Heading>
             <Tag size="sm" variant="subtle" colorScheme="brand">
               {categoryLabel(meta.category)}
             </Tag>
-          </div>
+          </Flex>
           <CopyCommand command={command} />
-        </div>
+        </Flex>
 
         {/* Tag, not Badge: Badge is the status pill (Active, Beta), Tag is the
             keyword chip. The id is not repeated here — it is right above in the
@@ -61,13 +66,13 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
             </Tag>
           ))}
         </Flex>
-      </div>
+      </VStack>
 
       <BlockWorkbench id={meta.id} name={meta.name} code={code} />
 
       <Separator />
 
-      <section className="flex flex-col gap-4">
+      <VStack as="section" gap="4">
         <Heading as="h2" size="lg" weight="semibold" letterSpacing="tight">
           Add it to your project
         </Heading>
@@ -81,9 +86,9 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
               <Code>components/blocks/{filename}</Code> and leaves the rest of
               your project untouched.
             </Text>
-            <div className="mt-2">
+            <Box mt="2">
               <CopyCommand command={command} />
-            </div>
+            </Box>
           </ListItem>
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
@@ -110,7 +115,7 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
           ))}
           .
         </Text>
-      </section>
-    </div>
+      </VStack>
+    </VStack>
   );
 }

@@ -4,7 +4,7 @@ import { Image, Text, VStack, Box } from "astralis-ui";
 
 export function ImagePreview() {
   return (
-    <VStack gap="2">
+    <VStack gap="2" alignItems="start">
       <Box w="56">
         {/* Click to open the built-in lightbox (zoom, rotate, Esc to close). */}
         <Image src="/placeholder.svg" alt="Preview me" aspectRatio="video" rounded="lg" preview />

@@ -301,11 +301,8 @@ export function Dashboard01() {
             </BreadcrumbItem>
           </Breadcrumb>
 
-          {/* Spacer: `flex="1"` stands in for the `mx="auto"` the margin scale
-              does not carry. */}
-          <Box flex="1" />
-
-          <Flex alignItems="center" gap="3" shrink="0">
+          {/* `ml="auto"` pushes this group to the far edge — no spacer element. */}
+          <Flex alignItems="center" gap="3" shrink="0" ml="auto">
             <Box w="64" display={{ base: "hidden", md: "block" }}>
               <Input
                 type="search"

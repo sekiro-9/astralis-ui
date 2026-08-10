@@ -138,9 +138,8 @@ export function Dashboard02() {
             </Box>
           </Stack>
 
-          <Box flex="1" />
-
-          <Flex alignItems="center" gap="3" shrink="0">
+          {/* `ml="auto"` pushes this group to the far edge — no spacer element. */}
+          <Flex alignItems="center" gap="3" shrink="0" ml="auto">
             <Box w="56" display={{ base: "hidden", md: "block" }}>
               <Input type="search" size="sm" placeholder="Search…" aria-label="Search" />
             </Box>

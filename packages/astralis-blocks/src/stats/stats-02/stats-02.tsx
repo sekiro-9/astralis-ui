@@ -24,10 +24,10 @@ const kpis = [
  * with a trend indicator. This is exactly what `Stat` is scoped for — a compact
  * value with a label, a signed change, and a note.
  *
- * `Stat` has no flat `StatRoot` export, so the root is the compound `Stat`
- * itself — safe here because a plain `Stat` tag is a real component, unlike the
- * dotted sub-component access that breaks across the RSC boundary. The children
- * are the flat exports. Four across from md, two below.
+ * `Stat` IS the root — the compound wrapper stands in for it, which is why no
+ * `StatRoot` is exported. A plain `Stat` tag is a real component, unlike the
+ * dotted sub-component access that breaks across the RSC boundary, so the
+ * children are the flat exports. Four across from md, two below.
  */
 export function Stats02() {
   return (

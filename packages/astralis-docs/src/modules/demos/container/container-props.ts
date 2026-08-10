@@ -10,7 +10,7 @@ export const containerProps: PropRow[] = [
   },
   {
     prop: "px",
-    type: `"0.5" – "96" (spacing scale)`,
+    type: `"0" – "96" (spacing scale)`,
     default: `"4"`,
     description: "Gutter padding so content never touches the viewport edge.",
   },

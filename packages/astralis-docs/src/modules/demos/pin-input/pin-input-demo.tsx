@@ -7,7 +7,7 @@ export function PinInputDemo() {
   const [done, setDone] = useState(false);
 
   return (
-    <VStack gap="3">
+    <VStack gap="3" alignItems="start">
       <PinInput length={4} onComplete={() => setDone(true)} onChange={() => setDone(false)} />
       <Text size="xs" color={done ? "success" : "muted"}>
         {done ? "Code complete — verifying…" : "Paste works too — try it."}

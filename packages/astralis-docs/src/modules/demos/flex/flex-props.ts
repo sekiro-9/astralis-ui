@@ -17,8 +17,9 @@ export const flexProps: PropRow[] = [
   {
     prop: "alignItems",
     type: `"start" | "center" | "end" | "baseline" | "stretch"`,
-    default: `"start"`,
-    description: "Alignment along the cross axis.",
+    default: `"stretch"`,
+    description:
+      "Alignment along the cross axis. Unset, it is CSS's stretch — children fill the cross size — so a row gives equal heights and a column gives equal widths.",
   },
   {
     prop: "wrap",
@@ -28,7 +29,7 @@ export const flexProps: PropRow[] = [
   },
   {
     prop: "gap · rowGap · columnGap",
-    type: `"0.5" – "96" (spacing scale)`,
+    type: `"0" – "96" (spacing scale)`,
     description: "Gap between children, together or per axis.",
   },
   {

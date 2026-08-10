@@ -4,6 +4,9 @@ import {
   Grid,
   Heading,
   Stack,
+  Stat,
+  StatLabel,
+  StatValue,
   Text,
 } from "astralis-ui";
 
@@ -18,9 +21,9 @@ const metrics = [
  * A marketing stats band — oversized numbers under a centred heading, four
  * across on desktop and two on mobile.
  *
- * The numbers are `Text`, not `Stat`: Stat's value is fixed at `text-3xl` for a
- * dashboard KPI, which reads small at hero scale. See
- * reports/astralis-api-updates.md.
+ * The numbers are a real `Stat` — `size` reaches hero scale and drops back on
+ * mobile, and `align="center"` centres the pair. Before those existed this
+ * band had to hand-roll the same thing out of two `Text` elements.
  */
 export function Stats01() {
   return (
@@ -50,21 +53,13 @@ export function Stats01() {
 
           <Grid columns={{ base: "2", lg: "4" }} gap={{ base: "10", lg: "8" }}>
             {metrics.map((metric) => (
-              <Stack key={metric.label} direction="vertical" alignItems="center" gap="2">
-                <Text
-                  as="span"
-                  size={{ base: "4xl", lg: "5xl" }}
-                  weight="semibold"
-                  color="base"
-                  lineHeight="none"
-                  letterSpacing="tight"
-                >
-                  {metric.value}
-                </Text>
-                <Text as="span" size="sm" color="muted" align="center">
-                  {metric.label}
-                </Text>
-              </Stack>
+              /* Value first, label under it — the compound takes its order
+                 from the children, so a marketing band and a dashboard KPI
+                 can read in opposite directions. */
+              <Stat key={metric.label} size={{ base: "lg", lg: "xl" }} align="center">
+                <StatValue>{metric.value}</StatValue>
+                <StatLabel>{metric.label}</StatLabel>
+              </Stat>
             ))}
           </Grid>
         </Stack>

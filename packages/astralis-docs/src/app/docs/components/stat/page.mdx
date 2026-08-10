@@ -23,12 +23,34 @@ colors green for `increase` and red for `decrease` — note that "decrease" is
 just the arrow direction, not a judgment (a falling bounce rate is good
 news).
 
+## Size
+
+`size` scales the label, value and help text together, so a resized Stat stays
+in proportion instead of growing one line and leaving the others behind. It is
+responsive, which is what lets one Stat serve a dense dashboard tile and a
+marketing band.
+
+<ComponentPreview name="stat-sizes" align="start" />
+
+```tsx
+{/* big on desktop, back in its box on a two-up mobile grid */}
+<Stat size={{ base: "lg", lg: "xl" }} align="center">
+  <StatValue>62</StatValue>
+  <StatLabel>Components</StatLabel>
+</Stat>
+```
+
+Children render in the order you write them, so a marketing band can lead with
+the value while a dashboard tile leads with the label.
+
 ## Props
 
-The parts take only `children` and `className`, except:
+The parts take only `children` and `className`. The root takes:
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `size` | `"sm" \| "md" \| "lg" \| "xl"` | `"md"` | Scales all three lines together. Responsive. |
+| `align` | `"start" \| "center" \| "end"` | `"start"` | Cross-axis alignment of the lines. Responsive. |
 | `Stat.Indicator type` | `"increase" \| "decrease"` | `"increase"` | Arrow direction and color. |
 
 Compose Stats in a [Grid](/docs/components/grid) or

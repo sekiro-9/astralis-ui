@@ -5,7 +5,7 @@ import { AlignLeft, AlignCenter, AlignRight, ChevronLeft, ChevronRight } from "l
 
 export function ButtonGroupAttached() {
   return (
-    <VStack gap="4">
+    <VStack gap="4" alignItems="start">
       <ButtonGroup attached variant="outline" colorScheme="gray">
         <Button leftIcon={<Icon as={AlignLeft} size="xs" />} aria-label="Align left" />
         <Button leftIcon={<Icon as={AlignCenter} size="xs" />} aria-label="Align center" />

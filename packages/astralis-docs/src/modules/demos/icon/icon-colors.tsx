@@ -5,7 +5,7 @@ import { Heart, CircleCheck, TriangleAlert, Info } from "lucide-react";
 
 export function IconColors() {
   return (
-    <VStack gap="4">
+    <VStack gap="4" alignItems="start">
       <HStack gap="4">
         <Icon as={CircleCheck} color="success" />
         <Icon as={TriangleAlert} color="warning" />

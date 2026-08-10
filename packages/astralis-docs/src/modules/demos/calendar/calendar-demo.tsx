@@ -7,7 +7,7 @@ export function CalendarDemo() {
   const [date, setDate] = useState<Date | null>(null);
 
   return (
-    <VStack gap="3">
+    <VStack gap="3" alignItems="start">
       <Calendar
         selectionMode="single"
         value={date}

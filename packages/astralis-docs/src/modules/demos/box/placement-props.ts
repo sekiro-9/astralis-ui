@@ -8,12 +8,12 @@ import type { PropRow } from "@/modules/docs/props-table";
 export const placementProps: PropRow[] = [
   {
     prop: "w · minW · maxW",
-    type: `"0.5" – "96", "full", "screen", fractions, "xs" – "7xl"`,
+    type: `"0" – "96", "full", "screen", fractions, "xs" – "7xl"`,
     description: "How much horizontal room the component takes in its parent.",
   },
   {
     prop: "h · minH · maxH",
-    type: `"0.5" – "96", "full", "screen", fractions`,
+    type: `"0" – "96", "full", "screen", fractions`,
     description: "The same vertically.",
   },
   {
@@ -28,7 +28,8 @@ export const placementProps: PropRow[] = [
   },
   {
     prop: "m · mx · my · mt/mb/ml/mr",
-    type: `"0.5" – "96" (spacing scale)`,
-    description: "Space between the component and its siblings.",
+    type: `"0" – "96" (spacing scale) | "auto"`,
+    description:
+      "Space between the component and its siblings. auto is the layout tool: ml=\"auto\" pushes a flex item to the far edge, mx=\"auto\" centres a fixed-width block.",
   },
 ];

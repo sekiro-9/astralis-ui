@@ -333,7 +333,7 @@ export const blocks = {
       ...stats01Meta,
       files: ["stats-01.tsx"],
       component: "Stats01",
-      uses: ["Box","Container","Grid","Heading","Stack","Text"],
+      uses: ["Box","Container","Grid","Heading","Stack","Stat","StatLabel","StatValue","Text"],
     },
     component: Stats01,
   },

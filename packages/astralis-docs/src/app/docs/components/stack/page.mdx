@@ -29,8 +29,15 @@ you want for rows of mixed-height content.
 ## Direction
 
 The base `Stack` takes a `direction` prop if you'd rather not pick a preset.
+It speaks in axes — `"vertical"` and `"horizontal"` — rather than CSS's
+`column` and `row`.
 
 <ComponentPreview name="stack-direction" align="start" />
+
+`direction` is responsive like every other style prop, so the most common
+layout of all — stacked on mobile, side by side on desktop — is one prop:
+
+<ComponentPreview name="stack-responsive" align="start" />
 
 For two-dimensional layouts or per-child control, step up to
 [Flex](/docs/components/flex) or [Grid](/docs/components/grid).

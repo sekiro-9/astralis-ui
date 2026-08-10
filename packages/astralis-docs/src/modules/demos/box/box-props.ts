@@ -7,13 +7,14 @@ import type { PropRow } from "@/modules/docs/props-table";
 export const boxProps: PropRow[] = [
   {
     prop: "p · px · py · pt/pb/pl/pr",
-    type: `"0.5" – "96" (spacing scale)`,
+    type: `"0" – "96" (spacing scale)`,
     description: "Padding — all sides, per axis, or per edge.",
   },
   {
     prop: "m · mx · my · mt/mb/ml/mr",
-    type: `"0.5" – "96" (spacing scale)`,
-    description: "Margin — all sides, per axis, or per edge.",
+    type: `"0" – "96" (spacing scale) | "auto"`,
+    description:
+      "Margin — all sides, per axis, or per edge. auto pushes a flex item to the far edge or centres a fixed-width block.",
   },
   {
     prop: "w · h · size · minW/maxW · minH/maxH",

@@ -25,6 +25,18 @@ the cross axis — the same vocabulary as CSS, minus the `flex-` prefixes.
 
 <ComponentPreview name="flex-align" align="start" />
 
+Left alone, `alignItems` is CSS's `stretch`: children fill the cross size, so a
+row gives you equal-height cards and a column gives you equal-width rows. That
+is usually what you want for a page skeleton — a sidebar reaching the full
+height of the row it sits in — and it is why a bare `<Flex>` behaves exactly
+like `display: flex` and nothing more. When you want children to keep their
+natural size, say so:
+
+```tsx
+{/* chips that keep their own height instead of matching the tallest */}
+<Flex alignItems="start" gap="2">
+```
+
 ## Flex items
 
 `basis`, `flex`, `grow`, `shrink`, `order` and `alignSelf` describe how an

@@ -839,6 +839,9 @@
         "Grid",
         "Heading",
         "Stack",
+        "Stat",
+        "StatLabel",
+        "StatValue",
         "Text"
       ]
     },

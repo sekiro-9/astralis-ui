@@ -248,9 +248,8 @@ export function Dashboard03() {
               Dashboard
             </Text>
 
-            <Box flex="1" />
-
-            <Flex alignItems="center" gap="3" shrink="0">
+            {/* `ml="auto"` pushes this group to the far edge — no spacer element. */}
+            <Flex alignItems="center" gap="3" shrink="0" ml="auto">
               <Flex
                 as="button"
                 type="button"

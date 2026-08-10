@@ -30,6 +30,7 @@ import { FlexResponsive } from "./flex/flex-responsive";
 import { StackDemo } from "./stack/stack-demo";
 import { StackHorizontal } from "./stack/stack-horizontal";
 import { StackDirection } from "./stack/stack-direction";
+import { StackResponsive } from "./stack/stack-responsive";
 import { GridDemo } from "./grid/grid-demo";
 import { GridSpan } from "./grid/grid-span";
 import { GridResponsive } from "./grid/grid-responsive";
@@ -157,6 +158,7 @@ import { CalendarDemo } from "./calendar/calendar-demo";
 import { CalendarRange } from "./calendar/calendar-range";
 import { TableDemo } from "./table/table-demo";
 import { StatDemo } from "./stat/stat-demo";
+import { StatSizes } from "./stat/stat-sizes";
 import { TimelineDemo } from "./timeline/timeline-demo";
 import { TimelineVariants } from "./timeline/timeline-variants";
 import { MarqueeDemo } from "./marquee/marquee-demo";
@@ -205,6 +207,7 @@ export const demos = {
   "stack-demo": { component: StackDemo, file: "stack/stack-demo.tsx" },
   "stack-horizontal": { component: StackHorizontal, file: "stack/stack-horizontal.tsx" },
   "stack-direction": { component: StackDirection, file: "stack/stack-direction.tsx" },
+  "stack-responsive": { component: StackResponsive, file: "stack/stack-responsive.tsx" },
   "grid-demo": { component: GridDemo, file: "grid/grid-demo.tsx" },
   "grid-span": { component: GridSpan, file: "grid/grid-span.tsx" },
   "grid-responsive": { component: GridResponsive, file: "grid/grid-responsive.tsx" },
@@ -332,6 +335,7 @@ export const demos = {
   "calendar-range": { component: CalendarRange, file: "calendar/calendar-range.tsx" },
   "table-demo": { component: TableDemo, file: "table/table-demo.tsx" },
   "stat-demo": { component: StatDemo, file: "stat/stat-demo.tsx" },
+  "stat-sizes": { component: StatSizes, file: "stat/stat-sizes.tsx" },
   "timeline-demo": { component: TimelineDemo, file: "timeline/timeline-demo.tsx" },
   "timeline-variants": { component: TimelineVariants, file: "timeline/timeline-variants.tsx" },
   "marquee-demo": { component: MarqueeDemo, file: "marquee/marquee-demo.tsx" },

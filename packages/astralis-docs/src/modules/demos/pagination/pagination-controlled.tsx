@@ -7,7 +7,7 @@ export function PaginationControlled() {
   const [page, setPage] = useState(1);
 
   return (
-    <VStack gap="3">
+    <VStack gap="3" alignItems="start">
       <Pagination totalPages={8} page={page} onPageChange={setPage} variant="subtle">
         <Pagination.List>
           <Pagination.Prev />

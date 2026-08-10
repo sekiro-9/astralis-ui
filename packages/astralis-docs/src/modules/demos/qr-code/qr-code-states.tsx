@@ -8,7 +8,7 @@ export function QrCodeStates() {
 
   return (
     <HStack gap="6" wrap="wrap" alignItems="start" justifyContent="center">
-      <VStack gap="1">
+      <VStack gap="1" alignItems="start">
         <Text as="span" size="xs" color="muted">overlay + download</Text>
         <QrCode
           value="https://astralis.dev/docs"
@@ -22,7 +22,7 @@ export function QrCodeStates() {
           }
         />
       </VStack>
-      <VStack gap="1">
+      <VStack gap="1" alignItems="start">
         <Text as="span" size="xs" color="muted">expired → refresh</Text>
         <QrCode
           value="https://astralis.dev/session"
@@ -31,7 +31,7 @@ export function QrCodeStates() {
           onRefresh={() => setExpired(false)}
         />
       </VStack>
-      <VStack gap="1">
+      <VStack gap="1" alignItems="start">
         <Text as="span" size="xs" color="muted">scanned</Text>
         <QrCode value="https://astralis.dev" size="sm" status="scanned" />
       </VStack>

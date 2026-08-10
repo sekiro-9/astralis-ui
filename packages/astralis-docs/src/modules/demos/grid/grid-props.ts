@@ -14,7 +14,7 @@ export const gridProps: PropRow[] = [
   },
   {
     prop: "gap · rowGap · columnGap",
-    type: `"0.5" – "96" (spacing scale)`,
+    type: `"0" – "96" (spacing scale)`,
     description: "Track gaps, together or per axis.",
   },
   {

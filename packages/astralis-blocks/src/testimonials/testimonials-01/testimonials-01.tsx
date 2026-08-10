@@ -69,8 +69,11 @@ function StarRow() {
  * a flex column so the attribution pins to the bottom on a divider, keeping the
  * footers aligned across a row even when the quotes differ in length.
  *
- * Card cannot express this — its root is not a flex column and takes no style
- * props — so the cards are plain Boxes. See reports/astralis-api-updates.md.
+ * Card takes placement props now, so it can be stretched from the outside —
+ * but its root is still not a flex column and its body cannot grow, so the
+ * footer would float instead of pinning. That's why these are Boxes. See item
+ * E in reports/astralis-api-updates.md — it's an open design decision, not an
+ * oversight.
  */
 export function Testimonials01() {
   return (

@@ -7,11 +7,11 @@ export const stackProps: PropRow[] = [
     type: `"horizontal" | "vertical"`,
     default: `"vertical"`,
     description:
-      "Stacking axis. HStack and VStack are presets with this fixed (HStack also defaults alignItems to center).",
+      "Stacking axis, responsive like every other style prop — direction={{ base: \"vertical\", md: \"horizontal\" }} is stack-on-mobile, row-on-desktop. HStack and VStack are presets with this fixed (HStack also centres on the cross axis).",
   },
   {
     prop: "gap",
-    type: `"0.5" – "96" (spacing scale)`,
+    type: `"0" – "96" (spacing scale)`,
     description: "Space between children.",
   },
   {
