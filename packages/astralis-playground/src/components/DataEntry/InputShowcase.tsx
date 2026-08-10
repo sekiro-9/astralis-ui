@@ -67,14 +67,14 @@ export default function InputShowcase() {
             {/* Field disabled */}
             <Field disabled>
               <Field.Label>Disabled Field Context</Field.Label>
-              <Input placeholder="Inherits disabled from FieldRoot..." />
+              <Input placeholder="Inherits disabled from Field..." />
               <Field.HelpText>This input cannot be selected or modified.</Field.HelpText>
             </Field>
 
             {/* Field read-only */}
             <Field readOnly>
               <Field.Label>Read-Only Field Context</Field.Label>
-              <Input defaultValue="This text is read-only and inherits context from FieldRoot" />
+              <Input defaultValue="This text is read-only and inherits context from Field" />
               <Field.HelpText>ReadOnly inputs are focusable but immutable, using flat backgrounds.</Field.HelpText>
             </Field>
 

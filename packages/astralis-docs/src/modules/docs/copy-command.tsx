@@ -1,5 +1,5 @@
 import {
-  CodeBlockRoot,
+  CodeBlock,
   CodeBlockContent,
   CodeBlockCode,
   CodeBlockCopyTrigger,
@@ -24,7 +24,7 @@ interface CopyCommandProps {
  */
 export function CopyCommand({ command }: CopyCommandProps) {
   return (
-    <CodeBlockRoot
+    <CodeBlock
       variant="outline"
       code={command}
       className="astralis:inline-flex astralis:w-auto astralis:max-w-full astralis:flex-row astralis:items-center astralis:gap-1 astralis:rounded-md astralis:border-stroke-base astralis:bg-surface-subtle astralis:py-1 astralis:pl-3 astralis:pr-1"
@@ -35,6 +35,6 @@ export function CopyCommand({ command }: CopyCommandProps) {
         </CodeBlockCode>
       </CodeBlockContent>
       <CodeBlockCopyTrigger className="astralis:size-6 astralis:text-label-subtle" />
-    </CodeBlockRoot>
+    </CodeBlock>
   );
 }

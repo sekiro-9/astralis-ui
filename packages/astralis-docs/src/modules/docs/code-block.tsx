@@ -1,7 +1,9 @@
 import { codeToHtml } from "shiki";
 import type { BundledLanguage } from "shiki";
 import {
-  CodeBlockRoot,
+  // Aliased: this module exports its own `CodeBlock`, the Shiki-rendered one
+  // the docs use everywhere. The library's compound is the root it builds on.
+  CodeBlock as CodeBlockRoot,
   CodeBlockHeader,
   CodeBlockTitle,
   CodeBlockContent,

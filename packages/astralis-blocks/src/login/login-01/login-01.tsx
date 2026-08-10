@@ -4,7 +4,7 @@ import {
   Checkbox,
   Container,
   FieldLabel,
-  FieldRoot,
+  Field,
   Flex,
   FlexItem,
   Heading,
@@ -107,7 +107,7 @@ export function Login01() {
           >
             {/* Wire this to your own handler — it submits nowhere as written. */}
             <Stack as="form" direction="vertical" alignItems="stretch" gap="5">
-              <FieldRoot>
+              <Field>
                 <FieldLabel>Email</FieldLabel>
                 <Input
                   type="email"
@@ -116,9 +116,9 @@ export function Login01() {
                   autoComplete="email"
                   required
                 />
-              </FieldRoot>
+              </Field>
 
-              <FieldRoot>
+              <Field>
                 <Flex alignItems="center" justifyContent="between" gap="3">
                   <FieldLabel>Password</FieldLabel>
                   <Link href="#forgot-password">
@@ -133,7 +133,7 @@ export function Login01() {
                   autoComplete="current-password"
                   required
                 />
-              </FieldRoot>
+              </Field>
 
               <Checkbox name="remember" size="sm">
                 Keep me signed in for 30 days

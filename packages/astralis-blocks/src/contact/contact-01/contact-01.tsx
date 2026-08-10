@@ -3,7 +3,7 @@ import {
   Button,
   Container,
   FieldLabel,
-  FieldRoot,
+  Field,
   Flex,
   Grid,
   Heading,
@@ -147,17 +147,17 @@ export function Contact01() {
           >
             <Stack as="form" direction="vertical" alignItems="stretch" gap="5">
               <Grid columns={{ base: "1", sm: "2" }} gap="5">
-                <FieldRoot>
+                <Field>
                   <FieldLabel>First name</FieldLabel>
                   <Input name="firstName" placeholder="Ada" autoComplete="given-name" required />
-                </FieldRoot>
-                <FieldRoot>
+                </Field>
+                <Field>
                   <FieldLabel>Last name</FieldLabel>
                   <Input name="lastName" placeholder="Lovelace" autoComplete="family-name" required />
-                </FieldRoot>
+                </Field>
               </Grid>
 
-              <FieldRoot>
+              <Field>
                 <FieldLabel>Work email</FieldLabel>
                 <Input
                   type="email"
@@ -166,9 +166,9 @@ export function Contact01() {
                   autoComplete="email"
                   required
                 />
-              </FieldRoot>
+              </Field>
 
-              <FieldRoot>
+              <Field>
                 <FieldLabel>How can we help?</FieldLabel>
                 <InputTextarea
                   name="message"
@@ -176,7 +176,7 @@ export function Contact01() {
                   rows={5}
                   required
                 />
-              </FieldRoot>
+              </Field>
 
               <Button type="submit" size="md" fullWidth>
                 Send message

@@ -4,7 +4,7 @@ import {
   Container,
   FieldHelpText,
   FieldLabel,
-  FieldRoot,
+  Field,
   Flex,
   Heading,
   Icon,
@@ -95,7 +95,7 @@ export function ForgotPassword01() {
           >
             {/* Wire this to your own handler — it submits nowhere as written. */}
             <Stack as="form" direction="vertical" alignItems="stretch" gap="10">
-              <FieldRoot>
+              <Field>
                 <FieldLabel>Email</FieldLabel>
                 <Input
                   type="email"
@@ -107,7 +107,7 @@ export function ForgotPassword01() {
                 <FieldHelpText>
                   We&apos;ll only send a link if this address has an account.
                 </FieldHelpText>
-              </FieldRoot>
+              </Field>
 
               <Button type="submit" size="md" fullWidth>
                 Send reset link

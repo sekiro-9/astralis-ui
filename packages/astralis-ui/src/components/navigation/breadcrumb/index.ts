@@ -11,7 +11,7 @@ export const Breadcrumb = Object.assign(BreadcrumbRoot, {
 /* 2️⃣ Flat exports for tree-shaking — and the only spelling that survives the
       RSC boundary, where a client-reference stub carries no static properties.
       The root ships flat too, so a consumer never has to mix the two styles. */
-export { BreadcrumbRoot, BreadcrumbItem, BreadcrumbLink };
+export { BreadcrumbItem, BreadcrumbLink };
 
 export default Breadcrumb;
 

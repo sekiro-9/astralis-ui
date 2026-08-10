@@ -11,7 +11,7 @@ export const Field = Object.assign(FieldRoot, {
 });
 
 // 2️⃣ Flat exports for tree-shaking
-export { FieldRoot, FieldLabel, FieldHelpText, FieldErrorText };
+export { FieldLabel, FieldHelpText, FieldErrorText };
 
 // 3️⃣ Context hook for custom components
 export { useFieldContext } from "./field.context";

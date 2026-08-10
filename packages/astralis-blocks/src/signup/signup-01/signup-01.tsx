@@ -5,7 +5,7 @@ import {
   Container,
   FieldHelpText,
   FieldLabel,
-  FieldRoot,
+  Field,
   Flex,
   FlexItem,
   Heading,
@@ -103,24 +103,24 @@ export function Signup01() {
           >
             {/* Wire this to your own handler — it submits nowhere as written. */}
             <Stack as="form" direction="vertical" alignItems="stretch" gap="5">
-              {/* FieldRoot carries no style props, so the two columns are
+              {/* Field carries no style props, so the two columns are
                   sized by wrappers rather than on the fields themselves. */}
               <Flex gap="4" wrap="wrap">
                 <FlexItem flex="1" minW="40">
-                  <FieldRoot>
+                  <Field>
                     <FieldLabel>First name</FieldLabel>
                     <Input name="firstName" placeholder="Ada" autoComplete="given-name" required />
-                  </FieldRoot>
+                  </Field>
                 </FlexItem>
                 <FlexItem flex="1" minW="40">
-                  <FieldRoot>
+                  <Field>
                     <FieldLabel>Last name</FieldLabel>
                     <Input name="lastName" placeholder="Lovelace" autoComplete="family-name" required />
-                  </FieldRoot>
+                  </Field>
                 </FlexItem>
               </Flex>
 
-              <FieldRoot>
+              <Field>
                 <FieldLabel>Work email</FieldLabel>
                 <Input
                   type="email"
@@ -129,9 +129,9 @@ export function Signup01() {
                   autoComplete="email"
                   required
                 />
-              </FieldRoot>
+              </Field>
 
-              <FieldRoot>
+              <Field>
                 <FieldLabel>Password</FieldLabel>
                 <InputPassword
                   name="password"
@@ -140,7 +140,7 @@ export function Signup01() {
                   required
                 />
                 <FieldHelpText>At least 8 characters, with a number or symbol.</FieldHelpText>
-              </FieldRoot>
+              </Field>
 
               <Checkbox name="terms" size="sm" required>
                 I agree to the Terms of Service and Privacy Policy

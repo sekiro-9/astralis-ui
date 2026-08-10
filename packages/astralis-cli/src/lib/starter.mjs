@@ -22,7 +22,7 @@ import { join, dirname } from "node:path";
  * Every astralis-ui export the starter uses. The gate in test/ asserts these
  * are real exports, and that this list matches what the source actually imports.
  *
- * Flat parts (CardRoot, CardBody) rather than Card.Body: under Next this file
+ * Flat parts (Card, CardBody) rather than Card.Body: under Next this file
  * is `app/page.tsx`, a Server Component, and namespace access on a
  * client-reference stub is undefined across the RSC boundary. Same rule the
  * block authoring gate enforces, for the same reason.
@@ -30,8 +30,8 @@ import { join, dirname } from "node:path";
 export const STARTER_IMPORTS = [
   "Badge",
   "Button",
+  "Card",
   "CardBody",
-  "CardRoot",
   "Code",
   "Container",
   "Flex",
@@ -129,7 +129,7 @@ export default function Welcome() {
         </Flex>
 
         {/* No width prop on Card by design — the Stack above stretches it. */}
-        <CardRoot variant="outline" size="lg">
+        <Card variant="outline" size="lg">
           <CardBody>
             <Stack gap="3" alignItems="start">
               <Heading as="h2" size="md" weight="semibold">
@@ -156,7 +156,7 @@ export default function Welcome() {
               </Flex>
             </Stack>
           </CardBody>
-        </CardRoot>
+        </Card>
       </Stack>
     </Container>
   );

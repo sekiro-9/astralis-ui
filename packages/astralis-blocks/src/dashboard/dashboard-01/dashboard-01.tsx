@@ -7,7 +7,7 @@ import {
   Box,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbRoot,
+  Breadcrumb,
   Flex,
   Grid,
   Icon,
@@ -292,14 +292,14 @@ export function Dashboard01() {
               carries no static properties, so dotted access resolves to
               undefined once this block is copied into a Server Component tree.
               The root draws the separators itself. */}
-          <BreadcrumbRoot>
+          <Breadcrumb>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
               <BreadcrumbLink isCurrent>Dashboard</BreadcrumbLink>
             </BreadcrumbItem>
-          </BreadcrumbRoot>
+          </Breadcrumb>
 
           {/* Spacer: `flex="1"` stands in for the `mx="auto"` the margin scale
               does not carry. */}

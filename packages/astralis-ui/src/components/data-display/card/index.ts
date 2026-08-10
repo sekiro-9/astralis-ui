@@ -15,7 +15,6 @@ export const Card = Object.assign(CardRoot, {
 });
 
 export {
-  CardRoot,
   CardHeader,
   CardTitle,
   CardDescription,

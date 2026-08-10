@@ -5,7 +5,7 @@ export const Image = Object.assign(ImageRoot, {
   Group: ImageGroup,
 });
 
-export { ImageRoot, ImageGroup };
+export { ImageGroup };
 export default Image;
 
 export type {

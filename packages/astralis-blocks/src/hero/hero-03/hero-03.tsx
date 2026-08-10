@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   CardBody,
-  CardRoot,
+  Card,
   Container,
   Flex,
   Grid,
@@ -103,7 +103,7 @@ export function Hero03() {
           {/* Testimonial over a tinted panel                            */}
           {/* ---------------------------------------------------------- */}
           <Box bg="brand-subtle" rounded="3xl" p={{ base: "6", lg: "10" }}>
-            <CardRoot variant="elevated" size="lg">
+            <Card variant="elevated" size="lg">
               <CardBody>
                 <Stack direction="vertical" gap="6">
                   <Text size="xl" lineHeight="relaxed">
@@ -134,7 +134,7 @@ export function Hero03() {
                   </Flex>
                 </Stack>
               </CardBody>
-            </CardRoot>
+            </Card>
           </Box>
         </Grid>
       </Container>

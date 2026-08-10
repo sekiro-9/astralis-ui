@@ -3,7 +3,7 @@ import {
   Button,
   Container,
   FieldLabel,
-  FieldRoot,
+  Field,
   Flex,
   Grid,
   GridItem,
@@ -58,12 +58,12 @@ export function Contact02() {
                   </Text>
                 </Stack>
 
-                <FieldRoot>
+                <Field>
                   <FieldLabel>Full name</FieldLabel>
                   <Input name="name" placeholder="Ada Lovelace" autoComplete="name" required />
-                </FieldRoot>
+                </Field>
 
-                <FieldRoot>
+                <Field>
                   <FieldLabel>Work email</FieldLabel>
                   <Input
                     type="email"
@@ -72,14 +72,14 @@ export function Contact02() {
                     autoComplete="email"
                     required
                   />
-                </FieldRoot>
+                </Field>
 
-                <FieldRoot>
+                <Field>
                   <FieldLabel>What's it about?</FieldLabel>
                   <Select name="topic" options={topics} placeholder="Choose a topic" />
-                </FieldRoot>
+                </Field>
 
-                <FieldRoot>
+                <Field>
                   <FieldLabel>Message</FieldLabel>
                   <InputTextarea
                     name="message"
@@ -87,7 +87,7 @@ export function Contact02() {
                     rows={4}
                     required
                   />
-                </FieldRoot>
+                </Field>
 
                 <Button type="submit" size="md" fullWidth>
                   Send message

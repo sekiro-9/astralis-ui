@@ -2,7 +2,7 @@
 // compound statics are undefined across the RSC boundary (they live on a
 // client-reference stub). The individual exports are their own references.
 import {
-  CardRoot,
+  Card,
   CardHeader,
   CardTitle,
   CardDescription,
@@ -40,7 +40,7 @@ function Cell({
      * cursor-pointer + active:scale-95 with it. These cells lift on hover as
      * decoration only, so the lift stays a class and the semantics stay honest.
      */
-    <CardRoot
+    <Card
       variant="outline"
       size="lg"
       className={`flex flex-col hover:-translate-y-1 hover:border-stroke-base hover:shadow-lg astralis:rounded-3xl astralis:bg-surface-subtle ${className}`}
@@ -52,7 +52,7 @@ function Cell({
         <CardDescription className="mt-1">{body}</CardDescription>
       </CardHeader>
       {children && <CardBody className="flex min-h-0 flex-1 items-center">{children}</CardBody>}
-    </CardRoot>
+    </Card>
   );
 }
 

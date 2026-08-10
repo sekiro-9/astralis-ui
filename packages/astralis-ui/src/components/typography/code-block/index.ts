@@ -19,7 +19,6 @@ export const CodeBlock = Object.assign(CodeBlockRoot, {
 });
 
 export {
-  CodeBlockRoot,
   CodeBlockHeader,
   CodeBlockTitle,
   CodeBlockControl,
