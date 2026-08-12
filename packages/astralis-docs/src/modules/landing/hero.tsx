@@ -8,6 +8,7 @@ import {
   Button, Card, Stat, Badge, Avatar, Switch, Slider, Tag, HStack, VStack,
 } from "astralis-ui";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { CopyCommand } from "@/modules/docs/copy-command";
 import { Entrance } from "./reveal";
 
 const swatches = [
@@ -134,6 +135,19 @@ export function Hero() {
               <Button as={Link} href="/docs/components/button" size="lg" rounded="xl" variant="outline" colorScheme="gray">
                 Browse components
               </Button>
+            </div>
+
+            {/* The fastest path in, and the only place on this page the CLI
+                is visible at all. CopyCommand is the same component the block
+                pages use — a command is a code block. */}
+            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <CopyCommand command="npx astralis-cli create my-app" />
+              <span className="text-xs text-label-subtle">
+                scaffolds and wires it up —{" "}
+                <Link href="/docs/cli" className="underline underline-offset-2 hover:text-label-muted">
+                  what the CLI does
+                </Link>
+              </span>
             </div>
           </Entrance>
         </div>

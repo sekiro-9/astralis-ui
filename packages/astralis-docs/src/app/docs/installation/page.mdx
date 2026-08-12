@@ -18,6 +18,27 @@ Astralis ships **precompiled CSS**: every class any component can emit is
 already in the stylesheet, generated and verified at the library's own build
 time. Your bundler just serves a `.css` file.
 
+## The short way
+
+The [CLI](/docs/cli) does all three steps below for you. For a new project:
+
+```bash
+npx astralis-cli create my-app
+```
+
+It runs the official `create-next-app` or `create-vite` prompts, then wires
+Astralis into the result — stylesheet imported, provider mounted, ready to
+run. For a project you already have:
+
+```bash
+npx astralis-cli init
+```
+
+Same edits, made in place. Pass `--dry-run` to see them first.
+
+If you'd rather do it by hand, or the CLI doesn't recognise your setup, the
+three steps are below — that's all `init` is doing.
+
 ## 1. Install the package
 
 ```bash
@@ -118,6 +139,17 @@ see [Style Props](/docs/style-props) for how conflicts are resolved.
 The package publishes one ES module per component with a `sideEffects`
 declaration, so bundlers drop everything you don't import. Importing a
 Button ships the Button — not the library.
+
+## Tooling
+
+Two things worth setting up once, both covered on their own pages:
+
+- **[The CLI](/docs/cli)** — beyond `create` and `init`, it copies
+  [blocks](/blocks) into your project (`astralis add dashboard-01`) and
+  generates a static theme stylesheet from a brand seed.
+- **[AI agents](/docs/ai-agents)** — `npx astralis-cli connect-mcp` points
+  your coding agent at a server that serves these docs, so it writes against
+  the current component API instead of guessing at one.
 
 Next: the [Quick Start](/docs/quick-start) builds a working form in about
 twenty lines.

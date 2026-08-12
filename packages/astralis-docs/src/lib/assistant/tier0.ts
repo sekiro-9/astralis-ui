@@ -252,6 +252,34 @@ For labels, help and error text, wrap controls in [Field](/docs/components/field
 Full guidance: [Style Props → Escape hatches](/docs/style-props).`,
   },
   {
+    // Every alias keeps >=2 content tokens (see the note on `what-is`), so
+    // "cli" alone doesn't match any question that happens to say the word.
+    id: "cli",
+    aliases: [
+      "is there a cli",
+      "command line tool",
+      "scaffold a project",
+      "create astralis app",
+      "new astralis project",
+      "add a block to my project",
+    ],
+    answer: `Yes — \`astralis-cli\`, and nothing to install:
+
+\`\`\`bash
+npx astralis-cli create my-app
+\`\`\`
+
+That runs the official \`create-next-app\` or \`create-vite\` prompts, then wires Astralis into the result — stylesheet imported, provider mounted, ready to run. Five commands:
+
+- **\`create\`** — new project, scaffolded and wired
+- **\`init\`** — same wiring for a project you already have (\`--dry-run\` to preview)
+- **\`add <block>\`** — copy a [block](https://astralis-zeta.vercel.app/blocks)'s source into your repo, e.g. \`astralis add dashboard-01\`; \`--list\` shows them all
+- **\`theme\`** — generate a static theme stylesheet from a brand seed
+- **\`connect-mcp\`** — point an AI coding agent at these docs
+
+Full options on the [CLI page](https://astralis-zeta.vercel.app/docs/cli).`,
+  },
+  {
     id: "mcp",
     aliases: [
       "mcp server",

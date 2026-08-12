@@ -36,9 +36,16 @@ prompts, then wires Astralis into it — the stylesheet import and the
 npx astralis-cli create my-app
 ```
 
+It asks which framework you want — Next.js, or React via Vite — then hands
+off to that scaffolder's own prompts, so you get the official setup rather
+than a copy of it that drifts. When it finishes you have a running app with
+the stylesheet imported, the provider mounted, and a welcome page you can
+delete.
+
 | Option | |
 | --- | --- |
 | `--framework next\|vite` | Skip the framework prompt. |
+| `--no-starter` | Keep the scaffolder's own demo page instead of the Astralis welcome screen. |
 | *extra args* | Anything after the name passes straight to the underlying scaffolder. |
 
 ## `init` — add Astralis to an existing project
@@ -55,6 +62,38 @@ npx astralis-cli init
 | Option | |
 | --- | --- |
 | `--dry-run` | Print the changes it would make without writing anything. |
+
+## `add` — copy a block into your project
+
+Writes a [block](/blocks)'s source into your codebase. Blocks aren't imported
+from a package — the file lands in your repo and you own it, so editing it is
+editing your own code.
+
+```bash
+npx astralis-cli add dashboard-01
+```
+
+Name as many as you like. To see what's available without opening the
+browser:
+
+```bash
+npx astralis-cli add --list
+```
+
+| Option | |
+| --- | --- |
+| `--list` | Print every available block, grouped by category, and exit. |
+| `--dir <path>` | Where to write (default `[src/]components/blocks`). |
+| `--overwrite` | Replace existing files without asking. |
+| `--dry-run` | Show what would be written, write nothing. |
+| `--registry <url>` | Read from a different registry host. |
+
+This command is deliberately small compared with the equivalent in other
+libraries, and the reason is architectural: a block imports only
+`astralis-ui`, React, or a sibling file — the registry builder rejects
+anything else — and the stylesheet is precompiled. So there are no import
+paths to rewrite, no dependency graph between blocks, and no Tailwind config
+to merge. It fetches text and writes files.
 
 ## `theme` — generate a static theme
 

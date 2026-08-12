@@ -6,8 +6,13 @@ export const metadata = {
 # Quick Start
 
 A working form, theming and responsive layout in about twenty lines. This
-assumes you've done the three [installation](/docs/installation) steps —
-package, stylesheet, provider.
+assumes Astralis is installed — either the three
+[installation](/docs/installation) steps, or one command:
+
+```bash
+npx astralis-cli create my-app   # new project
+npx astralis-cli init            # existing one
+```
 
 ## Your first component
 
@@ -88,9 +93,22 @@ const { resolvedTheme, setTheme } = useTheme();
 setTheme(resolvedTheme === "dark" ? "light" : "dark");
 ```
 
+## Don't build the page from scratch
+
+[Blocks](/blocks) are whole sections — navbars, pricing tables, dashboard
+shells — assembled from the same components. The CLI copies one into your
+project as source you own:
+
+```bash
+npx astralis-cli add pricing-01
+```
+
 ## Where to go next
 
 - [Theming](/docs/theming) — how tokens, dark mode and the brand color work.
 - [Style Props](/docs/style-props) — the full prop-based styling system.
+- [CLI](/docs/cli) — scaffolding, blocks, and static theme generation.
+- [AI agents](/docs/ai-agents) — point your coding agent at these docs so it
+  writes against the real API.
 - Any component page in the sidebar — each pairs live examples with the
   exact source that renders them.
