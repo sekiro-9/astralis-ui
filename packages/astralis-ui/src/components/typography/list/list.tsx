@@ -16,7 +16,7 @@ type ListComponent = <T extends ElementType = "ul">(
 /** Root of the List compound — renders a `<ul>` (or `<ol>` via `as`). */
 const ListRoot = forwardRef(
   <T extends ElementType = "ul">(
-    { as, className, children, ...props }: ListProps<T>,
+    { as, className, children, style, ...props }: ListProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "ul") as ElementType;
@@ -27,14 +27,14 @@ const ListRoot = forwardRef(
       BOX_VARIANT_KEYS,
     );
 
+    const own = resolveStyleProps(variantProps, { maps: listVariantMap, variants: listVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(variantProps, { maps: listVariantMap, variants: listVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
         ref={ref}
+        style={{ ...own.style, ...box.style, ...style }}
         {...htmlProps}
       >
         {children}

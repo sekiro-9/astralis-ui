@@ -10,11 +10,14 @@ export function CodeBlockRoot({
   size = "md",
   code,
   className = "",
-  style,
   children,
   ref,
   ...rest
 }: CodeBlockRootProps & { ref?: Ref<HTMLDivElement> }) {
+  // `style` stays inside `rest` ON PURPOSE: splitPlacement folds the channel
+  // vars under it (user keys win) and returns both via rest.style. Destructuring
+  // style separately and rendering style={style} before {...domProps} let the
+  // folded style REPLACE the user's — a silent stomp, not a merge.
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
   return (
@@ -22,7 +25,6 @@ export function CodeBlockRoot({
       <div
         ref={ref}
         className={astralisMerge(codeBlockRootVariants({ variant }), placementClass, className)}
-        style={style}
         {...domProps}
       >
         {children}

@@ -19,7 +19,7 @@ type FloatComponent = <T extends ElementType = "div">(
  */
 const Float = forwardRef(
   <T extends ElementType = "div">(
-    { children, as, className, ...props }: FloatProps<T>,
+    { children, as, className, style, ...props }: FloatProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -36,14 +36,14 @@ const Float = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+    const own = resolveStyleProps(variantProps, { maps: floatVariantMap, variants: floatVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          resolveStyleProps(variantProps, { maps: floatVariantMap, variants: floatVariants }),
-          className,
-        )}
+        className={astralisMerge(box.className, own.className, className)}
         ref={ref}
+        style={{ ...box.style, ...own.style, ...style }}
         {...htmlProps}
       >
         {children}

@@ -17,17 +17,17 @@ export function TagRoot({
   closable,
   onClose,
   className = "",
-  style,
   ref,
   ...rest
 }: TagProps & { ref?: Ref<HTMLSpanElement> }) {
+  // `style` rides through splitPlacement's fold (channel vars first, user
+  // keys last) and arrives via the domProps spread.
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
     return (
       <span
         ref={ref}
         className={astralisMerge(tagVariants({ size, variant }), accentClass(colorScheme), placementClass, className)}
-        style={style}
         {...domProps}
       >
         {startElement && <span className="astralis:shrink-0 astralis:inline-flex">{startElement}</span>}

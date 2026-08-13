@@ -25,7 +25,7 @@ export function AccordionRoot({
   className = "",
   ...rest
 }: AccordionProps) {
-  const { placementClass } = splitPlacement(rest);
+  const { placementClass, placementStyle } = splitPlacement(rest);
   const rootId = useId();
   const [internalValue, setInternalValue] = useState<string | string[] | undefined>(defaultValue);
   const currentValue = value ?? internalValue;
@@ -98,6 +98,7 @@ export function AccordionRoot({
       <div
         onKeyDown={handleKeyDown}
         className={astralisMerge(accordionRootVariants({ variant }), accentClass(colorScheme), placementClass, className)}
+        style={placementStyle}
       >
         {children}
       </div>

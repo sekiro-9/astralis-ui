@@ -48,8 +48,7 @@ export function SwitchBase({
 
     const sz = switchSizes[size];
 
-    const { placementClass, rest: domProps } = splitPlacement(props);
-
+    const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
 
     return (
       <label
@@ -63,6 +62,7 @@ export function SwitchBase({
               : "astralis:cursor-pointer",
           placementClass, className,
         )}
+        style={placementStyle}
       >
         <input
           ref={ref}

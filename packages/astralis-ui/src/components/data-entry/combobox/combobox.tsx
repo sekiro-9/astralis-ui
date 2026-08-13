@@ -50,7 +50,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     },
     ref,
   ) => {
-    const { placementClass } = splitPlacement(rest);
+    const { placementClass, placementStyle } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -184,7 +184,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const activeOption = activeIdx >= 0 ? navigable[activeIdx] : null;
 
     return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), placementClass, className)}>
+      <div
+        className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), placementClass, className)}
+        style={placementStyle}
+      >
         {name != null && <input type="hidden" name={name} value={selectedValue ?? ""} disabled={!!isDisabled} />}
         <input
           ref={inputRef}

@@ -67,8 +67,7 @@ export function CheckboxBase({
     const sz = checkboxSizes[size];
     const active = isChecked || indeterminate;
 
-    const { placementClass, rest: domProps } = splitPlacement(props);
-
+    const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
 
     return (
       <label
@@ -82,6 +81,7 @@ export function CheckboxBase({
               : "astralis:cursor-pointer",
           placementClass, className,
         )}
+        style={placementStyle}
       >
         <input
           ref={resolvedRef}

@@ -1,3 +1,5 @@
+import { channelMap } from "./channel";
+
 export const displayTypes = {
   inline: "astralis:inline",
   block: "astralis:block",
@@ -22,16 +24,17 @@ export const displayTypes = {
   hidden: "astralis:hidden",
 } as const;
 
-export const opacityTypes = {
-  lowest: "astralis:opacity-lowest",
-  lower: "astralis:opacity-lower",
-  low: "astralis:opacity-low",
-  moderate: "astralis:opacity-moderate",
-  high: "astralis:opacity-high",
-  higher: "astralis:opacity-higher",
-  highest: "astralis:opacity-highest",
-  max: "astralis:opacity-max",
-} as const;
+/* Channel prop (const/channel.ts): token -> CSS value via --astralis-opacity. */
+export const opacityTypes = channelMap({
+  lowest: "var(--astralis-opacity-lowest)",
+  lower: "var(--astralis-opacity-lower)",
+  low: "var(--astralis-opacity-low)",
+  moderate: "var(--astralis-opacity-moderate)",
+  high: "var(--astralis-opacity-high)",
+  higher: "var(--astralis-opacity-higher)",
+  highest: "var(--astralis-opacity-highest)",
+  max: "var(--astralis-opacity-max)",
+} as const);
 
 export const zIndexTypes = {
   lowest: "astralis:z-lowest",
@@ -104,16 +107,18 @@ export const borderStyleTypes = {
   none: "astralis:border-none",
 } as const;
 
-export const shadowTypes = {
-  none: "astralis:shadow-none",
-  xs: "astralis:shadow-xs",
-  sm: "astralis:shadow-sm",
-  md: "astralis:shadow-md",
-  lg: "astralis:shadow-lg",
-  xl: "astralis:shadow-xl",
-  "2xl": "astralis:shadow-2xl",
-  inner: "astralis:inset-shadow-sm",
-} as const;
+/* Channel prop: token -> CSS value via --astralis-shadow. `inner` rides the
+   dedicated inset token (shadow.css declares both tiers, light + dark). */
+export const shadowTypes = channelMap({
+  none: "var(--astralis-shadow-none)",
+  xs: "var(--astralis-shadow-xs)",
+  sm: "var(--astralis-shadow-sm)",
+  md: "var(--astralis-shadow-md)",
+  lg: "var(--astralis-shadow-lg)",
+  xl: "var(--astralis-shadow-xl)",
+  "2xl": "var(--astralis-shadow-2xl)",
+  inner: "var(--astralis-shadow-inner)",
+} as const);
 
 export const overflowTypes = {
   auto: "astralis:overflow-auto",

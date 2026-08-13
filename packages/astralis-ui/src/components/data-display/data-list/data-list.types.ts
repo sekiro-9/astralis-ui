@@ -1,5 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export type DataListOrientation = "horizontal" | "vertical";
 export type DataListSize = "sm" | "md" | "lg";
@@ -15,14 +15,20 @@ export interface DataListProps extends PlacementProps {
 export interface DataListItemProps {
   children: ReactNode;
   className?: string;
+  /** The one-off escape hatch — always forwarded, always wins. */
+  style?: CSSProperties;
 }
 
 export interface DataListLabelProps {
   children: ReactNode;
   className?: string;
+  /** The one-off escape hatch — always forwarded, always wins. */
+  style?: CSSProperties;
 }
 
 export interface DataListValueProps {
   children: ReactNode;
   className?: string;
+  /** The one-off escape hatch — always forwarded, always wins. */
+  style?: CSSProperties;
 }

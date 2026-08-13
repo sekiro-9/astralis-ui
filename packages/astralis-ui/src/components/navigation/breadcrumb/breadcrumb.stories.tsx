@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { VStack } from "../../layout/stack";
 import { Text } from "../../typography/text";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbRoot } from "./index";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "./index";
 
 /**
  * Breadcrumb shows where a page sits in the hierarchy above it. It's a compound
@@ -116,13 +116,15 @@ export const Wrapping: Story = {
  */
 export const FlatExports: Story = {
   render: () => (
-    <BreadcrumbRoot>
+    // The compound root IS the flat root (Object.assign) — index.ts exports no
+    // separate BreadcrumbRoot, and importing one breaks the production build.
+    <Breadcrumb>
       <BreadcrumbItem>
         <BreadcrumbLink href="#">Home</BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbItem>
         <BreadcrumbLink isCurrent>Current</BreadcrumbLink>
       </BreadcrumbItem>
-    </BreadcrumbRoot>
+    </Breadcrumb>
   ),
 };

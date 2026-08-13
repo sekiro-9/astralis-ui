@@ -32,7 +32,7 @@ export function ImageRoot({
   ref,
   ...rest
 }: ImageProps & { ref?: Ref<HTMLImageElement> }) {
-    const { placementClass } = splitPlacement(rest);
+    const { placementClass, placementStyle } = splitPlacement(rest);
 
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setIsError] = useState(false);
@@ -120,17 +120,18 @@ export function ImageRoot({
         ]
           .filter(Boolean)
           .join(" ")}
-        style={aspectRatio ? {} : { width, height, ...style }}
+        style={aspectRatio ? {} : { ...placementStyle, width, height, ...style }}
       />
     );
 
     /*
      * Placement goes on whichever element is outermost. With an aspectRatio
      * the image is absolutely positioned inside the ratio box, so a width on
-     * the image itself would do nothing — it belongs on the box.
+     * the image itself would do nothing — it belongs on the box. The channel
+     * vars ride along with the class either way.
      */
     const wrapped = aspectRatio ? (
-      <div className={placementClass} style={{ ...ratioStyle, width, ...style }}>
+      <div className={placementClass} style={{ ...placementStyle, ...ratioStyle, width, ...style }}>
         {imageElement}
       </div>
     ) : (

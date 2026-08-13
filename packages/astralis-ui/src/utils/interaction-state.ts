@@ -1,24 +1,24 @@
 /* ==========================================================================
    ASTRALIS INTERACTION-STATE ENGINE
    --------------------------------------------------------------------------
-   The sibling of the responsive engine. Where that one prefixes a token class
-   with a breakpoint, this one prefixes it with an interaction state:
+   The sibling of the responsive engine, on the same var-channel:
 
-     <Flex hover={{ bg: "subtle" }} />   ->  astralis:hover:bg-surface-subtle
+     <Flex hover={{ bg: "subtle" }} />
+       -> class: astralis-hover-bg
+          style: --astralis-bg-hover: var(--astralis-color-surface-subtle)
 
-   Both are the same string surgery — insert a variant immediately after the
-   `astralis:` prefix — so `withVariant` is shared between them.
+   The state class (theme/channels.css) applies the property under the pseudo
+   (`.astralis-hover-bg:hover { background-color: var(--astralis-bg-hover) }`)
+   and the custom property carries the value.
 
-   WHY THE SCOPE IS NARROWER THAN THE RESPONSIVE LAYER
-   The library ships precompiled CSS, so every state class must be generated at
-   build time. Measured: granting states to all ~3,000 style-prop tokens costs
-   +45.9 KB brotli and +33s on every CSS build, and what it buys is
-   `hover:padding` — layout shifting under the cursor. Restricting states to the
-   properties that PAINT costs +9.5 KB and covers every interaction pattern the
-   blocks needed.
+   SCOPE: every channel prop. The old 5-paint-prop limit existed only because
+   enumerated state classes were measured at +45.9 KB brotli / +33 s per CSS
+   build for the full token surface — a var-read rule per prop per state costs
+   nothing, so the limit is gone. States still do NOT compose with breakpoints
+   (no `hover: { md: ... }`): one var per state.
 
-   The type is the contract: if a key is accepted, its CSS exists. There is
-   deliberately no way to express a state style that was never generated.
+   The type is the contract: a state may only carry channel props, with the
+   same token vocabulary as the base prop.
 
    NO `disabled` STATE, on purpose. `disabled` is a real HTML attribute — a
    `<Box as="button" disabled>` must keep working — and CSS `:disabled` only
@@ -27,8 +27,9 @@
    attribute and do nothing on the elements you'd hand-compose.
    ========================================================================== */
 
-import { bgColors, textColors, borderColors } from "../const/color-mappings";
-import { shadowTypes, opacityTypes } from "../const/common-mappings";
+import { boxVariantMap } from "../components/layout/box/box.styles";
+import { gapTypes, rowGapTypes, columnGapTypes } from "../const/layout-mappings";
+import { CHANNEL_PROPS, channelVar, isChannelMap } from "../const/channel";
 
 /** State prop name -> the CSS variant it compiles to. */
 export const STATE_VARIANTS = {
@@ -46,64 +47,64 @@ const STATE_PROP_SET = new Set<string>(STATE_PROP_NAMES);
 /** True when a prop key is an interaction-state object rather than a style prop. */
 export const isStateProp = (key: string): key is StatePropName => STATE_PROP_SET.has(key);
 
-/**
- * The style props a state may paint. Narrower than boxVariantMap by design —
- * see the scope note above. Keep in step with STATE_SOURCE_MAPS in
- * scripts/token-scope.mjs; the CSS coverage gate fails loudly if they drift.
- */
-export const STATE_STYLE_MAPS = {
-  bg: bgColors,
-  color: textColors,
-  borderColor: borderColors,
-  shadow: shadowTypes,
-  opacity: opacityTypes,
+/* Everything stateable: Box's channel props plus the gap family (Flex/Grid).
+   Derived, not hand-listed, so it can't drift from the base vocabulary. */
+const STATE_SOURCE = {
+  ...boxVariantMap,
+  gap: gapTypes,
+  rowGap: rowGapTypes,
+  columnGap: columnGapTypes,
 } as const;
+
+type StateableKey = Extract<keyof typeof STATE_SOURCE, keyof typeof CHANNEL_PROPS>;
+
+/** The style props a state may carry — every channel prop, same tokens as base. */
+export const STATE_STYLE_MAPS = Object.fromEntries(
+  Object.entries(STATE_SOURCE).filter(
+    ([key, map]) => key in CHANNEL_PROPS && isChannelMap(map as Record<string, string>),
+  ),
+) as Record<string, Record<string, string>>;
 
 /** What one state object may carry. */
 export type StateStyles = {
-  [K in keyof typeof STATE_STYLE_MAPS]?: keyof (typeof STATE_STYLE_MAPS)[K];
+  [K in StateableKey]?: keyof (typeof STATE_SOURCE)[K];
 };
 
 /** `hover` / `focusVisible` / `active`, each taking a state object. */
 export type StateProps = { [K in StatePropName]?: StateStyles };
 
-/**
- * Injects a variant *inside* the astralis prefix so the result is a valid
- * Tailwind-v4 prefixed class: "astralis:bg-x" + "hover" -> "astralis:hover:bg-x".
- * Shared with the responsive engine, which passes a breakpoint instead.
- */
-export function withVariant(className: string, variant: string): string {
-  return className
-    .split(" ")
-    .filter(Boolean)
-    .map((token) => {
-      const colon = token.indexOf(":");
-      if (colon === -1) return `${variant}:${token}`;
-      return `${token.slice(0, colon + 1)}${variant}:${token.slice(colon + 1)}`;
-    })
-    .join(" ");
+/** What one state object resolves to: the state classes plus their vars. */
+export interface ResolvedStateStyles {
+  className: string;
+  style: Record<string, string>;
 }
 
 /**
- * Resolves ONE state object into classes, e.g.
- * `("hover", { bg: "subtle" })` -> `"astralis:hover:bg-surface-subtle"`.
+ * Resolves ONE state object, e.g. `("hover", { bg: "subtle", p: "6" })` ->
+ * classes `astralis-hover-bg astralis-hover-p` + vars
+ * `--astralis-bg-hover` / `--astralis-p-hover`.
  *
- * Values come from the same token maps the base props use, so a state can never
- * paint a colour the base layer could not.
+ * Values come from the same token maps the base props use, so a state can
+ * never paint a value the base layer could not. Token lookups use
+ * `=== undefined` — "0" is a real token.
  */
-export function resolveStateStyles(state: StatePropName, styles: unknown): string {
-  if (!styles || typeof styles !== "object") return "";
+export function resolveStateStyles(state: StatePropName, styles: unknown): ResolvedStateStyles {
+  const out: ResolvedStateStyles = { className: "", style: {} };
+  if (!styles || typeof styles !== "object") return out;
 
   const variant = STATE_VARIANTS[state];
-  const out: string[] = [];
+  const classes: string[] = [];
 
   for (const prop in styles as Record<string, string>) {
-    const map = (STATE_STYLE_MAPS as Record<string, Record<string, string>>)[prop];
+    const map = STATE_STYLE_MAPS[prop];
     if (!map) continue;
-    const cls = map[(styles as Record<string, string>)[prop]];
-    if (!cls) continue;
-    out.push(withVariant(cls, variant));
+    const css = map[(styles as Record<string, string>)[prop]];
+    if (css === undefined) continue;
+    const slug = (CHANNEL_PROPS as Record<string, string>)[prop];
+    classes.push(`astralis-${variant}-${slug}`);
+    out.style[channelVar(slug, variant)] = css;
   }
 
-  return out.join(" ");
+  out.className = classes.join(" ");
+  return out;
 }

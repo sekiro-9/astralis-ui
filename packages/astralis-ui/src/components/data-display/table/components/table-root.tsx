@@ -17,11 +17,14 @@ export function TableRoot({
     ? "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-hidden"
     : "";
 
-  const { placementClass, rest: domProps } = splitPlacement(rest);
+  const { placementClass, placementStyle, rest: domProps } = splitPlacement(rest);
 
   return (
     <TableContext.Provider value={{ size, variant, striped, interactive, stickyHeader }}>
-      <div className={astralisMerge("astralis:w-full astralis:overflow-x-auto", outer, placementClass, className)}>
+      <div
+        className={astralisMerge("astralis:w-full astralis:overflow-x-auto", outer, placementClass, className)}
+        style={placementStyle}
+      >
         <table className="astralis:w-full astralis:border-collapse astralis:text-label-base" {...domProps}>
           {children}
         </table>

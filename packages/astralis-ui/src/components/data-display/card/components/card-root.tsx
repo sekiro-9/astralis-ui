@@ -10,13 +10,14 @@ export function CardRoot({
   size = "md",
   hoverable = false,
   className = "",
-  style,
   children,
   ref,
   ...props
 }: CardRootProps & { ref?: Ref<HTMLDivElement> }) {
   // Placement keys become classes; everything else stays a DOM prop. Splitting
-  // here is what stops `w` reaching the div as an attribute.
+  // here is what stops `w` reaching the div as an attribute. `style` stays in
+  // props so splitPlacement folds the channel vars UNDER it (user keys win) —
+  // a separate style={style} before the spread would be replaced by the fold.
   const { placementClass, rest } = splitPlacement(props);
 
   return (
@@ -28,7 +29,6 @@ export function CardRoot({
           placementClass,
           className,
         )}
-        style={style}
         {...rest}
       >
         {children}

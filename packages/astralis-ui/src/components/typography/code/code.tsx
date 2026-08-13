@@ -16,7 +16,7 @@ type CodeComponent = <T extends ElementType = "code">(
 /** Inline code — a monospace `<code>` chip for snippets inside prose. */
 const Code = forwardRef(
   <T extends ElementType = "code">(
-    { as, className, children, ...props }: CodeProps<T>,
+    { as, className, children, style, ...props }: CodeProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "code") as ElementType;
@@ -27,14 +27,14 @@ const Code = forwardRef(
       BOX_VARIANT_KEYS,
     );
 
+    const own = resolveStyleProps(variantProps, { maps: codeVariantMap, variants: codeVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(variantProps, { maps: codeVariantMap, variants: codeVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
         ref={ref}
+        style={{ ...own.style, ...box.style, ...style }}
         {...htmlProps}
       >
         {children}

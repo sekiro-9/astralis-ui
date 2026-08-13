@@ -14,7 +14,7 @@ type SeparatorComponent = <T extends ElementType = "div">(
 
 const Separator = forwardRef(
   <T extends ElementType = "div">(
-    { as, className, ...props }: SeparatorProps<T>,
+    { as, className, style, ...props }: SeparatorProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -35,16 +35,16 @@ const Separator = forwardRef(
       }
     }
 
+    const own = resolveStyleProps(variantProps, { maps: separatorVariantMap, variants: separatorVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
         role="separator"
         aria-orientation={ariaOrientation}
-        className={astralisMerge(
-          resolveStyleProps(variantProps, { maps: separatorVariantMap, variants: separatorVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
         ref={ref}
+        style={{ ...own.style, ...box.style, ...style }}
         {...htmlProps}
       />
     );

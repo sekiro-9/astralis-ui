@@ -10,7 +10,8 @@ export function StatHelpText({ children, className = "" }: StatHelpTextProps) {
   return (
     <span
       className={astralisMerge(
-        resolveStyleProps({ size }, { maps: { size: statHelpSizeMap }, variants: statHelpVariants }),
+        resolveStyleProps({ size }, { maps: { size: statHelpSizeMap }, variants: statHelpVariants })
+          .className,
         className,
       )}
     >

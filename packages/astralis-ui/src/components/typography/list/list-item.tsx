@@ -12,7 +12,7 @@ type ListItemComponent = <T extends ElementType = "li">(
 /** A single `<li>`. With `icon`, it suppresses the native marker and renders the icon inline. */
 const ListItem = forwardRef(
   <T extends ElementType = "li">(
-    { as, className, children, icon, ...props }: ListItemProps<T>,
+    { as, className, children, icon, style, ...props }: ListItemProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "li") as ElementType;
@@ -27,16 +27,19 @@ const ListItem = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
         className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
+          box.className,
           icon != null
             ? "astralis:list-none astralis:flex astralis:items-start astralis:gap-2"
             : "",
           className,
         )}
         ref={ref}
+        style={{ ...box.style, ...style }}
         {...htmlProps}
       >
         {icon != null && (

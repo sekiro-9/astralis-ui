@@ -113,13 +113,15 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
 ];
 
 describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
-  it("resolves w to a class and keeps it off the DOM", () => {
+  it("resolves w and mt to channel classes + vars and keeps both off the DOM", () => {
     const { container } = render(render_({ w: "full", mt: "4" }));
-    const root = container.firstElementChild!;
+    const root = container.firstElementChild as HTMLElement;
 
     expect([...root.classList]).toEqual(
-      expect.arrayContaining(["astralis:w-full", "astralis:mt-4"]),
+      expect.arrayContaining(["astralis-w", "astralis-mt"]),
     );
+    expect(root.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    expect(root.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
     expect(root.hasAttribute("w")).toBe(false);
     expect(root.hasAttribute("mt")).toBe(false);
   });
@@ -132,16 +134,20 @@ describe("placement props on recipe components", () => {
         card
       </Card>,
     );
-    const card = container.firstElementChild!;
+    const card = container.firstElementChild as HTMLElement;
 
+    // `flex` stays a keyword class; w/maxW/mt are channel props.
     expect([...card.classList]).toEqual(
       expect.arrayContaining([
-        "astralis:w-full",
-        "astralis:max-w-lg",
+        "astralis-w",
+        "astralis-max-w",
         "astralis:flex-1",
-        "astralis:mt-4",
+        "astralis-mt",
       ]),
     );
+    expect(card.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    expect(card.style.getPropertyValue("--astralis-max-w")).toBe("var(--astralis-size-lg)");
+    expect(card.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
   });
 
   it("never leaks a placement prop onto the DOM as an attribute", () => {
@@ -153,24 +159,39 @@ describe("placement props on recipe components", () => {
     }
   });
 
+  it("keeps the caller's style alongside placement vars — fold, never stomp", () => {
+    // The trap this pins: destructuring `style` and rendering it BEFORE the
+    // rest spread let the folded placement vars REPLACE the user's style.
+    const { container } = render(
+      <Card mt="4" style={{ outline: "1px solid red" }}>
+        x
+      </Card>,
+    );
+    const card = container.firstElementChild as HTMLElement;
+
+    expect(card.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
+    expect(card.style.outline).toBe("1px solid red");
+  });
+
   it("keeps the recipe's own variant classes alongside placement", () => {
     const { container } = render(<Card variant="outline" size="lg" w="full" />);
     const classes = [...container.firstElementChild!.classList];
 
     // `size` here is the Card recipe's scale, not Box's width+height.
-    expect(classes).toEqual(expect.arrayContaining(["astralis:w-full"]));
+    expect(classes).toEqual(expect.arrayContaining(["astralis-w"]));
     expect(classes.some((c) => c.includes("border"))).toBe(true);
   });
 
   it("accepts responsive placement, the same as on Box", () => {
     const { container } = render(<Card w={{ base: "full", md: "1/2" }} />);
-    const classes = [...container.firstElementChild!.classList];
+    const card = container.firstElementChild as HTMLElement;
 
-    // Whole class names, not prefixes: the CSS coverage gate scans source for
-    // `astralis:` strings, so a partial one reads as a class that must exist.
-    expect(classes).toEqual(
-      expect.arrayContaining(["astralis:w-full", "astralis:md:w-1/2"]),
+    expect([...card.classList]).toEqual(
+      expect.arrayContaining(["astralis-w", "astralis-w-md"]),
     );
+    expect(card.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    // Fraction tokens ride the escaped size ident (size.css declares 1\/2).
+    expect(card.style.getPropertyValue("--astralis-w-md")).toBe("var(--astralis-size-1\\/2)");
   });
 
   it("gives Stat placement props", () => {
@@ -180,11 +201,13 @@ describe("placement props on recipe components", () => {
         <StatValue>$12k</StatValue>
       </Stat>,
     );
-    const stat = container.firstElementChild!;
+    const stat = container.firstElementChild as HTMLElement;
 
     expect([...stat.classList]).toEqual(
-      expect.arrayContaining(["astralis:w-full", "astralis:mt-2"]),
+      expect.arrayContaining(["astralis-w", "astralis-mt"]),
     );
+    expect(stat.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    expect(stat.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-2)");
     expect(stat.hasAttribute("w")).toBe(false);
   });
 
@@ -199,8 +222,10 @@ describe("placement props on recipe components", () => {
     const button = container.querySelector("button")!;
 
     expect([...button.classList]).toEqual(
-      expect.arrayContaining(["astralis:w-full", "astralis:mt-4"]),
+      expect.arrayContaining(["astralis-w", "astralis-mt"]),
     );
+    expect(button.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    expect(button.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
     expect(button.hasAttribute("w")).toBe(false);
   });
 

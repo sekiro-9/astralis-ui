@@ -16,7 +16,7 @@ type BlockquoteComponent = <T extends ElementType = "blockquote">(
 /** A quotation block with a leading accent rule and optional `<cite>` attribution. */
 const Blockquote = forwardRef(
   <T extends ElementType = "blockquote">(
-    { as, className, children, cite, citeUrl, ...props }: BlockquoteProps<T>,
+    { as, className, children, cite, citeUrl, style, ...props }: BlockquoteProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "blockquote") as ElementType;
@@ -27,15 +27,15 @@ const Blockquote = forwardRef(
       BOX_VARIANT_KEYS,
     );
 
+    const own = resolveStyleProps(variantProps, { maps: blockquoteVariantMap, variants: blockquoteVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
         cite={citeUrl}
-        className={astralisMerge(
-          resolveStyleProps(variantProps, { maps: blockquoteVariantMap, variants: blockquoteVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
         ref={ref}
+        style={{ ...own.style, ...box.style, ...style }}
         {...htmlProps}
       >
         {children}

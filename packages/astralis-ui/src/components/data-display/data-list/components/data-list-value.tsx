@@ -4,10 +4,13 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 
 const textForSize = { sm: "astralis:text-xs", md: "astralis:text-sm", lg: "astralis:text-base" } as const;
 
-export function DataListValue({ children, className = "" }: DataListValueProps) {
+export function DataListValue({ children, className = "", style }: DataListValueProps) {
   const { size } = useDataList();
   return (
-    <dd className={astralisMerge("astralis:flex-1 astralis:min-w-0 astralis:text-label-base", textForSize[size], className)}>
+    <dd
+      className={astralisMerge("astralis:flex-1 astralis:min-w-0 astralis:text-label-base", textForSize[size], className)}
+      style={style}
+    >
       {children}
     </dd>
   );

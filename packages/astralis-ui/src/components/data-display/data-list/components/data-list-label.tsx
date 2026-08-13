@@ -4,7 +4,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 
 const textForSize = { sm: "astralis:text-xs", md: "astralis:text-sm", lg: "astralis:text-base" } as const;
 
-export function DataListLabel({ children, className = "" }: DataListLabelProps) {
+export function DataListLabel({ children, className = "", style }: DataListLabelProps) {
   const { orientation, size } = useDataList();
   return (
     <dt
@@ -14,6 +14,7 @@ export function DataListLabel({ children, className = "" }: DataListLabelProps) 
         orientation === "horizontal" ? "astralis:w-40 astralis:shrink-0" : "",
         className,
       )}
+      style={style}
     >
       {children}
     </dt>

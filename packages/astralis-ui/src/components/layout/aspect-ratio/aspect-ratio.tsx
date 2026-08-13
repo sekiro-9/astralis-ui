@@ -14,7 +14,7 @@ type AspectRatioComponent = <T extends ElementType = "div">(
 
 const AspectRatio = forwardRef(
   <T extends ElementType = "div">(
-    { children, as, className, ...props }: AspectRatioProps<T>,
+    { children, as, className, style, ...props }: AspectRatioProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -31,14 +31,14 @@ const AspectRatio = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+    const own = resolveStyleProps(variantProps, { maps: aspectRatioVariantMap, variants: aspectRatioVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          resolveStyleProps(variantProps, { maps: aspectRatioVariantMap, variants: aspectRatioVariants }),
-          className,
-        )}
+        className={astralisMerge(box.className, own.className, className)}
         ref={ref}
+        style={{ ...box.style, ...own.style, ...style }}
         {...htmlProps}
       >
         {children}

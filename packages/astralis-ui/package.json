@@ -1,7 +1,7 @@
 {
   "name": "astralis-ui",
-  "version": "0.6.0",
-  "description": "React 19 component library on semantic design tokens — precompiled CSS, runtime brand theming, responsive style props, 62 components.",
+  "version": "0.7.0",
+  "description": "React 19 component library on semantic design tokens — precompiled CSS with var-channel style props, runtime brand theming, responsive style props, 62 components.",
   "type": "module",
   "types": "dist/index.d.ts",
   "author": "Paul Andrew",

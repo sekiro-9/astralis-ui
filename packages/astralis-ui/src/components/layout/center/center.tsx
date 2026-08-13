@@ -12,7 +12,7 @@ type CenterComponent = <T extends ElementType = "div">(
 /** Centers its children on both axes (flex + items/justify center). Carries all Box props. */
 const Center = forwardRef(
   <T extends ElementType = "div">(
-    { as, className, children, ...props }: CenterProps<T>,
+    { as, className, children, style, ...props }: CenterProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -26,14 +26,17 @@ const Center = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
         className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
+          box.className,
           "astralis:flex astralis:items-center astralis:justify-center",
           className,
         )}
         ref={ref}
+        style={{ ...box.style, ...style }}
         {...htmlProps}
       >
         {children}

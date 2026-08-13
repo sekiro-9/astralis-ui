@@ -6,10 +6,13 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 const gapForSize = { sm: "astralis:gap-2", md: "astralis:gap-3", lg: "astralis:gap-4" } as const;
 
 export function DataListRoot({ children, orientation = "horizontal", size = "md", className = "", ...rest }: DataListProps) {
-  const { placementClass } = splitPlacement(rest);
+  const { placementClass, placementStyle } = splitPlacement(rest);
   return (
     <DataListContext.Provider value={{ orientation, size }}>
-      <dl className={astralisMerge("astralis:flex astralis:flex-col", gapForSize[size], placementClass, className)}>{children}</dl>
+      <dl
+        className={astralisMerge("astralis:flex astralis:flex-col", gapForSize[size], placementClass, className)}
+        style={placementStyle}
+      >{children}</dl>
     </DataListContext.Provider>
   );
 }

@@ -14,7 +14,7 @@ type FlexComponent = <T extends ElementType = "div">(
 
 const FlexRoot = forwardRef(
   <T extends ElementType = "div">(
-    { children, as, className, ...props }: FlexProps<T>,
+    { children, as, className, style, ...props }: FlexProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -35,18 +35,18 @@ const FlexRoot = forwardRef(
       }
     }
 
+    // Flex's own recipe FIRST, Box props second. `display` is the one key
+    // the two families share, and Flex's cva always emits `flex` — merged
+    // the other way round it silently ate an explicit display, so
+    // `<Flex display={{ base: "hidden", md: "flex" }} />` typechecked and
+    // then rendered visible at every width.
+    const own = resolveStyleProps(variantProps, { maps: flexVariantMap, variants: flexVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          // Flex's own recipe FIRST, Box props second. `display` is the one key
-          // the two families share, and Flex's cva always emits `flex` — merged
-          // the other way round it silently ate an explicit display, so
-          // `<Flex display={{ base: "hidden", md: "flex" }} />` typechecked and
-          // then rendered visible at every width.
-          resolveStyleProps(variantProps, { maps: flexVariantMap, variants: flexVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
+        style={{ ...own.style, ...box.style, ...style }}
         ref={ref}
         {...htmlProps}
       >

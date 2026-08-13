@@ -71,10 +71,24 @@ export type PlacementProps = Responsive<
  * Returns the resolved className plus the remaining props, which the caller
  * spreads onto its root as before — placement keys are removed, so none of
  * them can leak onto the DOM as an attribute.
+ *
+ * Channel props (margin, w/h, ... — see const/channel.ts) also produce custom
+ * properties. Those are folded into `rest.style` here — channel vars first,
+ * the caller's own `style` second, so user style always wins — which keeps
+ * every call site that just spreads `rest` working unchanged.
  */
 export function splitPlacement<T extends Record<string, unknown>>(
   props: T,
-): { placementClass: string; rest: Omit<T, PlacementPropName> } {
+): {
+  placementClass: string;
+  /** Channel variables for the placement props. Already folded into
+   *  `rest.style`, so call sites that spread `rest` can ignore this — it
+   *  exists for the sites that discard `rest` and build the root's props by
+   *  hand: apply it to the root's `style` yourself (own values and the
+   *  caller's `style` AFTER it, so they win). */
+  placementStyle: Record<string, string>;
+  rest: Omit<T, PlacementPropName>;
+} {
   const placement: Record<string, unknown> = {};
   const rest: Record<string, unknown> = {};
 
@@ -84,11 +98,21 @@ export function splitPlacement<T extends Record<string, unknown>>(
     else rest[key] = props[key];
   }
 
+  const resolved = resolveStyleProps(placement, {
+    maps: boxVariantMap,
+    variants: boxVariants,
+  });
+
+  if (Object.keys(resolved.style).length > 0) {
+    rest.style = {
+      ...resolved.style,
+      ...(rest.style as Record<string, unknown> | undefined),
+    };
+  }
+
   return {
-    placementClass: resolveStyleProps(placement, {
-      maps: boxVariantMap,
-      variants: boxVariants,
-    }),
+    placementClass: resolved.className,
+    placementStyle: resolved.style,
     rest: rest as Omit<T, PlacementPropName>,
   };
 }

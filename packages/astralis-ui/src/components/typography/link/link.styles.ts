@@ -16,7 +16,7 @@ export const linkVariantMap = {
 } as const;
 
 export const linkVariants = cva(
-  "astralis:cursor-pointer astralis:rounded-sm astralis:text-accent-label astralis:transition-colors " +
+  "astralis:cursor-pointer astralis:rounded-sm astralis:transition-colors " +
     "astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
   {
     variants: linkVariantMap,
@@ -26,6 +26,14 @@ export const linkVariants = cva(
 
 /** The colour shift on hover, opted out of when `color` is set explicitly. */
 export const linkHoverColor = "astralis:hover:text-accent-solid";
+
+/**
+ * The resting accent colour, applied only when the consumer has not set
+ * `color`. It cannot live in the cva base: an explicit `color` prop is a
+ * channel var in the components layer, and this utility-layer class would
+ * beat it in the cascade — the class must step aside, not be out-merged.
+ */
+export const linkAccentColor = "astralis:text-accent-label";
 
 /**
  * Text's token map with NO defaults of its own.

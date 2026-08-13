@@ -2,6 +2,57 @@
    ASTRALIS LAYOUT MAPPINGS (FLEXBOX, GRID, & SHARED PROPERTIES)
    ========================================================================== */
 
+import { channelMap } from "./channel";
+
+/* ==========================================================================
+   0. VALUE-MAP HELPERS (channel props that live in this file)
+   --------------------------------------------------------------------------
+   These maps are token -> CSS VALUE (the rest of this file stays
+   token -> class for the keyword props). "0" is the literal zero; escaped
+   idents must match the token CSS files.
+   ========================================================================== */
+
+const GAP_STEPS = [
+  "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5", "6", "7", "8",
+  "9", "10", "11", "12", "14", "16", "20", "24", "28", "32", "36", "40", "44",
+  "48", "52", "56", "60", "64", "72", "80", "96",
+] as const;
+
+export type GapToken = "0" | (typeof GAP_STEPS)[number];
+
+const buildGap = (): Record<GapToken, string> => {
+  const map = { "0": "0" } as Record<GapToken, string>;
+  for (const s of GAP_STEPS) map[s] = `var(--astralis-spacing-${s.replace(/\./g, (c) => `\\${c}`)})`;
+  return map;
+};
+const GAP_SCALE = channelMap(buildGap());
+
+const BASIS_FRACTIONS = [
+  "1/2", "1/3", "2/3", "1/4", "3/4", "1/5", "2/5", "3/5", "4/5", "1/6", "2/6",
+  "3/6", "4/6", "5/6", "1/12", "2/12", "3/12", "4/12", "5/12", "6/12", "7/12",
+  "8/12", "9/12", "10/12", "11/12",
+] as const;
+const BASIS_TSHIRTS = [
+  "3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl",
+  "6xl", "7xl", "8xl",
+] as const;
+
+export type BasisToken =
+  | GapToken
+  | (typeof BASIS_TSHIRTS)[number]
+  | (typeof BASIS_FRACTIONS)[number]
+  | "auto" | "full" | "min" | "max" | "fit";
+
+function buildBasis(): Record<BasisToken, string> {
+  const map = { "0": "0", auto: "auto" } as Record<BasisToken, string>;
+  const sizeVar = (t: string) => `var(--astralis-size-${t.replace(/[./]/g, (c) => `\\${c}`)})`;
+  for (const s of GAP_STEPS) map[s] = sizeVar(s);
+  for (const t of BASIS_TSHIRTS) map[t] = sizeVar(t);
+  for (const f of BASIS_FRACTIONS) map[f] = sizeVar(f);
+  for (const k of ["full", "min", "max", "fit"] as const) map[k] = sizeVar(k);
+  return channelMap(map);
+}
+
 /* ==========================================================================
    1. FLEXBOX ONLY MAPPINGS
    ========================================================================== */
@@ -19,94 +70,9 @@ export const flexWrapTypes = {
   "wrap-reverse": "astralis:flex-wrap-reverse",
 } as const;
 
-export const flexBasisTypes = {
-  // Spacing Scale
-  "0": "astralis:basis-0",
-  "0.5": "astralis:basis-0.5",
-  "1": "astralis:basis-1",
-  "1.5": "astralis:basis-1.5",
-  "2": "astralis:basis-2",
-  "2.5": "astralis:basis-2.5",
-  "3": "astralis:basis-3",
-  "3.5": "astralis:basis-3.5",
-  "4": "astralis:basis-4",
-  "4.5": "astralis:basis-4.5",
-  "5": "astralis:basis-5",
-  "6": "astralis:basis-6",
-  "7": "astralis:basis-7",
-  "8": "astralis:basis-8",
-  "9": "astralis:basis-9",
-  "10": "astralis:basis-10",
-  "11": "astralis:basis-11",
-  "12": "astralis:basis-12",
-  "14": "astralis:basis-14",
-  "16": "astralis:basis-16",
-  "20": "astralis:basis-20",
-  "24": "astralis:basis-24",
-  "28": "astralis:basis-28",
-  "32": "astralis:basis-32",
-  "36": "astralis:basis-36",
-  "40": "astralis:basis-40",
-  "44": "astralis:basis-44",
-  "48": "astralis:basis-48",
-  "52": "astralis:basis-52",
-  "56": "astralis:basis-56",
-  "60": "astralis:basis-60",
-  "64": "astralis:basis-64",
-  "72": "astralis:basis-72",
-  "80": "astralis:basis-80",
-  "96": "astralis:basis-96",
-
-  // T-Shirt Scale
-  "3xs": "astralis:basis-3xs",
-  "2xs": "astralis:basis-2xs",
-  xs: "astralis:basis-xs",
-  sm: "astralis:basis-sm",
-  md: "astralis:basis-md",
-  lg: "astralis:basis-lg",
-  xl: "astralis:basis-xl",
-  "2xl": "astralis:basis-2xl",
-  "3xl": "astralis:basis-3xl",
-  "4xl": "astralis:basis-4xl",
-  "5xl": "astralis:basis-5xl",
-  "6xl": "astralis:basis-6xl",
-  "7xl": "astralis:basis-7xl",
-  "8xl": "astralis:basis-8xl",
-
-  // Fractions
-  "1/2": "astralis:basis-1/2",
-  "1/3": "astralis:basis-1/3",
-  "2/3": "astralis:basis-2/3",
-  "1/4": "astralis:basis-1/4",
-  "3/4": "astralis:basis-3/4",
-  "1/5": "astralis:basis-1/5",
-  "2/5": "astralis:basis-2/5",
-  "3/5": "astralis:basis-3/5",
-  "4/5": "astralis:basis-4/5",
-  "1/6": "astralis:basis-1/6",
-  "2/6": "astralis:basis-2/6",
-  "3/6": "astralis:basis-3/6",
-  "4/6": "astralis:basis-4/6",
-  "5/6": "astralis:basis-5/6",
-  "1/12": "astralis:basis-1/12",
-  "2/12": "astralis:basis-2/12",
-  "3/12": "astralis:basis-3/12",
-  "4/12": "astralis:basis-4/12",
-  "5/12": "astralis:basis-5/12",
-  "6/12": "astralis:basis-6/12",
-  "7/12": "astralis:basis-7/12",
-  "8/12": "astralis:basis-8/12",
-  "9/12": "astralis:basis-9/12",
-  "10/12": "astralis:basis-10/12",
-  "11/12": "astralis:basis-11/12",
-
-  // Keywords
-  auto: "astralis:basis-auto",
-  full: "astralis:basis-full",
-  min: "astralis:basis-min",
-  max: "astralis:basis-max",
-  fit: "astralis:basis-fit",
-} as const;
+/* Channel prop (const/channel.ts): token -> CSS value, delivered through
+   --astralis-basis. Rides the size scale — size.css declares every rung. */
+export const flexBasisTypes = buildBasis();
 
 export const flexTypes = {
   "1": "astralis:flex-1",
@@ -360,134 +326,20 @@ export const placeSelfTypes = {
   stretch: "astralis:place-self-stretch",
 } as const;
 
-export const orderTypes = {
-  "1": "astralis:order-1",
-  "2": "astralis:order-2",
-  "3": "astralis:order-3",
-  "4": "astralis:order-4",
-  "5": "astralis:order-5",
-  "6": "astralis:order-6",
-  "7": "astralis:order-7",
-  "8": "astralis:order-8",
-  "9": "astralis:order-9",
-  "10": "astralis:order-10",
-  "11": "astralis:order-11",
-  "12": "astralis:order-12",
-  first: "astralis:order-first",
-  last: "astralis:order-last",
-  none: "astralis:order-none",
-} as const;
+/* Channel prop: token -> CSS value via --astralis-order. first/last are the
+   conventional extreme sentinels; none restores the initial 0. */
+export const orderTypes = channelMap({
+  "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6",
+  "7": "7", "8": "8", "9": "9", "10": "10", "11": "11", "12": "12",
+  first: "-9999",
+  last: "9999",
+  none: "0",
+} as const);
 
-export const gapTypes = {
-  "0": "astralis:gap-0",
-  "0.5": "astralis:gap-0.5",
-  "1": "astralis:gap-1",
-  "1.5": "astralis:gap-1.5",
-  "2": "astralis:gap-2",
-  "2.5": "astralis:gap-2.5",
-  "3": "astralis:gap-3",
-  "3.5": "astralis:gap-3.5",
-  "4": "astralis:gap-4",
-  "4.5": "astralis:gap-4.5",
-  "5": "astralis:gap-5",
-  "6": "astralis:gap-6",
-  "7": "astralis:gap-7",
-  "8": "astralis:gap-8",
-  "9": "astralis:gap-9",
-  "10": "astralis:gap-10",
-  "11": "astralis:gap-11",
-  "12": "astralis:gap-12",
-  "14": "astralis:gap-14",
-  "16": "astralis:gap-16",
-  "20": "astralis:gap-20",
-  "24": "astralis:gap-24",
-  "28": "astralis:gap-28",
-  "32": "astralis:gap-32",
-  "36": "astralis:gap-36",
-  "40": "astralis:gap-40",
-  "44": "astralis:gap-44",
-  "48": "astralis:gap-48",
-  "52": "astralis:gap-52",
-  "56": "astralis:gap-56",
-  "60": "astralis:gap-60",
-  "64": "astralis:gap-64",
-  "72": "astralis:gap-72",
-  "80": "astralis:gap-80",
-  "96": "astralis:gap-96",
-} as const;
+/* Channel props: token -> CSS value on the spacing scale, delivered through
+   --astralis-gap / --astralis-row-gap / --astralis-column-gap. */
+export const gapTypes = GAP_SCALE;
 
-export const rowGapTypes = {
-  "0": "astralis:gap-y-0",
-  "0.5": "astralis:gap-y-0.5",
-  "1": "astralis:gap-y-1",
-  "1.5": "astralis:gap-y-1.5",
-  "2": "astralis:gap-y-2",
-  "2.5": "astralis:gap-y-2.5",
-  "3": "astralis:gap-y-3",
-  "3.5": "astralis:gap-y-3.5",
-  "4": "astralis:gap-y-4",
-  "4.5": "astralis:gap-y-4.5",
-  "5": "astralis:gap-y-5",
-  "6": "astralis:gap-y-6",
-  "7": "astralis:gap-y-7",
-  "8": "astralis:gap-y-8",
-  "9": "astralis:gap-y-9",
-  "10": "astralis:gap-y-10",
-  "11": "astralis:gap-y-11",
-  "12": "astralis:gap-y-12",
-  "14": "astralis:gap-y-14",
-  "16": "astralis:gap-y-16",
-  "20": "astralis:gap-y-20",
-  "24": "astralis:gap-y-24",
-  "28": "astralis:gap-y-28",
-  "32": "astralis:gap-y-32",
-  "36": "astralis:gap-y-36",
-  "40": "astralis:gap-y-40",
-  "44": "astralis:gap-y-44",
-  "48": "astralis:gap-y-48",
-  "52": "astralis:gap-y-52",
-  "56": "astralis:gap-y-56",
-  "60": "astralis:gap-y-60",
-  "64": "astralis:gap-y-64",
-  "72": "astralis:gap-y-72",
-  "80": "astralis:gap-y-80",
-  "96": "astralis:gap-y-96",
-} as const;
+export const rowGapTypes = GAP_SCALE;
 
-export const columnGapTypes = {
-  "0": "astralis:gap-x-0",
-  "0.5": "astralis:gap-x-0.5",
-  "1": "astralis:gap-x-1",
-  "1.5": "astralis:gap-x-1.5",
-  "2": "astralis:gap-x-2",
-  "2.5": "astralis:gap-x-2.5",
-  "3": "astralis:gap-x-3",
-  "3.5": "astralis:gap-x-3.5",
-  "4": "astralis:gap-x-4",
-  "4.5": "astralis:gap-x-4.5",
-  "5": "astralis:gap-x-5",
-  "6": "astralis:gap-x-6",
-  "7": "astralis:gap-x-7",
-  "8": "astralis:gap-x-8",
-  "9": "astralis:gap-x-9",
-  "10": "astralis:gap-x-10",
-  "11": "astralis:gap-x-11",
-  "12": "astralis:gap-x-12",
-  "14": "astralis:gap-x-14",
-  "16": "astralis:gap-x-16",
-  "20": "astralis:gap-x-20",
-  "24": "astralis:gap-x-24",
-  "28": "astralis:gap-x-28",
-  "32": "astralis:gap-x-32",
-  "36": "astralis:gap-x-36",
-  "40": "astralis:gap-x-40",
-  "44": "astralis:gap-x-44",
-  "48": "astralis:gap-x-48",
-  "52": "astralis:gap-x-52",
-  "56": "astralis:gap-x-56",
-  "60": "astralis:gap-x-60",
-  "64": "astralis:gap-x-64",
-  "72": "astralis:gap-x-72",
-  "80": "astralis:gap-x-80",
-  "96": "astralis:gap-x-96",
-} as const;
+export const columnGapTypes = GAP_SCALE;

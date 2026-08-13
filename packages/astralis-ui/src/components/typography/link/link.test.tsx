@@ -23,7 +23,13 @@ describe("Link typography", () => {
   });
   it("explicit color wins and drops the hover shift", () => {
     const { container } = render(<Link href="#" color="inverted">x</Link>);
-    expect(cls(container)).toContain("astralis:text-label-inverted");
+    const a = container.querySelector("a")!;
+    // color is a channel prop; the resting accent class must step aside
+    // entirely (a utility-layer class would beat the channel var in cascade).
+    expect(cls(container)).toContain("astralis-color");
+    expect(a.style.getPropertyValue("--astralis-color")).toBe(
+      "var(--astralis-color-label-inverted)",
+    );
     expect(cls(container)).not.toContain("astralis:text-accent-label");
     expect(cls(container)).not.toContain("astralis:hover:text-accent-solid");
   });

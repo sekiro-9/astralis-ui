@@ -24,7 +24,8 @@ export function StatRoot({
       <div
         ref={ref}
         className={astralisMerge(
-          resolveStyleProps({ align }, { maps: { align: statAlignMap }, variants: statRootVariants }),
+          resolveStyleProps({ align }, { maps: { align: statAlignMap }, variants: statRootVariants })
+            .className,
           placementClass,
           className,
         )}

@@ -33,7 +33,7 @@ export function CarouselRoot({
   children,
   ...rest
 }: CarouselProps) {
-  const { placementClass } = splitPlacement(rest);
+  const { placementClass, placementStyle } = splitPlacement(rest);
   const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultIndex);
   const [slideCount, setSlideCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
@@ -121,7 +121,7 @@ export function CarouselRoot({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={astralisMerge(layout, "astralis:outline-none", accentClass(colorScheme), placementClass, className)}
-        style={style}
+        style={{ ...placementStyle, ...style }}
       >
         {children}
       </div>

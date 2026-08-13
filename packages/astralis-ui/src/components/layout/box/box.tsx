@@ -20,7 +20,7 @@ type BoxComponent = <T extends ElementType = "div">(
 
 const Box = forwardRef(
   <T extends ElementType = "div">(
-    { children, as, className, ...props }: BoxProps<T>,
+    { children, as, className, style, ...props }: BoxProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -38,12 +38,16 @@ const Box = forwardRef(
       }
     }
 
+    const resolved = resolveStyleProps(variantProps, {
+      maps: boxVariantMap,
+      variants: boxVariants,
+    });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(variantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(resolved.className, className)}
+        // Channel vars first so the caller's style always wins.
+        style={{ ...resolved.style, ...style }}
         ref={ref}
         {...htmlProps}
       >

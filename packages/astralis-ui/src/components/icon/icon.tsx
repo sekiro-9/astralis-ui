@@ -20,19 +20,29 @@ function Icon({
   color,
   strokeWidth,
   className,
-  style,
   ref,
   ...rest
 }: IconProps & { ref?: Ref<SVGSVGElement> }) {
+  // `style` stays in rest so splitPlacement folds the channel vars under it;
+  // we then lift the combined style out to weave in Icon's own pieces.
   const { placementClass, rest: domProps } = splitPlacement(rest);
+    const { style: incomingStyle, ...domRest } = domProps as typeof domProps & {
+      style?: Record<string, unknown>;
+    };
 
     const isToken = typeof size === "string";
     const classes = astralisMerge(
       iconVariants({ size: isToken ? size : undefined }),
-      color ? textColors[color] : "",
       placementClass, className,
     );
-    const mergedStyle = isToken ? style : { width: size, height: size, ...style };
+    // `textColors` is a VALUE map since the var-channel migration — its
+    // entries are CSS values, not classes, so colour is applied via style.
+    const mergedStyle = {
+      ...(color ? { color: textColors[color] } : {}),
+      ...(isToken ? {} : { width: size, height: size }),
+      ...incomingStyle, // channel vars first, caller's style last — both win over ours
+    };
+    const styleAttr = Object.keys(mergedStyle).length ? mergedStyle : undefined;
     const a11y = (rest as { "aria-label"?: string })["aria-label"]
       ? { role: "img" as const }
       : { "aria-hidden": true };
@@ -42,23 +52,25 @@ function Icon({
         <As
           ref={ref}
           className={classes}
-          style={mergedStyle}
+          style={styleAttr}
           {...(strokeWidth != null ? { strokeWidth } : {})}
           {...a11y}
-          {...domProps}
+          {...domRest}
         />
       );
     }
 
     if (children) {
-      // `rest` carries <svg> attrs; only the shared HTML/aria ones apply to a <span>.
+      // domRest carries <svg> attrs; only the shared HTML/aria ones apply to a
+      // <span>. (The SPLIT rest, not the raw one — the raw spread leaked
+      // placement props onto the DOM as attributes.)
       return (
         <span
           ref={ref as unknown as Ref<HTMLSpanElement>}
           className={classes}
-          style={mergedStyle}
+          style={styleAttr}
           {...a11y}
-          {...(rest as HTMLAttributes<HTMLSpanElement>)}
+          {...(domRest as HTMLAttributes<HTMLSpanElement>)}
         >
           {children}
         </span>

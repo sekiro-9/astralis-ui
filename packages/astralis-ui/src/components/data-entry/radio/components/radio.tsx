@@ -59,8 +59,7 @@ export function RadioBase({
 
     const sz = radioSizes[size];
 
-    const { placementClass, rest: domProps } = splitPlacement(props);
-
+    const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
 
     return (
       <label
@@ -74,6 +73,7 @@ export function RadioBase({
               : "astralis:cursor-pointer",
           placementClass, className,
         )}
+        style={placementStyle}
       >
         <input
           ref={ref}

@@ -1,171 +1,46 @@
 /* ==========================================================================
-   ASTRALIS POSITION OFFSET MAPPINGS (INSET, TOP, RIGHT, BOTTOM, LEFT)
-   Numeric values resolve to calc(var(--astralis-spacing) * n); plus keywords.
-   Written as static literals so Tailwind's scanner + the responsive safelist
-   generator can see every class (interpolated strings are invisible to both).
+   ASTRALIS — POSITIONING VALUE MAPS (var-channel)
+   --------------------------------------------------------------------------
+   token -> CSS VALUE, not token -> class. inset/top/right/bottom/left are
+   channel props (const/channel.ts): fixed class per prop in
+   theme/channels.css, value in a custom property.
+
+   Numeric steps ride the spacing scale (offsets track spacing, as Tailwind's
+   do); fractions are the literal percentages size.css uses. "0" is literal.
    ========================================================================== */
 
-export const insetTypes = {
-  "0": "astralis:inset-0",
-  "0.5": "astralis:inset-0.5",
-  "1": "astralis:inset-1",
-  "1.5": "astralis:inset-1.5",
-  "2": "astralis:inset-2",
-  "2.5": "astralis:inset-2.5",
-  "3": "astralis:inset-3",
-  "3.5": "astralis:inset-3.5",
-  "4": "astralis:inset-4",
-  "5": "astralis:inset-5",
-  "6": "astralis:inset-6",
-  "8": "astralis:inset-8",
-  "10": "astralis:inset-10",
-  "12": "astralis:inset-12",
-  "16": "astralis:inset-16",
-  "20": "astralis:inset-20",
-  "24": "astralis:inset-24",
-  "32": "astralis:inset-32",
-  "40": "astralis:inset-40",
-  "48": "astralis:inset-48",
-  "56": "astralis:inset-56",
-  "64": "astralis:inset-64",
-  "1/2": "astralis:inset-1/2",
-  "1/3": "astralis:inset-1/3",
-  "2/3": "astralis:inset-2/3",
-  "1/4": "astralis:inset-1/4",
-  "3/4": "astralis:inset-3/4",
-  full: "astralis:inset-full",
-  auto: "astralis:inset-auto",
-  px: "astralis:inset-px",
+import { channelMap } from "./channel";
+
+const OFFSET_STEPS = [
+  "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "8", "10", "12",
+  "16", "20", "24", "32", "40", "48", "56", "64",
+] as const;
+
+const OFFSET_FRACTIONS = {
+  "1/2": "50%",
+  "1/3": "33.333333%",
+  "2/3": "66.666667%",
+  "1/4": "25%",
+  "3/4": "75%",
 } as const;
 
-export const topTypes = {
-  "0": "astralis:top-0",
-  "0.5": "astralis:top-0.5",
-  "1": "astralis:top-1",
-  "1.5": "astralis:top-1.5",
-  "2": "astralis:top-2",
-  "2.5": "astralis:top-2.5",
-  "3": "astralis:top-3",
-  "3.5": "astralis:top-3.5",
-  "4": "astralis:top-4",
-  "5": "astralis:top-5",
-  "6": "astralis:top-6",
-  "8": "astralis:top-8",
-  "10": "astralis:top-10",
-  "12": "astralis:top-12",
-  "16": "astralis:top-16",
-  "20": "astralis:top-20",
-  "24": "astralis:top-24",
-  "32": "astralis:top-32",
-  "40": "astralis:top-40",
-  "48": "astralis:top-48",
-  "56": "astralis:top-56",
-  "64": "astralis:top-64",
-  "1/2": "astralis:top-1/2",
-  "1/3": "astralis:top-1/3",
-  "2/3": "astralis:top-2/3",
-  "1/4": "astralis:top-1/4",
-  "3/4": "astralis:top-3/4",
-  full: "astralis:top-full",
-  auto: "astralis:top-auto",
-  px: "astralis:top-px",
-} as const;
+export type OffsetToken =
+  | "0"
+  | (typeof OFFSET_STEPS)[number]
+  | keyof typeof OFFSET_FRACTIONS;
 
-export const rightTypes = {
-  "0": "astralis:right-0",
-  "0.5": "astralis:right-0.5",
-  "1": "astralis:right-1",
-  "1.5": "astralis:right-1.5",
-  "2": "astralis:right-2",
-  "2.5": "astralis:right-2.5",
-  "3": "astralis:right-3",
-  "3.5": "astralis:right-3.5",
-  "4": "astralis:right-4",
-  "5": "astralis:right-5",
-  "6": "astralis:right-6",
-  "8": "astralis:right-8",
-  "10": "astralis:right-10",
-  "12": "astralis:right-12",
-  "16": "astralis:right-16",
-  "20": "astralis:right-20",
-  "24": "astralis:right-24",
-  "32": "astralis:right-32",
-  "40": "astralis:right-40",
-  "48": "astralis:right-48",
-  "56": "astralis:right-56",
-  "64": "astralis:right-64",
-  "1/2": "astralis:right-1/2",
-  "1/3": "astralis:right-1/3",
-  "2/3": "astralis:right-2/3",
-  "1/4": "astralis:right-1/4",
-  "3/4": "astralis:right-3/4",
-  full: "astralis:right-full",
-  auto: "astralis:right-auto",
-  px: "astralis:right-px",
-} as const;
+const buildOffsets = (): Record<OffsetToken, string> => {
+  const map = { "0": "0", ...OFFSET_FRACTIONS } as Record<OffsetToken, string>;
+  for (const step of OFFSET_STEPS) {
+    map[step] = `var(--astralis-spacing-${step.replace(/\./g, (c) => `\\${c}`)})`;
+  }
+  return map;
+};
 
-export const bottomTypes = {
-  "0": "astralis:bottom-0",
-  "0.5": "astralis:bottom-0.5",
-  "1": "astralis:bottom-1",
-  "1.5": "astralis:bottom-1.5",
-  "2": "astralis:bottom-2",
-  "2.5": "astralis:bottom-2.5",
-  "3": "astralis:bottom-3",
-  "3.5": "astralis:bottom-3.5",
-  "4": "astralis:bottom-4",
-  "5": "astralis:bottom-5",
-  "6": "astralis:bottom-6",
-  "8": "astralis:bottom-8",
-  "10": "astralis:bottom-10",
-  "12": "astralis:bottom-12",
-  "16": "astralis:bottom-16",
-  "20": "astralis:bottom-20",
-  "24": "astralis:bottom-24",
-  "32": "astralis:bottom-32",
-  "40": "astralis:bottom-40",
-  "48": "astralis:bottom-48",
-  "56": "astralis:bottom-56",
-  "64": "astralis:bottom-64",
-  "1/2": "astralis:bottom-1/2",
-  "1/3": "astralis:bottom-1/3",
-  "2/3": "astralis:bottom-2/3",
-  "1/4": "astralis:bottom-1/4",
-  "3/4": "astralis:bottom-3/4",
-  full: "astralis:bottom-full",
-  auto: "astralis:bottom-auto",
-  px: "astralis:bottom-px",
-} as const;
+const OFFSETS = channelMap(buildOffsets());
 
-export const leftTypes = {
-  "0": "astralis:left-0",
-  "0.5": "astralis:left-0.5",
-  "1": "astralis:left-1",
-  "1.5": "astralis:left-1.5",
-  "2": "astralis:left-2",
-  "2.5": "astralis:left-2.5",
-  "3": "astralis:left-3",
-  "3.5": "astralis:left-3.5",
-  "4": "astralis:left-4",
-  "5": "astralis:left-5",
-  "6": "astralis:left-6",
-  "8": "astralis:left-8",
-  "10": "astralis:left-10",
-  "12": "astralis:left-12",
-  "16": "astralis:left-16",
-  "20": "astralis:left-20",
-  "24": "astralis:left-24",
-  "32": "astralis:left-32",
-  "40": "astralis:left-40",
-  "48": "astralis:left-48",
-  "56": "astralis:left-56",
-  "64": "astralis:left-64",
-  "1/2": "astralis:left-1/2",
-  "1/3": "astralis:left-1/3",
-  "2/3": "astralis:left-2/3",
-  "1/4": "astralis:left-1/4",
-  "3/4": "astralis:left-3/4",
-  full: "astralis:left-full",
-  auto: "astralis:left-auto",
-  px: "astralis:left-px",
-} as const;
+export const insetTypes = OFFSETS;
+export const topTypes = OFFSETS;
+export const rightTypes = OFFSETS;
+export const bottomTypes = OFFSETS;
+export const leftTypes = OFFSETS;

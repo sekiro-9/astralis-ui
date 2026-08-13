@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
+import type { CSSProperties } from "react";
 import { Box, Flex, Grid, Stack, HStack, VStack } from "./index";
 
 /**
@@ -10,6 +11,11 @@ import { Box, Flex, Grid, Stack, HStack, VStack } from "./index";
 
 function classesOf(container: HTMLElement): string[] {
   return [...container.firstElementChild!.classList];
+}
+
+/** Channel props deliver their value through a custom property on `style`. */
+function styleVarOf(container: HTMLElement, name: string): string {
+  return (container.firstElementChild as HTMLElement).style.getPropertyValue(name);
 }
 
 describe("self-placement props", () => {
@@ -28,9 +34,11 @@ describe("self-placement props", () => {
     expect(el.hasAttribute("shrink")).toBe(false);
     expect(el.hasAttribute("order")).toBe(false);
     expect(el.hasAttribute("alignSelf")).toBe(false);
+    // shrink/alignSelf are keyword classes; order is a channel prop.
     expect(classesOf(container)).toEqual(
-      expect.arrayContaining(["astralis:shrink-0", "astralis:order-2", "astralis:self-center"]),
+      expect.arrayContaining(["astralis:shrink-0", "astralis-order", "astralis:self-center"]),
     );
+    expect(styleVarOf(container, "--astralis-order")).toBe("2");
   });
 
   it("accept a responsive map like every other style prop", () => {
@@ -70,8 +78,9 @@ describe("display on a layout container", () => {
     const { container } = render(<Flex direction="column" gap="4" />);
 
     expect(classesOf(container)).toEqual(
-      expect.arrayContaining(["astralis:flex", "astralis:flex-col", "astralis:gap-4"]),
+      expect.arrayContaining(["astralis:flex", "astralis:flex-col", "astralis-gap"]),
     );
+    expect(styleVarOf(container, "--astralis-gap")).toBe("var(--astralis-spacing-4)");
   });
 });
 
@@ -133,39 +142,102 @@ describe("Stack direction", () => {
 /*
  * The values a layout author reaches for by reflex. Each was absent from its
  * scale, so the canonical spelling was a compile error and blocks grew spacer
- * elements instead.
+ * elements instead. Spacing is a channel now: the class is fixed per prop and
+ * the value rides a custom property.
  */
 describe("scale sentinels", () => {
   it("pushes a flex item with an auto margin", () => {
     const { container } = render(<Box ml="auto" />);
 
-    expect(classesOf(container)).toContain("astralis:ml-auto");
+    expect(classesOf(container)).toContain("astralis-ml");
+    expect(styleVarOf(container, "--astralis-ml")).toBe("auto");
   });
 
   it("centres a fixed-width block with mx auto", () => {
     const { container } = render(<Box w="md" mx="auto" />);
 
     expect(classesOf(container)).toEqual(
-      expect.arrayContaining(["astralis:w-md", "astralis:mx-auto"]),
+      expect.arrayContaining(["astralis-w", "astralis-mx"]),
     );
+    expect(styleVarOf(container, "--astralis-w")).toBe("var(--astralis-size-md)");
+    expect(styleVarOf(container, "--astralis-mx")).toBe("auto");
   });
 
   it("allows min-width zero, the flex truncation fix", () => {
     const { container } = render(<Box minW="0" />);
 
-    expect(classesOf(container)).toContain("astralis:min-w-0");
+    expect(classesOf(container)).toContain("astralis-min-w");
+    expect(styleVarOf(container, "--astralis-min-w")).toBe("0");
   });
 
   it("allows a zero gap to be stated rather than omitted", () => {
     const { container } = render(<Flex gap="0" />);
 
-    expect(classesOf(container)).toContain("astralis:gap-0");
+    expect(classesOf(container)).toContain("astralis-gap");
+    expect(styleVarOf(container, "--astralis-gap")).toBe("0");
   });
 
-  it("allows zero padding", () => {
+  it("allows zero padding — '0' is a real token, not a falsy miss", () => {
     const { container } = render(<Box p="0" />);
 
-    expect(classesOf(container)).toContain("astralis:p-0");
+    expect(classesOf(container)).toContain("astralis-p");
+    expect(styleVarOf(container, "--astralis-p")).toBe("0");
+  });
+});
+
+/*
+ * The var-channel contract: one fixed class per prop per breakpoint, the value
+ * in a custom property. These assertions pin the delivery mechanism itself —
+ * the classes exist statically in channels.css, so a typo in either half
+ * renders as nothing without failing anywhere else.
+ */
+describe("var-channel delivery", () => {
+  it("resolves a scalar spacing token to class + token variable", () => {
+    const { container } = render(<Box p="4" />);
+
+    expect(classesOf(container)).toContain("astralis-p");
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-4)");
+  });
+
+  it("carries the CSS-escaped ident for fractional steps", () => {
+    // spacing.css declares --astralis-spacing-0\.5 — an unescaped reference
+    // parses invalid and the declaration silently drops.
+    const { container } = render(<Box p="0.5" />);
+
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-0\\.5)");
+  });
+
+  it("emits one class and one variable per breakpoint entry", () => {
+    const { container } = render(<Box p={{ base: "2", md: "8" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-p", "astralis-p-md"]),
+    );
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-2)");
+    expect(styleVarOf(container, "--astralis-p-md")).toBe("var(--astralis-spacing-8)");
+  });
+
+  it("lets the caller's style win over channel variables", () => {
+    const { container } = render(
+      <Box p="4" style={{ "--astralis-p": "3rem" } as CSSProperties} />,
+    );
+
+    expect(styleVarOf(container, "--astralis-p")).toBe("3rem");
+  });
+
+  it("keeps a plain inline style intact alongside channel variables", () => {
+    const { container } = render(<Box m="2" style={{ outline: "1px solid red" }} />);
+    const el = container.firstElementChild as HTMLElement;
+
+    expect(el.style.getPropertyValue("--astralis-m")).toBe("var(--astralis-spacing-2)");
+    expect(el.style.outline).toBe("1px solid red");
+  });
+
+  it("flows through Stack's axis translation to Flex", () => {
+    const { container } = render(<Stack mt="4" />);
+
+    expect(classesOf(container)).toContain("astralis-mt");
+    expect(styleVarOf(container, "--astralis-mt")).toBe("var(--astralis-spacing-4)");
   });
 });
 
@@ -175,18 +247,35 @@ describe("scale sentinels", () => {
  * DOM attribute, and an unrecognised token inside one vanishes without a trace.
  */
 describe("interaction-state props", () => {
-  it("resolve to state-prefixed classes", () => {
+  it("resolve to state channel classes + vars", () => {
     const { container } = render(
       <Box bg="base" hover={{ bg: "subtle" }} focusVisible={{ borderColor: "brand" }} />,
     );
 
     expect(classesOf(container)).toEqual(
       expect.arrayContaining([
-        "astralis:bg-surface-base",
-        "astralis:hover:bg-surface-subtle",
-        "astralis:focus-visible:border-brand-stroke",
+        "astralis-bg",
+        "astralis-hover-bg",
+        "astralis-focus-visible-border-color",
       ]),
     );
+    expect(styleVarOf(container, "--astralis-bg")).toBe("var(--astralis-color-surface-base)");
+    expect(styleVarOf(container, "--astralis-bg-hover")).toBe(
+      "var(--astralis-color-surface-subtle)",
+    );
+    expect(styleVarOf(container, "--astralis-border-color-focus-visible")).toBe(
+      "var(--astralis-color-brand-stroke)",
+    );
+  });
+
+  it("cover every channel prop, not just paint — the old limit is gone", () => {
+    const { container } = render(<Box hover={{ p: "6", w: "full" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-hover-p", "astralis-hover-w"]),
+    );
+    expect(styleVarOf(container, "--astralis-p-hover")).toBe("var(--astralis-spacing-6)");
+    expect(styleVarOf(container, "--astralis-w-hover")).toBe("var(--astralis-size-full)");
   });
 
   it("never become DOM attributes", () => {
@@ -203,7 +292,10 @@ describe("interaction-state props", () => {
   it("reach every Box-composing primitive, not just Box", () => {
     const { container } = render(<Flex hover={{ bg: "subtle" }} />);
 
-    expect(classesOf(container)).toContain("astralis:hover:bg-surface-subtle");
+    expect(classesOf(container)).toContain("astralis-hover-bg");
+    expect(styleVarOf(container, "--astralis-bg-hover")).toBe(
+      "var(--astralis-color-surface-subtle)",
+    );
   });
 
   it("leave `disabled` as a real HTML attribute", () => {

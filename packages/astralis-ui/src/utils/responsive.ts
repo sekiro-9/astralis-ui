@@ -3,18 +3,32 @@
    --------------------------------------------------------------------------
    A single, prefix-aware resolution layer shared by every component.
 
-   Every style prop accepts either a scalar token value OR a responsive map:
+   Every style prop accepts either a scalar token value OR a responsive map.
+   Resolution has two channels:
 
-     <Box p="4" />                         -> astralis:p-4
-     <Box p={{ base: "2", md: "4" }} />    -> astralis:p-2 astralis:md:p-4
+   KEYWORD props (closed sets: display, position, alignment, ...) resolve to
+   enumerated Tailwind classes, exactly as before:
 
-   Components keep using CVA for typing + scalar resolution + defaultVariants.
-   This engine sits on top: it peels responsive objects apart, feeds the
-   `base` value through CVA, and resolves every breakpoint override straight
-   from the same token map CVA already uses (single source of truth).
+     <Box display="flex" />                    -> astralis:flex
+     <Box display={{ base: "hidden", md: "flex" }} />
+                                               -> astralis:hidden astralis:md:flex
+
+   CHANNEL props (open value ranges: padding, margin, ... — see
+   const/channel.ts) resolve to ONE fixed class per prop per breakpoint
+   (defined in theme/channels.css) plus a custom property carrying the value:
+
+     <Box p="4" />                     -> class: astralis-p
+                                          style: --astralis-p: var(--astralis-spacing-4)
+     <Box p={{ base: "2", md: "4" }} /> -> class: astralis-p astralis-p-md
+                                          style: --astralis-p: ...-2; --astralis-p-md: ...-4
+
+   Components keep using CVA for keyword typing + scalar resolution +
+   defaultVariants. Channel props bypass CVA entirely — their maps hold CSS
+   values, not classes, and must never reach it.
    ========================================================================== */
 
 import { isStateProp, resolveStateStyles } from "./interaction-state";
+import { CHANNEL_PROPS, channelClass, channelVar, isChannelMap } from "../const/channel";
 
 /** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
 export const BREAKPOINTS = ["sm", "md", "lg", "xl"] as const;
@@ -34,13 +48,13 @@ export type Responsive<T> = {
   [K in keyof T]: ResponsiveProp<NonNullable<T[K]>>;
 };
 
-/** A token -> className map, e.g. { "4": "astralis:p-4" }. */
+/** token -> className (keyword props) or token -> CSS value (channel props). */
 type TokenMap = Record<string, string>;
 
 /**
  * Injects a breakpoint variant *inside* the astralis prefix so the output is a
  * valid Tailwind-v4 prefixed class: "astralis:p-4" + "md" -> "astralis:md:p-4".
- * Handles space-separated multi-class values and unprefixed fallbacks.
+ * Keyword props only — channel props never pass through here.
  */
 function withBreakpoint(className: string, bp: Breakpoint): string {
   return className
@@ -66,24 +80,35 @@ function isResponsiveObject(
 export interface ResolveStylePropsConfig {
   /** Token maps keyed by prop name — typically the same object passed to CVA `variants`. */
   maps: Record<string, TokenMap>;
-  /** The CVA function for this layer; resolves scalar base values + defaultVariants. */
+  /** The CVA function for this layer; resolves scalar keyword values + defaultVariants. */
   variants: (props: Record<string, unknown>) => string;
 }
 
+/** What a bag of style props resolves to: classes plus channel variables. */
+export interface ResolvedStyles {
+  className: string;
+  /** Custom properties for channel props — spread into the element's `style`,
+   *  BEFORE any component-computed styles and the caller's own `style`, so
+   *  both of those keep winning. */
+  style: Record<string, string>;
+}
+
 /**
- * Resolves a bag of (possibly responsive) style props into a single className string.
+ * Resolves a bag of (possibly responsive) style props into classes + style.
  *
- * - Scalar values are forwarded to CVA untouched (preserving defaultVariants).
- * - Responsive objects are split: `base` is resolved from the token map, and each
- *   breakpoint override is resolved + prefixed. CVA still supplies the default for
- *   any prop given without a `base`, so mobile-first defaults are never lost.
+ * - Keyword scalars are forwarded to CVA untouched (preserving defaultVariants).
+ * - Keyword responsive objects resolve per breakpoint from the token map.
+ * - Channel props resolve to channel classes + custom properties; tokens are
+ *   looked up with `=== undefined` (never truthiness — "0" is a real token
+ *   whose value is the string "0").
  */
 export function resolveStyleProps(
   props: Record<string, unknown>,
   { maps, variants }: ResolveStylePropsConfig,
-): string {
+): ResolvedStyles {
   const baseProps: Record<string, unknown> = {};
-  const responsive: string[] = [];
+  const classes: string[] = [];
+  const style: Record<string, string> = {};
 
   for (const key in props) {
     const value = props[key];
@@ -94,8 +119,38 @@ export function resolveStyleProps(
     // so every Box-composing primitive gets them from one place and none can
     // leak `hover` onto the DOM as an attribute.
     if (isStateProp(key)) {
-      const cls = resolveStateStyles(key, value);
-      if (cls) responsive.push(cls);
+      const resolved = resolveStateStyles(key, value);
+      if (resolved.className) classes.push(resolved.className);
+      Object.assign(style, resolved.style);
+      continue;
+    }
+
+    // Channel route needs BOTH the registered name AND a branded value map —
+    // `size` on Text is a typography rung whose map holds classes, and it must
+    // stay on the keyword path below.
+    const slug = (CHANNEL_PROPS as Record<string, string | undefined>)[key];
+    if (slug !== undefined && isChannelMap(maps[key])) {
+      const map = maps[key];
+      if (isResponsiveObject(value)) {
+        for (const bp in value) {
+          const token = (value as Record<string, string>)[bp];
+          const css = map[token];
+          if (css === undefined) continue;
+          if (bp === "base") {
+            classes.push(channelClass(slug));
+            style[channelVar(slug)] = css;
+          } else if (BREAKPOINT_SET.has(bp)) {
+            classes.push(channelClass(slug, bp));
+            style[channelVar(slug, bp)] = css;
+          }
+        }
+      } else {
+        const css = map[value as string];
+        if (css !== undefined) {
+          classes.push(channelClass(slug));
+          style[channelVar(slug)] = css;
+        }
+      }
       continue;
     }
 
@@ -106,13 +161,16 @@ export function resolveStyleProps(
         const token = (value as Record<string, string>)[bp];
         const cls = map[token];
         if (!cls) continue;
-        if (bp === "base") responsive.push(cls);
-        else if (BREAKPOINT_SET.has(bp)) responsive.push(withBreakpoint(cls, bp as Breakpoint));
+        if (bp === "base") classes.push(cls);
+        else if (BREAKPOINT_SET.has(bp)) classes.push(withBreakpoint(cls, bp as Breakpoint));
       }
     } else {
       baseProps[key] = value;
     }
   }
 
-  return [variants(baseProps), ...responsive].filter(Boolean).join(" ");
+  return {
+    className: [variants(baseProps), ...classes].filter(Boolean).join(" "),
+    style,
+  };
 }

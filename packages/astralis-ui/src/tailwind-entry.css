@@ -9,7 +9,13 @@
    project consuming this stylesheet. We ship a `.astralis`-scoped port of
    Preflight instead (see @layer base below), so this file resets Astralis
    components and touches nothing else in the consumer's document. */
-@layer theme, base, components, utilities;
+/* `channels` sits ABOVE utilities: an explicit per-element value prop must
+   beat any recipe's ambient utility class (astralis:w-full on a wrapper,
+   astralis:h-full in a variant). tailwind-merge used to arbitrate those as
+   same-system utilities; channel classes carry no value for it to compare,
+   so the cascade has to rank them. A consumer's inline `style` still beats
+   everything. */
+@layer theme, base, components, utilities, channels;
 @import "tailwindcss/theme.css" layer(theme) prefix(astralis);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(astralis);
 
@@ -49,6 +55,13 @@
 @import "./theme/tokens/shadow.css";
 @import "./theme/tokens/semantic.css";
 @import "./theme/tokens/accent.css";
+
+/* Var-channel rules: one class per value-bearing prop per breakpoint, reading
+   the custom property the responsive engine sets inline. Lives in
+   @layer channels (above utilities) so an explicit prop beats a recipe's
+   ambient utility class; inline `style` still beats the prop.
+   See const/channel.ts. */
+@import "./theme/channels.css";
 
 /* Auto-generated: forces sm/md/lg/xl variants for every token utility so the
    runtime responsive engine always resolves to real CSS. Regenerate via

@@ -18,7 +18,7 @@ export function AvatarRoot({
   src, alt, name, icon, size, shape, colorScheme, ring, children, className = "", style,
   ...rest
 }: AvatarProps) {
-  const { placementClass } = splitPlacement(rest);
+  const { placementClass, placementStyle } = splitPlacement(rest);
   const [imgError, setImgError] = useState(false);
   const group = useAvatarGroupContext();
 
@@ -43,7 +43,7 @@ export function AvatarRoot({
         placementClass,
         className,
       )}
-      style={style}
+      style={{ ...placementStyle, ...style }}
     >
       {showImage ? (
         <img

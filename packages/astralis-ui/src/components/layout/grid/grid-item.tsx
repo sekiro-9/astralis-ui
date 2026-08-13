@@ -36,15 +36,14 @@ const GridItem = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+    const own = resolveStyleProps(variantProps, { maps: gridItemVariantMap, variants: gridItemVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          resolveStyleProps(variantProps, { maps: gridItemVariantMap, variants: gridItemVariants }),
-          className,
-        )}
+        className={astralisMerge(box.className, own.className, className)}
         ref={ref}
-        style={area ? { gridArea: area, ...style } : style}
+        style={{ ...box.style, ...own.style, ...(area ? { gridArea: area } : {}), ...style }}
         {...htmlProps}
       >
         {children}

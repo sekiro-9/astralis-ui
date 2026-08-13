@@ -24,14 +24,18 @@ const Container = forwardRef(
       centerContent = false,
       maxW = "5xl",
       px = "4",
+      style,
       ...props
     }: ContainerProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
 
-    // Defaults first; any matching box prop in `...props` (e.g. a custom `w`) overrides.
-    const boxVariantProps: Record<string, any> = { w: "full", maxW, px };
+    // Defaults first; any matching box prop in `...props` (e.g. a custom `w`
+    // or `mx`) overrides by plain key overwrite. Centering is the `mx: "auto"`
+    // default rather than a literal class — a class would sit in a later
+    // cascade layer and silently beat a caller's mx prop.
+    const boxVariantProps: Record<string, any> = { w: "full", maxW, px, mx: "auto" };
     const htmlProps: Record<string, any> = {};
     for (const key in props) {
       if (Object.prototype.hasOwnProperty.call(props, key)) {
@@ -40,15 +44,17 @@ const Container = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
         className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          "astralis:mx-auto",
+          box.className,
           centerContent && "astralis:flex astralis:flex-col astralis:items-center",
           className,
         )}
         ref={ref}
+        style={{ ...box.style, ...style }}
         {...htmlProps}
       >
         {children}

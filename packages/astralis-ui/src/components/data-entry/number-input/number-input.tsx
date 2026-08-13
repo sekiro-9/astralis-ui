@@ -38,7 +38,7 @@ export function NumberInput({
   ref,
   ...rest
 }: NumberInputProps & { ref?: Ref<HTMLInputElement> }) {
-  const { placementClass, rest: domProps } = splitPlacement(rest);
+  const { placementClass, placementStyle, rest: domProps } = splitPlacement(rest);
 
     const field = useFieldContext();
     const isInvalid = invalidProp ?? field?.invalid;
@@ -97,7 +97,7 @@ export function NumberInput({
     // Placement sits on the wrapper, not the input: the wrapper is what a
     // parent lays out, and the steppers are positioned against it.
     return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", placementClass)}>
+      <div className={astralisMerge("astralis:relative astralis:w-full", placementClass)} style={placementStyle}>
         <input
           ref={ref}
           id={id}

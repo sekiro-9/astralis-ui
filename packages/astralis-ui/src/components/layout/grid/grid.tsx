@@ -54,17 +54,16 @@ const GridRoot = forwardRef(
           }
         : undefined;
 
+    // Grid's own recipe FIRST, Box props second — same reason as Flex:
+    // `display` is shared, and Grid's cva always emits `grid`.
+    const own = resolveStyleProps(variantProps, { maps: gridVariantMap, variants: gridVariants });
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          // Grid's own recipe FIRST, Box props second — same reason as Flex:
-          // `display` is shared, and Grid's cva always emits `grid`.
-          resolveStyleProps(variantProps, { maps: gridVariantMap, variants: gridVariants }),
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          className,
-        )}
+        className={astralisMerge(own.className, box.className, className)}
         ref={ref}
-        style={templateStyle ? { ...templateStyle, ...style } : style}
+        style={{ ...own.style, ...box.style, ...templateStyle, ...style }}
         {...htmlProps}
       >
         {children}

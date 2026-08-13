@@ -15,7 +15,7 @@ export function StatIndicator({ type = "increase", children, className = "" }: S
         resolveStyleProps(
           { size },
           { maps: { size: statHelpSizeMap }, variants: statIndicatorVariants },
-        ),
+        ).className,
         isIncrease ? "astralis:text-green-solid" : "astralis:text-red-solid",
         className,
       )}

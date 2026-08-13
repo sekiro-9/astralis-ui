@@ -14,7 +14,7 @@ type FlexItemComponent = <T extends ElementType = "div">(
 
 const FlexItem = forwardRef(
   <T extends ElementType = "div">(
-    { children, as, className, ...props }: FlexItemProps<T>,
+    { children, as, className, style, ...props }: FlexItemProps<T>,
     ref: Ref<any>,
   ) => {
     const Element = (as || "div") as ElementType;
@@ -36,13 +36,13 @@ const FlexItem = forwardRef(
       }
     }
 
+    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+    const own = resolveStyleProps(variantProps, { maps: flexItemVariantMap, variants: flexItemVariants });
+
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants }),
-          resolveStyleProps(variantProps, { maps: flexItemVariantMap, variants: flexItemVariants }),
-          className,
-        )}
+        className={astralisMerge(box.className, own.className, className)}
+        style={{ ...box.style, ...own.style, ...style }}
         ref={ref}
         {...htmlProps}
       >

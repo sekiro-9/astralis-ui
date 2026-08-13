@@ -10,7 +10,8 @@ export function StatValue({ children, className = "" }: StatValueProps) {
   return (
     <span
       className={astralisMerge(
-        resolveStyleProps({ size }, { maps: { size: statValueSizeMap }, variants: statValueVariants }),
+        resolveStyleProps({ size }, { maps: { size: statValueSizeMap }, variants: statValueVariants })
+          .className,
         className,
       )}
     >

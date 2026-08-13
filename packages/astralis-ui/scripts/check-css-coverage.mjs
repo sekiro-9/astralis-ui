@@ -1,44 +1,56 @@
 /* ==========================================================================
-   ASTRALIS — CSS COVERAGE GATE
+   ASTRALIS — CSS COVERAGE GATE (three parts)
    --------------------------------------------------------------------------
-   The library ships precompiled CSS, so a class the components can emit but
-   Tailwind didn't generate fails SILENTLY in the browser. This script makes
-   that failure loud at build time:
+   The library ships precompiled CSS, so anything the components can emit but
+   the stylesheet doesn't define fails SILENTLY in the browser. This script
+   makes that failure loud at build time:
 
-   - EVERY `astralis:*` class literal in src must exist at base.
-   - Classes in the RESPONSIVE scope (const maps + *Map style blocks — the
-     only ones the runtime engine can breakpoint-prefix) must also exist at
-     every sm/md/lg/xl variant.
+   1. KEYWORD classes — every `astralis:*` literal in src exists at base, and
+      everything in the responsive scope also exists at all four breakpoints.
 
-   Runs as part of `build:css`; exits non-zero (failing the build) on any miss.
+   2. CHANNEL completeness — every CHANNEL_PROPS slug has its fixed rule in
+      the compiled CSS at base, at all four breakpoint suffixes, and at all
+      three interaction states. This is what makes the hand-authored
+      theme/channels.css safe to edit. Also asserts the four @media
+      min-widths in channels.css match the --breakpoint-* theme values.
+
+   3. TOKEN -> VALUE totality — every entry in every branded value map is a
+      non-empty CSS value, contains no leftover class string, and every
+      var(--astralis-*) it references is actually declared in the token CSS.
+      (Imports the BUILT maps from dist, so it validates what ships.)
+
+   Runs as part of `build:css` (after the vite build); exits non-zero on any
+   miss.
    ========================================================================== */
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readFileSync, readdirSync } from "node:fs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 import {
   collectAllTokens,
   collectResponsiveTokens,
-  collectStateTokens,
-  STATE_VARIANTS,
+  collectChannelSlugs,
 } from "./token-scope.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
 const BREAKPOINTS = ["sm", "md", "lg", "xl"];
+const STATES = ["hover", "focus-visible", "active"];
+const CHANNEL_MAP_BRAND = Symbol.for("astralis.channel-map");
 
-const all = collectAllTokens();
-const responsive = collectResponsiveTokens();
-const stateful = collectStateTokens();
+const missing = [];
 
-// Every class selector defined in the compiled CSS (unescape \x sequences).
+/* ---- shared: every class selector defined in the compiled CSS ---------- */
 const css = readFileSync(join(PKG, "dist", "styles.css"), "utf8");
 const defined = new Set();
 for (const m of css.matchAll(/\.((?:[^\s{},.:#()[\]>+~\\'"]|\\.)+)/g)) {
   defined.add(m[1].replace(/\\(.)/g, "$1"));
 }
 
-const missing = [];
+/* ---- part 1: keyword classes ------------------------------------------- */
+const all = collectAllTokens();
+const responsive = collectResponsiveTokens();
+
 for (const bare of all) {
   if (!defined.has(`astralis:${bare}`)) {
     missing.push(`astralis:${bare}  [base]`);
@@ -54,25 +66,102 @@ for (const bare of all) {
   }
 }
 
-// Interaction states are resolved from the same token maps, so every stateful
-// token must carry all four variants or `hover={{ bg: … }}` silently no-ops.
-for (const bare of stateful) {
-  for (const state of STATE_VARIANTS) {
-    if (!defined.has(`astralis:${state}:${bare}`)) {
-      missing.push(`astralis:${bare}  [${state} variant missing]`);
-      break;
+/* ---- part 2: channel completeness -------------------------------------- */
+const slugs = collectChannelSlugs();
+
+for (const slug of slugs) {
+  if (!defined.has(`astralis-${slug}`)) missing.push(`astralis-${slug}  [channel base]`);
+  for (const bp of BREAKPOINTS) {
+    if (!defined.has(`astralis-${slug}-${bp}`)) {
+      missing.push(`astralis-${slug}-${bp}  [channel breakpoint]`);
+    }
+  }
+  for (const state of STATES) {
+    if (!defined.has(`astralis-${state}-${slug}`)) {
+      missing.push(`astralis-${state}-${slug}  [channel state]`);
     }
   }
 }
 
+// Breakpoints must stay literal AND in sync with the theme. channels.css
+// carries them as @media literals; the entry declares --breakpoint-*.
+const channelsCss = readFileSync(join(PKG, "src", "theme", "channels.css"), "utf8");
+const entryCss = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
+const channelWidths = [...channelsCss.matchAll(/@media \(min-width: ([\d.]+rem)\)/g)].map((m) => m[1]);
+for (const [i, bp] of BREAKPOINTS.entries()) {
+  const theme = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
+  const inChannels = channelWidths[i];
+  if (!theme || theme[1] !== inChannels) {
+    missing.push(
+      `breakpoint ${bp}: channels.css says ${inChannels ?? "(absent)"}, theme says ${theme?.[1] ?? "(absent)"}  [breakpoint drift]`,
+    );
+  }
+}
+
+/* ---- part 3: token -> value totality ------------------------------------ */
+// Every --astralis-* custom property declared in the token CSS (idents unescaped).
+const declaredVars = new Set();
+const tokensDir = join(PKG, "src", "theme", "tokens");
+for (const f of readdirSync(tokensDir)) {
+  if (!f.endsWith(".css")) continue;
+  const text = readFileSync(join(tokensDir, f), "utf8");
+  for (const m of text.matchAll(/(--astralis-[\w\\./-]+)\s*:/g)) {
+    declaredVars.add(m[1].replace(/\\(.)/g, "$1"));
+  }
+}
+
+const VALUE_MAP_MODULES = [
+  "spacing-mappings.js",
+  "sizing-mappings.js",
+  "positioning-mappings.js",
+  "rounded-mappings.js",
+  "layout-mappings.js",
+  "color-mappings.js",
+  "common-mappings.js",
+];
+
+let valueMapCount = 0;
+let tokenCount = 0;
+for (const mod of VALUE_MAP_MODULES) {
+  const url = pathToFileURL(join(PKG, "dist", "const", mod)).href;
+  const exports = await import(url);
+  for (const [name, value] of Object.entries(exports)) {
+    if (!value || typeof value !== "object" || value[CHANNEL_MAP_BRAND] !== true) continue;
+    valueMapCount++;
+    for (const [token, cssValue] of Object.entries(value)) {
+      tokenCount++;
+      if (typeof cssValue !== "string" || cssValue.length === 0) {
+        missing.push(`${name}.${token} = ${JSON.stringify(cssValue)}  [empty value]`);
+        continue;
+      }
+      if (cssValue.includes("astralis:")) {
+        missing.push(`${name}.${token} = "${cssValue}"  [class string left in a value map]`);
+        continue;
+      }
+      for (const ref of cssValue.matchAll(/var\((--astralis-[^),\s]+)/g)) {
+        const ident = ref[1].replace(/\\(.)/g, "$1");
+        if (!declaredVars.has(ident)) {
+          missing.push(`${name}.${token} -> var(${ref[1]})  [undeclared token variable]`);
+        }
+      }
+    }
+  }
+}
+
+/* ---- verdict ------------------------------------------------------------ */
 if (missing.length) {
-  console.error(`[astralis] CSS COVERAGE FAILURE — ${missing.length} class(es) referenced in source but absent from dist/styles.css:`);
+  console.error(
+    `[astralis] CSS COVERAGE FAILURE — ${missing.length} problem(s):`,
+  );
   for (const line of missing.sort()) console.error("  " + line);
-  console.error("[astralis] Every emitted class must compile. Fix the token/map, add the missing @theme namespace key, or remove the entry.");
+  console.error(
+    "[astralis] Every emitted class must compile and every value-map entry must resolve. Fix the token/map, channels.css, or the @theme key.",
+  );
   process.exit(1);
 }
 
 console.log(
-  `[astralis] css coverage: ${all.size} base classes + ${responsive.size} responsive x ${BREAKPOINTS.length} breakpoints` +
-    ` + ${stateful.size} stateful x ${STATE_VARIANTS.length} states all present in dist/styles.css`,
+  `[astralis] css coverage: ${all.size} keyword base + ${responsive.size} responsive x ${BREAKPOINTS.length}` +
+    ` | ${slugs.length} channel slugs x (base + ${BREAKPOINTS.length} bp + ${STATES.length} states)` +
+    ` | ${tokenCount} tokens across ${valueMapCount} value maps all resolve`,
 );

@@ -131,7 +131,7 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     },
     ref,
   ) => {
-    const { placementClass } = splitPlacement(rest);
+    const { placementClass, placementStyle } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -288,7 +288,10 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     const showClear = clearable && selectedValues.length > 0 && !isDisabled && !isReadOnly;
 
     return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), placementClass, className)}>
+      <div
+        className={astralisMerge("astralis:relative astralis:w-full", accentClass(colorScheme), placementClass, className)}
+        style={placementStyle}
+      >
         {/* Native form bridge — one hidden input per selected value (repeated
             name), so the selection reaches <form> submission. */}
         {name != null &&

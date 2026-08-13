@@ -4,7 +4,7 @@ import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
 import { accentClass } from "../../../const/color-schemes";
 import { textVariantMap } from "../text/text.styles";
-import { linkHoverColor, linkTypographyVariants, linkVariants } from "./link.styles";
+import { linkAccentColor, linkHoverColor, linkTypographyVariants, linkVariants } from "./link.styles";
 import type { LinkProps } from "./link.types";
 
 /** An inline text link: Text's typography, plus accent colouring and external handling. */
@@ -30,40 +30,47 @@ export function Link<C extends ElementType = "a">({
   lineClamp,
   ...rest
 }: LinkProps<C>) {
-  const { placementClass, rest: domProps } = splitPlacement(rest);
+  const { placementClass, rest: split } = splitPlacement(rest);
+  // splitPlacement folds placement vars under rest.style (user style last).
+  const { style, ...domProps } = split as Record<string, any>;
 
   const Element = (as || "a") as ElementType;
   const externalProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+
+  // Typography last, so an explicit prop beats the accent label colour.
+  const typography = resolveStyleProps(
+    {
+      size,
+      weight,
+      align,
+      color,
+      casing,
+      lineHeight,
+      letterSpacing,
+      fontFamily,
+      fontStyle,
+      textDecoration,
+      truncate,
+      lineClamp: truncate ? undefined : lineClamp,
+    },
+    { maps: textVariantMap, variants: linkTypographyVariants },
+  );
 
   return (
     <Element
       ref={ref}
       className={astralisMerge(
         linkVariants({ variant }),
-        // Only shift colour on hover when the colour is ours to shift. With an
-        // explicit `color` the affordance falls to `variant`'s underline.
+        // Only paint/shift colour when the colour is ours. With an explicit
+        // `color` the resting accent and its hover shift both step aside —
+        // the affordance falls to `variant`'s underline.
+        color === undefined ? linkAccentColor : "",
         color === undefined ? linkHoverColor : "",
         accentClass(colorScheme),
-        // Typography last, so an explicit prop beats the accent label colour.
-        resolveStyleProps(
-          {
-            size,
-            weight,
-            align,
-            color,
-            casing,
-            lineHeight,
-            letterSpacing,
-            fontFamily,
-            fontStyle,
-            textDecoration,
-            truncate,
-            lineClamp: truncate ? undefined : lineClamp,
-          },
-          { maps: textVariantMap, variants: linkTypographyVariants },
-        ),
+        typography.className,
         placementClass, className,
       )}
+      style={{ ...typography.style, ...style }}
       {...externalProps}
       {...domProps}
     >

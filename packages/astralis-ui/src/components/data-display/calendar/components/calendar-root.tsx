@@ -76,11 +76,12 @@ export function CalendarRoot({
   isDateUnavailable,
   size = "md",
   className,
-  style,
   children,
   ref,
   ...props
 }: CalendarRootProps & { ref?: Ref<HTMLDivElement> }) {
+    // `style` stays in props: splitPlacement folds channel vars under it and
+    // it arrives via the domProps spread (user keys win).
     const { placementClass, rest: domProps } = splitPlacement(props);
 
     const initialMonth = startOfMonth(defaultMonth ?? new Date());
@@ -225,7 +226,6 @@ export function CalendarRoot({
           ]
             .filter(Boolean)
             .join(" ")}
-          style={style}
           {...domProps}
         >
           {children ?? (

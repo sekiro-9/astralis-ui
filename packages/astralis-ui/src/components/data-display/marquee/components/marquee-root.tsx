@@ -43,12 +43,17 @@ export function MarqueeRoot({
   gradientWidth = "10%",
   loopCount = 0,
   className = "",
-  style,
   children,
   ref,
   ...rest
 }: MarqueeRootProps & { ref?: Ref<HTMLDivElement> }) {
+    // `style` rides through splitPlacement's fold (channel vars first, the
+    // caller's keys last); it's lifted back out here so the gradient mask can
+    // keep its place at the top of the pile.
     const { placementClass, rest: domProps } = splitPlacement(rest);
+    const { style: foldedStyle, ...domRest } = domProps as typeof domProps & {
+      style?: React.CSSProperties;
+    };
 
     const uid = useId();
     const trackRef = useRef<HTMLDivElement>(null);
@@ -87,7 +92,7 @@ export function MarqueeRoot({
       position: "relative",
       overflow: "hidden",
       ...(isVertical ? { display: "flex", flexDirection: "column" } : {}),
-      ...style,
+      ...foldedStyle,
     };
 
     const trackStyle: React.CSSProperties = {
@@ -136,7 +141,7 @@ export function MarqueeRoot({
         onMouseLeave={() => pauseOnHover && setPaused(false)}
         onFocus={() => pauseOnFocus && setPaused(true)}
         onBlur={() => pauseOnFocus && setPaused(false)}
-        {...domProps}
+        {...domRest}
       >
         <div
           ref={trackRef}

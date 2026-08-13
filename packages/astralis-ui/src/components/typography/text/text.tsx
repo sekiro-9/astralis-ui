@@ -56,34 +56,36 @@ const Text = forwardRef(
     const Element = (paragraph ? "p" : as || "p") as ElementType;
     const elementStr = typeof Element === "string" ? Element : "";
 
-    const { placementClass, rest: domProps } = splitPlacement(props);
+    const { placementClass, rest } = splitPlacement(props);
+    // splitPlacement already folded placement vars under rest.style (user style
+    // last) — pull it out so the typography channel vars can slot in first.
+    const { style, ...domProps } = rest as Record<string, any>;
 
+    const typography = resolveStyleProps(
+      {
+        size: size || DEFAULT_HEADING_SIZES[elementStr] || "md",
+        weight: weight || DEFAULT_WEIGHTS[elementStr] || "normal",
+        align,
+        color,
+        casing,
+        lineHeight,
+        letterSpacing,
+        fontFamily,
+        fontStyle,
+        textDecoration,
+        gutterBottom,
+        paragraph,
+        truncate,
+        lineClamp: truncate ? undefined : lineClamp,
+      },
+      { maps: textVariantMap, variants: textVariants },
+    );
 
     return (
       <Element
-        className={astralisMerge(
-          resolveStyleProps(
-            {
-              size: size || DEFAULT_HEADING_SIZES[elementStr] || "md",
-              weight: weight || DEFAULT_WEIGHTS[elementStr] || "normal",
-              align,
-              color,
-              casing,
-              lineHeight,
-              letterSpacing,
-              fontFamily,
-              fontStyle,
-              textDecoration,
-              gutterBottom,
-              paragraph,
-              truncate,
-              lineClamp: truncate ? undefined : lineClamp,
-            },
-            { maps: textVariantMap, variants: textVariants },
-          ),
-          placementClass, className,
-        )}
+        className={astralisMerge(typography.className, placementClass, className)}
         ref={ref}
+        style={{ ...typography.style, ...style }}
         {...domProps}
       >
         {children}

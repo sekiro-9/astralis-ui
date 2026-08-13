@@ -21,7 +21,7 @@ export function PaginationRoot({
   children,
   ...rest
 }: PaginationProps) {
-  const { placementClass } = splitPlacement(rest);
+  const { placementClass, placementStyle } = splitPlacement(rest);
 
   // Pages come from `totalPages`, or are derived from `count` + `pageSize`.
   const resolvedTotal = Math.max(1, totalPages ?? Math.ceil((count ?? 0) / pageSize));
@@ -49,6 +49,7 @@ export function PaginationRoot({
       <nav
         aria-label="Pagination"
         className={astralisMerge("astralis:flex astralis:justify-center", accentClass(colorScheme), placementClass, className)}
+        style={placementStyle}
       >
         {children}
       </nav>
