@@ -245,9 +245,9 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                 <Progress value={64} aria-label="Upload" className="flex-1" />
               </div>
               <div className="flex items-center gap-3">
-                <Skeleton variant="circle" className="astralis:size-10 astralis:shrink-0" />
+                <Skeleton variant="circle" w="10" h="10" className="astralis:shrink-0" />
                 <div className="flex flex-1 flex-col gap-2">
-                  <Skeleton variant="text" className="astralis:w-3/4" />
+                  <Skeleton variant="text" w="3/4" />
                   <Skeleton variant="text" />
                 </div>
               </div>

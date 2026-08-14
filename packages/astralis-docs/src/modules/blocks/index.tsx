@@ -51,7 +51,7 @@ export function BlockGallery({ groups, all }: BlockGalleryProps) {
       onValueChange={setCategory}
       variant="segmented"
       size="sm"
-      className="astralis:gap-4"
+      style={{ gap: "var(--astralis-spacing-4)" }}
     >
       <Tabs.List aria-label="Block categories" className="self-start">
         <Tabs.Trigger value={ALL}>

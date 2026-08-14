@@ -6,6 +6,7 @@
     "dev": "pnpm --filter astralis-playground dev",
     "dev:ui": "pnpm --filter astralis-ui dev",
     "dev:docs": "pnpm --filter astralis-docs dev",
+    "preview:docs": "pnpm --filter astralis-docs start",
     "build": "pnpm -r build",
     "build:ui": "pnpm --filter astralis-ui build",
     "build:playground": "pnpm --filter astralis-playground build",

@@ -7,7 +7,7 @@ export function GET() {
   const parts: string[] = [
     "# Astralis UI — full documentation",
     "",
-    "React 19 component library on semantic design tokens. Precompiled prefixed CSS; no build tooling required in the consuming app.",
+    "React 19 component library on semantic design tokens. Precompiled, prefix-isolated CSS (value props deliver through CSS custom properties); no build tooling required in the consuming app.",
     "",
   ];
 

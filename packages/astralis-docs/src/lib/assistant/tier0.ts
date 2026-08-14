@@ -136,7 +136,7 @@ It works through a CSS-variable accent channel, so no per-hue CSS ships. How it 
       "media queries",
       "responsive design",
     ],
-    answer: `Every style prop accepts a breakpoint map — mobile-first, resolved to precompiled classes with zero runtime cost:
+    answer: `Every style prop accepts a breakpoint map — mobile-first, zero runtime cost. Values resolve to a fixed class per breakpoint plus a CSS token variable on the style attribute (keyword props like \`display\` use precompiled classes):
 
 \`\`\`tsx
 <Box p={{ base: "4", md: "8" }} />

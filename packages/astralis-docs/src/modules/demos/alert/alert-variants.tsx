@@ -7,7 +7,7 @@ export function AlertVariants() {
   const [dismissed, setDismissed] = useState(false);
 
   return (
-    <VStack gap="3" alignItems="stretch" className="astralis:w-full astralis:max-w-xl">
+    <VStack gap="3" alignItems="stretch" w="full" maxW="xl">
       <Alert status="success" variant="subtle">
         <Alert.Title>subtle — the default tinted panel</Alert.Title>
       </Alert>

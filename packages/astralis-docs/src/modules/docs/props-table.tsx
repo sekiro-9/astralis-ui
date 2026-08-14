@@ -53,8 +53,15 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
           <Table.Row key={row.prop} className="align-top">
             <Table.Cell>
               {/* The accent tint has no Box token (bg/color are surface+label
-                  only), so it stays a prefixed class override. */}
-              <Code className="astralis:bg-accent-subtle astralis:text-accent-label">{row.prop}</Code>
+                  only), so it rides the style hatch on the accent variables. */}
+              <Code
+                style={{
+                  background: "var(--astralis-color-accent-subtle)",
+                  color: "var(--astralis-color-accent-label)",
+                }}
+              >
+                {row.prop}
+              </Code>
             </Table.Cell>
             {/* bg="transparent" + color: Box style props, so the unchipped
                 look is expressed in tokens rather than an override class. */}
@@ -74,7 +81,10 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
                 </Text>
               )}
             </Table.Cell>
-            <Table.Cell className="min-w-56 leading-relaxed astralis:text-label-muted">
+            <Table.Cell
+              className="min-w-56 leading-relaxed"
+              style={{ color: "var(--astralis-color-label-muted)" }}
+            >
               {row.description}
             </Table.Cell>
           </Table.Row>

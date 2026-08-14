@@ -22,7 +22,7 @@ const GROUPED = [
 
 export function ComboboxDemo() {
   return (
-    <VStack gap="4" alignItems="stretch" className="astralis:w-full astralis:max-w-sm">
+    <VStack gap="4" alignItems="stretch" w="full" maxW="sm">
       <Combobox options={FRAMEWORKS} placeholder="Pick a framework…" clearable />
       <Combobox options={GROUPED} placeholder="Grouped options…" defaultValue="europa" clearable />
     </VStack>

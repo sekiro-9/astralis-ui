@@ -7,7 +7,9 @@ const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   
   // astralis-blocks ships raw TS/TSX on purpose — its source IS the artifact.
-  transpilePackages: ["astralis-ui", "astralis-blocks"],
+  // astralis-ui is NOT here: it ships prebuilt ESM (dist/), and transpiling it
+  // again roughly doubled Turbopack's dev graph for no benefit.
+  transpilePackages: ["astralis-blocks"],
   
   // Point Turbopack root to the workspace root directory
   turbopack: {

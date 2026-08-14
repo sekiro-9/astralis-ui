@@ -43,7 +43,11 @@ function Cell({
     <Card
       variant="outline"
       size="lg"
-      className={`flex flex-col hover:-translate-y-1 hover:border-stroke-base hover:shadow-lg astralis:rounded-3xl astralis:bg-surface-subtle ${className}`}
+      className={`flex flex-col hover:-translate-y-1 hover:border-stroke-base hover:shadow-lg ${className}`}
+      style={{
+        borderRadius: "var(--astralis-border-radius-3xl)",
+        background: "var(--astralis-color-surface-subtle)",
+      }}
     >
       <CardHeader>
         {/* Prefixed only where it overrides a class the component sets
@@ -59,7 +63,7 @@ function Cell({
 export function Bento() {
   // Live marketing grid: each cell is a real component painting from tokens.
   return (
-    <section className="mx-auto max-w-screen-xl px-6 py-28 lg:px-12 lg:py-36">
+    <section className="mx-auto max-w-screen-xl px-6 py-24 lg:px-12 lg:py-28">
       <Reveal>
         <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
           Built on tokens, not guesses
@@ -119,7 +123,7 @@ export function Bento() {
               >
                 {/* Prefixed: overrides the horizontal Label's fixed w-40, which
                     would crop these long token names. */}
-                <DataListLabel className="truncate astralis:w-auto astralis:flex-1">
+                <DataListLabel className="truncate astralis:flex-1" style={{ width: "auto" }}>
                   {row.token}
                 </DataListLabel>
                 <DataListValue className="flex items-center gap-1.5 astralis:flex-none">

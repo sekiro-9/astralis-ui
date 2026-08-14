@@ -330,7 +330,12 @@ export function Assistant() {
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {m.suggestions.map((s) => (
                         <Link key={s.href} href={s.href} target="_blank">
-                          <Tag variant="surface" colorScheme="brand" size="sm" className="astralis:rounded-full">
+                          <Tag
+                            variant="surface"
+                            colorScheme="brand"
+                            size="sm"
+                            style={{ borderRadius: "var(--astralis-border-radius-full)" }}
+                          >
                             {s.title}
                           </Tag>
                         </Link>

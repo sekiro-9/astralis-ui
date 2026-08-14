@@ -4,7 +4,7 @@ import { Alert, VStack } from "astralis-ui";
 
 export function AlertDemo() {
   return (
-    <VStack gap="3" alignItems="stretch" className="astralis:w-full astralis:max-w-xl">
+    <VStack gap="3" alignItems="stretch" w="full" maxW="xl">
       <Alert status="info">
         <Alert.Title>Scheduled maintenance</Alert.Title>
         <Alert.Description>The dashboard will be read-only on Saturday from 02:00–04:00 UTC.</Alert.Description>

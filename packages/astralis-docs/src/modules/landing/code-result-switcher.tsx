@@ -12,7 +12,12 @@ interface Panel {
 
 export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
   return (
-    <Tabs defaultValue={panels[0]?.title} variant="subtle" rounded className="astralis:gap-6">
+    <Tabs
+      defaultValue={panels[0]?.title}
+      variant="subtle"
+      rounded
+      style={{ gap: "var(--astralis-spacing-6)" }}
+    >
       <Tabs.List aria-label="Examples" className="flex-wrap self-start">
         {panels.map((panel) => (
           <Tabs.Trigger key={panel.title} value={panel.title}>

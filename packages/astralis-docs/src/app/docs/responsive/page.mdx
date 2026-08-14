@@ -71,18 +71,36 @@ The common recipes:
 
 ## How it works (and why it's fast)
 
-Nothing is computed in the browser. A responsive value resolves to plain
-class names at render — `p={{ base: "2", md: "4" }}` becomes the classes
-`astralis:p-2 astralis:md:p-4` — and both classes **already exist** in the
-stylesheet you imported. At the library's build time, every token a
-responsive prop can accept is pre-generated at every breakpoint, and a
-build gate verifies each one landed in the compiled CSS. From there it's
-ordinary media queries, handled natively by the browser.
+Nothing is computed in the browser. A value-bearing prop resolves to one
+**fixed class per breakpoint** plus a CSS custom property carrying the value:
+
+```html
+<!-- p={{ base: "2", md: "4" }} renders as -->
+<div
+  class="astralis-p astralis-p-md"
+  style="--astralis-p: var(--astralis-spacing-2); --astralis-p-md: var(--astralis-spacing-4)"
+/>
+```
+
+The classes already exist in the stylesheet you imported — `.astralis-p`
+reads `var(--astralis-p)`, and `.astralis-p-md` does the same inside a
+`min-width: 48rem` media query. The class says *where* the value lands; the
+variable says *what* it is. Because the value travels as a token variable
+rather than being baked into a class name, the stylesheet stays small no
+matter how many values exist, and theming keeps cascading through the same
+tokens.
+
+Keyword props (`display`, `position`, alignment, ...) are small closed sets
+and resolve to pre-generated classes per breakpoint instead
+(`astralis:hidden astralis:md:flex`). A build gate verifies every class —
+fixed rules and keyword variants alike — landed in the compiled CSS.
+From there it's ordinary media queries, handled natively by the browser.
 
 Two practical consequences:
 
 - **No resize listeners, no JS at breakpoints, no flash** — server-rendered
-  HTML is responsive before hydration.
-- **The values are a closed set.** Props accept scale tokens, not arbitrary
-  CSS — that's what makes it possible to precompile (and type-check)
-  everything. For a value outside the scale, use `className` or `style`.
+  HTML is responsive before hydration (custom properties in `style` are
+  plain HTML attributes).
+- **The values are token-checked.** Props accept scale tokens, so every
+  value is type-checked against the theme. For a one-off outside the scale,
+  use the `style` prop.

@@ -173,7 +173,8 @@ function Board({
           variant="segmented"
           size="sm"
           keepMounted
-          className="min-h-0 flex-1 astralis:gap-3"
+          className="min-h-0 flex-1"
+          style={{ gap: "var(--astralis-spacing-3)" }}
         >
           <div className="flex items-center justify-between gap-2">
             <Tabs.List aria-label="Playground rail">

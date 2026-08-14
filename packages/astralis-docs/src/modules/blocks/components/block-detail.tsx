@@ -79,7 +79,7 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
 
         {/* `as="ol"`: List renders a <ul> by default, and numbered steps are an
             ordered list — decimal markers alone don't carry that to a reader. */}
-        <List as="ol" styleType="decimal" spacing="3" className="astralis:pl-5">
+        <List as="ol" styleType="decimal" spacing="3" pl="5">
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
               Run the command — it writes{" "}

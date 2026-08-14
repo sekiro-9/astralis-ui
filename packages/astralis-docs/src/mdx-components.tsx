@@ -96,7 +96,9 @@ const components: MDXComponents = {
    * Blockquote, Table and Separator all paint from the same tokens as the
    * examples beside them, which is the whole point of dogfooding.
    */
-  code: (props) => <Code variant="outline" className="astralis:text-label-base" {...props} />,
+  code: (props) => (
+    <Code variant="outline" style={{ color: "var(--astralis-color-label-base)" }} {...props} />
+  ),
   pre: Pre,
   blockquote: (props) => <Blockquote className="my-6" {...props} />,
   table: (props) => <Table variant="outline" className="docs-scroll my-6" {...props} />,
@@ -104,7 +106,13 @@ const components: MDXComponents = {
   tbody: (props) => <TableBody {...props} />,
   tr: (props) => <TableRow {...props} />,
   th: (props) => <TableHead {...props} />,
-  td: (props) => <TableCell className="leading-relaxed astralis:text-label-muted" {...props} />,
+  td: (props) => (
+    <TableCell
+      className="leading-relaxed"
+      style={{ color: "var(--astralis-color-label-muted)" }}
+      {...props}
+    />
+  ),
   hr: () => <Separator className="my-10" />,
   // Docs building blocks available in every MDX page without imports.
   ComponentPreview,

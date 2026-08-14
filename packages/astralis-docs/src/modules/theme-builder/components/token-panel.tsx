@@ -92,9 +92,10 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
         onValueChange={(value) => setTab(value as ExportTab["value"])}
         variant="segmented"
         size="sm"
-        /* Prefixed so astralisMerge recognises the conflict and drops the
-           root's own gap-4 — an unprefixed gap-2 would just race it. */
-        className="min-h-0 flex-1 astralis:gap-2"
+        /* Inline style so the override beats the root's own gap class —
+           value-utility classes no longer ship since the var-channel. */
+        className="min-h-0 flex-1"
+        style={{ gap: "var(--astralis-spacing-2)" }}
       >
         <div className="flex items-center justify-between gap-2">
           <Tabs.List aria-label="Export format">

@@ -94,7 +94,12 @@ export function BlockWorkbench({ id, name, code }: BlockWorkbenchProps) {
   const width = VIEWPORTS.find((entry) => entry.id === viewport)?.width ?? null;
 
   return (
-    <Tabs defaultValue="preview" variant="segmented" size="sm" className="astralis:gap-3">
+    <Tabs
+      defaultValue="preview"
+      variant="segmented"
+      size="sm"
+      style={{ gap: "var(--astralis-spacing-3)" }}
+    >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Tabs.List aria-label="Block view">
           <Tabs.Trigger value="preview">Preview</Tabs.Trigger>

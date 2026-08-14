@@ -45,7 +45,9 @@ export function Header({ version }: { version: string }) {
               prefixed class merges against them. */}
           <Separator
             orientation="vertical"
-            className="mx-1 hidden sm:block astralis:h-4 astralis:self-center"
+            h="4"
+            alignSelf="center"
+            className="mx-1 hidden sm:block"
           />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
           <MobileNav />

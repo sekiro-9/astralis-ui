@@ -17,24 +17,43 @@ interface CopyCommandProps {
  * Flat parts, not `CodeBlock.*`: this is a Server Component, and namespace
  * access on a client-reference stub is undefined across the RSC boundary.
  *
- * The overrides are prefixed even though the docs site has its own Tailwind.
- * astralisMerge only recognises prefixed classes, so an unprefixed `flex` sits
- * *alongside* Root's `astralis:block` rather than replacing it — which is why
- * this used to render as a full-width box with the button on its own line.
+ * Styling: keyword utilities (inline-flex, items-center, ...) ride className;
+ * VALUE overrides use the `style` escape hatch with token variables — the
+ * per-value utility classes no longer ship since the var-channel migration,
+ * and style keeps every override on the theme's own tokens.
  */
 export function CopyCommand({ command }: CopyCommandProps) {
   return (
     <CodeBlock
       variant="outline"
       code={command}
-      className="astralis:inline-flex astralis:w-auto astralis:max-w-full astralis:flex-row astralis:items-center astralis:gap-1 astralis:rounded-md astralis:border-stroke-base astralis:bg-surface-subtle astralis:py-1 astralis:pl-3 astralis:pr-1"
+      maxW="full"
+      className="astralis:inline-flex astralis:flex-row astralis:items-center"
+      style={{
+        width: "auto",
+        gap: "var(--astralis-spacing-1)",
+        borderRadius: "var(--astralis-border-radius-md)",
+        borderColor: "var(--astralis-color-stroke-base)",
+        background: "var(--astralis-color-surface-subtle)",
+        padding:
+          "var(--astralis-spacing-1) var(--astralis-spacing-1) var(--astralis-spacing-1) var(--astralis-spacing-3)",
+      }}
     >
-      <CodeBlockContent className="astralis:min-w-0 astralis:p-0">
-        <CodeBlockCode className="astralis:text-xs astralis:text-label-muted">
+      <CodeBlockContent style={{ minWidth: 0, padding: 0 }}>
+        <CodeBlockCode
+          className="astralis:text-xs"
+          style={{ color: "var(--astralis-color-label-muted)" }}
+        >
           {command}
         </CodeBlockCode>
       </CodeBlockContent>
-      <CodeBlockCopyTrigger className="astralis:size-6 astralis:text-label-subtle" />
+      <CodeBlockCopyTrigger
+        style={{
+          width: "var(--astralis-size-6)",
+          height: "var(--astralis-size-6)",
+          color: "var(--astralis-color-label-subtle)",
+        }}
+      />
     </CodeBlock>
   );
 }

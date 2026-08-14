@@ -95,22 +95,29 @@ Box's and silently constrain the height. It is now a type error; use `maxW`.
 When you need something outside the scale, drop down a level — in this
 order:
 
-**1. `className`** — every component forwards it, and conflicts resolve
-predictably: your classes are merged last, so they win against the
-component's own styling.
-
-```tsx
-<Box p="4" className="my-fancy-gradient" />
-```
-
-Your own utility classes work here too, whatever generates them — Astralis's
-internal classes are prefixed (`astralis:*`), so the two systems can't
-collide.
-
-**2. `style`** — for truly dynamic one-off values:
+**1. `style`** — for one-off and dynamic values. Value props deliver through
+CSS custom properties, and your `style` always wins over them:
 
 ```tsx
 <Box style={{ transform: `translateX(${offset}px)` }} />
+<Box p="4" style={{ paddingTop: "13px" }} />  {/* one-off beats the prop */}
+```
+
+Reach for the token variables inside `style` to stay on the scale:
+
+```tsx
+<Box style={{ gap: "var(--astralis-spacing-1)" }} />
+```
+
+**2. `className`** — every component forwards it. Astralis's internal
+classes are prefixed (`astralis:*`), so your own utility classes — whatever
+generates them — can't collide. Note that Astralis ships utility classes
+only for **keyword** props (`display`, alignment, overflow, ...); since the
+var-channel migration there is no per-value class like `astralis:p-4` to
+reach for — value styling belongs to the props or to `style`.
+
+```tsx
+<Box p="4" className="my-fancy-gradient" />
 ```
 
 **3. Plain CSS** — Astralis renders ordinary DOM elements, and every design
@@ -124,12 +131,12 @@ components and stay on the scale:
 }
 ```
 
-## Why a closed scale?
+## Why tokens?
 
-Astralis ships **precompiled CSS** — the stylesheet you import already
-contains every class these props can produce, verified by a build-time
-coverage gate. That's why the props accept tokens rather than arbitrary
-values: a fixed vocabulary is what makes it possible to guarantee, at build
-time, that every prop value actually has CSS behind it. Arbitrary values
-would need a runtime style engine — the exact cost the library is designed
-to avoid.
+Astralis ships **precompiled CSS**. Value props resolve to a fixed rule per
+prop that reads a custom property (see [Responsive Props](/docs/responsive)
+for the mechanics), and keyword props resolve to pre-generated classes — a
+build-time coverage gate verifies every rule, class, and token value has CSS
+behind it. Tokens keep every value type-checked against the theme, so a typo
+is a compile error rather than a silently-ignored style — and everything
+stays zero-runtime: no style engine executes in the browser.

@@ -47,7 +47,12 @@ export function StatsStrip() {
     <section className="border-y border-stroke-base bg-surface-subtle/40">
       <div className="mx-auto grid max-w-screen-xl grid-cols-2 gap-x-8 gap-y-10 px-6 py-16 md:grid-cols-4 lg:px-12 lg:py-20">
         {numbers.map((item) => (
-          <Stat key={item.label} className="text-center astralis:items-center astralis:gap-2">
+          <Stat
+            key={item.label}
+            align="center"
+            className="text-center"
+            style={{ gap: "var(--astralis-spacing-2)" }}
+          >
             <Stat.Value className="font-display astralis:text-5xl astralis:tracking-tight">
               <CountUp target={item.value} suffix={item.suffix} />
             </Stat.Value>

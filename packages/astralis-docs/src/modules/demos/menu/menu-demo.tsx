@@ -15,17 +15,17 @@ export function MenuDemo() {
         </Menu.Trigger>
         <Menu.Content>
           <Menu.Label>Mission</Menu.Label>
-          <Menu.Item icon={<Pencil className="astralis:size-full" />} shortcut={<Kbd size="sm">E</Kbd>} onSelect={() => did("Edit")}>
+          <Menu.Item icon={<Pencil style={{ width: "100%", height: "100%" }} />} shortcut={<Kbd size="sm">E</Kbd>} onSelect={() => did("Edit")}>
             Edit
           </Menu.Item>
-          <Menu.Item icon={<Copy className="astralis:size-full" />} shortcut={<Kbd size="sm">⌘C</Kbd>} onSelect={() => did("Duplicate")}>
+          <Menu.Item icon={<Copy style={{ width: "100%", height: "100%" }} />} shortcut={<Kbd size="sm">⌘C</Kbd>} onSelect={() => did("Duplicate")}>
             Duplicate
           </Menu.Item>
-          <Menu.Item icon={<Settings className="astralis:size-full" />} disabled>
+          <Menu.Item icon={<Settings style={{ width: "100%", height: "100%" }} />} disabled>
             Configure
           </Menu.Item>
           <Menu.Separator />
-          <Menu.Item danger icon={<Trash2 className="astralis:size-full" />} onSelect={() => did("Deleted")}>
+          <Menu.Item danger icon={<Trash2 style={{ width: "100%", height: "100%" }} />} onSelect={() => did("Deleted")}>
             Delete
           </Menu.Item>
         </Menu.Content>

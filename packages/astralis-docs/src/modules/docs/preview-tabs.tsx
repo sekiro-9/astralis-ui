@@ -21,8 +21,10 @@ export function PreviewTabs({ preview, code, playground, align = "center" }: Pre
       variant="segmented"
       size="sm"
       keepMounted
-      /* Prefixed so astralisMerge drops the root's own gap-4. */
-      className="my-6 astralis:gap-3"
+      /* Inline style beats the root's own gap class (value utilities no
+         longer ship since the var-channel). */
+      className="my-6"
+      style={{ gap: "var(--astralis-spacing-3)" }}
     >
       {/* self-start: the list is a segmented pill, not a full-width bar. */}
       <Tabs.List aria-label="Demo view" className="self-start">

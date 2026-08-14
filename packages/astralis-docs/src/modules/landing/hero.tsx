@@ -72,7 +72,7 @@ export function Hero() {
         style={{ backgroundColor: brand }}
       />
 
-      <div className="relative mx-auto grid max-w-screen-xl items-center gap-16 px-6 pb-32 pt-20 lg:grid-cols-2 lg:px-12 lg:pb-40 lg:pt-24">
+      <div className="relative mx-auto grid max-w-screen-xl items-center gap-16 px-6 pb-14 pt-14 lg:grid-cols-2 lg:px-12 lg:pb-16 lg:pt-16">
         {/* Copy + CTAs + picker */}
         <div className="flex flex-col items-start">
           <Entrance delay={0}>
@@ -90,7 +90,7 @@ export function Hero() {
           </Entrance>
 
           <Entrance delay={0.16}>
-            <p className="mt-8 max-w-lg text-pretty text-lg leading-relaxed text-label-muted">
+            <p className="mt-8 max-w-lg text-pretty text-base leading-relaxed text-label-muted">
               A React component library on semantic tokens — one brand color
               restyles everything at runtime. Try it: this whole section is
               listening.
