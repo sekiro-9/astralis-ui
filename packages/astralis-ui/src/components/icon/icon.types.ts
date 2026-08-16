@@ -3,8 +3,9 @@ import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import type { textColors } from "../../const/color-mappings";
 
 export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | number;
-/** Any semantic text-colour token (icons inherit colour via `currentColor`). */
-export type IconColor = keyof typeof textColors;
+/** Any semantic text-colour token, or arbitrary CSS colour (icons inherit
+ *  colour via `currentColor` when omitted). */
+export type IconColor = keyof typeof textColors | (string & {});
 
 /*
  * `order` is dropped from the SVG props so the flex-item `order` can take the

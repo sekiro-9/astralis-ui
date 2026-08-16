@@ -1,10 +1,9 @@
 import type { VariantProps } from "class-variance-authority";
 import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
-import type { Responsive, ResponsiveProp } from "../../../utils/responsive";
+import type { ResponsiveProp } from "../../../utils/responsive";
 import type { PlacementProps } from "../../../utils/placement";
-import type { textVariants } from "../text/text.styles";
-import type { TextLineClamp } from "../text/text.types";
+import type { TextLineClamp, TextStyleProps } from "../text/text.types";
 import type { linkVariants } from "./link.styles";
 
 export type LinkVariant = NonNullable<VariantProps<typeof linkVariants>["variant"]>;
@@ -34,7 +33,7 @@ interface LinkCustomProps<C extends ElementType = "a"> {
 type LinkBaseProps<C extends ElementType = "a"> = LinkCustomProps<C> &
   VariantProps<typeof linkVariants> &
   PlacementProps &
-  Responsive<Omit<VariantProps<typeof textVariants>, "lineClamp">>;
+  TextStyleProps;
 
 export type LinkProps<C extends ElementType = "a"> = LinkBaseProps<C> &
   Omit<ComponentPropsWithoutRef<C>, keyof LinkBaseProps<C>>;

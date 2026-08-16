@@ -381,11 +381,12 @@ Framework recipes: [Installation](/docs/installation).`,
       "do i need types package",
       "autocomplete props",
     ],
-    answer: `TypeScript-first — the package ships its own declarations (no \`@types/*\` needed). Every prop is typed against the design scale, so values autocomplete in your editor and anything off-scale is a compile error, not a silent no-op:
+    answer: `TypeScript-first — the package ships its own declarations (no \`@types/*\` needed). Every prop is typed against the design scale: tokens autocomplete in your editor, keyword props (display, alignment, ...) are closed sets where an off-scale value is a compile error, and value props also accept arbitrary CSS beyond their tokens:
 
 \`\`\`tsx
-<Box p="6" shadow="sm" />   // ✓ autocompleted
-<Box p="6.5" />             // ✗ type error
+<Box p="6" shadow="sm" />     // ✓ autocompleted tokens
+<Box p="37px" w="calc(100vw - 200px)" />  // ✓ arbitrary values pass through
+<Box display="blorp" />       // ✗ type error — keyword sets stay closed
 \`\`\``,
   },
   {

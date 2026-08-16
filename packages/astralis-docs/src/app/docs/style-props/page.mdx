@@ -22,11 +22,12 @@ pass tokens as props:
 
 Three things distinguish this from a `style` attribute:
 
-- **Values come from the design scale**, not free-form CSS — `p="6"` is the
-  spacing token `6`, `bg="subtle"` is a semantic color role. Consistency is
-  the default, not a discipline.
-- **Everything is typed.** Your editor autocompletes valid values; `p="7.5"`
-  is a compile error, not a silent oddity.
+- **Values come from the design scale first** — `p="6"` is the spacing token
+  `6`, `bg="subtle"` is a semantic color role. Your editor autocompletes the
+  tokens, so consistency is the default, not a discipline.
+- **The scale is a vocabulary, not a ceiling.** When no token fits, pass the
+  CSS value itself — `p="37px"`, `w="calc(100vw - 200px)"` — and it rides the
+  same delivery. See [Arbitrary values](#arbitrary-values).
 - **Every prop is responsive.** Any value can be a breakpoint map — see
   [Responsive Props](/docs/responsive).
 
@@ -90,13 +91,41 @@ Box's and silently constrain the height. It is now a type error; use `maxW`.
 
 <PropsTable rows={boxProps} />
 
+## Arbitrary values
+
+Every **value** prop (spacing, sizing, gap, radius, offsets, colors, shadow,
+opacity — everything that isn't a closed keyword set) accepts any CSS value
+alongside its tokens. A string that isn't a token is delivered through the
+same custom property the token would have used:
+
+```tsx
+<Box p="37px" />                          {/* raw length */}
+<Box w="calc(100vw - 200px)" />           {/* calc, clamp, min, max */}
+<Box bg="#0ea5e9" borderColor="oklch(0.7 0.1 200)" />
+<Box p={{ base: "5vw", md: "4" }} />      {/* mix raw and tokens per breakpoint */}
+<Box hover={{ bg: "rebeccapurple" }} />   {/* states take them too */}
+```
+
+Two things to know:
+
+- **Tokens win.** If the string is a token, you get the token's variable —
+  `p="4"` is always `var(--astralis-spacing-4)`, never the literal `4`.
+- **Units are on you.** A bare number like `p="37"` isn't valid CSS for a
+  length, so Astralis warns in development and passes it through unchanged.
+  Write `p="37px"` (or use a token).
+
+**Keyword props stay closed.** `display`, alignment, overflow and friends are
+finite CSS vocabularies backed by build-time classes — an unknown value there
+resolves to nothing, exactly as before.
+
 ## Escape hatches
 
-When you need something outside the scale, drop down a level — in this
-order:
+Arbitrary values cover most "outside the scale" needs. For everything else,
+drop down a level — in this order:
 
-**1. `style`** — for one-off and dynamic values. Value props deliver through
-CSS custom properties, and your `style` always wins over them:
+**1. `style`** — for dynamic values and properties that aren't props. Value
+props deliver through CSS custom properties, and your `style` always wins
+over them:
 
 ```tsx
 <Box style={{ transform: `translateX(${offset}px)` }} />
@@ -137,6 +166,7 @@ Astralis ships **precompiled CSS**. Value props resolve to a fixed rule per
 prop that reads a custom property (see [Responsive Props](/docs/responsive)
 for the mechanics), and keyword props resolve to pre-generated classes — a
 build-time coverage gate verifies every rule, class, and token value has CSS
-behind it. Tokens keep every value type-checked against the theme, so a typo
-is a compile error rather than a silently-ignored style — and everything
-stays zero-runtime: no style engine executes in the browser.
+behind it. Because values ride custom properties rather than classes, they
+don't need to exist at build time — which is what makes arbitrary values
+free — and everything stays zero-runtime: no style engine executes in the
+browser.

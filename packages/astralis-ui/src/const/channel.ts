@@ -84,6 +84,26 @@ export const CHANNEL_PROPS = {
 
 export type ChannelPropName = keyof typeof CHANNEL_PROPS;
 
+/**
+ * Widens channel props to accept arbitrary CSS values while keeping token
+ * autocomplete: `SpacingToken | (string & {})` still surfaces the token
+ * literals in editor suggestions, but any string typechecks. The engine
+ * delivers unknown strings straight into the channel var (see
+ * `resolveChannelToken`), so `p="37px"` and `w="calc(100vw - 200px)"` work
+ * without a class existing for them — values are invisible to the CSS build.
+ *
+ * `Skip` is for the name-collision components: a prop is only widened when it
+ * is channel-ROUTED, and routing needs the branded map, which the type system
+ * cannot see. Box's `size` is square sizing (channel); Text's and Stat's is a
+ * scale rung (keyword) and must stay a closed set — pass `"size"` as `Skip`
+ * wherever the keyword meaning applies.
+ */
+export type WidenChannelProps<Props, Skip extends PropertyKey = never> = {
+  [K in keyof Props]: K extends Exclude<ChannelPropName, Skip>
+    ? Props[K] | (string & {})
+    : Props[K];
+};
+
 /** `p` -> `astralis-p`, (`p`, `md`) -> `astralis-p-md`. Plain hyphen classes:
  *  invisible to the Tailwind scanner, the safelist, and tailwind-merge. */
 export const channelClass = (slug: string, bp?: string): string =>
@@ -109,3 +129,42 @@ export function isChannelMap(map: Record<string, string> | undefined): boolean {
 /** `p` -> `--astralis-p`, (`p`, `md`) -> `--astralis-p-md`. */
 export const channelVar = (slug: string, suffix?: string): string =>
   suffix ? `--astralis-${slug}-${suffix}` : `--astralis-${slug}`;
+
+/* The only channel props whose CSS property takes a plain number — a bare
+   numeric pass-through is valid there and must not warn. Everything else is a
+   length, color, or shadow, where `p="37"` is almost certainly a typo'd token
+   or a missing unit. */
+const UNITLESS_SLUGS = new Set(["order", "opacity"]);
+
+/** `"37"`, `"-2.5"`, `".5"` — a number with no unit. */
+const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
+
+/**
+ * Token -> CSS value, with arbitrary pass-through: a string that is not in
+ * the token map rides the channel var untouched (`p="37px"`,
+ * `w="calc(100vw - 200px)"`, `bg="#0ea5e9"`). The channel rule reads the var
+ * either way — the cascade never cared where the value came from, only the
+ * safelist did, and values don't need to exist at build time.
+ *
+ * Token lookups use `=== undefined`, never truthiness — "0" is a real token.
+ * Non-strings and empty strings resolve to nothing, same as before.
+ */
+export function resolveChannelToken(
+  map: Record<string, string>,
+  token: unknown,
+  slug: string,
+): string | undefined {
+  const css = map[token as string];
+  if (css !== undefined) return css;
+  if (typeof token !== "string" || token === "") return undefined;
+
+  if (process.env.NODE_ENV !== "production") {
+    if (BARE_NUMBER.test(token) && !UNITLESS_SLUGS.has(slug)) {
+      console.warn(
+        `[astralis-ui] ${slug}="${token}" is not a token, and a bare number is not valid CSS for this property — did you mean a token, or "${token}px"? Passing it through as-is.`,
+      );
+    }
+  }
+
+  return token;
+}

@@ -101,6 +101,7 @@ Two practical consequences:
 - **No resize listeners, no JS at breakpoints, no flash** — server-rendered
   HTML is responsive before hydration (custom properties in `style` are
   plain HTML attributes).
-- **The values are token-checked.** Props accept scale tokens, so every
-  value is type-checked against the theme. For a one-off outside the scale,
-  use the `style` prop.
+- **Values are unbounded.** Because only the class must exist at build time,
+  a breakpoint entry can be a scale token *or* any CSS value —
+  `p={{ base: "5vw", md: "4" }}` mixes both. See
+  [Arbitrary values](/docs/style-props#arbitrary-values).

@@ -3,6 +3,7 @@ import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import type { boxVariants } from "./box.styles";
 import type { Responsive } from "../../../utils/responsive";
 import type { StateProps } from "../../../utils/interaction-state";
+import type { WidenChannelProps } from "../../../const/channel";
 
 interface BoxCustomProps<T extends ElementType = "div"> {
   as?: T;
@@ -10,8 +11,10 @@ interface BoxCustomProps<T extends ElementType = "div"> {
   className?: string;
 }
 
-/** Every Box style prop accepts a scalar token or a responsive map. */
-export type BoxStyleProps = Responsive<VariantProps<typeof boxVariants>>;
+/** Every Box style prop accepts a scalar token or a responsive map. Channel
+ *  props additionally take arbitrary CSS values (`p="37px"`) — the widening
+ *  keeps token autocomplete. */
+export type BoxStyleProps = Responsive<WidenChannelProps<VariantProps<typeof boxVariants>>>;
 
 /**
  * `hover` / `focusVisible` / `active`, each taking a state object limited to

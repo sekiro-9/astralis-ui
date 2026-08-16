@@ -37,8 +37,9 @@ function Icon({
     );
     // `textColors` is a VALUE map since the var-channel migration — its
     // entries are CSS values, not classes, so colour is applied via style.
+    // Non-token strings pass through raw, same as the channel props.
     const mergedStyle = {
-      ...(color ? { color: textColors[color] } : {}),
+      ...(color ? { color: textColors[color as keyof typeof textColors] ?? color } : {}),
       ...(isToken ? {} : { width: size, height: size }),
       ...incomingStyle, // channel vars first, caller's style last — both win over ours
     };

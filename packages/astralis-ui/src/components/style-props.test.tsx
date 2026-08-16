@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import type { CSSProperties } from "react";
-import { Box, Flex, Grid, Stack, HStack, VStack } from "./index";
+import { Box, Card, Flex, Grid, Stack, HStack, VStack } from "./index";
 
 /**
  * A guarantee that is easy to break silently, because breaking it still
@@ -306,10 +306,101 @@ describe("interaction-state props", () => {
     expect(container.firstElementChild!.hasAttribute("disabled")).toBe(true);
   });
 
-  it("drop a token the base layer could not paint", () => {
-    // @ts-expect-error — the type is the contract; this must not compile.
-    const { container } = render(<Box hover={{ bg: "not-a-token" }} />);
+  it("pass arbitrary values through, exactly like the base layer", () => {
+    // States share the base props' vocabulary — including the pass-through,
+    // so a state still cannot paint anything the base layer could not.
+    const { container } = render(<Box hover={{ bg: "oklch(0.7 0.1 200)" }} />);
 
-    expect(classesOf(container).some((c) => c.includes("hover:"))).toBe(false);
+    expect(classesOf(container)).toContain("astralis-hover-bg");
+    expect(styleVarOf(container, "--astralis-bg-hover")).toBe("oklch(0.7 0.1 200)");
+  });
+});
+
+/*
+ * The other half of the var-channel bargain: classes are finite, values are
+ * not. A string that is no token rides the custom property untouched, so the
+ * scale is a vocabulary rather than a ceiling. Only channel props do this —
+ * keyword props are closed sets backed by build-time classes.
+ */
+describe("arbitrary-value pass-through", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("delivers a non-token length straight into the channel var", () => {
+    const { container } = render(<Box p="37px" />);
+
+    expect(classesOf(container)).toContain("astralis-p");
+    expect(styleVarOf(container, "--astralis-p")).toBe("37px");
+  });
+
+  it("carries calc() expressions", () => {
+    const { container } = render(<Box w="calc(100vw - 200px)" />);
+
+    expect(classesOf(container)).toContain("astralis-w");
+    expect(styleVarOf(container, "--astralis-w")).toBe("calc(100vw - 200px)");
+  });
+
+  it("passes raw colors on the paint channels", () => {
+    const { container } = render(<Box bg="#0ea5e9" borderColor="rebeccapurple" />);
+
+    expect(styleVarOf(container, "--astralis-bg")).toBe("#0ea5e9");
+    expect(styleVarOf(container, "--astralis-border-color")).toBe("rebeccapurple");
+  });
+
+  it("mixes tokens and raw values across breakpoints", () => {
+    const { container } = render(<Box p={{ base: "5vw", md: "4" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-p", "astralis-p-md"]),
+    );
+    expect(styleVarOf(container, "--astralis-p")).toBe("5vw");
+    expect(styleVarOf(container, "--astralis-p-md")).toBe("var(--astralis-spacing-4)");
+  });
+
+  it("reaches placement props on recipe components", () => {
+    const { container } = render(<Card w="37rem">content</Card>);
+    const el = container.firstElementChild as HTMLElement;
+
+    expect([...el.classList]).toContain("astralis-w");
+    expect(el.style.getPropertyValue("--astralis-w")).toBe("37rem");
+  });
+
+  it("still prefers the token table when the value is a token", () => {
+    const { container } = render(<Box p="4" />);
+
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-4)");
+  });
+
+  it("resolves an empty string to nothing", () => {
+    const { container } = render(<Box p="" />);
+
+    expect(classesOf(container)).not.toContain("astralis-p");
+    expect(styleVarOf(container, "--astralis-p")).toBe("");
+  });
+
+  it("warns in dev about a bare number on a length prop, but still delivers it", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { container } = render(<Box p="37" />);
+
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn.mock.calls[0][0]).toContain('p="37"');
+    expect(styleVarOf(container, "--astralis-p")).toBe("37");
+  });
+
+  it("does not warn where a bare number is valid CSS", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { container } = render(<Box order="5" />);
+
+    expect(warn).not.toHaveBeenCalled();
+    expect(styleVarOf(container, "--astralis-order")).toBe("5");
+  });
+
+  it("keeps keyword props closed — an unknown display resolves to nothing", () => {
+    const { container } = render(<Box display={"blorp" as never} />);
+    const el = container.firstElementChild!;
+
+    expect(classesOf(container).some((c) => c.includes("blorp"))).toBe(false);
+    expect(el.hasAttribute("display")).toBe(false);
   });
 });

@@ -1,6 +1,7 @@
 import type { VariantProps } from "class-variance-authority";
 import { boxVariantMap, boxVariants } from "../components/layout/box/box.styles";
 import { resolveStyleProps, type Responsive } from "./responsive";
+import type { WidenChannelProps } from "../const/channel";
 
 /**
  * PLACEMENT PROPS
@@ -57,9 +58,11 @@ export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 
 const PLACEMENT_SET = new Set<string>(PLACEMENT_PROP_NAMES);
 
-/** Placement props, each accepting a scalar token or a responsive map. */
+/** Placement props, each accepting a scalar token or a responsive map. The
+ *  channel subset (sizing, margin, basis, order) also takes arbitrary CSS
+ *  values — `w="37rem"` on a Card works like it does on Box. */
 export type PlacementProps = Responsive<
-  Pick<VariantProps<typeof boxVariants>, PlacementPropName>
+  WidenChannelProps<Pick<VariantProps<typeof boxVariants>, PlacementPropName>>
 >;
 
 /**

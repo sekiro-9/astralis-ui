@@ -29,7 +29,12 @@
 
 import { boxVariantMap } from "../components/layout/box/box.styles";
 import { gapTypes, rowGapTypes, columnGapTypes } from "../const/layout-mappings";
-import { CHANNEL_PROPS, channelVar, isChannelMap } from "../const/channel";
+import {
+  CHANNEL_PROPS,
+  channelVar,
+  isChannelMap,
+  resolveChannelToken,
+} from "../const/channel";
 
 /** State prop name -> the CSS variant it compiles to. */
 export const STATE_VARIANTS = {
@@ -65,9 +70,12 @@ export const STATE_STYLE_MAPS = Object.fromEntries(
   ),
 ) as Record<string, Record<string, string>>;
 
-/** What one state object may carry. */
+/** What one state object may carry. Every stateable key is channel-routed by
+ *  construction (the CHANNEL_PROPS filter above), so all of them take
+ *  arbitrary CSS values on top of their tokens — same widening as the base
+ *  props (see WidenChannelProps in const/channel.ts). */
 export type StateStyles = {
-  [K in StateableKey]?: keyof (typeof STATE_SOURCE)[K];
+  [K in StateableKey]?: keyof (typeof STATE_SOURCE)[K] | (string & {});
 };
 
 /** `hover` / `focusVisible` / `active`, each taking a state object. */
@@ -84,9 +92,9 @@ export interface ResolvedStateStyles {
  * classes `astralis-hover-bg astralis-hover-p` + vars
  * `--astralis-bg-hover` / `--astralis-p-hover`.
  *
- * Values come from the same token maps the base props use, so a state can
- * never paint a value the base layer could not. Token lookups use
- * `=== undefined` — "0" is a real token.
+ * Values come from the same token maps the base props use — with the same
+ * arbitrary pass-through — so a state can never paint a value the base layer
+ * could not. Token lookups use `=== undefined` — "0" is a real token.
  */
 export function resolveStateStyles(state: StatePropName, styles: unknown): ResolvedStateStyles {
   const out: ResolvedStateStyles = { className: "", style: {} };
@@ -98,9 +106,9 @@ export function resolveStateStyles(state: StatePropName, styles: unknown): Resol
   for (const prop in styles as Record<string, string>) {
     const map = STATE_STYLE_MAPS[prop];
     if (!map) continue;
-    const css = map[(styles as Record<string, string>)[prop]];
-    if (css === undefined) continue;
     const slug = (CHANNEL_PROPS as Record<string, string>)[prop];
+    const css = resolveChannelToken(map, (styles as Record<string, string>)[prop], slug);
+    if (css === undefined) continue;
     classes.push(`astralis-${variant}-${slug}`);
     out.style[channelVar(slug, variant)] = css;
   }

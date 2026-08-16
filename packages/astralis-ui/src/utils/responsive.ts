@@ -28,7 +28,13 @@
    ========================================================================== */
 
 import { isStateProp, resolveStateStyles } from "./interaction-state";
-import { CHANNEL_PROPS, channelClass, channelVar, isChannelMap } from "../const/channel";
+import {
+  CHANNEL_PROPS,
+  channelClass,
+  channelVar,
+  isChannelMap,
+  resolveChannelToken,
+} from "../const/channel";
 
 /** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
 export const BREAKPOINTS = ["sm", "md", "lg", "xl"] as const;
@@ -100,7 +106,8 @@ export interface ResolvedStyles {
  * - Keyword responsive objects resolve per breakpoint from the token map.
  * - Channel props resolve to channel classes + custom properties; tokens are
  *   looked up with `=== undefined` (never truthiness — "0" is a real token
- *   whose value is the string "0").
+ *   whose value is the string "0"), and a string that is no token at all
+ *   passes through raw — arbitrary values ride the var (`p="37px"`).
  */
 export function resolveStyleProps(
   props: Record<string, unknown>,
@@ -134,7 +141,7 @@ export function resolveStyleProps(
       if (isResponsiveObject(value)) {
         for (const bp in value) {
           const token = (value as Record<string, string>)[bp];
-          const css = map[token];
+          const css = resolveChannelToken(map, token, slug);
           if (css === undefined) continue;
           if (bp === "base") {
             classes.push(channelClass(slug));
@@ -145,7 +152,7 @@ export function resolveStyleProps(
           }
         }
       } else {
-        const css = map[value as string];
+        const css = resolveChannelToken(map, value, slug);
         if (css !== undefined) {
           classes.push(channelClass(slug));
           style[channelVar(slug)] = css;
