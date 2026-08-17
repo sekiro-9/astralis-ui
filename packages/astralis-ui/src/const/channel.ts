@@ -133,8 +133,9 @@ export const channelVar = (slug: string, suffix?: string): string =>
 /* The only channel props whose CSS property takes a plain number — a bare
    numeric pass-through is valid there and must not warn. Everything else is a
    length, color, or shadow, where `p="37"` is almost certainly a typo'd token
-   or a missing unit. */
-const UNITLESS_SLUGS = new Set(["order", "opacity"]);
+   or a missing unit. Exported so the system spec (and therefore the
+   validator) carries the exact same rule the runtime warning uses. */
+export const UNITLESS_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["order", "opacity"]);
 
 /** `"37"`, `"-2.5"`, `".5"` — a number with no unit. */
 const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
@@ -159,7 +160,7 @@ export function resolveChannelToken(
   if (typeof token !== "string" || token === "") return undefined;
 
   if (process.env.NODE_ENV !== "production") {
-    if (BARE_NUMBER.test(token) && !UNITLESS_SLUGS.has(slug)) {
+    if (BARE_NUMBER.test(token) && !UNITLESS_CHANNEL_SLUGS.has(slug)) {
       console.warn(
         `[astralis-ui] ${slug}="${token}" is not a token, and a bare number is not valid CSS for this property — did you mean a token, or "${token}px"? Passing it through as-is.`,
       );
