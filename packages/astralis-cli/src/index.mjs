@@ -9,6 +9,7 @@ const COMMANDS = {
   init: () => import("./commands/init.mjs"),
   add: () => import("./commands/add.mjs"),
   theme: () => import("./commands/theme.mjs"),
+  validate: () => import("./commands/validate.mjs"),
   "connect-mcp": () => import("./commands/connect-mcp.mjs"),
 };
 
@@ -36,6 +37,11 @@ ${bold("Commands")}
                     ${dim("--radius/--spacing/--font-scale/--motion <n>")}
                     ${dim("--out <file> (default astralis-theme.css) · --force")}
                     ${dim("run `astralis theme --help` for the full list")}
+  ${cyan("validate [paths]")} check TSX against the installed design system
+                    ${dim("catches what typechecks but still fails: unknown")}
+                    ${dim("components, off-set values, dead astralis classes")}
+                    ${dim("--json for CI · --spec <path> to override the spec")}
+                    ${dim("--strict-tokens also flags raw colors (drift check)")}
   ${cyan("connect-mcp")}     connect a client to the Astralis docs server
                     ${dim("prompts for the client, then configures it for you")}
                     ${dim("--client claude-code|codex|cursor|claude-desktop|antigravity")}

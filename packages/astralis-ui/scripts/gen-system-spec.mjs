@@ -65,6 +65,18 @@ const { gridVariantMap, gridItemVariantMap } = await import(
 );
 const { textVariantMap } = await import(distUrl("components/typography/text/text.styles.js"));
 
+/* What kind of CSS value each channel carries — the grammar a validator
+   holds an ARBITRARY (non-token) string against. Everything not listed is a
+   length-percentage: spacing, sizing, gap, offsets, radius, basis. */
+const SLUG_VALUE_TYPES = {
+  bg: "color",
+  color: "color",
+  "border-color": "color",
+  shadow: "shadow",
+  opacity: "number",
+  order: "integer",
+};
+
 /** One prop's spec entry. Channel routing mirrors the engine: registered
  *  name AND branded map — Text's `size` stays keyword here for the same
  *  reason it stays keyword at runtime. */
@@ -80,6 +92,7 @@ function propSpec(prop, tokenMap) {
       tokens,
       arbitrary: true,
       unitless: UNITLESS_CHANNEL_SLUGS.has(slug),
+      valueType: SLUG_VALUE_TYPES[slug] ?? "length",
     };
   }
   return { kind: "keyword", tokens, arbitrary: false };
@@ -174,9 +187,74 @@ const components = Object.fromEntries(
     const groups = PRIMITIVE_GROUPS[name] ?? (PLACEMENT_ADOPTERS.includes(name) ? ["placement"] : []);
     const entry = { groups };
     if (EXCLUDED_PROPS[name]) entry.exclude = EXCLUDED_PROPS[name];
+    // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
+    // enumerated from the real object, so dot-access validates against what
+    // actually exists at runtime. Some compounds also have flat exports
+    // (CardBody); some are dot-only (MenuItem does not exist) — the parts
+    // list is the only truth for dot-access.
+    const parts = Object.keys(rootExports[name] ?? {}).filter((k) => /^[A-Z]/.test(k));
+    if (parts.length) entry.parts = parts;
     return [name, entry];
   }),
 );
+
+/* Flat part exports (CardBody) are the same component as the attached part
+   (Card.Body) — proven by IDENTITY, not name-matching, so a coincidental
+   name like CheckableTagGroup can never be misclassified. `partOf` lets a
+   validator know a flat part's anatomy without seeing the dot. */
+for (const [name, entry] of Object.entries(components)) {
+  if (!entry.parts) continue;
+  for (const part of entry.parts) {
+    const flat = name + part;
+    if (components[flat] && rootExports[flat] === rootExports[name][part]) {
+      components[flat].partOf = name;
+    }
+  }
+}
+
+/* ANATOMY: which attached parts are CHILDREN that need the compound's root
+   above them. Authored, because the parts namespace conflates two patterns
+   the runtime cannot distinguish: anatomy children (Menu.Item crashes or
+   misbehaves without Menu) versus namespaced variants and containers
+   (Input.Password is a standalone input; Radio.Group WRAPS radios — the
+   direction is inverted). Compounds absent here make no anatomy claim.
+   Drift-checked: every name below must exist in the enumerated parts. */
+const ANATOMY_CHILDREN = {
+  Accordion: ["Item", "Trigger", "Content"],
+  Breadcrumb: ["Item", "Link"],
+  Card: ["Header", "Title", "Description", "Body", "Footer"],
+  Carousel: ["Track", "Slide", "Control", "Prev", "Next", "Indicators", "Indicator", "AutoPlayTrigger", "ProgressText"],
+  CodeBlock: ["Header", "Title", "Content", "Code", "CopyTrigger", "Control", "WindowControls"],
+  DataList: ["Item", "Label", "Value"],
+  Drawer: ["Trigger", "Content", "Header", "Body", "Footer", "Title", "Description", "Close", "CloseButton"],
+  Field: ["Label", "HelpText", "ErrorText"],
+  List: ["Item"],
+  Marquee: ["Item"],
+  Menu: ["Trigger", "Content", "Item", "Label", "Separator", "Group"],
+  Modal: ["Trigger", "Content", "Header", "Body", "Footer", "Title", "Description", "Close", "CloseButton"],
+  Pagination: ["List", "Item", "First", "Last", "Next", "Prev", "Ellipsis", "Jumper", "PageText", "Pages"],
+  Popover: ["Trigger", "Content", "Title", "Description", "Close"],
+  Stat: ["Label", "Value", "HelpText", "Indicator"],
+  Steps: ["List", "Item", "Indicator", "Title", "Description", "Content", "Next", "Prev", "Completed"],
+  Table: ["Header", "Body", "Footer", "Row", "Head", "Cell", "Caption"],
+  Tabs: ["List", "Trigger", "Content"],
+  Timeline: ["Item", "Indicator", "Title", "Description", "Content"],
+  Tooltip: ["Trigger", "Content"],
+};
+
+for (const [owner, children] of Object.entries(ANATOMY_CHILDREN)) {
+  const entry = components[owner];
+  if (!entry?.parts) {
+    fail(`anatomy table names "${owner}", which has no enumerated parts`);
+    continue;
+  }
+  for (const child of children) {
+    if (!entry.parts.includes(child)) {
+      fail(`anatomy: ${owner}.${child} is not an enumerated part of ${owner} (has: ${entry.parts.join(", ")})`);
+    }
+  }
+  entry.anatomy = { children };
+}
 
 /* ---- class inventory (same extraction as the coverage gate) --------------- */
 const css = readFileSync(join(PKG, "dist", "styles.css"), "utf8");
