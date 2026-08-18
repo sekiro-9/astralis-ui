@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * Astralis UI MCP server — gives AI coding agents current component APIs
- * instead of hallucinated ones.
+ * instead of hallucinated ones, and a validator to judge what they write:
+ * retrieval AND verification (validate_code), so an agent can close its own
+ * write -> validate -> fix loop against the design system's ground truth.
  *
  * Data source: the deployed docs site's machine-readable endpoints
  * (/llms.txt, /docs/components/*.md, /docs/*.md) and its block registry
@@ -13,10 +15,11 @@
  * Register in an MCP client:
  *   { "command": "npx", "args": ["-y", "astralis-mcp"] }
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { prepareSpec, validateSource, findInstalledSpec } from "astralis-cli/validate";
 
 /** Single source of truth for the version — the handshake can't drift from what npm publishes. */
 const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
@@ -270,6 +273,92 @@ server.tool(
     } catch (err) {
       return offline(err);
     }
+  },
+);
+
+/* ---------- validation ---------- */
+
+/*
+ * The judge half of verified generation. Validation is pure local
+ * computation — no model, no network beyond (at most) one spec fetch — so
+ * the agent CALLING this tool supplies all the intelligence and cost, and
+ * this server supplies ground truth.
+ *
+ * Spec resolution prefers the project's own installed astralis-ui (that is
+ * the version the code must conform to); with no project nearby (e.g. a
+ * desktop client spawned at $HOME) it falls back to the spec of the version
+ * the docs site currently documents.
+ */
+let specState = null; // { prepared, version, source, key }
+
+async function resolveSpec() {
+  const localPath = findInstalledSpec(process.cwd());
+  if (localPath) {
+    const mtime = statSync(localPath).mtimeMs;
+    const key = `${localPath}@${mtime}`;
+    if (specState?.key !== key) {
+      const spec = JSON.parse(readFileSync(localPath, "utf8"));
+      specState = {
+        key,
+        prepared: prepareSpec(spec),
+        version: spec.version,
+        source: "installed astralis-ui",
+      };
+    }
+    return specState;
+  }
+  if (specState?.key !== "remote") {
+    const spec = JSON.parse(await fetchText("/system-spec.json"));
+    specState = {
+      key: "remote",
+      prepared: prepareSpec(spec),
+      version: spec.version,
+      source: `docs site (${SITE}) — no local astralis-ui found, validated against the latest published version`,
+    };
+  }
+  return specState;
+}
+
+server.tool(
+  "validate_code",
+  "Validate Astralis UI TSX/JSX against the design system's machine-readable spec. Catches what typechecking cannot: components and compound parts that don't exist, prop values outside their token sets, astralis:* classes missing from the compiled CSS (they render as nothing), undeclared token variables, illegal breakpoint/state keys, broken compound anatomy, Tabs trigger/panel mismatches, and a11y mistakes (typo'd aria-* attributes, invalid roles, missing alt). ALWAYS run this on Astralis code you generate or edit BEFORE presenting it; fix every error, then validate again until clean. Errors include the valid alternatives, so they are directly actionable.",
+  {
+    code: z.string().describe("The complete TSX/JSX source to validate (a whole file or a self-contained snippet with its astralis-ui imports)"),
+    strict_tokens: z
+      .boolean()
+      .optional()
+      .describe("Also warn on valid-but-off-token colors (design-system drift check). Default false."),
+  },
+  async ({ code, strict_tokens }) => {
+    let spec;
+    try {
+      spec = await resolveSpec();
+    } catch (err) {
+      return offline(err);
+    }
+    const { errors, warnings } = validateSource(code, spec.prepared, "<code>", {
+      strictTokens: strict_tokens ?? false,
+    });
+    const verdict = errors.length === 0;
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify(
+          {
+            valid: verdict,
+            spec: { version: spec.version, source: spec.source },
+            summary: verdict
+              ? `valid against astralis-ui@${spec.version}${warnings.length ? ` (${warnings.length} warning(s))` : ""}`
+              : `${errors.length} error(s), ${warnings.length} warning(s) — fix the errors and validate again`,
+            errors,
+            warnings,
+          },
+          null,
+          2,
+        ),
+      }],
+      isError: false,
+    };
   },
 );
 

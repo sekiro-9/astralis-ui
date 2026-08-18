@@ -39,6 +39,7 @@ No install step — `npx` fetches and runs it on demand.
 | `get_theming` | The complete theming + design-token reference in one call |
 | `list_blocks` | Every block — prebuilt page sections — with id, description, category and the components it composes. Filterable by category |
 | `get_block` | One block's metadata plus the complete source of its files, ready to write into a project |
+| `validate_code` | Verdict on Astralis TSX against the design system's machine-readable spec — unknown components/parts, off-token values, dead `astralis:*` classes, anatomy and a11y mistakes, with actionable reasons. Prefers the spec of the astralis-ui installed in your project; no model involved |
 
 ## Options
 

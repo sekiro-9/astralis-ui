@@ -42,6 +42,14 @@ Answer ONLY questions about Astralis UI, using the documentation excerpts provid
 - Use only this markdown subset: paragraphs, - lists, **bold**, \`inline code\`, \`\`\` fenced code with a language tag, and [links](...) using site-relative paths like /docs/theming.`;
 
 export async function POST(req: Request): Promise<Response> {
+  // Assistant retired 2026-08-16 — the AI surface is MCP-only now (costs
+  // nothing to serve). This endpoint spends OUR API key, and hiding the UI
+  // doesn't hide the URL, so it stays dark unless explicitly re-enabled
+  // (set ASSISTANT_ENABLED=1 for a demo week).
+  if (process.env.ASSISTANT_ENABLED !== "1") {
+    return Response.json({ error: "The docs assistant is currently disabled." }, { status: 503 });
+  }
+
   let question: unknown;
   try {
     ({ question } = await req.json());

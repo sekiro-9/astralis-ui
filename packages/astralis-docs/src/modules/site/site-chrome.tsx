@@ -2,7 +2,11 @@
 
 import { usePathname } from "next/navigation";
 import { Header } from "./header";
-import { Assistant } from "@/modules/assistant/assistant";
+// Assistant retired 2026-08-16: the docs AI chat ran generation on our API
+// key for anyone who visited — a recurring cost with no funding story. The
+// AI surface is now MCP-only (retrieval + validate_code), which costs
+// nothing to serve. Code kept for a possible demo-week revival.
+// import { Assistant } from "@/modules/assistant/assistant";
 
 /**
  * Site chrome, minus the routes that must render bare.
@@ -28,7 +32,7 @@ export function SiteChrome({
     <>
       <Header version={version} />
       {children}
-      <Assistant />
+      {/* <Assistant /> — retired, see import note above */}
     </>
   );
 }

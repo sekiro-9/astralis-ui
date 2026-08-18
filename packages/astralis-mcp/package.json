@@ -1,7 +1,7 @@
 {
   "name": "astralis-mcp",
   "version": "0.3.0",
-  "description": "MCP server exposing Astralis UI docs to AI coding agents — current component APIs, props tables, demo sources, and theming guides instead of hallucinated ones.",
+  "description": "MCP server exposing Astralis UI docs to AI coding agents — current component APIs, props tables, demo sources, theming guides, and a validate_code tool that checks generated TSX against the design system's machine-readable spec.",
   "type": "module",
   "license": "MIT",
   "author": "Paul Andrew",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "astralis-cli": "workspace:^",
     "zod": "^3.23.0"
   }
 }
