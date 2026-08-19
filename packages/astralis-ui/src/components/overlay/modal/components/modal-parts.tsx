@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { useModal } from "../modal.context";
 import type { ModalSectionProps } from "../modal.types";

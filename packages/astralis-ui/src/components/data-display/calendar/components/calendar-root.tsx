@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useMemo, useState, type Ref } from "react";
 import { CalendarContext } from "../calendar.context";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, type Ref } from "react";
 import type { FieldHelpTextProps } from "../field.types";
 import { useFieldContext } from "../field.context";

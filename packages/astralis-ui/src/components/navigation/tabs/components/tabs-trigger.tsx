@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, type KeyboardEvent } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useTabsContext } from "../tabs.context";

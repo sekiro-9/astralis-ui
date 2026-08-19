@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useLayoutEffect, useState, type RefObject } from "react";
 
 export type Side = "top" | "right" | "bottom" | "left";

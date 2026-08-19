@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import { useCalendarContext } from "../calendar.context";
 import type { CalendarGridProps } from "../calendar.types";

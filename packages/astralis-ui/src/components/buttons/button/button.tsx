@@ -1,14 +1,13 @@
 import { splitPlacement } from "../../../utils/placement";
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType, ReactNode, Ref } from "react";
 import { buttonVariants, buttonColorClasses } from "./button.styles";
 import type { ButtonProps } from "./button.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
-import { useButtonGroup } from "../button-group/button-group.context";
 
-type ButtonComponent = <T extends ElementType = "button">(
+type ButtonComponent = (<T extends ElementType = "button">(
   props: ButtonProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+) => ReactNode) & { displayName?: string };
 
 const spinnerSizes = {
   xs: "astralis:h-3 astralis:w-3",
@@ -18,15 +17,17 @@ const spinnerSizes = {
   xl: "astralis:h-6 astralis:w-6",
 };
 
-const ButtonImpl = forwardRef(
-  <T extends ElementType = "button">(
+function ButtonImpl<T extends ElementType = "button">(
     {
       as,
       children,
-      variant: variantProp,
-      colorScheme: colorSchemeProp,
-      size: sizeProp,
-      disabled: disabledProp,
+      // A surrounding ButtonGroup clones its defaults into these props
+      // (explicit props win) — no context, so Button is a Server Component
+      // and forwardRef gives way to React 19's ref-as-prop.
+      variant = "solid",
+      colorScheme = "brand",
+      size = "md",
+      disabled = false,
       loading = false,
       loadingText,
       loaderPlacement = "start",
@@ -36,16 +37,10 @@ const ButtonImpl = forwardRef(
       rightIcon,
       fullWidth = false,
       className = "",
+      ref,
       ...props
-    }: ButtonProps<T>,
-    ref: Ref<any>
-  ) => {
-    // A surrounding ButtonGroup supplies defaults; an explicit prop always wins.
-    const group = useButtonGroup();
-    const variant = variantProp ?? group?.variant ?? "solid";
-    const colorScheme = colorSchemeProp ?? group?.colorScheme ?? "brand";
-    const size = sizeProp ?? group?.size ?? "md";
-    const disabled = disabledProp ?? group?.disabled ?? false;
+    }: ButtonProps<T> & { ref?: Ref<any> },
+  ) {
 
     const Element = (as || "button") as ElementType;
     const isNativeButton = Element === "button";
@@ -57,7 +52,7 @@ const ButtonImpl = forwardRef(
 
     const defaultSpinner = (
       <svg
-        className={`astralis:animate-spin ${spinnerSizes[size]} astralis:shrink-0`}
+        className={`astralis:animate-spin ${spinnerSizes[size ?? "md"]} astralis:shrink-0`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -131,9 +126,7 @@ const ButtonImpl = forwardRef(
         {rightSlot}
       </Element>
     );
-  }
-);
+}
 
-(ButtonImpl as { displayName?: string }).displayName = "Button";
-
-export const Button = ButtonImpl as ButtonComponent & { displayName?: string };
+export const Button = ButtonImpl as ButtonComponent;
+Button.displayName = "Button";

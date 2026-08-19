@@ -24,23 +24,32 @@ export interface StatProps extends HTMLAttributes<HTMLDivElement>, PlacementProp
   className?: string;
 }
 
+/**
+ * `size` on the parts is normally injected by the Stat root (server-side
+ * cloning replaced the old context). Set it manually only when rendering a
+ * part standalone or through a wrapper element the root can't see through.
+ */
 export interface StatLabelProps {
   children: ReactNode;
   className?: string;
+  size?: ResponsiveProp<StatSize>;
 }
 
 export interface StatValueProps {
   children: ReactNode;
   className?: string;
+  size?: ResponsiveProp<StatSize>;
 }
 
 export interface StatHelpTextProps {
   children: ReactNode;
   className?: string;
+  size?: ResponsiveProp<StatSize>;
 }
 
 export interface StatIndicatorProps {
   type?: "increase" | "decrease";
   children?: ReactNode;
   className?: string;
+  size?: ResponsiveProp<StatSize>;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { useDrawer } from "../drawer.context";
 import type { DrawerContentProps } from "../drawer.types";
 import { drawerBackdropClasses, drawerPanelVariants, drawerSizeStyle, drawerClosedTransform, SCRIM_COLOR } from "../drawer.styles";

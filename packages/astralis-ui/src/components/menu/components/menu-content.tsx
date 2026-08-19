@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo } from "react";
 import { Portal } from "../../overlay/portal";
 import { useMenu } from "../menu.context";

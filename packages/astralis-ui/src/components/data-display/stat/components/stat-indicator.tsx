@@ -1,12 +1,10 @@
 import type { StatIndicatorProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
-import { useStatSize } from "../stat.context";
 import { statHelpSizeMap, statIndicatorVariants } from "../stat.styles";
 
-export function StatIndicator({ type = "increase", children, className = "" }: StatIndicatorProps) {
+export function StatIndicator({ type = "increase", children, className = "", size = "md" }: StatIndicatorProps) {
   const isIncrease = type === "increase";
-  const size = useStatSize();
 
   return (
     <span

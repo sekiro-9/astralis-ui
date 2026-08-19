@@ -1,4 +1,7 @@
+"use client";
+
 import { useCallback, useId, useMemo, useRef, useState, cloneElement, type MouseEvent } from "react";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { PopoverContext, usePopover } from "../popover.context";
 import type { PopoverProps, PopoverSlotProps } from "../popover.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -43,9 +46,10 @@ export function PopoverRoot({
 
 export function PopoverTrigger({ children }: PopoverSlotProps) {
   const { toggle, open, triggerRef, contentId } = usePopover();
-  return cloneElement(children, {
+  const child = resolveServerChild(children) as PopoverSlotProps["children"];
+  return cloneElement(child, {
     ref: triggerRef,
-    onClick: (e: MouseEvent) => { children.props.onClick?.(e); toggle(); },
+    onClick: (e: MouseEvent) => { child.props.onClick?.(e); toggle(); },
     "aria-haspopup": "dialog",
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
@@ -54,7 +58,8 @@ export function PopoverTrigger({ children }: PopoverSlotProps) {
 
 export function PopoverClose({ children }: PopoverSlotProps) {
   const { close } = usePopover();
-  return cloneElement(children, {
-    onClick: (e: MouseEvent) => { children.props.onClick?.(e); close(); },
+  const child = resolveServerChild(children) as PopoverSlotProps["children"];
+  return cloneElement(child, {
+    onClick: (e: MouseEvent) => { child.props.onClick?.(e); close(); },
   } as Record<string, unknown>);
 }

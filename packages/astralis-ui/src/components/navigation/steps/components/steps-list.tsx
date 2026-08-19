@@ -1,5 +1,8 @@
+"use client";
+
 import { Children, cloneElement, isValidElement, useEffect, type ReactElement } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { useStepsContext } from "../steps.context";
 import type { StepsListProps } from "../steps.types";
 
@@ -11,7 +14,11 @@ import type { StepsListProps } from "../steps.types";
 export function StepsList({ children, className, ...rest }: StepsListProps) {
   const { orientation, labelPlacement, setCount } = useStepsContext();
 
-  const items = Children.toArray(children).filter(isValidElement) as ReactElement<{ index?: number }>[];
+  // Double unwrap: a Server Component's children can arrive as one lazy node
+  // wrapping the whole array, and each entry can be lazy again.
+  const items = Children.toArray(resolveServerChild(children))
+    .map(resolveServerChild)
+    .filter(isValidElement) as ReactElement<{ index?: number }>[];
   const count = items.length;
 
   useEffect(() => {

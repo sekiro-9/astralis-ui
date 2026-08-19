@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";

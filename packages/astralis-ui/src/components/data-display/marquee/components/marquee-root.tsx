@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useId, useRef, useState, type Ref } from "react";
 import type { MarqueeRootProps } from "../marquee.types";

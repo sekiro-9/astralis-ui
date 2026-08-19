@@ -1,3 +1,5 @@
+"use client";
+
 import type { CarouselControlGroupProps } from "../carousel.types";
 import { useCarousel } from "../carousel.context";
 import { carouselControlGroupVariants } from "../carousel.styles";

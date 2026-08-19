@@ -1,7 +1,10 @@
+"use client";
+
 import { Children, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { CarouselTrackProps } from "../carousel.types";
 import { useCarousel, CarouselItemContext } from "../carousel.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 
 export function CarouselTrack({ children, className = "" }: CarouselTrackProps) {
   const {
@@ -14,7 +17,9 @@ export function CarouselTrack({ children, className = "" }: CarouselTrackProps) 
 
   // Slides are counted from children (StrictMode-safe) and handed their ordinal
   // via context — no fragile self-registration.
-  const slides = Children.toArray(children);
+  // Unwrap server-passed children before counting: one lazy node can wrap the
+  // whole array, which would count as a single slide.
+  const slides = Children.toArray(resolveServerChild(children));
   const count = slides.length;
   useEffect(() => setSlideCount(count), [count, setSlideCount]);
   const items: ReactNode = slides.map((child, i) => (

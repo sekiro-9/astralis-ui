@@ -1,7 +1,8 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import type { Ref } from "react";
 import { useFieldContext } from "../../field/field.context";
-import { useInputGroupContext } from "../input.context";
 import { inputVariants } from "../input.styles";
 import type { InputProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -18,7 +19,6 @@ export function InputBase({
   ...props
 }: InputProps & { ref?: Ref<HTMLInputElement> }) {
     const field = useFieldContext();
-    const group = useInputGroupContext();
 
     const isInvalid = invalidProp ?? field?.invalid;
     const isDisabled = disabledProp ?? field?.disabled;
@@ -42,8 +42,8 @@ export function InputBase({
         aria-readonly={isReadOnly || undefined}
         className={astralisMerge(
           inputVariants({ size, variant, invalid: !!isInvalid }),
-          group.hasPrefix && "astralis:pl-9",
-          group.hasSuffix && "astralis:pr-9",
+          // Slot padding keys off the InputGroup wrapper's presence attributes.
+          "astralis:[[data-inputgroup-prefix]_&]:pl-9 astralis:[[data-inputgroup-suffix]_&]:pr-9",
           placementClass, className,
         )}
         {...domProps}

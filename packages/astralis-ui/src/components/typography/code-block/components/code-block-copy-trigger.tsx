@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { MouseEvent, Ref } from "react";
-import { useCodeBlockContext } from "../code-block.context";
 import { codeBlockCopyTriggerClasses } from "../code-block.styles";
 import type { CodeBlockCopyTriggerProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -19,7 +18,6 @@ export function CodeBlockCopyTrigger({
   ref,
   ...rest
 }: CodeBlockCopyTriggerProps & { ref?: Ref<HTMLButtonElement> }) {
-  const context = useCodeBlockContext();
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -27,7 +25,13 @@ export function CodeBlockCopyTrigger({
 
   const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
-    const text = code ?? context.code;
+    // No context: the trigger is the compound's ONLY client leaf, so it reads
+    // the rendered code straight from the DOM at click time — the <code>
+    // inside the nearest CodeBlock root is exactly what the user sees.
+    const text =
+      code ??
+      event.currentTarget.closest("[data-astralis-codeblock]")?.querySelector("code")?.textContent ??
+      undefined;
     if (!text || !navigator.clipboard) return;
     try {
       await navigator.clipboard.writeText(text);

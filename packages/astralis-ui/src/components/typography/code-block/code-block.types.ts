@@ -84,6 +84,8 @@ export interface CodeBlockContentProps extends HTMLAttributes<HTMLPreElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  /** Normally injected by the Root; forwarded into a bare `CodeBlock.Code`. */
+  code?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -100,4 +102,6 @@ export interface CodeBlockCodeProps extends HTMLAttributes<HTMLElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  /** Normally injected by the surrounding Content; rendered when no children. */
+  code?: string;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import type { PaginationControlProps } from "../pagination.types";
 import { usePagination } from "../pagination.context";

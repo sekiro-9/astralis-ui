@@ -1,5 +1,4 @@
 import type { TimelineContentProps, TimelineTextProps } from "../timeline.types";
-import { useTimeline } from "../timeline.context";
 import { timelineTitleSize } from "../timeline.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
@@ -9,8 +8,7 @@ export function TimelineContent({ children, className = "" }: TimelineContentPro
 TimelineContent.displayName = "Timeline.Content";
 
 export function TimelineTitle({ children, className = "" }: TimelineTextProps) {
-  const { size } = useTimeline();
-  return <span className={astralisMerge("astralis:font-medium astralis:text-label-base", timelineTitleSize[size], className)}>{children}</span>;
+  return <span className={astralisMerge("astralis:font-medium astralis:text-label-base", timelineTitleSize, className)}>{children}</span>;
 }
 TimelineTitle.displayName = "Timeline.Title";
 

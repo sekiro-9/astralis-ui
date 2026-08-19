@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../utils/placement";
 import { useEffect, useRef, useState, type KeyboardEvent, type Ref } from "react";
 import type { NumberInputProps } from "./number-input.types";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { useDrawer } from "../drawer.context";
 import type { DrawerSectionProps } from "../drawer.types";

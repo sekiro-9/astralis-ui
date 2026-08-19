@@ -1,3 +1,5 @@
+"use client";
+
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useStepsContext } from "../steps.context";
 import type { StepsCompletedProps } from "../steps.types";

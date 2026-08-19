@@ -1,6 +1,5 @@
 import { splitPlacement } from "../../../../utils/placement";
 import type { TableProps } from "../table.types";
-import { TableContext } from "../table.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 export function TableRoot({
@@ -20,15 +19,20 @@ export function TableRoot({
   const { placementClass, placementStyle, rest: domProps } = splitPlacement(rest);
 
   return (
-    <TableContext.Provider value={{ size, variant, striped, interactive, stickyHeader }}>
-      <div
-        className={astralisMerge("astralis:w-full astralis:overflow-x-auto", outer, placementClass, className)}
-        style={placementStyle}
-      >
-        <table className="astralis:w-full astralis:border-collapse astralis:text-label-base" {...domProps}>
-          {children}
-        </table>
-      </div>
-    </TableContext.Provider>
+    <div
+      // The parts read these through CSS parent-keyed variants (see
+      // table.styles.ts), which is what lets the whole compound stay a
+      // Server Component. Booleans are presence-attributes: absent when off.
+      data-table-size={size}
+      data-table-striped={striped ? "" : undefined}
+      data-table-interactive={interactive ? "" : undefined}
+      data-table-sticky={stickyHeader ? "" : undefined}
+      className={astralisMerge("astralis:w-full astralis:overflow-x-auto", outer, placementClass, className)}
+      style={placementStyle}
+    >
+      <table className="astralis:w-full astralis:border-collapse astralis:text-label-base" {...domProps}>
+        {children}
+      </table>
+    </div>
   );
 }

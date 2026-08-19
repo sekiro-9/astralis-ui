@@ -1,4 +1,7 @@
+"use client";
+
 import { useCallback, useId, useMemo, useState, cloneElement, type MouseEvent } from "react";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { ModalContext, useModal } from "../modal.context";
 import type { ModalProps, ModalSlotProps } from "../modal.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -36,9 +39,10 @@ export function ModalRoot({
 /** Wraps a single element and opens the modal on click (asChild-style). */
 export function ModalTrigger({ children }: ModalSlotProps) {
   const { setOpen, open } = useModal();
-  return cloneElement(children, {
+  const child = resolveServerChild(children) as ModalSlotProps["children"];
+  return cloneElement(child, {
     onClick: (e: MouseEvent) => {
-      children.props.onClick?.(e);
+      child.props.onClick?.(e);
       setOpen(true);
     },
     "aria-haspopup": "dialog",
@@ -49,9 +53,10 @@ export function ModalTrigger({ children }: ModalSlotProps) {
 /** Wraps a single element and closes the modal on click. */
 export function ModalClose({ children }: ModalSlotProps) {
   const { close } = useModal();
-  return cloneElement(children, {
+  const child = resolveServerChild(children) as ModalSlotProps["children"];
+  return cloneElement(child, {
     onClick: (e: MouseEvent) => {
-      children.props.onClick?.(e);
+      child.props.onClick?.(e);
       close();
     },
   } as Record<string, unknown>);

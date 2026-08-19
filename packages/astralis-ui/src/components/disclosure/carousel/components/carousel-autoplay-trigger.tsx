@@ -1,3 +1,5 @@
+"use client";
+
 import { useCarousel } from "../carousel.context";
 import type { CarouselAutoPlayTriggerProps } from "../carousel.types";
 import { carouselControlVariants, controlIconSize } from "../carousel.styles";

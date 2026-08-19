@@ -1,3 +1,5 @@
+"use client";
+
 import type { Ref } from "react";
 import { useFieldContext } from "../../field/field.context";
 import { textareaVariants } from "../input.styles";

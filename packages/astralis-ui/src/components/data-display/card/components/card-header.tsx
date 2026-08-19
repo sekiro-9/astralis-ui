@@ -1,5 +1,4 @@
 import type { Ref } from "react";
-import { useCardContext } from "../card.context";
 import { cardPadding } from "../card.styles";
 import type { CardHeaderProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -12,7 +11,6 @@ export function CardHeader({
   ref,
   ...rest
 }: CardHeaderProps & { ref?: Ref<HTMLDivElement> }) {
-    const { size } = useCardContext();
     const hasExtra = extra !== undefined && extra !== null;
 
     return (
@@ -21,7 +19,7 @@ export function CardHeader({
         className={astralisMerge(
           "astralis:flex astralis:items-start astralis:justify-between astralis:gap-3",
           hasExtra ? "astralis:border-b astralis:border-stroke-subtle" : "",
-          cardPadding[size],
+          cardPadding,
           className,
         )}
         style={style}

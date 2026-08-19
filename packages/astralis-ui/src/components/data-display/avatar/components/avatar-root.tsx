@@ -1,10 +1,13 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useState } from "react";
-import { useAvatarGroupContext } from "../avatar.context";
 import { avatarVariants } from "../avatar.styles";
 import type { AvatarProps } from "../avatar.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { inheritProps } from "../../../../utils/inherit-props";
 import { accentClass, type ColorScheme } from "../../../../const/color-schemes";
+import { AvatarBadge } from "./avatar-badge";
 
 const PALETTE: ColorScheme[] = ["blue", "purple", "green", "teal", "orange", "pink", "red", "cyan"];
 
@@ -20,11 +23,11 @@ export function AvatarRoot({
 }: AvatarProps) {
   const { placementClass, placementStyle } = splitPlacement(rest);
   const [imgError, setImgError] = useState(false);
-  const group = useAvatarGroupContext();
 
-  const resolvedSize = size ?? group?.size ?? "md";
-  const resolvedShape = shape ?? group?.shape ?? "circle";
-  const resolvedRing = ring ?? group?.ring ?? false;
+  // An AvatarGroup clones size/ring into these props; explicit props win.
+  const resolvedSize = size ?? "md";
+  const resolvedShape = shape ?? "circle";
+  const resolvedRing = ring ?? false;
   const hue = colorScheme ?? (name ? hueFromName(name) : "gray");
 
   const initials = name
@@ -61,7 +64,9 @@ export function AvatarRoot({
           <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
       )}
-      {children}
+      {/* The badge inherits this avatar's size (an improvement on the old
+          group-context read: it now matches its OWN avatar, grouped or not). */}
+      {inheritProps(children, new Map([[AvatarBadge, { size: resolvedSize }]]))}
     </div>
   );
 }

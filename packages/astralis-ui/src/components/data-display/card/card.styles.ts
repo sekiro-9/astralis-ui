@@ -1,5 +1,4 @@
 import { cva } from "class-variance-authority";
-import type { CardSize } from "./card.types";
 
 export const cardRootVariants = cva("astralis:overflow-hidden astralis:transition-all astralis:duration-moderate", {
   variants: {
@@ -22,9 +21,16 @@ export const cardRootVariants = cva("astralis:overflow-hidden astralis:transitio
   defaultVariants: { variant: "elevated", size: "md", hoverable: false },
 });
 
-/** Section padding shared by Header/Body/Footer, keyed by the card size. */
-export const cardPadding: Record<CardSize, string> = {
-  sm: "astralis:px-4 astralis:py-3",
-  md: "astralis:px-5 astralis:py-4",
-  lg: "astralis:px-7 astralis:py-5",
-};
+/**
+ * Section padding shared by Header/Body/Footer, resolved by CSS instead of
+ * context so the parts stay Server Components: the root stamps
+ * `data-card-size` and these parent-keyed variants read it. The md padding is
+ * the unprefixed default — a part rendered outside any root keeps the old
+ * "silently md" behavior — and the attribute variants out-specify it, so
+ * sm/lg win whenever a sized root is above.
+ */
+export const cardPadding = [
+  "astralis:px-5 astralis:py-4",
+  "astralis:[[data-card-size=sm]_&]:px-4 astralis:[[data-card-size=sm]_&]:py-3",
+  "astralis:[[data-card-size=lg]_&]:px-7 astralis:[[data-card-size=lg]_&]:py-5",
+].join(" ");

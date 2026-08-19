@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../utils/placement";
 import { useEffect, useRef, useState, useCallback } from "react";
 import QRCode from "qrcode";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Text } from "../../../typography/text";
 import { useStepItemContext, useStepsContext } from "../steps.context";
 import { stepSizeClasses } from "../steps.styles";

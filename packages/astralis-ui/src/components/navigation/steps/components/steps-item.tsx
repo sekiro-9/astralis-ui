@@ -1,5 +1,8 @@
+"use client";
+
 import { Children, isValidElement, useMemo, type ReactNode } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import {
   StepItemContext,
   useStepsContext,
@@ -13,7 +16,8 @@ import type { StepsItemProps } from "../steps.types";
 function splitChildren(children: ReactNode) {
   let indicator: ReactNode = null;
   const rest: ReactNode[] = [];
-  Children.toArray(children).forEach((child) => {
+  Children.toArray(resolveServerChild(children)).forEach((rawChild) => {
+    const child = resolveServerChild(rawChild);
     const name = isValidElement(child) ? (child.type as any)?.displayName : undefined;
     if (name === "Steps.Indicator" && indicator === null) indicator = child;
     else rest.push(child);

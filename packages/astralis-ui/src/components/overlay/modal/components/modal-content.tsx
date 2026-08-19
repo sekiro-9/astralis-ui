@@ -1,3 +1,5 @@
+"use client";
+
 import { useModal } from "../modal.context";
 import type { ModalContentProps } from "../modal.types";
 import { modalViewportVariants, modalBackdropClasses, modalPanelVariants, SCRIM_COLOR } from "../modal.styles";

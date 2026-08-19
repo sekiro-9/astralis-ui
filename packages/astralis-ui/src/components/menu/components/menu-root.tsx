@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useId, useMemo, useRef } from "react";
 import { MenuContext } from "../menu.context";
 import type { MenuProps } from "../menu.types";

@@ -34,17 +34,15 @@ export const codeBlockControlClasses =
 export const codeBlockCopyTriggerClasses =
   "astralis:inline-flex astralis:items-center astralis:justify-center astralis:size-7 astralis:rounded-md astralis:text-current astralis:opacity-high astralis:cursor-pointer astralis:transition astralis:hover:opacity-100 astralis:hover:bg-surface-muted astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring";
 
-export const codeBlockContentVariants = cva(
-  // Whitespace preserved; long lines scroll horizontally rather than wrap.
+/**
+ * The scrollable <pre>. Size travels by CSS: the Root stamps
+ * `data-codeblock-size` and these parent-keyed variants read it (md is the
+ * unprefixed default), which keeps the compound a Server Component at any
+ * nesting depth. Whitespace preserved; long lines scroll rather than wrap.
+ */
+export const codeBlockContentClasses = [
   "astralis:font-mono astralis:block astralis:m-0 astralis:overflow-x-auto astralis:whitespace-pre",
-  {
-    variants: {
-      size: {
-        sm: "astralis:text-xs astralis:p-3",
-        md: "astralis:text-sm astralis:p-4",
-        lg: "astralis:text-md astralis:p-5",
-      },
-    },
-    defaultVariants: { size: "md" },
-  },
-);
+  "astralis:text-sm astralis:p-4",
+  "astralis:[[data-codeblock-size=sm]_&]:text-xs astralis:[[data-codeblock-size=sm]_&]:p-3",
+  "astralis:[[data-codeblock-size=lg]_&]:text-md astralis:[[data-codeblock-size=lg]_&]:p-5",
+].join(" ");

@@ -1,3 +1,5 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import type { CarouselSlideProps } from "../carousel.types";
 import { useCarousel, useCarouselItemIndex } from "../carousel.context";

@@ -1,3 +1,5 @@
+"use client";
+
 import type { PaginationItemProps } from "../pagination.types";
 import { usePagination } from "../pagination.context";
 import { paginationItemVariants } from "../pagination.styles";

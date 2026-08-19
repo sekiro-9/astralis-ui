@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useState, type Ref } from "react";
 import { ImageLightbox } from "./image-lightbox";

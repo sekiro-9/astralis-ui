@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type KeyboardEvent } from "react";
 import { usePagination } from "../pagination.context";
 import type { PaginationJumperProps } from "../pagination.types";

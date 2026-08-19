@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useMemo, useState } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";

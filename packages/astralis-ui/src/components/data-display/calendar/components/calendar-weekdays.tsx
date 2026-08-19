@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, type Ref } from "react";
 import { useCalendarContext } from "../calendar.context";
 import type { CalendarWeekdaysProps } from "../calendar.types";

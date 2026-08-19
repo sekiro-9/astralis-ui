@@ -1,3 +1,5 @@
+"use client";
+
 import type { CarouselControlProps } from "../carousel.types";
 import { useCarousel } from "../carousel.context";
 import { carouselControlVariants, controlIconSize } from "../carousel.styles";

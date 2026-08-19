@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, type CSSProperties } from "react";
 import { usePopover } from "../popover.context";
 import type { PopoverContentProps } from "../popover.types";

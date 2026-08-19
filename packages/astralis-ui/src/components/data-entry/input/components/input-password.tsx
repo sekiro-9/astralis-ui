@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, type Ref } from "react";
 import { InputBase } from "./input";
 import type { InputPasswordProps } from "../input.types";

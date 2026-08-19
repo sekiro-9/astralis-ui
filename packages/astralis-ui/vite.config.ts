@@ -6,25 +6,34 @@ import dts from "vite-plugin-dts";
 
 // https://vite.dev/config/
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 
 /**
- * Modules that must ship WITHOUT the "use client" banner: the theme core is
- * dependency- and React-free so it can run in Node and in React Server
- * Components. Names are rollup chunk names — the path under src/, no extension.
- * scripts/check-server-safe.mjs asserts the built output still matches.
- *
- * const/color-schemes is here for the same reason: it's a plain array plus a
- * string helper, published as the "astralis-ui/color-schemes" subpath so build
- * scripts and Server Components can read the hue list as actual data.
+ * The client/server boundary lives in SOURCE directives: a module that is
+ * genuinely client carries "use client" at the top of its .ts/.tsx file, and
+ * the build MIRRORS that into dist (rollup strips module-level directives from
+ * output, so the banner re-stamps them — but only where the source declared
+ * one). Everything else ships as a server module: Server Components importing
+ * the barrel get real objects for static components and client references only
+ * for interactive ones. scripts/check-server-safe.mjs asserts dist matches
+ * source and that the curated static set stays fully server.
  */
-const SERVER_SAFE = new Set([
-  "theme/theme-math",
-  "theme/token-spec",
-  "theme/serialize",
-  "const/color-schemes",
-]);
+// Forward slashes: rollup module ids are posix-style even on Windows.
+const srcDir = path
+  .resolve(path.dirname(fileURLToPath(import.meta.url)), "src")
+  .replace(/\\/g, "/");
+
+const sourceIsClient = new Map<string, boolean>();
+function hasUseClientDirective(file: string): boolean {
+  let cached = sourceIsClient.get(file);
+  if (cached === undefined) {
+    cached = readFileSync(file, "utf8").trimStart().startsWith('"use client"');
+    sourceIsClient.set(file, cached);
+  }
+  return cached;
+}
 
 const dirname =
   typeof __dirname !== "undefined"
@@ -52,6 +61,13 @@ export default defineConfig({
       // ships references, not copies; consumers resolve them from their own
       // node_modules, which keeps dist small and dedupes shared packages.
       external: (id) => !id.startsWith(".") && !path.isAbsolute(id),
+      // Rollup drops module-level "use client" from bundled output and warns
+      // about each one; the banner above re-stamps them, so the warning is
+      // noise here (144 of them, drowning out anything real).
+      onwarn(warning, warn) {
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE" && warning.message.includes("use client")) return;
+        warn(warning);
+      },
       output: {
         // One output module per source module: bundlers tree-shake at file
         // granularity and RSC client boundaries stay per-module instead of
@@ -59,15 +75,12 @@ export default defineConfig({
         preserveModules: true,
         preserveModulesRoot: "src",
         entryFileNames: "[name].js",
-        /*
-         * The theme core is dependency- and React-free by design so it can run
-         * in Node (astralis-cli, build scripts) and in React Server Components.
-         * Stamping it "use client" makes it a client reference, and a Server
-         * Component calling it gets nothing — which silently broke decoding a
-         * shared theme during server render. Everything else is a component or
-         * a hook and does need the directive.
-         */
-        banner: (chunk) => (SERVER_SAFE.has(chunk.name) ? "" : '"use client";\n'),
+        banner: (chunk) => {
+          const id = chunk.facadeModuleId?.replace(/\\/g, "/");
+          return id && id.startsWith(srcDir) && hasUseClientDirective(chunk.facadeModuleId!)
+            ? '"use client";\n'
+            : "";
+        },
       },
     },
   },

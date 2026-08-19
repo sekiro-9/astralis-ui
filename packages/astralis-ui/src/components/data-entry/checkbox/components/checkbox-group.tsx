@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import CheckboxGroupContext from "../checkbox.context";
 import type { CheckboxGroupProps } from "../checkbox.types";

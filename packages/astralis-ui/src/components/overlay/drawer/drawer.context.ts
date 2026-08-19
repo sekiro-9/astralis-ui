@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext } from "react";
 
 export type DrawerPlacement = "left" | "right" | "top" | "bottom";

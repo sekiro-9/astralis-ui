@@ -1,5 +1,4 @@
 import type { Ref } from "react";
-import { CardContext } from "../card.context";
 import { cardRootVariants } from "../card.styles";
 import type { CardRootProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -21,19 +20,21 @@ export function CardRoot({
   const { placementClass, rest } = splitPlacement(props);
 
   return (
-    <CardContext.Provider value={{ size }}>
-      <div
-        ref={ref}
-        className={astralisMerge(
-          cardRootVariants({ variant, size, hoverable }),
-          placementClass,
-          className,
-        )}
-        {...rest}
-      >
-        {children}
-      </div>
-    </CardContext.Provider>
+    <div
+      ref={ref}
+      // The size reaches Header/Body/Footer through CSS: parts carry
+      // parent-keyed variants on this attribute (see cardPadding), which is
+      // what lets the whole compound stay a Server Component.
+      data-card-size={size}
+      className={astralisMerge(
+        cardRootVariants({ variant, size, hoverable }),
+        placementClass,
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
   );
 }
 

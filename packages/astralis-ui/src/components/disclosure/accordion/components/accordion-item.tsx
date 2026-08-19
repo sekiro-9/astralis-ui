@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 import { useAccordion, AccordionItemContext } from "../accordion.context";
 import { accordionItemVariants } from "../accordion.styles";

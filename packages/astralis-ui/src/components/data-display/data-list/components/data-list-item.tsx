@@ -1,17 +1,10 @@
 import type { DataListItemProps } from "../data-list.types";
-import { useDataList } from "../data-list.context";
+import { dataListItemLayout } from "../data-list.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 export function DataListItem({ children, className = "", style }: DataListItemProps) {
-  const { orientation } = useDataList();
   return (
-    <div
-      className={astralisMerge(
-        orientation === "horizontal" ? "astralis:flex astralis:gap-4" : "astralis:flex astralis:flex-col astralis:gap-0.5",
-        className,
-      )}
-      style={style}
-    >
+    <div className={astralisMerge(dataListItemLayout, className)} style={style}>
       {children}
     </div>
   );

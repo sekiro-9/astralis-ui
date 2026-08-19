@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../utils/placement";
 import {
   forwardRef,

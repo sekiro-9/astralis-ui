@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useState, useId, useMemo, useCallback, type KeyboardEvent } from "react";
 import { AccordionContext } from "../accordion.context";

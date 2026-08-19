@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 import { FIT_MAP, ROUNDED_MAP } from "./image.constants";
 import { ImageLightbox } from "./image-lightbox";

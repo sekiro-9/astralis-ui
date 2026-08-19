@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import { useAccordion, useAccordionItem } from "../accordion.context";
 import { accordionContentVariants } from "../accordion.styles";

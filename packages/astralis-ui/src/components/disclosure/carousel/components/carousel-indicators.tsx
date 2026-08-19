@@ -1,3 +1,5 @@
+"use client";
+
 import { useCarousel } from "../carousel.context";
 import type { CarouselIndicatorsProps } from "../carousel.types";
 import {

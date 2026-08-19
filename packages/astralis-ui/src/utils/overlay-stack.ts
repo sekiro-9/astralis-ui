@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Module-level coordination for stacked overlays (Modal over Modal, Popover
  * inside a Drawer, ...). A lone overlay can't see its siblings, which caused

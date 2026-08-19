@@ -1,3 +1,5 @@
+"use client";
+
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useTabsContext } from "../tabs.context";
 import { tabsContentVariants } from "../tabs.styles";

@@ -1,3 +1,5 @@
+"use client";
+
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useStepItemContext, useStepsContext } from "../steps.context";
 import { stepIndicatorVariants, stepDotVariants } from "../steps.styles";

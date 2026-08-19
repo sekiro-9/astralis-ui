@@ -1,3 +1,5 @@
+"use client";
+
 import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useRef, useState } from "react";
 import { useFieldContext } from "../../field/field.context";

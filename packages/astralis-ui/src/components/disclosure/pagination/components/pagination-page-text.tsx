@@ -1,3 +1,5 @@
+"use client";
+
 import { usePagination } from "../pagination.context";
 import type { PaginationPageTextProps } from "../pagination.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";

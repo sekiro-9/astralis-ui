@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { usePopover } from "../popover.context";
 import type { PopoverSectionProps } from "../popover.types";

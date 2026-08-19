@@ -1,4 +1,7 @@
+"use client";
+
 import { useCallback, useId, useMemo, useRef, cloneElement, type FocusEvent, type MouseEvent } from "react";
+import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { TooltipContext, useTooltip } from "../tooltip.context";
 import type { TooltipProps, TooltipTriggerProps } from "../tooltip.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -35,12 +38,13 @@ export function TooltipRoot({
 
 export function TooltipTrigger({ children }: TooltipTriggerProps) {
   const { show, showNow, hide, open, triggerRef, tooltipId } = useTooltip();
-  return cloneElement(children, {
+  const child = resolveServerChild(children) as TooltipTriggerProps["children"];
+  return cloneElement(child, {
     ref: triggerRef,
-    onMouseEnter: (e: MouseEvent) => { children.props.onMouseEnter?.(e); show(); },
-    onMouseLeave: (e: MouseEvent) => { children.props.onMouseLeave?.(e); hide(); },
-    onFocus: (e: FocusEvent) => { children.props.onFocus?.(e); showNow(); },
-    onBlur: (e: FocusEvent) => { children.props.onBlur?.(e); hide(); },
+    onMouseEnter: (e: MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
+    onMouseLeave: (e: MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },
+    onFocus: (e: FocusEvent) => { child.props.onFocus?.(e); showNow(); },
+    onBlur: (e: FocusEvent) => { child.props.onBlur?.(e); hide(); },
     "aria-describedby": open ? tooltipId : undefined,
   } as Record<string, unknown>);
 }

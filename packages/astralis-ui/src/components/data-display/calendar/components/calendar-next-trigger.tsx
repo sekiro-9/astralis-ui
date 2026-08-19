@@ -1,3 +1,5 @@
+"use client";
+
 import type { Ref } from "react";
 import type { CalendarTriggerProps } from "../calendar.types";
 import { useCalendarContext } from "../calendar.context";

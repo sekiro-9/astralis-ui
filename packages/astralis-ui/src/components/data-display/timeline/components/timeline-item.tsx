@@ -1,18 +1,15 @@
 import { Children, isValidElement, type ReactElement, type ReactNode } from "react";
 import type { TimelineItemProps } from "../timeline.types";
-import { useTimeline, useTimelineItem } from "../timeline.context";
-import { timelineColumnWidth } from "../timeline.styles";
+import { timelineColumnWidth, timelineConnectorClasses } from "../timeline.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 /**
  * Lays out one entry: an indicator column with the connecting line drawn beneath
- * it (hidden on the last item), and the content beside it. Splits its children
- * into the Indicator and everything else by displayName.
+ * it (hidden on the last item via CSS :last-child — no context), and the content
+ * beside it. Splits its children into the Indicator and everything else by
+ * displayName.
  */
 export function TimelineItem({ children, className = "" }: TimelineItemProps) {
-  const { size } = useTimeline();
-  const { isLast } = useTimelineItem();
-
   let indicator: ReactElement | null = null;
   const rest: ReactNode[] = [];
   Children.forEach(children, (child) => {
@@ -24,10 +21,10 @@ export function TimelineItem({ children, className = "" }: TimelineItemProps) {
   });
 
   return (
-    <div className={astralisMerge("astralis:flex astralis:gap-3", className)}>
-      <div className={astralisMerge("astralis:flex astralis:flex-col astralis:items-center astralis:shrink-0", timelineColumnWidth[size])}>
+    <div data-timeline-item="" className={astralisMerge("astralis:flex astralis:gap-3", className)}>
+      <div className={astralisMerge("astralis:flex astralis:flex-col astralis:items-center astralis:shrink-0", timelineColumnWidth)}>
         {indicator}
-        {!isLast && <div className="astralis:w-px astralis:flex-1 astralis:min-h-6 astralis:bg-stroke-base astralis:mt-1" />}
+        <div className={timelineConnectorClasses} />
       </div>
       <div className="astralis:flex-1 astralis:min-w-0 astralis:pb-6">{rest}</div>
     </div>

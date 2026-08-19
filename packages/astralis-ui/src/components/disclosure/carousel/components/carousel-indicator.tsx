@@ -1,3 +1,5 @@
+"use client";
+
 import type { CarouselIndicatorProps } from "../carousel.types";
 import { useCarousel } from "../carousel.context";
 import { carouselDotVariants } from "../carousel.styles";

@@ -1,3 +1,5 @@
+"use client";
+
 import type { Ref } from "react";
 import type { CheckableTagProps } from "../tag.types";
 import { TagRoot } from "./tag-root";

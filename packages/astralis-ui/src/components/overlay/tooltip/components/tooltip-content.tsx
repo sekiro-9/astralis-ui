@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, type CSSProperties } from "react";
 import { useTooltip } from "../tooltip.context";
 import type { TooltipContentProps } from "../tooltip.types";

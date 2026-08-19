@@ -1,12 +1,9 @@
 import type { StatValueProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
-import { useStatSize } from "../stat.context";
 import { statValueSizeMap, statValueVariants } from "../stat.styles";
 
-export function StatValue({ children, className = "" }: StatValueProps) {
-  const size = useStatSize();
-
+export function StatValue({ children, className = "", size = "md" }: StatValueProps) {
   return (
     <span
       className={astralisMerge(

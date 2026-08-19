@@ -1,3 +1,5 @@
+"use client";
+
 import type { ElementType, ReactNode } from "react";
 import { useAccordion, useAccordionItem } from "../accordion.context";
 import { accordionTriggerVariants, accordionIndicatorVariants } from "../accordion.styles";

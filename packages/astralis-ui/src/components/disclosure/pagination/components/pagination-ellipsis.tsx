@@ -1,3 +1,5 @@
+"use client";
+
 import { usePagination } from "../pagination.context";
 import { paginationEllipsisVariants } from "../pagination.styles";
 

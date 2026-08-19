@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import type { KeyboardEvent, Ref, RefObject } from "react";
 import { InputBase } from "./input";

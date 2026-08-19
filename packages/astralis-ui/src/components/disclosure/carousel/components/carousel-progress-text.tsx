@@ -1,3 +1,5 @@
+"use client";
+
 import { useCarousel } from "../carousel.context";
 import type { CarouselProgressTextProps } from "../carousel.types";
 import { carouselProgressVariants } from "../carousel.styles";

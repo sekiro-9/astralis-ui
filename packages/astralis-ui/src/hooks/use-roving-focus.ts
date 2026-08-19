@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useRef, type KeyboardEvent, type RefObject } from "react";
 
 interface UseRovingFocusOptions {
