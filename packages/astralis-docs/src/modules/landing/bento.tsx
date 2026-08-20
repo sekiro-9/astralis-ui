@@ -108,6 +108,31 @@ export function Bento() {
         </Cell>
 
         <Cell
+          title="Static parts ship zero JavaScript"
+          body="Every static component is a true Server Component — build-gate enforced, labeled on every docs page. Same page, four libraries; client JS beyond the framework:"
+          className="lg:col-span-2"
+        >
+          {/* Static markup on purpose: the cell about shipping no JS ships none. */}
+          <div className="flex w-full flex-col gap-2 font-mono text-[12px]">
+            {[
+              { name: "Astralis", kb: 15, pct: 16, self: true },
+              { name: "shadcn/ui", kb: 36, pct: 38, self: false },
+              { name: "MUI", kb: 58, pct: 61, self: false },
+              { name: "Chakra", kb: 95, pct: 100, self: false },
+            ].map((row) => (
+              <div key={row.name} className="flex items-center gap-2">
+                <span className="w-16 shrink-0 text-label-muted">{row.name}</span>
+                <span
+                  className={`h-2.5 rounded-full ${row.self ? "bg-brand-solid" : "bg-surface-muted"}`}
+                  style={{ width: `${row.pct}%` }}
+                />
+                <span className="shrink-0 text-label-muted">{row.kb} kB</span>
+              </div>
+            ))}
+          </div>
+        </Cell>
+
+        <Cell
           title="Design tokens end to end"
           body="Named roles resolve per theme; components never see a hex."
           className="lg:col-span-2"

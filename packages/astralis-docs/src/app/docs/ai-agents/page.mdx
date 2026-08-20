@@ -73,6 +73,11 @@ it wrote is *inside* the system. Validation is pure computation — it runs
 locally in the server process, uses no model, and prefers the spec of the
 astralis-ui version installed in your project.
 
+The spec also records each component's `client` tier (`none`, `leaf`, or
+`required`), classified from the shipped module graph at build time — so an
+agent deciding what to render in a Server Component can check whether a
+component ships client JavaScript before writing it.
+
 ## How it stays current
 
 The server holds no copy of the docs. It reads them from this site's

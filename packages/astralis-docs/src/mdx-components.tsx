@@ -3,10 +3,9 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import React from "react";
 import Link from "next/link";
 import type { BundledLanguage } from "shiki";
-// Flat parts, not the compound `Table.*`: this map is a Server Component, and a
-// compound static accessed on a client-reference stub resolves to undefined
-// across the RSC boundary. The individually-exported parts are their own
-// references and render fine server-side.
+// Flat parts by preference (compound `Table.*` dot-access also works
+// server-side since 0.7.2 — the client-reference-stub problem this map used
+// to work around is gone).
 import {
   Blockquote,
   Code,

@@ -1,9 +1,7 @@
-"use client";
-
-// "use client" is load-bearing, not stylistic: this renders inside MDX (a
-// Server Component), and compound statics like `Table.Header` are undefined when
-// `Table` crosses the RSC boundary as a client-reference stub. As a client
-// component it gets the real module, so the compound API resolves.
+// Server Component since 0.7.2: Table is a true server module now, so
+// compound statics like `Table.Header` resolve during server render — the
+// "use client" workaround this file used to carry is gone, and the props
+// tables ship zero JS.
 import { Code, Table, Text } from "astralis-ui";
 
 /**

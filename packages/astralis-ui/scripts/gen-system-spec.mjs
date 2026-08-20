@@ -28,6 +28,7 @@
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
+import { buildGraph, classifyClient } from "./module-graph.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -182,10 +183,19 @@ const EXCLUDED_PROPS = {
   VStack: ["direction"],
 };
 
+/* The shipped client/server boundary, read from the same dist graph the
+   server-boundary gate asserts: "none" renders 0 KB of library JS, "leaf" is
+   a server shell with a client island inside, "required" hydrates. */
+const distGraph = buildGraph(join(PKG, "dist"));
+const clientTiers = classifyClient(distGraph, join(PKG, "dist"));
+
 const components = Object.fromEntries(
   componentNames.map((name) => {
     const groups = PRIMITIVE_GROUPS[name] ?? (PLACEMENT_ADOPTERS.includes(name) ? ["placement"] : []);
     const entry = { groups };
+    const client = clientTiers.get(name);
+    if (client) entry.client = client;
+    else fail(`component "${name}" missing from the dist client classification`);
     if (EXCLUDED_PROPS[name]) entry.exclude = EXCLUDED_PROPS[name];
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what

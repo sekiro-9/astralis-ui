@@ -5,10 +5,10 @@ import { useInView, useReducedMotion } from "framer-motion";
 import { Stat } from "astralis-ui";
 
 const numbers = [
-  { label: "Components", value: 50, suffix: "" },
+  { label: "Components", value: 62, suffix: "" },
   { label: "Color schemes", value: 11, suffix: "" },
   { label: "Live examples", value: 140, suffix: "+" },
-  { label: "Build steps", value: 0, suffix: "" },
+  { label: "Client JS in static parts", value: 0, suffix: " KB" },
 ];
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
