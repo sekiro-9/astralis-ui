@@ -390,11 +390,27 @@ export function validateSource(source, prepared, filePath = "<source>", opts = {
         checkPropValue(identity.specName, prop, allowed[prop], attr.value, attr);
         continue;
       }
+      // Recipe props (Button variant, Alert status, …): closed vocabularies
+      // the spec reads out of the shipped d.ts. Literal values only — a
+      // dynamic expression is the consumer's business (and TypeScript's).
+      if (comp.props?.[prop]) {
+        const values = comp.props[prop];
+        const value =
+          literalOf(attr.value) ??
+          (attr.value?.type === "JSXExpressionContainer" ? literalOf(attr.value.expression) : null);
+        if (value !== null && !values.includes(value)) {
+          const near = suggestToken(value, values);
+          report(errors, "invalid-recipe-value", attr,
+            `${identity.specName}: "${value}" is not a ${prop} value` +
+            (near ? ` (did you mean "${near}"?)` : ` (valid: ${values.slice(0, 8).join(", ")}${values.length > 8 ? ", …" : ""})`));
+        }
+        continue;
+      }
       if (comp.groups.length === 1 && comp.groups[0] === "placement" && DOCTRINE_PAINT_PROPS.has(prop)) {
         report(warnings, "paint-on-recipe", attr,
           `${identity.specName} owns its own ${prop} — paint props stay off recipe components; reach for variant/size/colorScheme instead`);
       }
-      // Anything else: DOM prop, recipe prop, or manifest-pending — no claim.
+      // Anything else: DOM prop or open-typed — no claim.
     }
 
     // Images need a text alternative: real <img>, or our Image wrapper —

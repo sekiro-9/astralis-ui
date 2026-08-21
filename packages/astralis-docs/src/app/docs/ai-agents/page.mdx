@@ -65,7 +65,7 @@ The server exposes eight tools:
 | `get_theming` | The complete theming reference — token system, dark mode, runtime brand color, the accent channel, and every design-token scale. |
 | `list_blocks` | Every block — prebuilt page sections — with id, description, category, and the components it composes. |
 | `get_block` | One block's metadata plus the complete source of its files, ready to write into a project. |
-| `validate_code` | A verdict on Astralis TSX the agent wrote, checked against the design system's machine-readable spec — unknown components or parts, off-token values, dead `astralis:*` classes, broken compound anatomy, a11y mistakes. Errors name the valid alternatives, so the agent fixes its own code and validates again before showing it to you. |
+| `validate_code` | A verdict on Astralis TSX the agent wrote, checked against the design system's machine-readable spec — unknown components or parts, off-token values, invalid recipe values (`variant="primary"` is a Chakra habit, not a Button variant), dead `astralis:*` classes, broken compound anatomy, a11y mistakes. Errors name the valid alternatives, so the agent fixes its own code and validates again before showing it to you. |
 
 The last one is the difference between retrieval and verification: the other
 tools help the agent *write* against the system; `validate_code` proves what

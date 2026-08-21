@@ -21,7 +21,9 @@ import { Card } from "astralis-ui";
 ## Anatomy
 
 `Card.Header` takes an `extra` slot for trailing content (badges, menus);
-`size` on the root scales every section's padding through context.
+`size` on the root scales every section's padding — the root stamps it as a
+`data-card-size` attribute and the sections' CSS reads it, so the whole
+compound stays a Server Component.
 
 ## Variants
 

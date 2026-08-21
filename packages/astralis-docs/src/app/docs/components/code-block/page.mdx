@@ -19,9 +19,9 @@ import { CodeBlock } from "astralis-ui";
 
 ## Anatomy
 
-`Root` holds the source string via `code` and provides it to the parts
-through context: `Code` renders it when given no children, and `CopyTrigger`
-copies it to the clipboard. `Header` is an optional top row for `Title`,
+`Root` holds the source string via `code` and hands it to its parts during
+server render: `Code` renders it when given no children, and `CopyTrigger` —
+the compound's only client part — copies the rendered code to the clipboard. `Header` is an optional top row for `Title`,
 `WindowControls` (the macOS traffic lights) and a trailing `Control` slot;
 `Content` is the scrollable `<pre>` wrapping `Code`.
 
@@ -83,7 +83,7 @@ unhighlighted source.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `highlightedHtml` | `string` | — | Pre-tokenized HTML from your highlighter; replaces children and the context `code`. |
+| `highlightedHtml` | `string` | — | Pre-tokenized HTML from your highlighter; replaces children and the inherited `code`. |
 
 `CodeBlock.CopyTrigger` additionally takes `code: string` to override what is
 copied, and its children may be a `(copied: boolean) => ReactNode` render

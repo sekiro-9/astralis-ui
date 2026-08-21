@@ -29,6 +29,7 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 import { buildGraph, classifyClient } from "./module-graph.mjs";
+import { extractLiteralProps } from "./extract-literal-props.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -189,6 +190,11 @@ const EXCLUDED_PROPS = {
 const distGraph = buildGraph(join(PKG, "dist"));
 const clientTiers = classifyClient(distGraph, join(PKG, "dist"));
 
+/* Recipe-prop vocabularies (Button variant, Alert status, …), read from the
+   rolled-up d.ts — the one place the build states them as closed literal
+   unions. See extract-literal-props.mjs for the selection rule. */
+const literalProps = extractLiteralProps(join(PKG, "dist", "index.d.ts"));
+
 const components = Object.fromEntries(
   componentNames.map((name) => {
     const groups = PRIMITIVE_GROUPS[name] ?? (PLACEMENT_ADOPTERS.includes(name) ? ["placement"] : []);
@@ -196,6 +202,8 @@ const components = Object.fromEntries(
     const client = clientTiers.get(name);
     if (client) entry.client = client;
     else fail(`component "${name}" missing from the dist client classification`);
+    const props = literalProps.get(name);
+    if (props) entry.props = props;
     if (EXCLUDED_PROPS[name]) entry.exclude = EXCLUDED_PROPS[name];
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what

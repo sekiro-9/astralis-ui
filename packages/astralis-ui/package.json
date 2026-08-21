@@ -53,6 +53,7 @@
     "./system-spec.json": "./dist/system-spec.json"
   },
   "files": [
+    "CHANGELOG.md",
     "dist",
     "theme-math.d.ts",
     "serialize.d.ts",

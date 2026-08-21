@@ -3,12 +3,12 @@ import { buttonGroupProps } from "@/modules/demos/button-group/button-group-prop
 export const metadata = {
   title: "Button Group",
   description:
-    "Groups related buttons, shares their styling via context, and optionally welds them into a segmented control.",
+    "Groups related buttons, shares its styling with every child, and optionally welds them into a segmented control.",
 };
 
 # Button Group
 
-Groups related buttons, shares their styling via context, and optionally welds them into a segmented control.
+Groups related buttons, shares its styling with every child, and optionally welds them into a segmented control.
 
 <ComponentPreview name="button-group-demo" />
 
@@ -21,8 +21,9 @@ import { ButtonGroup, Button } from "astralis-ui";
 ## Usage
 
 Set `variant`, `colorScheme`, `size` or `disabled` once on the group and every
-child [Button](/docs/components/button) inherits it through context — no prop
-repetition. An explicit prop on a child always wins, which is how the
+direct child [Button](/docs/components/button) inherits it — the group hands
+the props down during server render, so the sharing costs no client
+JavaScript. An explicit prop on a child always wins, which is how the
 "Publish" button above breaks out of its group's outline style.
 
 ## Attached

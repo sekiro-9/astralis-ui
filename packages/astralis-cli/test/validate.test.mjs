@@ -353,3 +353,37 @@ test("--strict-tokens flags raw colors as drift, off by default", () => {
   assert.equal(strict.warnings[0].code, "off-token-color");
   assert.ok(strict.warnings[0].message.includes("dark mode"));
 });
+
+/* ---- recipe props (the d.ts-derived manifest) --------------------------- */
+
+test("recipe props are closed sets: unknown Button variant is an error with a suggestion", () => {
+  const r = validate(`<Button variant="primry">go</Button>`);
+  assert.equal(r.errors.length, 1);
+  assert.equal(r.errors[0].code, "invalid-recipe-value");
+  // The near-miss should land on a real variant, and "primary" (the Chakra
+  // habit) must NOT silently pass either:
+  const chakraism = validate(`<Button variant="primary">go</Button>`);
+  assert.equal(chakraism.errors[0].code, "invalid-recipe-value");
+});
+
+test("valid recipe values pass, including on dot-access parts", () => {
+  const r = validate(
+    `<Card variant="filled" size="lg"><Card.Body>ok</Card.Body></Card>`,
+  );
+  assert.deepEqual(r.errors, []);
+});
+
+test("dynamic recipe values make no claim", () => {
+  const src = `import { Button } from "astralis-ui";\nexport const X = ({ v }: { v: never }) => (<Button variant={v}>go</Button>);`;
+  const r = validateSource(src, prepared, "test.tsx");
+  assert.deepEqual(r.errors, []);
+});
+
+test("recipe check rides the spec: Alert status typo caught, colorScheme vocabulary enforced", () => {
+  const r = validate(`<Alert status="eror">x</Alert>`, "Alert");
+  assert.equal(r.errors[0].code, "invalid-recipe-value");
+  assert.ok(r.errors[0].message.includes("error")); // the did-you-mean
+
+  const scheme = validate(`<Button colorScheme="magenta">x</Button>`);
+  assert.equal(scheme.errors[0].code, "invalid-recipe-value");
+});
