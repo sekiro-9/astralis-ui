@@ -404,3 +404,49 @@ describe("arbitrary-value pass-through", () => {
     expect(el.hasAttribute("display")).toBe(false);
   });
 });
+
+describe("container-query responsive keys", () => {
+  it("`container` establishes the query container and never reaches the DOM", () => {
+    const { container } = render(<Box container p="4" />);
+    const el = container.firstElementChild!;
+    expect([...el.classList]).toContain("astralis-container");
+    expect(el.hasAttribute("container")).toBe(false);
+
+    // Works on primitives that re-implement the prop split too.
+    const flex = render(<Flex container gap="2" />);
+    expect([...flex.container.firstElementChild!.classList]).toContain("astralis-container");
+    expect(flex.container.firstElementChild!.hasAttribute("container")).toBe(false);
+  });
+
+  it("channel props accept @-keys: class + variable carry the cq suffix", () => {
+    const { container } = render(<Box p={{ base: "2", "@md": "6" }} />);
+    const el = container.firstElementChild as HTMLElement;
+    expect([...el.classList]).toEqual(
+      expect.arrayContaining(["astralis-p", "astralis-p-cq-md"]),
+    );
+    expect(el.style.getPropertyValue("--astralis-p")).toBe("var(--astralis-spacing-2)");
+    expect(el.style.getPropertyValue("--astralis-p-cq-md")).toBe("var(--astralis-spacing-6)");
+  });
+
+  it("keyword props accept @-keys via the arbitrary container variant", () => {
+    const { container } = render(<Box display={{ base: "hidden", "@lg": "flex" }} />);
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis:hidden", "astralis:@min-[64rem]:flex"]),
+    );
+  });
+
+  it("viewport and container keys mix freely in one map", () => {
+    const { container } = render(<Box p={{ base: "1", md: "3", "@md": "5" }} />);
+    const el = container.firstElementChild as HTMLElement;
+    expect([...el.classList]).toEqual(
+      expect.arrayContaining(["astralis-p", "astralis-p-md", "astralis-p-cq-md"]),
+    );
+  });
+
+  it("arbitrary values ride container keys like any other", () => {
+    const { container } = render(<Box w={{ "@sm": "37px" }} />);
+    const el = container.firstElementChild as HTMLElement;
+    expect([...el.classList]).toContain("astralis-w-cq-sm");
+    expect(el.style.getPropertyValue("--astralis-w-cq-sm")).toBe("37px");
+  });
+});

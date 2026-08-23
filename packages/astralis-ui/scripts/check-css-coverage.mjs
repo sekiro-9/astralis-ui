@@ -36,6 +36,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
 const BREAKPOINTS = ["sm", "md", "lg", "xl"];
 const STATES = ["hover", "focus-visible", "active"];
+// Container-key thresholds — must equal the breakpoint widths (drift-checked
+// below against theme, @media, AND @container literals).
+const CONTAINER_WIDTHS = { sm: "40rem", md: "48rem", lg: "64rem", xl: "80rem" };
 const CHANNEL_MAP_BRAND = Symbol.for("astralis.channel-map");
 
 const missing = [];
@@ -63,6 +66,12 @@ for (const bare of all) {
         break;
       }
     }
+    for (const width of Object.values(CONTAINER_WIDTHS)) {
+      if (!defined.has(`astralis:@min-[${width}]:${bare}`)) {
+        missing.push(`astralis:${bare}  [@min-[${width}] container variant missing]`);
+        break;
+      }
+    }
   }
 }
 
@@ -74,6 +83,9 @@ for (const slug of slugs) {
   for (const bp of BREAKPOINTS) {
     if (!defined.has(`astralis-${slug}-${bp}`)) {
       missing.push(`astralis-${slug}-${bp}  [channel breakpoint]`);
+    }
+    if (!defined.has(`astralis-${slug}-cq-${bp}`)) {
+      missing.push(`astralis-${slug}-cq-${bp}  [channel container variant]`);
     }
   }
   for (const state of STATES) {
@@ -88,6 +100,7 @@ for (const slug of slugs) {
 const channelsCss = readFileSync(join(PKG, "src", "theme", "channels.css"), "utf8");
 const entryCss = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
 const channelWidths = [...channelsCss.matchAll(/@media \(min-width: ([\d.]+rem)\)/g)].map((m) => m[1]);
+const containerWidths = [...channelsCss.matchAll(/@container \(min-width: ([\d.]+rem)\)/g)].map((m) => m[1]);
 for (const [i, bp] of BREAKPOINTS.entries()) {
   const theme = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
   const inChannels = channelWidths[i];
@@ -96,6 +109,14 @@ for (const [i, bp] of BREAKPOINTS.entries()) {
       `breakpoint ${bp}: channels.css says ${inChannels ?? "(absent)"}, theme says ${theme?.[1] ?? "(absent)"}  [breakpoint drift]`,
     );
   }
+  if (containerWidths[i] !== CONTAINER_WIDTHS[bp] || (theme && theme[1] !== CONTAINER_WIDTHS[bp])) {
+    missing.push(
+      `container key @${bp}: @container says ${containerWidths[i] ?? "(absent)"}, expected ${CONTAINER_WIDTHS[bp]}  [container-breakpoint drift]`,
+    );
+  }
+}
+if (!defined.has("astralis-container")) {
+  missing.push("astralis-container  [container establishment class]");
 }
 
 /* ---- part 3: token -> value totality ------------------------------------ */

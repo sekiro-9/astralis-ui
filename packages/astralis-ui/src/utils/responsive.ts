@@ -30,19 +30,25 @@
 import { isStateProp, resolveStateStyles } from "./interaction-state";
 import {
   CHANNEL_PROPS,
+  CONTAINER_BREAKPOINT_WIDTHS,
   channelClass,
   channelVar,
+  containerSuffix,
   isChannelMap,
   resolveChannelToken,
+  type ContainerKey,
 } from "../const/channel";
 
 /** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
 export const BREAKPOINTS = ["sm", "md", "lg", "xl"] as const;
 
 export type Breakpoint = (typeof BREAKPOINTS)[number];
-export type ResponsiveKey = "base" | Breakpoint;
+/** Viewport keys (sm..xl) plus container keys (@sm..@xl) — the latter resolve
+ *  against the nearest `container` ancestor instead of the window. */
+export type ResponsiveKey = "base" | Breakpoint | ContainerKey;
 
 const BREAKPOINT_SET = new Set<string>(BREAKPOINTS);
+const CONTAINER_KEY_SET = new Set<string>(Object.keys(CONTAINER_BREAKPOINT_WIDTHS));
 
 /** A prop value: either a raw token, or a per-breakpoint map of tokens. */
 export type ResponsiveProp<Value> =
@@ -72,6 +78,26 @@ function withBreakpoint(className: string, bp: Breakpoint): string {
       if (colon === -1) return `${bp}:${token}`;
       // Insert the breakpoint immediately after the "astralis:" prefix
       return `${token.slice(0, colon + 1)}${bp}:${token.slice(colon + 1)}`;
+    })
+    .join(" ");
+}
+
+/**
+ * Container variant of `withBreakpoint`: "astralis:p-4" + "@md" ->
+ * "astralis:@min-[48rem]:p-4". The arbitrary-width form (not Tailwind's named
+ * `@md:`) is deliberate — Tailwind's container scale (`--container-md`: 28rem)
+ * also feeds `max-w-md`, so overriding it to match our breakpoints would
+ * corrupt the sizing tokens. The safelist generator emits the same literals.
+ */
+function withContainer(className: string, key: ContainerKey): string {
+  const variant = `@min-[${CONTAINER_BREAKPOINT_WIDTHS[key]}]:`;
+  return className
+    .split(" ")
+    .filter(Boolean)
+    .map((token) => {
+      const colon = token.indexOf(":");
+      if (colon === -1) return `${variant}${token}`;
+      return `${token.slice(0, colon + 1)}${variant}${token.slice(colon + 1)}`;
     })
     .join(" ");
 }
@@ -121,6 +147,14 @@ export function resolveStyleProps(
     const value = props[key];
     if (value === undefined) continue;
 
+    // The container-establishment prop: `<Box container>` marks the element
+    // the `@sm..@xl` keys of its DESCENDANTS resolve against. Handled here so
+    // every Box-composing primitive gets it and none leaks it onto the DOM.
+    if (key === "container") {
+      if (value) classes.push("astralis-container");
+      continue;
+    }
+
     // Interaction states are objects too, but keyed by style prop rather than
     // breakpoint. Handled here — rather than in each component's prop split —
     // so every Box-composing primitive gets them from one place and none can
@@ -149,6 +183,10 @@ export function resolveStyleProps(
           } else if (BREAKPOINT_SET.has(bp)) {
             classes.push(channelClass(slug, bp));
             style[channelVar(slug, bp)] = css;
+          } else if (CONTAINER_KEY_SET.has(bp)) {
+            const suffix = containerSuffix(bp);
+            classes.push(channelClass(slug, suffix));
+            style[channelVar(slug, suffix)] = css;
           }
         }
       } else {
@@ -170,6 +208,7 @@ export function resolveStyleProps(
         if (!cls) continue;
         if (bp === "base") classes.push(cls);
         else if (BREAKPOINT_SET.has(bp)) classes.push(withBreakpoint(cls, bp as Breakpoint));
+        else if (CONTAINER_KEY_SET.has(bp)) classes.push(withContainer(cls, bp as ContainerKey));
       }
     } else {
       baseProps[key] = value;

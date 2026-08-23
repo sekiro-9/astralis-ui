@@ -109,6 +109,35 @@ export type WidenChannelProps<Props, Skip extends PropertyKey = never> = {
 export const channelClass = (slug: string, bp?: string): string =>
   bp ? `astralis-${slug}-${bp}` : `astralis-${slug}`;
 
+/*
+ * Container-query responsive keys. Same four names and the same rem
+ * thresholds as the viewport breakpoints — one mental model, one token set —
+ * but prefixed with "@" and resolved against the NEAREST ANCESTOR CONTAINER
+ * (an element carrying the `container` prop) instead of the viewport:
+ *
+ *   <Box container>
+ *     <Card size={{ base: "sm", "@md": "lg" }} />   // md = the Box is >=48rem
+ *   </Box>
+ *
+ * The widths must stay literal here (CSS forbids var() in @container exactly
+ * as in @media); the coverage gate asserts they match --breakpoint-* in the
+ * theme, the @media literals in channels.css, and the @container literals.
+ * With no container ancestor, @container rules resolve against the small
+ * viewport — the prop appears inert. That failure mode is documented, and the
+ * validator warns when "@" keys are used with no `container` in the file.
+ */
+export const CONTAINER_BREAKPOINT_WIDTHS = {
+  "@sm": "40rem",
+  "@md": "48rem",
+  "@lg": "64rem",
+  "@xl": "80rem",
+} as const;
+
+export type ContainerKey = keyof typeof CONTAINER_BREAKPOINT_WIDTHS;
+
+/** `"@md"` -> channel class/var suffix `"cq-md"`. */
+export const containerSuffix = (key: string): string => `cq-${key.slice(1)}`;
+
 /* A prop NAME alone cannot decide the route: `size` is square sizing on Box
    but a typography rung on Text and a scale on Stat. The engine only takes
    the channel branch when the prop's map is a branded VALUE map — an

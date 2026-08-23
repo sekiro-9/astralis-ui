@@ -12,7 +12,10 @@ import { boxVariants, boxVariantMap } from "./box.styles";
  * both layers — so states work everywhere from one place, and `hover` can
  * never leak onto the DOM as an attribute.
  */
-export const BOX_VARIANT_KEYS = [...Object.keys(boxVariantMap), ...STATE_PROP_NAMES];
+// `container` rides with the style keys so every primitive that splits on
+// this list routes it into resolveStyleProps (which turns it into the
+// .astralis-container class) instead of leaking it onto the DOM.
+export const BOX_VARIANT_KEYS = [...Object.keys(boxVariantMap), ...STATE_PROP_NAMES, "container"];
 
 type BoxComponent = <T extends ElementType = "div">(
   props: BoxProps<T> & { ref?: Ref<any> },

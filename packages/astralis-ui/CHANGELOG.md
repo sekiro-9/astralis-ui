@@ -3,6 +3,34 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.3 — 2026-08-22
+
+Container-query responsive props. Every responsive key gains an `@`-prefixed
+twin (`@sm` `@md` `@lg` `@xl`) that resolves against the **nearest ancestor
+marked `container`** instead of the viewport — same names, same widths, one
+mental model:
+
+```tsx
+<Box container>
+  <Card size={{ base: "sm", "@md": "lg" }} />   // lg when the Box is ≥48rem
+</Box>
+```
+
+- Works on every responsive surface: keyword props, value props, arbitrary
+  values; viewport and container keys mix freely in one map.
+- `container` (boolean) is accepted by every Box-composing primitive and
+  renders `container-type: inline-size`. With no container ancestor, `@`
+  values never fire.
+- Still zero-runtime and server-safe: value props ride the same CSS-variable
+  channel inside `@container` rules; keyword variants are precompiled.
+- `system-spec.json` gains `containerBreakpoints`; `astralis validate`
+  accepts `@` keys (astralis-cli ≥ 0.4.2).
+- styles.css grows to 457 kB raw / 53 kB gzip (from 290/33) to carry the
+  container variants of every keyword utility.
+
+To our knowledge this is the first React component library whose component
+props resolve against container queries across the board.
+
 ## 0.7.2 — 2026-08-16
 
 Server-first. The static half of the library now renders as true React

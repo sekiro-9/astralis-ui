@@ -387,3 +387,19 @@ test("recipe check rides the spec: Alert status typo caught, colorScheme vocabul
   const scheme = validate(`<Button colorScheme="magenta">x</Button>`);
   assert.equal(scheme.errors[0].code, "invalid-recipe-value");
 });
+
+/* ---- container-query responsive keys ------------------------------------ */
+
+test("container keys (@sm..@xl) are legal responsive keys; typos still caught", () => {
+  const ok = validate(`<Box p={{ base: "2", "@md": "6" }} display={{ "@lg": "flex" }} />`);
+  assert.deepEqual(ok.errors, []);
+
+  const bad = validate(`<Box p={{ "@mdd": "6" }} />`);
+  assert.equal(bad.errors[0].code, "invalid-breakpoint-key");
+  assert.ok(bad.errors[0].message.includes("@md"));
+});
+
+test("`container` prop is spec-legal as a bare attribute", () => {
+  const r = validate(`<Box container><Card>x</Card></Box>`);
+  assert.deepEqual(r.errors, []);
+});

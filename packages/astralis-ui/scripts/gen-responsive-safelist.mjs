@@ -30,6 +30,13 @@ const PREFIX = "astralis:";
 const utils = [...collectResponsiveTokens()].sort();
 const bpGroup = `{${BREAKPOINTS.join(",")}}`;
 
+// Container-key variants (@sm..@xl responsive keys). Arbitrary widths, not
+// Tailwind's named @md: — its --container-* scale also feeds max-w-* and must
+// not be overridden. Literals must match const/channel.ts
+// CONTAINER_BREAKPOINT_WIDTHS; the coverage gate asserts the compiled result.
+const CONTAINER_WIDTHS = ["40rem", "48rem", "64rem", "80rem"];
+const cqGroup = `{${CONTAINER_WIDTHS.map((w) => `@min-[${w}]`).join(",")}}`;
+
 const lines = [
   "/* ==========================================================================",
   "   AUTO-GENERATED — DO NOT EDIT BY HAND",
@@ -42,11 +49,13 @@ const lines = [
   "",
   ...utils.map((util) => `@source inline("${PREFIX}${bpGroup}:${util}");`),
   "",
+  ...utils.map((util) => `@source inline("${PREFIX}${cqGroup}:${util}");`),
+  "",
 ];
 
 const outFile = join(__dirname, "..", "src", "_responsive-safelist.css");
 writeFileSync(outFile, lines.join("\n"));
 
 console.log(
-  `[astralis] safelist: ${utils.length} keyword utilities x ${BREAKPOINTS.length} breakpoints -> ${outFile}`,
+  `[astralis] safelist: ${utils.length} keyword utilities x ${BREAKPOINTS.length} breakpoints + ${CONTAINER_WIDTHS.length} container keys -> ${outFile}`,
 );

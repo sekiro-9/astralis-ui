@@ -69,6 +69,42 @@ The common recipes:
 <Heading size={{ base: "lg", md: "2xl" }} />
 ```
 
+## Container queries
+
+Every responsive key has a container-query twin, written with an `@` prefix:
+`@sm`, `@md`, `@lg`, `@xl` — same names, same widths, but measured against the
+**nearest ancestor marked `container`** instead of the browser window.
+
+```tsx
+<Box container>
+  <Card size={{ base: "sm", "@md": "lg" }} />
+</Box>
+```
+
+The card is `lg` when *the Box* is at least 48rem wide — drop the same card
+into a narrow sidebar and it renders `sm`, on the same screen, with no extra
+code. That is the promise viewport breakpoints can't keep: a component styled
+by the space it actually has, wherever it lands.
+
+Everything responsive works with `@` keys — keyword props, value props,
+arbitrary values — and viewport and container keys mix freely in one map:
+
+```tsx
+<Flex container direction="column" gap="2">
+  {/* hidden on phones (viewport), row layout once the panel is wide (container) */}
+  <Flex display={{ base: "hidden", sm: "flex" }} direction={{ base: "column", "@md": "row" }} />
+</Flex>
+```
+
+Two rules to remember:
+
+- **Something must be the container.** `@` keys measure the nearest ancestor
+  with the `container` prop (any layout primitive takes it). With no container
+  ancestor, `@` values simply never fire.
+- `container` uses `container-type: inline-size` — the element sizes from its
+  context as usual, but note it no longer contributes its intrinsic width to
+  `max-content` ancestors.
+
 ## How it works (and why it's fast)
 
 Nothing is computed in the browser. A value-bearing prop resolves to one

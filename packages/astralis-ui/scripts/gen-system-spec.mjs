@@ -46,6 +46,10 @@ const pkg = JSON.parse(readFileSync(join(PKG, "package.json"), "utf8"));
 /* ---- breakpoints (same source the coverage gate checks for drift) -------- */
 const entryCss = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
 const breakpoints = {};
+/* Container-query responsive keys (@sm..@xl) — same thresholds as the
+   viewport breakpoints, resolved against the nearest `container` ancestor.
+   Read from the built package so the spec can never drift from the engine. */
+const { CONTAINER_BREAKPOINT_WIDTHS } = await import(distUrl("const/channel.js"));
 for (const bp of ["sm", "md", "lg", "xl"]) {
   const m = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
   if (m) breakpoints[bp] = m[1];
@@ -104,6 +108,9 @@ const groupSpec = (map) =>
   Object.fromEntries(Object.entries(map).map(([prop, m]) => [prop, propSpec(prop, m)]));
 
 const box = groupSpec(boxVariantMap);
+// The container-establishment prop (`<Box container>`): handled by the
+// responsive engine, not the variant maps, so it is added here explicitly.
+box.container = { kind: "keyword", tokens: ["true", "false"], arbitrary: false };
 const flex = groupSpec(flexVariantMap);
 const propGroups = {
   box,
@@ -316,6 +323,7 @@ const spec = {
   propsManifest: "style-props-v1",
   generatedAt: new Date().toISOString(),
   breakpoints,
+  containerBreakpoints: CONTAINER_BREAKPOINT_WIDTHS,
   states: STATE_VARIANTS,
   stateableProps: Object.keys(STATE_STYLE_MAPS).sort(),
   channelProps: CHANNEL_PROPS,

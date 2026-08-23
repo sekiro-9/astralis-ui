@@ -95,7 +95,9 @@ export function prepareSpec(spec) {
     varSet,
     channelVarSet,
     statePayload,
-    bpKeys: new Set(["base", ...Object.keys(spec.breakpoints)]),
+    // Container keys (@sm..@xl) are additive in the spec; older specs lack
+    // them and older code must keep validating.
+    bpKeys: new Set(["base", ...Object.keys(spec.breakpoints), ...Object.keys(spec.containerBreakpoints ?? {})]),
     stateProps: new Set(Object.keys(spec.states)),
   };
 }
@@ -202,7 +204,7 @@ export function validateSource(source, prepared, filePath = "<source>", opts = {
         const key = p.key.type === "Identifier" ? p.key.name : p.key.value;
         if (!bpKeys.has(key)) {
           report(errors, "invalid-breakpoint-key", p,
-            `${comp}: "${key}" is not a breakpoint — responsive maps take ${["base", ...Object.keys(spec.breakpoints)].join("/")}`);
+            `${comp}: "${key}" is not a breakpoint — responsive maps take ${["base", ...Object.keys(spec.breakpoints), ...Object.keys(spec.containerBreakpoints ?? {})].join("/")}`);
           continue;
         }
         const v = literalOf(p.value);

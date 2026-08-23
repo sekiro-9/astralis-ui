@@ -9,6 +9,12 @@ interface BoxCustomProps<T extends ElementType = "div"> {
   as?: T;
   children?: ReactNode;
   className?: string;
+  /**
+   * Establishes this element as the query container (`container-type:
+   * inline-size`) that descendants' `@sm..@xl` responsive keys resolve
+   * against. Without a `container` ancestor, `@`-keyed values are inert.
+   */
+  container?: boolean;
 }
 
 /** Every Box style prop accepts a scalar token or a responsive map. Channel
