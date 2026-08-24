@@ -50,6 +50,20 @@ const breakpoints = {};
    viewport breakpoints, resolved against the nearest `container` ancestor.
    Read from the built package so the spec can never drift from the engine. */
 const { CONTAINER_BREAKPOINT_WIDTHS } = await import(distUrl("const/channel.js"));
+
+/* Contrast contracts — the promised WCAG AA text pairings, verified against
+   the shipped palette by scripts/check-contrast.mjs earlier in this same
+   build. Emitted so agents and docs can see WHAT is promised; the ratios are
+   facts about this exact version's palette. */
+const { contrastContracts, verifyContrast, parsePaletteFromCss } = await import(distUrl("theme/contrast.js"));
+const shippedPalette = parsePaletteFromCss(readFileSync(join(PKG, "src", "theme", "tokens", "color.css"), "utf8"));
+const contrast = {};
+for (const mode of ["light", "dark"]) {
+  contrast[mode] = verifyContrast((ref) => shippedPalette[ref], mode).map((r) => ({
+    rule: r.rule, fg: r.fg, bg: r.bg, min: r.min, ratio: r.ratio === undefined ? null : Math.round(r.ratio * 100) / 100, pass: r.pass,
+  }));
+  if (contrast[mode].some((r) => !r.pass)) fail(`contrast contract failing in spec emission (${mode}) — gate should have caught this`);
+}
 for (const bp of ["sm", "md", "lg", "xl"]) {
   const m = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
   if (m) breakpoints[bp] = m[1];
@@ -324,6 +338,7 @@ const spec = {
   generatedAt: new Date().toISOString(),
   breakpoints,
   containerBreakpoints: CONTAINER_BREAKPOINT_WIDTHS,
+  contrast,
   states: STATE_VARIANTS,
   stateableProps: Object.keys(STATE_STYLE_MAPS).sort(),
   channelProps: CHANNEL_PROPS,

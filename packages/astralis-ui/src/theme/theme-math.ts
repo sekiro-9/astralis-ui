@@ -188,11 +188,30 @@ export function neutralEndpoints(grayColor: string): { white: string; black: str
   };
 }
 
-/** Readable text color on a solid fill — OKLCH lightness threshold. */
-export function contrastOn(hex: string): string {
+/** WCAG 2.x relative luminance (sRGB linearised) — the contrast currency. */
+export function wcagLuminance(hex: string): number | undefined {
   const rgb = hexToRgb(hex);
-  if (!rgb) return "#ffffff";
-  return rgbToOklch(rgb.r, rgb.g, rgb.b).l >= 0.66 ? "#000000" : "#ffffff";
+  if (!rgb) return undefined;
+  const lin = (c8: number) => {
+    const c = c8 / 255;
+    return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * lin(rgb.r) + 0.7152 * lin(rgb.g) + 0.0722 * lin(rgb.b);
+}
+
+/**
+ * Readable text color on a solid fill — whichever of black/white wins the
+ * WCAG contrast ratio. Used to be an OKLCH lightness threshold (L >= 0.66),
+ * which disagreed with WCAG in the mid-lightness band: it kept white text on
+ * green/teal/cyan/orange 600 fills at ratios as low as 3.3:1 while black
+ * cleared 5+. The contrast gate exposed it; every `contrast: "auto"` role —
+ * including seeded brand colours — now picks the side WCAG actually favours.
+ */
+export function contrastOn(hex: string): string {
+  const l = wcagLuminance(hex);
+  if (l === undefined) return "#ffffff";
+  // ratio(white, bg) > ratio(black, bg)  <=>  1.05/(l+0.05) > (l+0.05)/0.05
+  return 1.05 / (l + 0.05) > (l + 0.05) / 0.05 ? "#ffffff" : "#000000";
 }
 
 /**

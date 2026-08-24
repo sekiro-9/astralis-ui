@@ -69,9 +69,15 @@ describe("generateBrandTokens", () => {
     expect(light["--astralis-color-brand-solid"]).toBe(dark["--astralis-color-brand-solid"]);
   });
 
-  it("picks readable contrast text: white on dark brands, black on light brands", () => {
+  it("picks the WCAG-winning contrast text: white on dark brands, black on light ones", () => {
+    // contrastOn is WCAG-ratio-based since the contrast gate landed. Violet
+    // #8b5cf6 is the instructive case: the old OKLCH threshold said white,
+    // but white only reaches 4.23:1 there while black clears 4.70 — the
+    // heuristic was shipping a sub-AA answer. Dark blue keeps white.
+    const onDarkBlue = generateBrandTokens("#1d4ed8", "light") as Record<string, string>;
+    expect(onDarkBlue["--astralis-color-brand-contrast"]).toBe("#ffffff");
     const onViolet = generateBrandTokens(VIOLET, "light") as Record<string, string>;
-    expect(onViolet["--astralis-color-brand-contrast"]).toBe("#ffffff");
+    expect(onViolet["--astralis-color-brand-contrast"]).toBe("#000000");
     const onYellow = generateBrandTokens("#eab308", "light") as Record<string, string>;
     expect(onYellow["--astralis-color-brand-contrast"]).toBe("#000000");
   });

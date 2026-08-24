@@ -108,7 +108,22 @@ const OVERRIDES: Partial<Record<Hue, Partial<Record<Mode, Partial<Record<Role, R
     dark: { solid: "white", contrast: "black", label: 200, stroke: 800, ring: 400 },
   },
   orange: {
+    // Light: white on orange-600 is 3.56:1 — the contrast gate rejects it;
+    // "auto" (WCAG-picked) lands on black. Same story for green/teal/cyan.
+    light: { contrast: "auto" },
     dark: { solid: 500, contrast: "black" },
+  },
+  green: {
+    light: { contrast: "auto" },
+    dark: { contrast: "auto" },
+  },
+  teal: {
+    light: { contrast: "auto" },
+    dark: { contrast: "auto" },
+  },
+  cyan: {
+    light: { contrast: "auto" },
+    dark: { contrast: "auto" },
   },
   yellow: {
     light: { solid: 300, contrast: "black", label: 800 },

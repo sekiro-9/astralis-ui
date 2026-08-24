@@ -2,6 +2,9 @@ import { parseArgs } from "node:util";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { themeCss, validateSeed, isEmptySeed } from "astralis-ui/serialize";
+import { verifySeedContrast, parsePaletteFromCss } from "astralis-ui/contrast";
+import { readFileSync as readFile } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { ok, warn, fail, cyan, dim } from "../lib/ui.mjs";
 import { readPackageJson, detectFramework, findEntryFile } from "../lib/detect.mjs";
 import { addImports } from "../lib/edits.mjs";
@@ -82,6 +85,7 @@ export async function run(argv) {
         out: { type: "string" },
         "no-import": { type: "boolean", default: false },
         force: { type: "boolean", default: false },
+        "strict-contrast": { type: "boolean", default: false },
         help: { type: "boolean", default: false },
       },
       allowPositionals: true,
@@ -136,6 +140,36 @@ export async function run(argv) {
 
   writeFileSync(out, themeCss(seed));
   ok(`wrote ${cyan(posix(out))}`);
+
+  /*
+   * Contrast verification: the same WCAG contracts the library's own build
+   * gate enforces, run against the palette THIS seed generates. A generated
+   * theme nobody checked is exactly how a pale brand colour ships white-on-
+   * mint buttons. Failures warn (the file is still written — the palette is
+   * the user's call); --strict-contrast turns them into a non-zero exit.
+   */
+  try {
+    const stylesPath = fileURLToPath(import.meta.resolve("astralis-ui/styles.css"));
+    const palette = parsePaletteFromCss(readFile(stylesPath, "utf8"));
+    const results = verifySeedContrast(seed, palette);
+    const failures = results.filter((r) => !r.pass);
+    if (failures.length === 0) {
+      ok(`contrast: all ${results.length} promised pairings clear WCAG AA (light + dark)`);
+    } else {
+      for (const r of failures) {
+        warn(
+          `contrast: [${r.mode}] ${r.rule} — ${r.fgHex ?? "?"} on ${r.bgHex ?? "?"} is ` +
+            `${r.ratio ? r.ratio.toFixed(2) : "unresolvable"}:1, needs ${r.min}:1`,
+        );
+      }
+      warn(
+        `${failures.length} of ${results.length} pairings fall below WCAG AA — a darker or lighter seed colour usually fixes it.`,
+      );
+      if (values["strict-contrast"]) fail("Failing under --strict-contrast.");
+    }
+  } catch (e) {
+    warn(`contrast check skipped: ${e.message}`);
+  }
 
   /*
    * Import it too. A generated stylesheet nobody imports changes nothing, and

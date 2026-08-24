@@ -1,6 +1,6 @@
 {
   "name": "astralis-ui",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "React 19 component library on semantic design tokens — precompiled CSS with var-channel style props, runtime brand theming, responsive style props, 62 components.",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -49,6 +49,10 @@
       "types": "./color-schemes.d.ts",
       "import": "./dist/const/color-schemes.js"
     },
+    "./contrast": {
+      "types": "./contrast.d.ts",
+      "import": "./dist/theme/contrast.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./system-spec.json": "./dist/system-spec.json"
   },
@@ -57,7 +61,8 @@
     "dist",
     "theme-math.d.ts",
     "serialize.d.ts",
-    "color-schemes.d.ts"
+    "color-schemes.d.ts",
+    "contrast.d.ts"
   ],
   "sideEffects": [
     "**/*.css"
@@ -73,7 +78,7 @@
     "dev:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./dist/styles.css",
     "build": "pnpm run check:types && vite build && node scripts/check-server-safe.mjs && pnpm run build:css",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs && node scripts/gen-system-spec.mjs",
+    "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs && node scripts/check-contrast.mjs && node scripts/gen-system-spec.mjs",
     "gen:spec": "node scripts/gen-system-spec.mjs",
     "test": "vitest run --project unit",
     "test:watch": "vitest --project unit",

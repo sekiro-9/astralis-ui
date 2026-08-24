@@ -3,6 +3,37 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.4 — 2026-08-22
+
+Contrast verification. The semantic layer's readable-text promises (labels on
+surfaces, contrast text on solid fills, a hue's label on its subtle) are now
+**contracts checked by the build** — and by `astralis theme` against the
+palette a seed actually generates.
+
+### Fixed — real violations the gate caught on day one
+
+- White text on the orange/green/teal/cyan solid fills shipped at 3.3–3.7:1
+  while a comment asserted AA. Root cause: `contrastOn` picked text by an
+  OKLCH lightness threshold that disagrees with WCAG in the mid-lightness
+  band. It now picks whichever of black/white wins the WCAG ratio, so those
+  fills render black text (the generated `semantic.css` diff is exactly the
+  affected `-contrast` roles, including warning/success/info aliases).
+- The same fix applies to every seeded brand: `contrast: "auto"` now returns
+  a WCAG-correct answer for any colour, not just the shipped ones.
+
+### Added
+
+- `astralis-ui/contrast` subpath: `contrastRatio`, `contrastContracts`,
+  `verifyContrast`, `verifySeedContrast`, `parsePaletteFromCss` — WCAG 2.x,
+  dependency- and React-free, server-safe.
+- Build gate `check-contrast.mjs`: 76 promised pairings must clear AA in both
+  modes or the build fails.
+- `astralis theme` (cli ≥ 0.4.3) verifies every generated theme and names
+  each failing pairing with hexes and ratios; `--strict-contrast` makes
+  failures a non-zero exit.
+- `system-spec.json` gains a `contrast` section: the full contract list with
+  this version's verified ratios, machine-readable.
+
 ## 0.7.3 — 2026-08-22
 
 Container-query responsive props. Every responsive key gains an `@`-prefixed
