@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode, ReactElement } from "react";
-import type { ModalSize } from "./modal.context";
+import type { ModalRole, ModalSize } from "./modal.context";
 
 export interface ModalProps {
   children: ReactNode;
@@ -12,6 +12,8 @@ export interface ModalProps {
   centered?: boolean;
   closeOnOverlayClick?: boolean;
   closeOnEsc?: boolean;
+  /** ARIA role the panel renders with. AlertDialog passes "alertdialog"; leave the default otherwise. @default "dialog" */
+  role?: ModalRole;
 }
 
 /** Trigger/Close wrap a single element and augment it (asChild-style). */

@@ -3,6 +3,44 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.6 — 2026-08-22
+
+Ten components in one release — the audited low-effort tier of the component
+roadmap. Every candidate was first checked against what already ships under a
+different name (Switch covers Toggle, `Progress shape="circle"` covers
+ProgressCircle, AvatarBadge covers StatusDot, Button's `isIconOnly` covers
+IconButton, CheckableTagGroup covers ToggleGroup) — nothing here duplicates.
+
+### Added
+
+- **SegmentedControl** (+ `.Item`) — single-choice view switcher on native
+  sr-only radios: arrow keys, form participation and radio semantics come
+  from the platform.
+- **Rating** — star input on native radios (whole stars); `readOnly` renders
+  a static `img`-role display where fractional values show half-filled stars.
+- **NativeSelect** — a styled native `<select>` wearing Input's
+  outline/filled chrome; Field-aware like the rest of data-entry.
+- **CheckboxCard / RadioCard** — card-shaped selection controls; join
+  `Checkbox.Group` / `Radio.Group` exactly like their small siblings.
+- **AlertDialog** — Modal with forced-choice semantics: `role="alertdialog"`,
+  overlay click off by default, no corner X. The parts ARE Modal's parts;
+  Modal gained an internal `role` prop to carry it.
+- **CopyButton** — Button that writes `value` to the clipboard with a
+  transient copied state; the general-purpose sibling of
+  `CodeBlock.CopyTrigger`.
+- **EmptyState** (+ Indicator/Title/Description/Actions) — blank-slate
+  compound. Zero client JS: size travels via `data-empty-state-size`, the
+  Card technique.
+- **Backdrop** — the Modal/Drawer scrim as a standalone primitive. Zero
+  client JS, purely presentational.
+- **VisuallyHidden** — sr-only span; the standard companion for icon-only
+  controls.
+
+EmptyState (all five exports), Backdrop and VisuallyHidden are pinned in the
+server-boundary gate — 60 components now verified zero-client.
+
+Component count: 65 → 75 documented.
+
 ## 0.7.5 — 2026-08-22
 
 Zero-JS interactive components. Two new components are interactive **with

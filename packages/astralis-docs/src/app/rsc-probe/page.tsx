@@ -1,7 +1,10 @@
 import {
   Alert,
+  Backdrop,
   Collapsible,
+  EmptyState,
   Popout,
+  VisuallyHidden,
   Badge,
   Box,
   Button,
@@ -143,6 +146,18 @@ export default function RscProbePage() {
               </Popout.Content>
             </Popout>
           </HStack>
+          <EmptyState size="sm">
+            <EmptyState.Indicator>∅</EmptyState.Indicator>
+            <EmptyState.Title>
+              EmptyState renders server-side
+              <VisuallyHidden> (and VisuallyHidden with it)</VisuallyHidden>
+            </EmptyState.Title>
+            <EmptyState.Description>Pure composition, zero client JS.</EmptyState.Description>
+          </EmptyState>
+          {/* Backdrop is fixed by design — scope it inside the probe box. */}
+          <Box position="relative" h="10" overflow="hidden" rounded="md">
+            <Backdrop className="astralis:absolute" />
+          </Box>
         </VStack>
 
         {/* Client compounds as islands inside the server page */}

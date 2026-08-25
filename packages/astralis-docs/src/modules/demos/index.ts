@@ -172,6 +172,22 @@ import { QrCodeStates } from "./qr-code/qr-code-states";
 import { QuickStartForm } from "./foundations/quick-start-form";
 import { BrandTheming } from "./foundations/brand-theming";
 import { PaletteGrid } from "./foundations/palette-grid";
+import { SegmentedControlDemo } from "./segmented-control/segmented-control-demo";
+import { SegmentedControlSizes } from "./segmented-control/segmented-control-sizes";
+import { SegmentedControlFullWidth } from "./segmented-control/segmented-control-full-width";
+import { RatingDemo } from "./rating/rating-demo";
+import { RatingReadOnly } from "./rating/rating-read-only";
+import { RatingSizes } from "./rating/rating-sizes";
+import { EmptyStateDemo } from "./empty-state/empty-state-demo";
+import { EmptyStateSizes } from "./empty-state/empty-state-sizes";
+import { NativeSelectDemo } from "./native-select/native-select-demo";
+import { NativeSelectVariants } from "./native-select/native-select-variants";
+import { CheckboxCardDemo } from "./checkbox-card/checkbox-card-demo";
+import { RadioCardDemo } from "./radio-card/radio-card-demo";
+import { CopyButtonDemo } from "./copy-button/copy-button-demo";
+import { AlertDialogDemo } from "./alert-dialog/alert-dialog-demo";
+import { BackdropDemo } from "./backdrop/backdrop-demo";
+import { VisuallyHiddenDemo } from "./visually-hidden/visually-hidden-demo";
 
 export interface DemoEntry {
   component: ComponentType;
@@ -353,4 +369,20 @@ export const demos = {
   "quick-start-form": { component: QuickStartForm, file: "foundations/quick-start-form.tsx" },
   "brand-theming": { component: BrandTheming, file: "foundations/brand-theming.tsx" },
   "palette-grid": { component: PaletteGrid, file: "foundations/palette-grid.tsx" },
+  "segmented-control-demo": { component: SegmentedControlDemo, file: "segmented-control/segmented-control-demo.tsx" },
+  "segmented-control-sizes": { component: SegmentedControlSizes, file: "segmented-control/segmented-control-sizes.tsx" },
+  "segmented-control-full-width": { component: SegmentedControlFullWidth, file: "segmented-control/segmented-control-full-width.tsx" },
+  "rating-demo": { component: RatingDemo, file: "rating/rating-demo.tsx" },
+  "rating-read-only": { component: RatingReadOnly, file: "rating/rating-read-only.tsx" },
+  "rating-sizes": { component: RatingSizes, file: "rating/rating-sizes.tsx" },
+  "empty-state-demo": { component: EmptyStateDemo, file: "empty-state/empty-state-demo.tsx" },
+  "empty-state-sizes": { component: EmptyStateSizes, file: "empty-state/empty-state-sizes.tsx" },
+  "native-select-demo": { component: NativeSelectDemo, file: "native-select/native-select-demo.tsx" },
+  "native-select-variants": { component: NativeSelectVariants, file: "native-select/native-select-variants.tsx" },
+  "checkbox-card-demo": { component: CheckboxCardDemo, file: "checkbox-card/checkbox-card-demo.tsx" },
+  "radio-card-demo": { component: RadioCardDemo, file: "radio-card/radio-card-demo.tsx" },
+  "copy-button-demo": { component: CopyButtonDemo, file: "copy-button/copy-button-demo.tsx" },
+  "alert-dialog-demo": { component: AlertDialogDemo, file: "alert-dialog/alert-dialog-demo.tsx" },
+  "backdrop-demo": { component: BackdropDemo, file: "backdrop/backdrop-demo.tsx" },
+  "visually-hidden-demo": { component: VisuallyHiddenDemo, file: "visually-hidden/visually-hidden-demo.tsx" },
 } satisfies Record<string, DemoEntry>;

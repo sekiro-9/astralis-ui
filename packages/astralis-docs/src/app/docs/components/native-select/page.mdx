@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Native Select",
+  description: "A styled native <select> — the platform's own dropdown and mobile pickers, wearing Input's chrome.",
+};
+
+# Native Select
+
+A styled native `<select>`. The dropdown, keyboard handling, typeahead and
+mobile pickers are the platform's own — no popup re-implementation. Reach for
+[Select](/docs/components/select) when options need custom rendering; reach
+for this when they don't.
+
+<ComponentPreview name="native-select-demo" />
+
+## Import
+
+```tsx
+import { NativeSelect } from "astralis-ui";
+```
+
+## Variants and states
+
+The chrome mirrors Input's `outline`/`filled` taxonomy:
+
+<ComponentPreview name="native-select-variants" />
+
+## With Field
+
+Inside a [Field](/docs/components/field), `id`, `describedBy`, `invalid` and
+`disabled` are inherited automatically, like every other data-entry component.
+
+## Props
+
+Everything a native `<select>` accepts passes through. On top of that:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Field height, mirroring Input's scale. |
+| `variant` | `"outline" \| "filled"` | `"outline"` | Field chrome. |
+| `invalid` | `boolean` | `false` | Error styling + `aria-invalid`. |
+| `placeholder` | `string` | — | Disabled empty option shown until a value is chosen. |
+| `children` | `ReactNode` | — | Native `<option>` / `<optgroup>` elements. |

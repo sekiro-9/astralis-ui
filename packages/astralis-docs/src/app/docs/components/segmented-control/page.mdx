@@ -1,0 +1,54 @@
+export const metadata = {
+  title: "Segmented Control",
+  description: "A single-choice view switcher built on native radios — platform keyboard handling, styled as connected segments.",
+};
+
+# Segmented Control
+
+A single-choice control styled as connected segments — the classic "view
+switcher". Under the styling it is a group of native radios (visually hidden),
+so arrow-key movement, form participation and radio semantics come from the
+platform, not from JavaScript re-implementations.
+
+<ComponentPreview name="segmented-control-demo" />
+
+## Import
+
+```tsx
+import { SegmentedControl } from "astralis-ui";
+```
+
+## Sizes
+
+<ComponentPreview name="segmented-control-sizes" />
+
+## Full width
+
+`fullWidth` stretches the track and shares the width equally between segments:
+
+<ComponentPreview name="segmented-control-full-width" />
+
+## Segmented Control vs Tabs vs CheckableTag
+
+- **SegmentedControl** — one value from a few, radio semantics, no panels.
+- **[Tabs](/docs/components/tabs)** — switches visible *content panels*.
+- **[CheckableTag](/docs/components/tag)** — chip-shaped multi/single select
+  for filtering, wraps freely.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` / `defaultValue` / `onChange` | `string` / `string` / `(value) => void` | — | Controlled / uncontrolled API. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Segment height and text size. |
+| `fullWidth` | `boolean` | `false` | Stretch to the container width. |
+| `disabled` | `boolean` | `false` | Disables the whole control. |
+| `name` | `string` | generated | Shared radio `name`. |
+
+### SegmentedControl.Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | — | The value this segment represents. Required. |
+| `disabled` | `boolean` | `false` | Disables just this segment. |
+| `children` | `ReactNode` | — | Segment label. |

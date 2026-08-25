@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "Empty State",
+  description: "A blank-slate placeholder for no-results and nothing-here-yet moments — pure composition, zero client JavaScript.",
+};
+
+# Empty State
+
+A placeholder for "no results", "nothing here yet" and recoverable-error
+moments. Pure composition — the whole compound renders as a Server Component
+and ships **zero client JavaScript**. Size travels to the parts via a data
+attribute, not context.
+
+<ComponentPreview name="empty-state-demo" />
+
+## Import
+
+```tsx
+import { EmptyState } from "astralis-ui";
+```
+
+## Sizes
+
+<ComponentPreview name="empty-state-sizes" />
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Scales indicator, title and description together. |
+
+### Parts
+
+| Part | Renders | Notes |
+| --- | --- | --- |
+| `EmptyState.Indicator` | muted icon circle | `aria-hidden` — the icon is decorative. |
+| `EmptyState.Title` | heading line | — |
+| `EmptyState.Description` | supporting copy | Max-width capped for line length. |
+| `EmptyState.Actions` | CTA row | Wraps; typically one or two Buttons. |

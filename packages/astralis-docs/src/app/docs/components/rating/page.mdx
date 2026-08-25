@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "Rating",
+  description: "Star rating input built on native radios, with a static display mode that renders half-stars for fractional values.",
+};
+
+# Rating
+
+Star rating. Interactive mode is a radiogroup of native radios (visually
+hidden), so arrow keys, form participation and announcements come from the
+platform — selection is whole stars. Display mode (`readOnly`) renders
+fractional values like `4.5` as half-filled stars.
+
+<ComponentPreview name="rating-demo" />
+
+## Import
+
+```tsx
+import { Rating } from "astralis-ui";
+```
+
+## Read-only display
+
+`readOnly` swaps the radios for a static `img`-role display — this is where
+fractional averages belong:
+
+<ComponentPreview name="rating-read-only" />
+
+## Sizes
+
+<ComponentPreview name="rating-sizes" />
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `max` | `number` | `5` | Number of stars. |
+| `value` / `defaultValue` / `onChange` | `number` / `number` / `(value) => void` | — | Controlled / uncontrolled API. Fractions render only in `readOnly`. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Star size. |
+| `colorScheme` | `ColorScheme` | `"yellow"` | Fill hue via the accent channel. |
+| `readOnly` | `boolean` | `false` | Static display with `role="img"`. |
+| `disabled` | `boolean` | `false` | Disables interaction. |
+| `label` | `string` | `"Rating"` | Accessible name for the radiogroup. |

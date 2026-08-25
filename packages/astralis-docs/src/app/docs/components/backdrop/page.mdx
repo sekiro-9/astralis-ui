@@ -1,0 +1,37 @@
+export const metadata = {
+  title: "Backdrop",
+  description: "The full-screen scrim behind Modal and Drawer, as a standalone primitive for blocking states and custom overlays.",
+};
+
+# Backdrop
+
+The scrim [Modal](/docs/components/modal) and
+[Drawer](/docs/components/drawer) paint behind their panels, exposed as a
+standalone primitive — for blocking "please wait" states, image viewers and
+custom overlays. It is purely presentational and ships **zero client
+JavaScript**: render it to show it; mounting, transitions and dismissal
+belong to the caller.
+
+<ComponentPreview name="backdrop-demo" />
+
+## Import
+
+```tsx
+import { Backdrop } from "astralis-ui";
+```
+
+## Scoping the scrim
+
+The scrim is `position: fixed` (full screen) by design. To scope it to a
+frame — as the demo above does — put it in a `position: relative` container
+and override with `className="astralis:absolute"`.
+
+## Props
+
+Extends `div` props:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `blur` | `boolean` | `true` | Frosts the content behind the scrim. |
+| `children` | `ReactNode` | — | Centered when present (a Spinner, a message). |
+| `style` | `CSSProperties` | — | `backgroundColor` overrides the default scrim colour. |

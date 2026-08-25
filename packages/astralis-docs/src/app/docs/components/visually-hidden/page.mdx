@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Visually Hidden",
+  description: "Content for assistive technology only — visually removed but still announced. The standard companion for icon-only controls.",
+};
+
+# Visually Hidden
+
+Renders content for assistive technology only: visually removed from the
+page, still present in the accessibility tree. The standard companion for
+icon-only buttons, table-header context and skip-link patterns. Zero client
+JavaScript — it is a single styled `<span>`.
+
+<ComponentPreview name="visually-hidden-demo" />
+
+## Import
+
+```tsx
+import { VisuallyHidden } from "astralis-ui";
+```
+
+## When to use it
+
+- An icon-only control whose meaning sighted users infer from the glyph —
+  the hidden text becomes the accessible name.
+- Extra context that would be visual noise on screen but matters when
+  linearised ("opens in a new tab", column units in dense tables).
+
+Prefer `aria-label` when the target element accepts one; `VisuallyHidden`
+wins when the name should be part of the content (translated with the page,
+findable by tests, composed of markup).
+
+## Props
+
+Extends `span` props — there is nothing else. The styling is the `sr-only`
+clip pattern.

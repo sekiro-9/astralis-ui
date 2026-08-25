@@ -1,0 +1,41 @@
+export const metadata = {
+  title: "Alert Dialog",
+  description: "A Modal that interrupts for a decision — alertdialog semantics, no overlay dismissal, resolution through explicit actions.",
+};
+
+# Alert Dialog
+
+A [Modal](/docs/components/modal) with forced-choice semantics for delete
+confirmations, unsaved changes and destructive actions. The panel announces
+as an `alertdialog`, clicking the overlay does **not** dismiss it, and there
+is deliberately no corner X — the user resolves it through the Footer actions
+(Esc still cancels, per the ARIA pattern).
+
+<ComponentPreview name="alert-dialog-demo" />
+
+## Import
+
+```tsx
+import { AlertDialog } from "astralis-ui";
+```
+
+## Relationship to Modal
+
+The parts *are* Modal's parts — same context, same styling, same composition.
+Only the root differs, so everything on the
+[Modal page](/docs/components/modal) (sizes, centering, controlled state)
+applies here unchanged.
+
+## Props
+
+Same as Modal, with different defaults:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
+| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | Panel width. |
+| `closeOnOverlayClick` | `boolean` | **`false`** | Off by default — the forced-choice point. |
+| `closeOnEsc` | `boolean` | `true` | Esc cancels. |
+
+Parts: `AlertDialog.Trigger`, `.Content`, `.Header`, `.Body`, `.Footer`,
+`.Title`, `.Description`, `.Close` (no `.CloseButton` on purpose).

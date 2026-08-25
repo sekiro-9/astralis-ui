@@ -98,6 +98,14 @@ const MUST_BE_ZERO_CLIENT = [
   "Popout",
   "PopoutTrigger",
   "PopoutContent",
+  // batch of 2026-08-22: pure composition + platform primitives
+  "EmptyState",
+  "EmptyStateIndicator",
+  "EmptyStateTitle",
+  "EmptyStateDescription",
+  "EmptyStateActions",
+  "VisuallyHidden",
+  "Backdrop",
 ];
 
 const failures = [];

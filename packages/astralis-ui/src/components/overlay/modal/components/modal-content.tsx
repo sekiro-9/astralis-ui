@@ -11,7 +11,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 const DURATION = 200;
 
 export function ModalContent({ children, className = "", ...rest }: ModalContentProps) {
-  const { open, setOpen, close, titleId, descriptionId, hasTitle, hasDescription, size, centered, closeOnOverlayClick, closeOnEsc } = useModal();
+  const { open, setOpen, close, titleId, descriptionId, hasTitle, hasDescription, size, centered, closeOnOverlayClick, closeOnEsc, role } = useModal();
   const { mounted, state } = usePresence(open, DURATION);
   const { containerRef } = useOverlayBehavior(open, setOpen, { closeOnEsc });
 
@@ -29,7 +29,7 @@ export function ModalContent({ children, className = "", ...rest }: ModalContent
         />
         <div
           ref={containerRef}
-          role="dialog"
+          role={role}
           aria-modal="true"
           aria-labelledby={hasTitle ? titleId : undefined}
           aria-describedby={hasDescription ? descriptionId : undefined}

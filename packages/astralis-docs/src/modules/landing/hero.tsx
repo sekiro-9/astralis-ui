@@ -78,7 +78,7 @@ export function Hero() {
           <Entrance delay={0}>
             <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-stroke-base bg-surface/60 px-4 py-2 text-xs font-medium text-label-muted backdrop-blur">
               <Sparkles size={13} className="text-accent-label" />
-              62 components · server-first · 0 KB static parts
+              75 components · server-first · 0 KB static parts
             </p>
           </Entrance>
 

@@ -3,8 +3,11 @@
 import { createContext, useContext } from "react";
 
 export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
+export type ModalRole = "dialog" | "alertdialog";
 
 export interface ModalContextValue {
+  /** ARIA role the panel renders with — AlertDialog sets "alertdialog". */
+  role: ModalRole;
   open: boolean;
   setOpen: (open: boolean) => void;
   close: () => void;

@@ -49,6 +49,7 @@ export const navigation: NavGroup[] = [
       { title: "Button Group", href: "/docs/components/button-group" },
       { title: "Floating Button", href: "/docs/components/floating-button", status: "new" },
       { title: "Theme Toggle", href: "/docs/components/theme-toggle" },
+      { title: "Copy Button", href: "/docs/components/copy-button", status: "new" },
     ],
   },
   {
@@ -63,6 +64,7 @@ export const navigation: NavGroup[] = [
       { title: "Aspect Ratio", href: "/docs/components/aspect-ratio" },
       { title: "Float", href: "/docs/components/float" },
       { title: "Separator", href: "/docs/components/separator" },
+      { title: "Visually Hidden", href: "/docs/components/visually-hidden", status: "new" },
     ],
   },
   {
@@ -109,6 +111,8 @@ export const navigation: NavGroup[] = [
       { title: "Tooltip", href: "/docs/components/tooltip" },
       { title: "Popover", href: "/docs/components/popover" },
       { title: "Popout", href: "/docs/components/popout" },
+      { title: "Alert Dialog", href: "/docs/components/alert-dialog", status: "new" },
+      { title: "Backdrop", href: "/docs/components/backdrop", status: "new" },
     ],
   },
   {
@@ -126,6 +130,11 @@ export const navigation: NavGroup[] = [
       { title: "Textarea", href: "/docs/components/textarea" },
       { title: "Number Input", href: "/docs/components/number-input" },
       { title: "Combobox", href: "/docs/components/combobox" },
+      { title: "Segmented Control", href: "/docs/components/segmented-control", status: "new" },
+      { title: "Rating", href: "/docs/components/rating", status: "new" },
+      { title: "Native Select", href: "/docs/components/native-select", status: "new" },
+      { title: "Checkbox Card", href: "/docs/components/checkbox-card", status: "new" },
+      { title: "Radio Card", href: "/docs/components/radio-card", status: "new" },
     ],
   },
   {
@@ -153,6 +162,7 @@ export const navigation: NavGroup[] = [
       { title: "Skeleton", href: "/docs/components/skeleton" },
       { title: "Spinner", href: "/docs/components/spinner" },
       { title: "Toast", href: "/docs/components/toast" },
+      { title: "Empty State", href: "/docs/components/empty-state", status: "new" },
     ],
   },
 ];

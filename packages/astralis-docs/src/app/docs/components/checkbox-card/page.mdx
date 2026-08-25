@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Checkbox Card",
+  description: "A card-shaped checkbox — a whole clickable surface for rich multi-select choices, grouped by Checkbox.Group.",
+};
+
+# Checkbox Card
+
+A card-shaped checkbox: the whole surface is the click target, with room for
+a title, description and leading addon. It joins
+[Checkbox.Group](/docs/components/checkbox) exactly like `Checkbox` does —
+give it a `value` inside a group and selection accumulates.
+
+<ComponentPreview name="checkbox-card-demo" />
+
+## Import
+
+```tsx
+import { CheckboxCard, Checkbox } from "astralis-ui";
+```
+
+## Props
+
+Extends the native checkbox input's props, plus:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Card title. |
+| `description` | `ReactNode` | — | Secondary line under the title. |
+| `addon` | `ReactNode` | — | Leading slot (icon, avatar, …). |
+| `indicator` | `boolean` | `true` | Corner tick while checked. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding and text scale. |
+| `colorScheme` | `ColorScheme` | `"brand"` | Checked hue via the accent channel. |
+| `invalid` | `boolean` | `false` | Error styling + `aria-invalid`. |
+
+Single-select version: [Radio Card](/docs/components/radio-card).

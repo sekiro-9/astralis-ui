@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Radio Card",
+  description: "A card-shaped radio — a whole clickable surface for rich single-select choices, grouped by Radio.Group.",
+};
+
+# Radio Card
+
+A card-shaped radio: the whole surface is the click target, with room for a
+title, description and leading addon. It joins
+[Radio.Group](/docs/components/radio) exactly like `Radio` does — give it a
+`value` inside a group for single selection.
+
+<ComponentPreview name="radio-card-demo" />
+
+## Import
+
+```tsx
+import { RadioCard, Radio } from "astralis-ui";
+```
+
+## Props
+
+Extends the native radio input's props, plus:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Card title. |
+| `description` | `ReactNode` | — | Secondary line under the title. |
+| `addon` | `ReactNode` | — | Leading slot (icon, avatar, …). |
+| `indicator` | `boolean` | `true` | Corner tick while selected. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding and text scale. |
+| `colorScheme` | `ColorScheme` | `"brand"` | Selected hue via the accent channel. |
+| `invalid` | `boolean` | `false` | Error styling + `aria-invalid`. |
+
+Multi-select version: [Checkbox Card](/docs/components/checkbox-card).

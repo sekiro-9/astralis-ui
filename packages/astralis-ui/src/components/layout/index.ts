@@ -7,3 +7,4 @@ export * from "./container";
 export * from "./separator";
 export * from "./float";
 export * from "./center";
+export * from "./visually-hidden";

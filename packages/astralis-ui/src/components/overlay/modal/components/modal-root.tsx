@@ -15,6 +15,7 @@ export function ModalRoot({
   centered = true,
   closeOnOverlayClick = true,
   closeOnEsc = true,
+  role = "dialog",
 }: ModalProps) {
   const [open, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
   const id = useId();
@@ -28,9 +29,9 @@ export function ModalRoot({
       titleId: `${id}-title`,
       descriptionId: `${id}-desc`,
       hasTitle, setHasTitle, hasDescription, setHasDescription,
-      size, centered, closeOnOverlayClick, closeOnEsc,
+      size, centered, closeOnOverlayClick, closeOnEsc, role,
     }),
-    [open, setOpen, close, id, hasTitle, hasDescription, size, centered, closeOnOverlayClick, closeOnEsc],
+    [open, setOpen, close, id, hasTitle, hasDescription, size, centered, closeOnOverlayClick, closeOnEsc, role],
   );
 
   return <ModalContext.Provider value={ctx}>{children}</ModalContext.Provider>;

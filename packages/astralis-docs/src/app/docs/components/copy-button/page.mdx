@@ -1,0 +1,33 @@
+export const metadata = {
+  title: "Copy Button",
+  description: "A Button that writes a value to the clipboard and confirms with a transient copied state.",
+};
+
+# Copy Button
+
+A [Button](/docs/components/button) that writes `value` to the clipboard and
+confirms with a transient copied state — the general-purpose sibling of
+`CodeBlock.CopyTrigger`. Every Button prop (variant, size, colorScheme, …)
+passes straight through.
+
+<ComponentPreview name="copy-button-demo" />
+
+## Import
+
+```tsx
+import { CopyButton } from "astralis-ui";
+```
+
+## Props
+
+Extends [Button](/docs/components/button)'s props (minus `leftIcon`, which
+the copied state owns), plus:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | — | Text written to the clipboard. Required. |
+| `children` | `ReactNode` | `"Copy"` | Idle label. |
+| `copiedLabel` | `ReactNode` | `"Copied"` | Label during the copied state. |
+| `timeout` | `number` | `1600` | How long the copied state lasts (ms). |
+
+While copied, the button carries `data-copied` for custom styling.
