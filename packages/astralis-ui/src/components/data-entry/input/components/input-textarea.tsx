@@ -19,6 +19,7 @@ export function InputTextarea({
   className = "",
   id: idProp,
   rows = 4,
+  autoGrow = false,
   ref,
   ...props
 }: InputTextareaProps & { ref?: Ref<HTMLTextAreaElement> }) {
@@ -52,7 +53,13 @@ export function InputTextarea({
           value={value}
           defaultValue={defaultValue}
           rows={rows}
-          className={astralisMerge(textareaVariants({ size, variant, invalid: !!isInvalid }), className)}
+          className={astralisMerge(
+            textareaVariants({ size, variant, invalid: !!isInvalid }),
+            // Native auto-growing textarea (CSS field-sizing, Baseline
+            // 2026-06) — the entire scroll-height-listener genre, deleted.
+            autoGrow ? "astralis:field-sizing-content" : "",
+            className,
+          )}
           {...props}
         />
         {showCount && (

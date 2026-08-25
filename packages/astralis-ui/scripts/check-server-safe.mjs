@@ -90,6 +90,14 @@ const MUST_BE_ZERO_CLIENT = [
   "CodeBlockCode",
   "CodeBlockHeader",
   "CodeBlockTitle",
+  // zero-JS disclosure family: interactive WITH JavaScript disabled — the
+  // whole point; a client module reaching these is a headline regression
+  "Collapsible",
+  "CollapsibleTrigger",
+  "CollapsibleContent",
+  "Popout",
+  "PopoutTrigger",
+  "PopoutContent",
 ];
 
 const failures = [];

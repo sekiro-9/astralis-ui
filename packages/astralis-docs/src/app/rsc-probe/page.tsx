@@ -1,5 +1,7 @@
 import {
   Alert,
+  Collapsible,
+  Popout,
   Badge,
   Box,
   Button,
@@ -121,6 +123,27 @@ export default function RscProbePage() {
           <Stat.Value>42</Stat.Value>
           <Stat.HelpText>dot access from a server page</Stat.HelpText>
         </Stat>
+
+        {/* Zero-JS interactive: native details + popover/anchor — these ship
+            NO JavaScript at all, yet open, close, and light-dismiss. */}
+        <VStack gap="3" alignItems="stretch" data-probe="zero-js">
+          <Collapsible name="probe-faq" defaultOpen>
+            <Collapsible.Trigger>Zero-JS collapsible A</Collapsible.Trigger>
+            <Collapsible.Content>Open state lives in the browser.</Collapsible.Content>
+          </Collapsible>
+          <Collapsible name="probe-faq">
+            <Collapsible.Trigger>Zero-JS collapsible B (exclusive)</Collapsible.Trigger>
+            <Collapsible.Content>Opening me closes A — native name grouping.</Collapsible.Content>
+          </Collapsible>
+          <HStack>
+            <Popout>
+              <Popout.Trigger>Zero-JS popout</Popout.Trigger>
+              <Popout.Content side="bottom" align="start">
+                Anchored by CSS, dismissed by the platform.
+              </Popout.Content>
+            </Popout>
+          </HStack>
+        </VStack>
 
         {/* Client compounds as islands inside the server page */}
         <HStack gap="4">

@@ -1,0 +1,59 @@
+export const metadata = {
+  title: "Collapsible",
+  description: "A single disclosure that ships zero JavaScript — native details/summary, with exclusive grouping via name.",
+};
+
+# Collapsible
+
+A single disclosure that ships **zero JavaScript**. The open state is the
+browser's (`<details>`), toggling is the browser's, and the expanded /
+collapsed state is announced natively to assistive technology. It renders as
+a Server Component and works with JavaScript disabled.
+
+<ComponentPreview name="collapsible-demo" />
+
+## Import
+
+```tsx
+import { Collapsible } from "astralis-ui";
+```
+
+## Exclusive groups (accordion, no JS)
+
+Collapsibles sharing a `name` form a native exclusive accordion — opening one
+closes its siblings via the `<details name>` attribute:
+
+<ComponentPreview name="collapsible-exclusive" />
+
+## Uncontrolled by design
+
+There is no `open`/`onOpenChange` pair: a controlled variant would move the
+state into React and forfeit exactly the property this component exists for.
+Use `defaultOpen` for the initial state; if you need programmatic control,
+[Accordion](/docs/components/accordion) is the stateful sibling.
+
+## Accessibility
+
+- The trigger stays a real `<summary>` with its native `list-item` display —
+  only the marker is hidden. Restyling summary's display is the documented
+  way to lose expanded/collapsed announcements in some screen readers, so the
+  layout row is an inner span instead.
+- Find-in-page can auto-open a collapsed section in Chromium — content is
+  searchable, not trapped.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultOpen` | `boolean` | `false` | Open on first render. |
+| `name` | `string` | — | Exclusive-group name: siblings sharing it form a native accordion. |
+
+### Collapsible.Trigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hideIndicator` | `boolean` | `false` | Hide the built-in chevron. |
+
+### Collapsible.Content
+
+Plain content wrapper — spacing and typography only.

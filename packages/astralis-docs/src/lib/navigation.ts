@@ -84,6 +84,7 @@ export const navigation: NavGroup[] = [
     items: [
       { title: "Accordion", href: "/docs/components/accordion" },
       { title: "Carousel", href: "/docs/components/carousel" },
+      { title: "Collapsible", href: "/docs/components/collapsible" },
       { title: "Pagination", href: "/docs/components/pagination" },
     ],
   },
@@ -107,6 +108,7 @@ export const navigation: NavGroup[] = [
       { title: "Drawer", href: "/docs/components/drawer" },
       { title: "Tooltip", href: "/docs/components/tooltip" },
       { title: "Popover", href: "/docs/components/popover" },
+      { title: "Popout", href: "/docs/components/popout" },
     ],
   },
   {

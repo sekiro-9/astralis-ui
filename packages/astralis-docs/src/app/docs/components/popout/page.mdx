@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Popout",
+  description: "An anchored disclosure panel that ships zero JavaScript — native popover plus CSS anchor positioning.",
+};
+
+# Popout
+
+An anchored disclosure panel that ships **zero JavaScript**. The trigger is a
+real `<button popovertarget>`; the panel is a native `[popover]` positioned by
+CSS anchor positioning against the trigger's implicit anchor. The platform
+supplies everything a JS popover engine used to: the top layer, light
+dismiss, **Esc**, focus return, and collision flipping. It
+renders as a Server Component and works with JavaScript disabled.
+
+<ComponentPreview name="popout-demo" />
+
+## Import
+
+```tsx
+import { Popout } from "astralis-ui";
+```
+
+## Placement
+
+`side` and `align` compile to `position-area`; when there is no room, the
+panel flips via `position-try-fallbacks` — the browser's collision handling,
+not a resize listener:
+
+<ComponentPreview name="popout-placement" />
+
+## Popout is a disclosure, not a menu
+
+Deliberately: there is no roving focus and no menu ARIA, because those
+require state CSS cannot own. For an actions menu with arrow-key navigation,
+reach for [Menu](/docs/components/menu) — that's what it's for. Popout is the
+right shape for nav dropdowns, info panels, and filters.
+
+## Browser support
+
+Popover is Baseline 2025; anchor positioning is cross-engine since January
+2026 (Chrome 125+, Safari 26+, Firefox 147+). In browsers without anchor
+positioning the panel still opens, closes and light-dismisses correctly, and
+falls back to the browser's centered top-layer placement.
+
+## Props
+
+### Popout.Trigger
+
+Renders a `<button popovertarget>`; accepts every button prop.
+
+### Popout.Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `side` | `"top" \| "bottom" \| "left" \| "right"` | `"bottom"` | Which side of the trigger the panel opens on. |
+| `align` | `"start" \| "center" \| "end"` | `"start"` | Alignment along that side. |
+| `sideOffset` | `number` | `8` | Gap between trigger and panel, px. |

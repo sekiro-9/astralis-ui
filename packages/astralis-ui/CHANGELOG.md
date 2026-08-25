@@ -3,6 +3,32 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.5 — 2026-08-22
+
+Zero-JS interactive components. Two new components are interactive **with
+JavaScript disabled** — the platform owns the state, Astralis ships the
+markup and CSS. Both are Server Components, `client: "none"` in the spec,
+and pinned in the server-boundary gate so the property cannot be lost
+silently.
+
+### Added
+
+- **Collapsible** — a single disclosure on native `<details>/<summary>`.
+  `name` groups siblings into a native exclusive accordion. Uncontrolled by
+  design; the summary keeps its native display (marker hidden only) so
+  screen-reader expanded/collapsed announcements survive restyling.
+- **Popout** — an anchored disclosure panel: `<button popovertarget>` +
+  native `[popover]`, positioned by CSS anchor positioning through the
+  invoker's implicit anchor (cross-engine since January 2026). Top layer,
+  Esc, light dismiss, focus return, and collision flipping
+  (`position-try-fallbacks`) all come from the platform. Deliberately a
+  disclosure, not a menu — no roving focus, no menu ARIA; Menu remains the
+  stateful sibling.
+- **Textarea `autoGrow`** — native `field-sizing: content` (Baseline
+  2026-06): grows with content, no scroll-height listener, zero JS.
+
+Component count: 63 → 65 documented.
+
 ## 0.7.4 — 2026-08-22
 
 Contrast verification. The semantic layer's readable-text promises (labels on

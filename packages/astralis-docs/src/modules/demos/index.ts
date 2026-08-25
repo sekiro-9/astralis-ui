@@ -54,6 +54,10 @@ import { TextStyling } from "./text/text-styling";
 import { HeadingDemo } from "./heading/heading-demo";
 import { HeadingSizeOverride } from "./heading/heading-size-override";
 import { BlockquoteDemo } from "./blockquote/blockquote-demo";
+import { CollapsibleDemo } from "./collapsible/collapsible-demo";
+import { CollapsibleExclusive } from "./collapsible/collapsible-exclusive";
+import { PopoutDemo } from "./popout/popout-demo";
+import { PopoutPlacement } from "./popout/popout-placement";
 import { BlockquoteVariants } from "./blockquote/blockquote-variants";
 import { CodeDemo } from "./code/code-demo";
 import { CodeVariants } from "./code/code-variants";
@@ -231,6 +235,10 @@ export const demos = {
   "heading-demo": { component: HeadingDemo, file: "heading/heading-demo.tsx" },
   "heading-size-override": { component: HeadingSizeOverride, file: "heading/heading-size-override.tsx" },
   "blockquote-demo": { component: BlockquoteDemo, file: "blockquote/blockquote-demo.tsx" },
+  "collapsible-demo": { component: CollapsibleDemo, file: "collapsible/collapsible-demo.tsx" },
+  "collapsible-exclusive": { component: CollapsibleExclusive, file: "collapsible/collapsible-exclusive.tsx" },
+  "popout-demo": { component: PopoutDemo, file: "popout/popout-demo.tsx" },
+  "popout-placement": { component: PopoutPlacement, file: "popout/popout-placement.tsx" },
   "blockquote-variants": { component: BlockquoteVariants, file: "blockquote/blockquote-variants.tsx" },
   "code-demo": { component: CodeDemo, file: "code/code-demo.tsx" },
   "code-variants": { component: CodeVariants, file: "code/code-variants.tsx" },

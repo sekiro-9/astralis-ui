@@ -44,6 +44,9 @@ export interface InputTextareaProps extends Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   "size"
 > {
+  /** Grow with content instead of scrolling — native CSS `field-sizing:
+   *  content`, zero JavaScript. `rows` becomes the minimum height. */
+  autoGrow?: boolean;
   /** Visual size */
   size?: InputSize;
   /** Visual variant */
