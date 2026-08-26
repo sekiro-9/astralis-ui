@@ -6,3 +6,4 @@ export * from "./tooltip";
 export { Portal } from "./portal";
 export * from "./alert-dialog";
 export * from "./backdrop";
+export * from "./hover-card";

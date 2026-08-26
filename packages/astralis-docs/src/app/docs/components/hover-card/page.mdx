@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Hover Card",
+  description: "A rich interactive preview on hover intent — the profile-card-on-a-mention pattern, with a pointer grace period.",
+};
+
+# Hover Card
+
+A rich preview that opens on hover intent — the "profile card on a mention"
+pattern. Unlike [Tooltip](/docs/components/tooltip), the content is
+**interactive**: the close delay gives the pointer a grace period to travel
+into the card, and entering it cancels the close, so links and buttons
+inside are usable.
+
+<ComponentPreview name="hover-card-demo" />
+
+## Import
+
+```tsx
+import { HoverCard } from "astralis-ui";
+```
+
+## Tooltip vs Hover Card
+
+- **Tooltip** — a short text label, `role="tooltip"`, pointer-events off.
+- **HoverCard** — a raised card with real content; supplementary by nature,
+  so keyboard users get it on focus and the underlying link still works
+  without it.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
+| `side` / `align` | `Side` / `Align` | `"bottom"` / `"center"` | Preferred placement (flips on collision). |
+| `sideOffset` | `number` | `8` | Gap from the trigger, px. |
+| `openDelay` | `number` | `400` | Hover intent delay before opening, ms. |
+| `closeDelay` | `number` | `200` | Grace period to reach the card, ms. |
+
+Parts: `HoverCard.Trigger` (wraps a single element), `HoverCard.Content`.

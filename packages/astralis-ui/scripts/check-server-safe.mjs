@@ -106,6 +106,8 @@ const MUST_BE_ZERO_CLIENT = [
   "EmptyStateActions",
   "VisuallyHidden",
   "Backdrop",
+  // medium tier: native scrollbars restyled with CSS, no JS thumb
+  "ScrollArea",
 ];
 
 const failures = [];

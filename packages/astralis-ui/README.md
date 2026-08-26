@@ -2,7 +2,7 @@
 
 React 19 component library built on semantic design tokens — precompiled CSS,
 runtime brand theming, first-class dark mode and responsive props on every
-layout primitive. **75 components across 9 categories.**
+layout primitive. **80 components across 9 categories.**
 
 **Docs & live demos:** https://astralis-zeta.vercel.app
 
@@ -76,7 +76,7 @@ import { Button, Card, Field, Input, VStack } from "astralis-ui";
 - [Installation guide](https://astralis-zeta.vercel.app/docs/installation)
 - [Quick start](https://astralis-zeta.vercel.app/docs/quick-start)
 - [Theming](https://astralis-zeta.vercel.app/docs/theming)
-- [All 75 components](https://astralis-zeta.vercel.app/docs)
+- [All 80 components](https://astralis-zeta.vercel.app/docs)
 
 ## For AI agents
 

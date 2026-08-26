@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "Editable",
+  description: "Click-to-edit text: a preview that swaps for an input, committing on Enter/blur and cancelling on Escape.",
+};
+
+# Editable
+
+Click-to-edit text for titles, names and inline fields where a permanent
+input would be visual noise. The preview is a real button in the
+accessibility tree (Enter/Space start editing); the input auto-focuses with
+its text selected, commits on **Enter** or blur, and cancels on **Escape**.
+
+<ComponentPreview name="editable-demo" />
+
+## Import
+
+```tsx
+import { Editable } from "astralis-ui";
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` / `defaultValue` / `onChange` | `string` / `string` / `(value) => void` | — | Controlled / uncontrolled API. |
+| `onSubmit` | `(value) => void` | — | Fires when an edit commits (Enter / blur). |
+| `onCancel` | `() => void` | — | Fires when an edit cancels (Escape). |
+| `placeholder` | `string` | `"Click to edit"` | Preview text while the value is empty. |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Text scale shared by preview and input. |
+| `submitOnBlur` | `boolean` | `true` | Blur commits (otherwise it cancels). |
+| `startWithEditView` | `boolean` | `false` | Mount already editing. |
+| `disabled` | `boolean` | `false` | Locks editing. |
+
+Parts: `Editable.Preview`, `Editable.Input` — render both; the active one
+shows itself.

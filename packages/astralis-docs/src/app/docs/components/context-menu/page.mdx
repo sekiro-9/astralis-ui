@@ -1,0 +1,38 @@
+export const metadata = {
+  title: "Context Menu",
+  description: "Menu opened by right-click, positioned at the pointer — same items, roving focus and dismissal as Menu.",
+};
+
+# Context Menu
+
+A [Menu](/docs/components/menu) opened by right-click and anchored at the
+pointer instead of a trigger button. Everything else *is* Menu — the same
+items, roving focus, typeahead, Escape/outside dismissal and styling.
+
+<ComponentPreview name="context-menu-demo" />
+
+## Import
+
+```tsx
+import { ContextMenu } from "astralis-ui";
+```
+
+## How it anchors
+
+Right-clicking places an invisible 1px anchor at the pointer and opens the
+menu against it. A right-click somewhere else first dismisses (outside
+pointer-down), then reopens fresh at the new position — matching platform
+context-menu behavior.
+
+## Props
+
+Same as [Menu](/docs/components/menu) minus `side`/`align` (the pointer is
+the anchor):
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
+| `closeOnSelect` | `boolean` | `true` | Close after an item activates. |
+
+Parts: `ContextMenu.Trigger` (wraps the right-clickable element),
+`.Content`, `.Item`, `.Label`, `.Separator`, `.Group` — identical to Menu's.

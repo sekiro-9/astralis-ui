@@ -50,6 +50,7 @@ export const navigation: NavGroup[] = [
       { title: "Floating Button", href: "/docs/components/floating-button", status: "new" },
       { title: "Theme Toggle", href: "/docs/components/theme-toggle" },
       { title: "Copy Button", href: "/docs/components/copy-button", status: "new" },
+      { title: "Toolbar", href: "/docs/components/toolbar", status: "new" },
     ],
   },
   {
@@ -65,6 +66,7 @@ export const navigation: NavGroup[] = [
       { title: "Float", href: "/docs/components/float" },
       { title: "Separator", href: "/docs/components/separator" },
       { title: "Visually Hidden", href: "/docs/components/visually-hidden", status: "new" },
+      { title: "Scroll Area", href: "/docs/components/scroll-area", status: "new" },
     ],
   },
   {
@@ -97,6 +99,7 @@ export const navigation: NavGroup[] = [
       { title: "Steps", href: "/docs/components/steps" },
       { title: "Breadcrumb", href: "/docs/components/breadcrumb" },
       { title: "Menu", href: "/docs/components/menu" },
+      { title: "Context Menu", href: "/docs/components/context-menu", status: "new" },
     ],
   },
   {
@@ -113,6 +116,7 @@ export const navigation: NavGroup[] = [
       { title: "Popout", href: "/docs/components/popout" },
       { title: "Alert Dialog", href: "/docs/components/alert-dialog", status: "new" },
       { title: "Backdrop", href: "/docs/components/backdrop", status: "new" },
+      { title: "Hover Card", href: "/docs/components/hover-card", status: "new" },
     ],
   },
   {
@@ -135,6 +139,7 @@ export const navigation: NavGroup[] = [
       { title: "Native Select", href: "/docs/components/native-select", status: "new" },
       { title: "Checkbox Card", href: "/docs/components/checkbox-card", status: "new" },
       { title: "Radio Card", href: "/docs/components/radio-card", status: "new" },
+      { title: "Editable", href: "/docs/components/editable", status: "new" },
     ],
   },
   {

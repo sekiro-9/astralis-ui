@@ -23,3 +23,5 @@ export type {
   MenuItemProps,
   MenuSectionProps,
 } from "./menu.types";
+
+export * from "./context-menu";

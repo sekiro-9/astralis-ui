@@ -3,6 +3,33 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.7 — 2026-08-22
+
+Medium tier, batch one — five components that ride the existing overlay and
+focus machinery (`use-anchor-position`, `use-dismiss`, `use-roving-focus`,
+`use-presence`, `use-controllable-state`). No new foundational code.
+
+### Added
+
+- **ContextMenu** — Menu opened by right-click, anchored at the pointer via
+  an invisible 1px anchor. The parts ARE Menu's parts (same context, items,
+  roving focus, dismissal); only the trigger differs.
+- **HoverCard** (+ Trigger/Content) — rich interactive preview on hover
+  intent: openDelay before showing, closeDelay grace period so the pointer
+  can travel into the card; entering it cancels the close. Focus opens
+  immediately for keyboard users.
+- **Toolbar** (+ Group/Separator) — `role="toolbar"` container on the APG
+  pattern: arrows move focus across the focusable children, Home/End jump.
+  Composes with Button/SegmentedControl/CopyButton.
+- **ScrollArea** — themed scrollbars that are the PLATFORM's own, restyled
+  with CSS (`::-webkit-scrollbar` + `scrollbar-width`/`scrollbar-color`).
+  No JS thumb, no ResizeObserver; zero client JavaScript, pinned in the
+  server-boundary gate (61 verified zero-client).
+- **Editable** (+ Preview/Input) — click-to-edit text: button-role preview,
+  auto-focused + selected input, Enter/blur commits, Escape cancels.
+
+Component count: 75 → 80 documented.
+
 ## 0.7.6 — 2026-08-22
 
 Ten components in one release — the audited low-effort tier of the component

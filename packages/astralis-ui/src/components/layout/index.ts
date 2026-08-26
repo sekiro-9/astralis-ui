@@ -8,3 +8,4 @@ export * from "./separator";
 export * from "./float";
 export * from "./center";
 export * from "./visually-hidden";
+export * from "./scroll-area";

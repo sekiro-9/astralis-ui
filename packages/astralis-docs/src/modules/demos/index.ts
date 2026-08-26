@@ -188,6 +188,11 @@ import { CopyButtonDemo } from "./copy-button/copy-button-demo";
 import { AlertDialogDemo } from "./alert-dialog/alert-dialog-demo";
 import { BackdropDemo } from "./backdrop/backdrop-demo";
 import { VisuallyHiddenDemo } from "./visually-hidden/visually-hidden-demo";
+import { ContextMenuDemo } from "./context-menu/context-menu-demo";
+import { HoverCardDemo } from "./hover-card/hover-card-demo";
+import { ToolbarDemo } from "./toolbar/toolbar-demo";
+import { ScrollAreaDemo } from "./scroll-area/scroll-area-demo";
+import { EditableDemo } from "./editable/editable-demo";
 
 export interface DemoEntry {
   component: ComponentType;
@@ -385,4 +390,9 @@ export const demos = {
   "alert-dialog-demo": { component: AlertDialogDemo, file: "alert-dialog/alert-dialog-demo.tsx" },
   "backdrop-demo": { component: BackdropDemo, file: "backdrop/backdrop-demo.tsx" },
   "visually-hidden-demo": { component: VisuallyHiddenDemo, file: "visually-hidden/visually-hidden-demo.tsx" },
+  "context-menu-demo": { component: ContextMenuDemo, file: "context-menu/context-menu-demo.tsx" },
+  "hover-card-demo": { component: HoverCardDemo, file: "hover-card/hover-card-demo.tsx" },
+  "toolbar-demo": { component: ToolbarDemo, file: "toolbar/toolbar-demo.tsx" },
+  "scroll-area-demo": { component: ScrollAreaDemo, file: "scroll-area/scroll-area-demo.tsx" },
+  "editable-demo": { component: EditableDemo, file: "editable/editable-demo.tsx" },
 } satisfies Record<string, DemoEntry>;

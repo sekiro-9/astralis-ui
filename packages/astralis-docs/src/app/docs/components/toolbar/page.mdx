@@ -1,0 +1,39 @@
+export const metadata = {
+  title: "Toolbar",
+  description: "A role=toolbar container with arrow-key focus movement — compose with Buttons, groups and separators.",
+};
+
+# Toolbar
+
+A `role="toolbar"` container for grouped controls, on the APG toolbar
+pattern: arrow keys move focus between the focusable children, Home/End
+jump to the edges. Compose it with [Button](/docs/components/button),
+[SegmentedControl](/docs/components/segmented-control),
+[CopyButton](/docs/components/copy-button) — anything focusable.
+
+<ComponentPreview name="toolbar-demo" />
+
+## Import
+
+```tsx
+import { Toolbar } from "astralis-ui";
+```
+
+## Accessibility
+
+- Give every toolbar a `label` — a toolbar without a name is just a row of
+  buttons.
+- Icon-only controls need their own `aria-label` (or a
+  [VisuallyHidden](/docs/components/visually-hidden) text).
+
+## Props
+
+Extends `div` props:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | — | Accessible name (`aria-label`). |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Layout + arrow-key axis. |
+
+Parts: `Toolbar.Group` (`role="group"` cluster), `Toolbar.Separator`
+(vertical rule between groups).
