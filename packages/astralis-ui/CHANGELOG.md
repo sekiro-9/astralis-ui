@@ -3,6 +3,29 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## 0.7.8 — 2026-08-22
+
+Medium tier, batch two. (A fourth candidate, Lightbox, was built and then
+removed the same day: the audit caught that `ImageGroup` already ships a
+gallery lightbox — thumbnails, prev/next, Escape, zoom — and `Image`
+`preview` covers the single-image case. No duplicates.)
+
+### Added
+
+- **FileUpload** (+ Dropzone/Trigger/ItemGroup) — picking + drag-and-drop
+  around a hidden native file input; the picker, `accept` filtering and
+  mobile flows stay the platform's. `maxSize`/`maxFiles` violations are
+  rejected and reported via `onReject`, never silently truncated.
+- **Splitter** (+ Panel/Handle) — two-panel resizable split. The handle is
+  a real `role="separator"` with the APG window-splitter keyboard contract
+  (arrows step, Home/End jump) and pointer-capture dragging. The first
+  panel's share rides a CSS variable; panels are addressed by DOM order.
+- **TableOfContents** — on-this-page nav with IntersectionObserver
+  scroll-spy. Entries are plain anchor links: navigation works before
+  hydration and with JS disabled; the highlight is the enhancement.
+
+Component count: 80 → 83 documented.
+
 ## 0.7.7 — 2026-08-22
 
 Medium tier, batch one — five components that ride the existing overlay and

@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Splitter",
+  description: "A two-panel resizable split — pointer-capture dragging plus the APG window-splitter keyboard contract.",
+};
+
+# Splitter
+
+A two-panel split with a draggable divider. The handle is a real
+`role="separator"` with the APG window-splitter keyboard contract — arrows
+step the split, Home/End jump to the limits — and dragging uses pointer
+capture, so fast drags never lose the handle.
+
+<ComponentPreview name="splitter-demo" />
+
+## Import
+
+```tsx
+import { Splitter } from "astralis-ui";
+```
+
+## How sizing works
+
+The first panel's share rides a CSS variable on the root; panels are
+addressed by DOM order (`Panel / Handle / Panel`), so there is no
+registration protocol. The second panel takes the rest.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Split axis (`horizontal` = side by side). |
+| `size` / `defaultSize` / `onResize` | `number` (percent) | `50` | Controlled / uncontrolled first-panel share. |
+| `minSize` / `maxSize` | `number` | `10` / `90` | Clamp, percent. |
+
+Parts: `Splitter.Panel` (×2), `Splitter.Handle` (the divider — give it an
+`aria-label`).

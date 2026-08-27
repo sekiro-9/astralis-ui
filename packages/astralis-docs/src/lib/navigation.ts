@@ -67,6 +67,7 @@ export const navigation: NavGroup[] = [
       { title: "Separator", href: "/docs/components/separator" },
       { title: "Visually Hidden", href: "/docs/components/visually-hidden", status: "new" },
       { title: "Scroll Area", href: "/docs/components/scroll-area", status: "new" },
+      { title: "Splitter", href: "/docs/components/splitter", status: "new" },
     ],
   },
   {
@@ -100,6 +101,7 @@ export const navigation: NavGroup[] = [
       { title: "Breadcrumb", href: "/docs/components/breadcrumb" },
       { title: "Menu", href: "/docs/components/menu" },
       { title: "Context Menu", href: "/docs/components/context-menu", status: "new" },
+      { title: "Table of Contents", href: "/docs/components/table-of-contents", status: "new" },
     ],
   },
   {
@@ -140,6 +142,7 @@ export const navigation: NavGroup[] = [
       { title: "Checkbox Card", href: "/docs/components/checkbox-card", status: "new" },
       { title: "Radio Card", href: "/docs/components/radio-card", status: "new" },
       { title: "Editable", href: "/docs/components/editable", status: "new" },
+      { title: "File Upload", href: "/docs/components/file-upload", status: "new" },
     ],
   },
   {

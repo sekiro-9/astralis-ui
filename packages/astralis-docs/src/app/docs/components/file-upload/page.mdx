@@ -1,0 +1,42 @@
+export const metadata = {
+  title: "File Upload",
+  description: "File picking + drag-and-drop on a hidden native input — validation rejects loudly, never truncates silently.",
+};
+
+# File Upload
+
+File picking and drag-and-drop built around a hidden native
+`<input type="file">` — the picker dialog, `accept` filtering and mobile
+integrations stay the platform's. `maxSize`/`maxFiles` violations are
+**rejected and reported** via `onReject`, never silently truncated.
+
+<ComponentPreview name="file-upload-demo" />
+
+## Import
+
+```tsx
+import { FileUpload } from "astralis-ui";
+```
+
+## Button trigger
+
+Skip the dropzone entirely — `FileUpload.Trigger` wraps any element and opens
+the picker:
+
+<ComponentPreview name="file-upload-trigger" />
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `accept` | `string` | — | Native accept filter (`"image/*,.pdf"`). |
+| `multiple` | `boolean` | `false` | Allow more than one file. |
+| `maxFiles` | `number` | — | Cap on kept files; overflow is rejected. |
+| `maxSize` | `number` | — | Per-file byte cap; oversized picks are rejected. |
+| `onFilesChange` | `(files: File[]) => void` | — | Full kept list after every add/remove. |
+| `onReject` | `(rejections) => void` | — | `{ file, reason: "size" \| "count" }[]`. |
+| `disabled` | `boolean` | `false` | Locks picking and dropping. |
+
+Parts: `FileUpload.Dropzone` (drop target + click/keyboard picker),
+`FileUpload.Trigger` (wraps your own element), `FileUpload.ItemGroup`
+(kept files with name, human-readable size and a remove control).

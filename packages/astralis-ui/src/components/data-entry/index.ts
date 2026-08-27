@@ -16,3 +16,4 @@ export * from "./native-select";
 export * from "./checkbox-card";
 export * from "./radio-card";
 export * from "./editable";
+export * from "./file-upload";

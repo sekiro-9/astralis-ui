@@ -193,6 +193,10 @@ import { HoverCardDemo } from "./hover-card/hover-card-demo";
 import { ToolbarDemo } from "./toolbar/toolbar-demo";
 import { ScrollAreaDemo } from "./scroll-area/scroll-area-demo";
 import { EditableDemo } from "./editable/editable-demo";
+import { FileUploadDemo } from "./file-upload/file-upload-demo";
+import { FileUploadTrigger } from "./file-upload/file-upload-trigger";
+import { SplitterDemo } from "./splitter/splitter-demo";
+import { TableOfContentsDemo } from "./table-of-contents/table-of-contents-demo";
 
 export interface DemoEntry {
   component: ComponentType;
@@ -395,4 +399,8 @@ export const demos = {
   "toolbar-demo": { component: ToolbarDemo, file: "toolbar/toolbar-demo.tsx" },
   "scroll-area-demo": { component: ScrollAreaDemo, file: "scroll-area/scroll-area-demo.tsx" },
   "editable-demo": { component: EditableDemo, file: "editable/editable-demo.tsx" },
+  "file-upload-demo": { component: FileUploadDemo, file: "file-upload/file-upload-demo.tsx" },
+  "file-upload-trigger": { component: FileUploadTrigger, file: "file-upload/file-upload-trigger.tsx" },
+  "splitter-demo": { component: SplitterDemo, file: "splitter/splitter-demo.tsx" },
+  "table-of-contents-demo": { component: TableOfContentsDemo, file: "table-of-contents/table-of-contents-demo.tsx" },
 } satisfies Record<string, DemoEntry>;

@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Table of Contents",
+  description: "On-this-page navigation with IntersectionObserver scroll-spy — plain anchor links, enhanced highlight.",
+};
+
+# Table of Contents
+
+"On this page" navigation with scroll-spy: the entry whose heading is
+currently on screen is highlighted, driven by `IntersectionObserver` — no
+scroll handler. The entries are **plain anchor links**, so navigation works
+before hydration and with JavaScript disabled; only the highlight is the
+enhancement.
+
+<ComponentPreview name="table-of-contents-demo" />
+
+## Import
+
+```tsx
+import { TableOfContents } from "astralis-ui";
+```
+
+## Usage
+
+Point `items` at heading ids that exist in the page:
+
+```tsx
+<TableOfContents
+  items={[
+    { id: "installation", title: "Installation" },
+    { id: "theming", title: "Theming", depth: 1 },
+    { id: "api", title: "API" },
+  ]}
+/>
+```
+
+## Props
+
+Extends `nav` props:
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `{ id, title, depth? }[]` | — | Entries; `id` targets a heading element's id. Required. |
+| `label` | `string` | `"On this page"` | Accessible name; also the visible heading. |
+| `showLabel` | `boolean` | `true` | Show the heading above the list. |
+| `offset` | `number` | `80` | Sticky-header inset subtracted from the spy zone, px. |

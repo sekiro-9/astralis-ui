@@ -9,3 +9,4 @@ export * from "./float";
 export * from "./center";
 export * from "./visually-hidden";
 export * from "./scroll-area";
+export * from "./splitter";

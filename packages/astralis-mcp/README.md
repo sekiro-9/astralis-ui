@@ -32,7 +32,7 @@ No install step — `npx` fetches and runs it on demand.
 
 | Tool | What it returns |
 | --- | --- |
-| `list_components` | Every docs page — 80 components + 7 guides — with slug, description, category |
+| `list_components` | Every docs page — 83 components + 7 guides — with slug, description, category |
 | `get_component` | One component's full docs: props table, keyboard map, a11y notes, demo source |
 | `get_guide` | A guide page: `installation`, `quick-start`, `theming`, `colors`, `responsive`, `style-props`, `tokens` |
 | `search_docs` | Full-text search across everything, with snippets |

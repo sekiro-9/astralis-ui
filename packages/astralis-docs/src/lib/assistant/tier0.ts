@@ -31,7 +31,7 @@ export const TIER0: Tier0Entry[] = [
       "introduction to astralis",
       "about this library",
     ],
-    answer: `**Astralis UI** is a React 19 component library built on semantic design tokens — **80 components** that ship as precompiled CSS with zero build tooling required in your app.
+    answer: `**Astralis UI** is a React 19 component library built on semantic design tokens — **83 components** that ship as precompiled CSS with zero build tooling required in your app.
 
 What makes it different:
 
@@ -188,7 +188,7 @@ It also coexists with whatever styling setup you already have (utility framework
       "does it have a datepicker",
       "available components",
     ],
-    answer: `**80 components across 9 categories** — buttons, layout, typography, data entry (Input → Combobox), overlays (Modal, Drawer, Popover, Tooltip, Menu), data display (Table, Calendar, Avatar…), feedback (Toast, Alert, Progress, Skeleton, Spinner), navigation and disclosure.
+    answer: `**83 components across 9 categories** — buttons, layout, typography, data entry (Input → Combobox), overlays (Modal, Drawer, Popover, Tooltip, Menu), data display (Table, Calendar, Avatar…), feedback (Toast, Alert, Progress, Skeleton, Spinner), navigation and disclosure.
 
 Browse them all in the [component docs](/docs) — every page has live demos with source. (DatePicker is on the roadmap; Calendar already exists.)`,
   },
@@ -328,7 +328,7 @@ Every interactive component's docs page has a **Keyboard** table documenting its
     ],
     answer: `Importing one Button ships the Button — the package publishes one ES module per component with a \`sideEffects\` declaration, so bundlers tree-shake at file granularity.
 
-The stylesheet is ~120 KB gzipped (all 80 components, both themes, all responsive variants — imported once). Runtime dependencies: four small ones; no Radix, no Floating UI, no animation library.`,
+The stylesheet is ~120 KB gzipped (all 83 components, both themes, all responsive variants — imported once). Runtime dependencies: four small ones; no Radix, no Floating UI, no animation library.`,
   },
   {
     id: "toast",
