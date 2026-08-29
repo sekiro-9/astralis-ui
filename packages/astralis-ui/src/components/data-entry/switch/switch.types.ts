@@ -6,7 +6,7 @@ export type SwitchSize = "sm" | "md" | "lg";
 
 export interface SwitchProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "size" | "type"
+  "size" | "type" | "width" | "height"
 >, PlacementProps {
   /** Visual size of the toggle */
   size?: SwitchSize;

@@ -28,6 +28,7 @@
    ========================================================================== */
 
 import { isStateProp, resolveStateStyles } from "./interaction-state";
+import { normalizeAliases } from "../const/prop-aliases";
 import {
   CHANNEL_PROPS,
   CONTAINER_BREAKPOINT_WIDTHS,
@@ -139,6 +140,9 @@ export function resolveStyleProps(
   props: Record<string, unknown>,
   { maps, variants }: ResolveStylePropsConfig,
 ): ResolvedStyles {
+  // Long-form spellings (padding, marginTop, width…) fold onto their
+  // canonical short forms first, so everything below sees one vocabulary.
+  props = normalizeAliases(props);
   const baseProps: Record<string, unknown> = {};
   const classes: string[] = [];
   const style: Record<string, string> = {};

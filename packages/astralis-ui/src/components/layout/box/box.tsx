@@ -3,6 +3,7 @@ import type { BoxProps } from "./box.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
 import { STATE_PROP_NAMES } from "../../../utils/interaction-state";
+import { PROP_ALIASES } from "../../../const/prop-aliases";
 import { boxVariants, boxVariantMap } from "./box.styles";
 
 /**
@@ -15,7 +16,14 @@ import { boxVariants, boxVariantMap } from "./box.styles";
 // `container` rides with the style keys so every primitive that splits on
 // this list routes it into resolveStyleProps (which turns it into the
 // .astralis-container class) instead of leaking it onto the DOM.
-export const BOX_VARIANT_KEYS = [...Object.keys(boxVariantMap), ...STATE_PROP_NAMES, "container"];
+// Alias spellings ride along too, so `padding` routes into the style
+// resolver (which folds it onto `p`) instead of leaking onto the DOM.
+export const BOX_VARIANT_KEYS = [
+  ...Object.keys(boxVariantMap),
+  ...Object.keys(PROP_ALIASES),
+  ...STATE_PROP_NAMES,
+  "container",
+];
 
 type BoxComponent = <T extends ElementType = "div">(
   props: BoxProps<T> & { ref?: Ref<any> },

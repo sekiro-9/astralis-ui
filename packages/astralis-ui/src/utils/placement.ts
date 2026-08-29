@@ -2,6 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 import { boxVariantMap, boxVariants } from "../components/layout/box/box.styles";
 import { resolveStyleProps, type Responsive } from "./responsive";
 import type { WidenChannelProps } from "../const/channel";
+import { normalizeAliases, type AliasesOf, type AliasName } from "../const/prop-aliases";
 
 /**
  * PLACEMENT PROPS
@@ -52,6 +53,19 @@ export const PLACEMENT_PROP_NAMES = [
   "mr",
   "mb",
   "ml",
+  // Position — where it sits when taken out of flow. As much a parent
+  // relationship as width: `left`/`top` are offsets within the positioning
+  // ancestor, which the component cannot know. Without these, absolutely
+  // placing a Text or Badge costs a wrapper Box purely to reach `position` —
+  // the same wrapper-node argument that created this set. FloatingButton
+  // omits `position` (its own controlled x/y prop shares the name).
+  "position",
+  "inset",
+  "top",
+  "right",
+  "bottom",
+  "left",
+  "zIndex",
 ] as const;
 
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
@@ -61,9 +75,13 @@ const PLACEMENT_SET = new Set<string>(PLACEMENT_PROP_NAMES);
 /** Placement props, each accepting a scalar token or a responsive map. The
  *  channel subset (sizing, margin, basis, order) also takes arbitrary CSS
  *  values — `w="37rem"` on a Card works like it does on Box. */
-export type PlacementProps = Responsive<
+type PlacementShortProps = Responsive<
   WidenChannelProps<Pick<VariantProps<typeof boxVariants>, PlacementPropName>>
 >;
+
+/** The short forms plus their long spellings — `margin` works wherever `m`
+ *  does. `normalizeAliases` folds the long forms away before resolution. */
+export type PlacementProps = PlacementShortProps & AliasesOf<PlacementShortProps>;
 
 /**
  * Split a component's props into placement classes and everything else.
@@ -90,15 +108,20 @@ export function splitPlacement<T extends Record<string, unknown>>(
    *  hand: apply it to the root's `style` yourself (own values and the
    *  caller's `style` AFTER it, so they win). */
   placementStyle: Record<string, string>;
-  rest: Omit<T, PlacementPropName>;
+  /** Alias spellings are folded away by normalisation, so they are gone from
+   *  `rest` at runtime — the type says so. */
+  rest: Omit<T, PlacementPropName | AliasName>;
 } {
   const placement: Record<string, unknown> = {};
   const rest: Record<string, unknown> = {};
 
-  for (const key in props) {
-    if (!Object.prototype.hasOwnProperty.call(props, key)) continue;
-    if (PLACEMENT_SET.has(key)) placement[key] = props[key];
-    else rest[key] = props[key];
+  // Long spellings fold onto their short forms here, so `marginTop` is
+  // recognised as placement and can never leak onto the DOM as an attribute.
+  const normalized = normalizeAliases(props);
+  for (const key in normalized) {
+    if (!Object.prototype.hasOwnProperty.call(normalized, key)) continue;
+    if (PLACEMENT_SET.has(key)) placement[key] = normalized[key];
+    else rest[key] = normalized[key];
   }
 
   const resolved = resolveStyleProps(placement, {
@@ -116,6 +139,6 @@ export function splitPlacement<T extends Record<string, unknown>>(
   return {
     placementClass: resolved.className,
     placementStyle: resolved.style,
-    rest: rest as Omit<T, PlacementPropName>,
+    rest: rest as Omit<T, PlacementPropName | AliasName>,
   };
 }

@@ -7,7 +7,11 @@ export interface FloatingButtonPosition {
   y: number;
 }
 
-export interface FloatingButtonProps extends Omit<ButtonProps, "fullWidth"> {
+// `position` here is the controlled x/y drag position, not the placement
+// style prop of the same name — the button is fixed-positioned by nature, so
+// CSS positioning placement is meaningless on it and the name goes to the API.
+export interface FloatingButtonProps
+  extends Omit<ButtonProps, "fullWidth" | "position"> {
   /**
    * Corner the button rests in until it is dragged.
    * @default "bottom-right"

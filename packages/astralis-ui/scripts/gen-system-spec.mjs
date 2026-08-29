@@ -74,6 +74,7 @@ for (const bp of ["sm", "md", "lg", "xl"]) {
 const { CHANNEL_PROPS, UNITLESS_CHANNEL_SLUGS } = await import(distUrl("const/channel.js"));
 const { STATE_VARIANTS, STATE_STYLE_MAPS } = await import(distUrl("utils/interaction-state.js"));
 const { PLACEMENT_PROP_NAMES } = await import(distUrl("utils/placement.js"));
+const { PROP_ALIASES, LONG_NAMES } = await import(distUrl("const/prop-aliases.js"));
 
 /* ---- prop groups: the vocabularies the engine actually resolves against -- */
 const { boxVariantMap } = await import(distUrl("components/layout/box/box.styles.js"));
@@ -118,8 +119,30 @@ function propSpec(prop, tokenMap) {
   return { kind: "keyword", tokens, arbitrary: false };
 }
 
+/* Long-form spellings (padding, marginTop, width…) are first-class entries:
+   validators check their values like any prop, and each side carries a
+   marker — `long` on the canonical short form, `short` on the alias — so a
+   tool can label with one and emit the other without a table of its own.
+   Derived from the same PROP_ALIASES the runtime normalises with. */
+const withAliases = (entries) => {
+  const out = {};
+  for (const [prop, entry] of Object.entries(entries)) {
+    const long = LONG_NAMES[prop];
+    out[prop] = long ? { ...entry, long } : entry;
+  }
+  for (const [long, short] of Object.entries(PROP_ALIASES)) {
+    if (!out[short]) continue;
+    // eslint-disable-next-line no-unused-vars
+    const { long: _dropped, ...entry } = out[short];
+    out[long] = { ...entry, short };
+  }
+  return out;
+};
+
 const groupSpec = (map) =>
-  Object.fromEntries(Object.entries(map).map(([prop, m]) => [prop, propSpec(prop, m)]));
+  withAliases(
+    Object.fromEntries(Object.entries(map).map(([prop, m]) => [prop, propSpec(prop, m)])),
+  );
 
 const box = groupSpec(boxVariantMap);
 // The container-establishment prop (`<Box container>`): handled by the
@@ -138,11 +161,13 @@ const propGroups = {
   // direction="row" on Stack, which the type system rejects.
   stack: { ...flex, direction: { kind: "keyword", tokens: ["horizontal", "vertical"], arbitrary: false } },
   // The subset every recipe component accepts (splitPlacement's contract).
-  placement: Object.fromEntries(
-    PLACEMENT_PROP_NAMES.map((p) => {
-      if (!box[p]) fail(`placement prop "${p}" missing from the box group`);
-      return [p, box[p]];
-    }),
+  placement: withAliases(
+    Object.fromEntries(
+      PLACEMENT_PROP_NAMES.map((p) => {
+        if (!box[p]) fail(`placement prop "${p}" missing from the box group`);
+        return [p, box[p]];
+      }),
+    ),
   ),
 };
 

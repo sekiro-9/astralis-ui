@@ -23,7 +23,9 @@ export type ImageAspectRatio =
   | "wide"
   | (string & {});
 
-export interface ImageProps extends PlacementProps {
+// `width`/`height` here are the img element's intrinsic-size attributes —
+// the native meaning keeps the names, so Image opts out of those two aliases.
+export interface ImageProps extends Omit<PlacementProps, "width" | "height"> {
   src: string;
   alt: string;
   className?: string;

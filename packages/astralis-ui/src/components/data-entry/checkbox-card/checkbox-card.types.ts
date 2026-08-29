@@ -5,7 +5,7 @@ import type { CheckboxSize } from "../checkbox/checkbox.types";
 
 export interface CheckboxCardProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "size" | "type" | "children"
+  "size" | "type" | "children" | "width" | "height"
 >, PlacementProps {
   /** Card title */
   children?: ReactNode;

@@ -4,6 +4,7 @@ import type { boxVariants } from "./box.styles";
 import type { Responsive } from "../../../utils/responsive";
 import type { StateProps } from "../../../utils/interaction-state";
 import type { WidenChannelProps } from "../../../const/channel";
+import type { AliasesOf } from "../../../const/prop-aliases";
 
 interface BoxCustomProps<T extends ElementType = "div"> {
   as?: T;
@@ -20,7 +21,11 @@ interface BoxCustomProps<T extends ElementType = "div"> {
 /** Every Box style prop accepts a scalar token or a responsive map. Channel
  *  props additionally take arbitrary CSS values (`p="37px"`) — the widening
  *  keeps token autocomplete. */
-export type BoxStyleProps = Responsive<WidenChannelProps<VariantProps<typeof boxVariants>>>;
+type BoxShortStyleProps = Responsive<WidenChannelProps<VariantProps<typeof boxVariants>>>;
+
+/** The short forms plus their long spellings — `padding` works wherever `p`
+ *  does. `normalizeAliases` folds the long forms away before resolution. */
+export type BoxStyleProps = BoxShortStyleProps & AliasesOf<BoxShortStyleProps>;
 
 /**
  * `hover` / `focusVisible` / `active`, each taking a state object limited to

@@ -10,7 +10,7 @@ export type InputVariant = "outline" | "filled" | "underline" | "unstyled";
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "size"
+  "size" | "width" | "height"
 >, PlacementProps {
   /** Visual size of the input */
   size?: InputSize;

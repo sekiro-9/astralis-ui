@@ -6,7 +6,7 @@ export type RadioSize = "sm" | "md" | "lg";
 
 export interface RadioProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "size" | "type"
+  "size" | "type" | "width" | "height"
 >, PlacementProps {
   /** Visual size */
   size?: RadioSize;

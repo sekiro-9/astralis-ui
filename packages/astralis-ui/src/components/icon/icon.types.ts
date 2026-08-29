@@ -13,7 +13,7 @@ export type IconColor = keyof typeof textColors | (string & {});
  * an <svg> root, whereas ordering an icon among its siblings is real.
  */
 export interface IconProps
-  extends Omit<ComponentPropsWithoutRef<"svg">, "color" | "order">,
+  extends Omit<ComponentPropsWithoutRef<"svg">, "color" | "order" | "width" | "height">,
     PlacementProps {
   /** Render this icon component (e.g. a Lucide / Heroicons component, or your own). */
   as?: ElementType;

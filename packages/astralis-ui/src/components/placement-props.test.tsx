@@ -125,6 +125,22 @@ describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
     expect(root.hasAttribute("w")).toBe(false);
     expect(root.hasAttribute("mt")).toBe(false);
   });
+
+  it("takes position + offsets, so free placement never needs a wrapper Box", () => {
+    const { container } = render(
+      render_({ position: "absolute", left: "4", top: "8" }),
+    );
+    const root = container.firstElementChild as HTMLElement;
+
+    expect([...root.classList]).toEqual(
+      expect.arrayContaining(["astralis:absolute", "astralis-left", "astralis-top"]),
+    );
+    expect(root.style.getPropertyValue("--astralis-left")).toBe("var(--astralis-spacing-4)");
+    expect(root.style.getPropertyValue("--astralis-top")).toBe("var(--astralis-spacing-8)");
+    for (const leaked of ["position", "left", "top"]) {
+      expect(root.hasAttribute(leaked)).toBe(false);
+    }
+  });
 });
 
 describe("placement props on recipe components", () => {

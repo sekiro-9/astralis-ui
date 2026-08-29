@@ -50,6 +50,64 @@ describe("self-placement props", () => {
   });
 });
 
+describe("long-form alias spellings", () => {
+  it("resolve exactly as their short forms — padding is p, width is w", () => {
+    const { container } = render(<Box padding="4" width="64" background="subtle" />);
+    const el = container.firstElementChild as HTMLElement;
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-p", "astralis-w", "astralis-bg"]),
+    );
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-4)");
+    expect(styleVarOf(container, "--astralis-w")).toBe("var(--astralis-size-64)");
+    for (const leaked of ["padding", "width", "background"]) {
+      expect(el.hasAttribute(leaked)).toBe(false);
+    }
+  });
+
+  it("cover the whole short vocabulary — corners, borders, flex item, height", () => {
+    const short = render(<Box roundedTl="lg" borderT="normal" grow="1" h="40" />);
+    const long = render(
+      <Box roundedTopLeft="lg" borderTop="normal" flexGrow="1" height="40" />,
+    );
+    const el = long.container.firstElementChild as HTMLElement;
+
+    // The proof is equivalence: the long spellings produce exactly the
+    // classes the short forms do, whatever those classes are.
+    expect(classesOf(long.container).sort()).toEqual(classesOf(short.container).sort());
+    for (const leaked of ["roundedtopleft", "bordertop", "flexgrow", "height"]) {
+      expect(el.hasAttribute(leaked)).toBe(false);
+    }
+  });
+
+  it("take responsive maps, the same as the short form", () => {
+    const { container } = render(<Box marginTop={{ base: "2", md: "4" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-mt", "astralis-mt-md"]),
+    );
+    expect(styleVarOf(container, "--astralis-mt")).toBe("var(--astralis-spacing-2)");
+  });
+
+  it("lose to the short form when both are passed — canonical wins", () => {
+    const { container } = render(<Box p="2" padding="8" />);
+
+    expect(styleVarOf(container, "--astralis-p")).toBe("var(--astralis-spacing-2)");
+  });
+
+  it("work on placement adopters — margin on a Card, spelt out", () => {
+    const { container } = render(<Card marginTop="4" maxWidth="lg" />);
+    const el = container.firstElementChild as HTMLElement;
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-mt", "astralis-max-w"]),
+    );
+    expect(styleVarOf(container, "--astralis-mt")).toBe("var(--astralis-spacing-4)");
+    expect(el.hasAttribute("margintop")).toBe(false);
+    expect(el.hasAttribute("maxwidth")).toBe(false);
+  });
+});
+
 describe("display on a layout container", () => {
   /*
    * Flex and Grid emit their own display from a cva base, and `display` is the

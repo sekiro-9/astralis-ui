@@ -13,6 +13,7 @@ export * from './theme';
 // The colorScheme hue list. The dedicated "astralis-ui/color-schemes" subpath
 // remains for build scripts and Node tools that don't want the barrel.
 export { COLOR_SCHEMES, accentClass, type ColorScheme } from './const/color-schemes';
+export { PROP_ALIASES, LONG_NAMES, type AliasName } from './const/prop-aliases';
 
 // The values each style prop accepts, for pickers/docs/codemods. Derived from
 // the style maps, which are plain data — usable on either side of the boundary.

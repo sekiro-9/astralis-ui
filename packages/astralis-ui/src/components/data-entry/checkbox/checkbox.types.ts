@@ -6,7 +6,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 
 export interface CheckboxProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "size" | "type"
+  "size" | "type" | "width" | "height"
 >, PlacementProps {
   /** Whether the checkbox is checked (controlled) */
   checked?: boolean;
