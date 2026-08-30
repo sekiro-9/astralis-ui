@@ -34,6 +34,13 @@ export interface ComboboxProps extends PlacementProps {
   readOnly?: boolean;
   /** Show a clear button when a value is selected. */
   clearable?: boolean;
+  /**
+   * Let typed text that matches no option commit as the value — the options
+   * become suggestions rather than a closed set. Enter (with nothing
+   * highlighted), Tab, and clicking away commit the text; Escape still
+   * reverts. Text exactly matching an option's label commits that option.
+   */
+  allowCustomValue?: boolean;
   loading?: boolean;
   /** Text shown when nothing matches the filter. */
   emptyText?: string;

@@ -18,6 +18,7 @@ import { useFieldContext } from "../field/field.context";
 import { inputVariants } from "../input/input.styles";
 import { flattenOptions, isGroup, OptionRow } from "../shared/options";
 import { astralisMerge } from "../../../utils/astralis-merge";
+import { menuPosition } from "../shared/menu-position";
 import { accentClass } from "../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../icon/internal-icons";
 import type { ComboboxOptionOrGroup, ComboboxProps } from "./combobox.types";
@@ -43,6 +44,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       invalid: invalidProp,
       readOnly: readOnlyProp,
       clearable = false,
+      allowCustomValue = false,
       loading = false,
       emptyText = "No matches",
       name,
@@ -74,9 +76,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     // reopening on a committed selection should show the full list.
     const [hasTyped, setHasTyped] = useState(false);
 
+    // A custom value has no option to borrow a label from; it is its own text.
+    const committedText = selectedOption
+      ? String(selectedOption.label)
+      : allowCustomValue && selectedValue != null
+        ? String(selectedValue)
+        : "";
+
     useEffect(() => {
-      setText(selectedOption ? String(selectedOption.label) : "");
-    }, [selectedOption]);
+      setText(committedText);
+    }, [committedText]);
 
     const filtered = useMemo<ComboboxOptionOrGroup[]>(() => {
       const q = text.toLowerCase().trim();
@@ -103,15 +112,20 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const updatePos = useCallback(() => {
       if (!inputRef.current) return;
       const r = inputRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+      setPos(menuPosition(r, dropdownRef.current));
     }, []);
 
     useLayoutEffect(() => {
       if (!isOpen) return;
       updatePos();
+      // Filtering changes the menu's height; a flipped menu must follow or
+      // it drifts away from its anchor.
+      const observer = new ResizeObserver(updatePos);
+      if (dropdownRef.current) observer.observe(dropdownRef.current);
       window.addEventListener("scroll", updatePos, true);
       window.addEventListener("resize", updatePos);
       return () => {
+        observer.disconnect();
         window.removeEventListener("scroll", updatePos, true);
         window.removeEventListener("resize", updatePos);
       };
@@ -119,14 +133,18 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
 
     useEffect(() => {
       if (!isOpen) return;
-      const handler = (e: MouseEvent) => {
+      // Capture phase, deliberately: the press that dismisses this combobox
+      // may also unmount it (selecting elsewhere in an app that swaps panels).
+      // A bubble listener would be torn down mid-propagation and never fire,
+      // silently dropping the typed text; capture runs before any of that.
+      const handler = (e: PointerEvent) => {
         const target = e.target as Node;
         if (!inputRef.current?.contains(target) && !dropdownRef.current?.contains(target)) {
-          close(true);
+          settleRef.current();
         }
       };
-      document.addEventListener("mousedown", handler);
-      return () => document.removeEventListener("mousedown", handler);
+      document.addEventListener("pointerdown", handler, true);
+      return () => document.removeEventListener("pointerdown", handler, true);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
@@ -135,18 +153,53 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       setIsOpen(false);
       setActiveIdx(-1);
       setHasTyped(false);
-      if (revert) setText(selectedOption ? String(selectedOption.label) : "");
+      if (revert) setText(committedText);
     };
 
     const commit = (next: string | number | null) => {
       if (!isControlled) setInternalValue(next);
       onChange?.(next);
       const picked = flatAll.find((o) => o.value === next) ?? null;
-      setText(picked ? String(picked.label) : "");
+      setText(
+        picked ? String(picked.label) : allowCustomValue && next != null ? String(next) : "",
+      );
       setIsOpen(false);
       setActiveIdx(-1);
       setHasTyped(false);
     };
+
+    /**
+     * Commit whatever is typed (custom-value mode): an exact label match
+     * commits that option, empty clears, anything else is the value itself.
+     */
+    const commitText = () => {
+      const typed = text.trim();
+      if (typed === committedText.trim()) {
+        close(true);
+        return;
+      }
+      if (typed === "") {
+        commit(null);
+        return;
+      }
+      const match = flatAll.find(
+        (o) => !o.disabled && String(o.label).toLowerCase() === typed.toLowerCase(),
+      );
+      commit(match ? match.value : typed);
+    };
+
+    /** Leaving the field: custom mode keeps the typed text, picker mode drops it. */
+    const settle = () => {
+      if (allowCustomValue) commitText();
+      else close(true);
+    };
+
+    // The outside-click listener attaches once per open and must not commit
+    // the text it closed over — it reads the latest settle through a ref.
+    const settleRef = useRef(settle);
+    useEffect(() => {
+      settleRef.current = settle;
+    });
 
     const handleKeyDown = (e: ReactKeyboardEvent) => {
       if (isReadOnly || isDisabled) return;
@@ -164,13 +217,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
           if (isOpen && activeIdx >= 0 && navigable[activeIdx]) {
             e.preventDefault();
             commit(navigable[activeIdx].value);
+          } else if (allowCustomValue) {
+            e.preventDefault();
+            commitText();
           }
           break;
         case "Escape":
           if (isOpen) close(true);
           break;
         case "Tab":
-          if (isOpen) close(true);
+          if (isOpen) settle();
           break;
       }
     };

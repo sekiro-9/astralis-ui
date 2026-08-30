@@ -17,6 +17,7 @@ import { selectTrigger } from "../select.styles";
 import { flattenOptions, isGroup, OptionRow } from "../../shared/options";
 import { splitPlacement } from "../../../../utils/placement";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { menuPosition } from "../../shared/menu-position";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SearchIcon, SpinnerIcon } from "../../../icon/internal-icons";
 import type {
@@ -101,15 +102,20 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
     const updatePos = useCallback(() => {
       if (!triggerRef.current) return;
       const r = triggerRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+      setPos(menuPosition(r, dropdownRef.current));
     }, []);
 
     useLayoutEffect(() => {
       if (!isOpen) return;
       updatePos();
+      // Filtering changes the menu's height; a flipped menu must follow or
+      // it drifts away from its anchor.
+      const observer = new ResizeObserver(updatePos);
+      if (dropdownRef.current) observer.observe(dropdownRef.current);
       window.addEventListener("scroll", updatePos, true);
       window.addEventListener("resize", updatePos);
       return () => {
+        observer.disconnect();
         window.removeEventListener("scroll", updatePos, true);
         window.removeEventListener("resize", updatePos);
       };

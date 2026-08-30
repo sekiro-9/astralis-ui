@@ -22,6 +22,7 @@ import {
   msOptionClasses,
 } from "../multi-select.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { menuPosition } from "../../shared/menu-position";
 import { flattenOptions, isGroup } from "../../shared/options";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, CheckIcon, SpinnerIcon } from "../../../icon/internal-icons";
@@ -186,15 +187,20 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     const updatePos = useCallback(() => {
       if (!containerRef.current) return;
       const r = containerRef.current.getBoundingClientRect();
-      setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+      setPos(menuPosition(r, dropdownRef.current));
     }, []);
 
     useLayoutEffect(() => {
       if (!isOpen) return;
       updatePos();
+      // Filtering changes the menu's height; a flipped menu must follow or
+      // it drifts away from its anchor.
+      const observer = new ResizeObserver(updatePos);
+      if (dropdownRef.current) observer.observe(dropdownRef.current);
       window.addEventListener("scroll", updatePos, true);
       window.addEventListener("resize", updatePos);
       return () => {
+        observer.disconnect();
         window.removeEventListener("scroll", updatePos, true);
         window.removeEventListener("resize", updatePos);
       };

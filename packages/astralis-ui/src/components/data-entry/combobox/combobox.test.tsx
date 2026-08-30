@@ -76,3 +76,83 @@ describe("Combobox commit and revert", () => {
     expect(document.getElementById(activeId!)).toHaveTextContent(/Astro|Gatsby/);
   });
 });
+
+describe("Combobox custom values", () => {
+  it("Enter with nothing highlighted commits the typed text as the value", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} allowCustomValue onChange={onChange} />);
+
+    await user.type(input(), "37px");
+    await user.keyboard("{Enter}");
+
+    expect(onChange).toHaveBeenCalledWith("37px");
+    expect(input().value).toBe("37px");
+  });
+
+  it("typed text exactly matching a label commits that option, not raw text", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} allowCustomValue onChange={onChange} />);
+
+    await user.type(input(), "vite");
+    await user.keyboard("{Enter}");
+
+    expect(onChange).toHaveBeenCalledWith("vite");
+    expect(input().value).toBe("Vite");
+  });
+
+  it("clicking away commits the typed text instead of dropping it", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <div>
+        <Combobox options={OPTIONS} allowCustomValue onChange={onChange} />
+        <button type="button">elsewhere</button>
+      </div>,
+    );
+
+    await user.type(input(), "2.5rem");
+    await user.click(screen.getByText("elsewhere"));
+
+    await waitFor(() => expect(onChange).toHaveBeenCalledWith("2.5rem"));
+  });
+
+  it("Escape still reverts to the committed value", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} allowCustomValue defaultValue="next" onChange={onChange} />);
+
+    await user.clear(input());
+    await user.type(input(), "junk");
+    await user.keyboard("{Escape}");
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(input().value).toBe("Next.js");
+  });
+
+  it("clearing the text and committing clears the value", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} allowCustomValue defaultValue="next" onChange={onChange} />);
+
+    await user.clear(input());
+    await user.keyboard("{Enter}");
+
+    expect(onChange).toHaveBeenCalledWith(null);
+    expect(input().value).toBe("");
+  });
+
+  it("without the flag, unmatched text still reverts on close", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} defaultValue="next" onChange={onChange} />);
+
+    await user.clear(input());
+    await user.type(input(), "37px");
+    await user.keyboard("{Escape}");
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(input().value).toBe("Next.js");
+  });
+});
