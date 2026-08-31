@@ -56,6 +56,20 @@ const DOM_ENUM_PROPS = new Set([
  * @returns {Map<string, Record<string, string[]>>} component -> prop -> values
  */
 export function extractLiteralProps(dtsPath) {
+  return extractComponentTypes(dtsPath).literal;
+}
+
+/**
+ * Both readings of the props types in one pass: the closed vocabularies, and
+ * the props a component cannot render without. A builder that places a
+ * component with nothing set needs the second list to know what it must
+ * supply (Image's src and alt) and which components it cannot place at all
+ * (TableOfContents wants an items array no prop editor can type).
+ *
+ * @param {string} dtsPath absolute path to dist/index.d.ts
+ * @returns {{ literal: Map<string, Record<string, string[]>>, required: Map<string, Record<string, string>> }}
+ */
+export function extractComponentTypes(dtsPath) {
   const program = ts.createProgram([dtsPath], {
     skipLibCheck: true,
     // The d.ts references react types; resolve them from this package.
@@ -68,6 +82,7 @@ export function extractLiteralProps(dtsPath) {
   if (!moduleSymbol) throw new Error(`${dtsPath} has no module symbol — not a module?`);
 
   const result = new Map();
+  const required = new Map();
   for (const symbol of checker.getExportsOfModule(moduleSymbol)) {
     const name = symbol.getName();
     if (!/^[A-Z]/.test(name) || /^[A-Z0-9_]+$/.test(name)) continue; // components only
@@ -81,8 +96,12 @@ export function extractLiteralProps(dtsPath) {
     const paramType = checker.getTypeOfSymbolAtLocation(param, source);
 
     const props = {};
+    const needed = {};
     for (const propSymbol of paramType.getProperties()) {
       const propName = propSymbol.getName();
+      if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName !== "children") {
+        needed[propName] = kindOf(checker.getTypeOfSymbolAtLocation(propSymbol, source));
+      }
       // aria-* / data-* / event handlers: other tiers own these.
       if (propName.startsWith("aria-") || propName.startsWith("data-") || /^on[A-Z]/.test(propName)) continue;
       // Standard HTML attribute enums inherited from React's DOM types: real
@@ -95,8 +114,20 @@ export function extractLiteralProps(dtsPath) {
       if (values) props[propName] = values;
     }
     if (Object.keys(props).length) result.set(name, props);
+    if (Object.keys(needed).length) required.set(name, needed);
   }
-  return result;
+  return { literal: result, required };
+}
+
+/** What a value for the prop looks like: a builder can type a string or a
+ *  number, and nothing else. */
+function kindOf(type) {
+  const nonNullable = type.getNonNullableType();
+  const arms = nonNullable.isUnion() ? nonNullable.types : [nonNullable];
+  if (arms.every((arm) => arm.flags & ts.TypeFlags.StringLike)) return "string";
+  if (arms.every((arm) => arm.flags & ts.TypeFlags.NumberLike)) return "number";
+  if (arms.every((arm) => arm.flags & ts.TypeFlags.BooleanLike)) return "boolean";
+  return "other";
 }
 
 /** The values of a pure string-literal union, or null if it isn't one. */

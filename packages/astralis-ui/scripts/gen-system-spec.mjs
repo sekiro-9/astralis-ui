@@ -28,8 +28,9 @@
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
-import { buildGraph, classifyClient } from "./module-graph.mjs";
-import { extractLiteralProps } from "./extract-literal-props.mjs";
+import { buildGraph, classifyClient, exportsOf } from "./module-graph.mjs";
+import { extractComponentTypes } from "./extract-literal-props.mjs";
+import { measureContent } from "./measure-content.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -239,7 +240,20 @@ const clientTiers = classifyClient(distGraph, join(PKG, "dist"));
 /* Recipe-prop vocabularies (Button variant, Alert status, …), read from the
    rolled-up d.ts — the one place the build states them as closed literal
    unions. See extract-literal-props.mjs for the selection rule. */
-const literalProps = extractLiteralProps(join(PKG, "dist", "index.d.ts"));
+const { literal: literalProps, required: requiredProps } = extractComponentTypes(join(PKG, "dist", "index.d.ts"));
+
+/* Category, read off the module that DEFINES each export: the source tree is
+   already grouped (components/data-entry/input/...), so the directory is the
+   category and nothing has to be listed twice. Consumers that present a
+   catalogue — a docs sidebar, a builder's component browser — otherwise each
+   invent their own table, and every one of them drifts the day a component
+   moves. */
+const definingModule = exportsOf(distGraph, join(PKG, "dist"), "index.js");
+const categoryOf = (name) => {
+  const module = definingModule.get(name);
+  const match = module && /(?:^|\/)components\/([^/]+)\//.exec(module);
+  return match ? match[1] : undefined;
+};
 
 const components = Object.fromEntries(
   componentNames.map((name) => {
@@ -248,8 +262,15 @@ const components = Object.fromEntries(
     const client = clientTiers.get(name);
     if (client) entry.client = client;
     else fail(`component "${name}" missing from the dist client classification`);
+    const category = categoryOf(name);
+    if (category) entry.category = category;
     const props = literalProps.get(name);
     if (props) entry.props = props;
+    // Props the types make mandatory, by the kind of value each takes. A
+    // builder fills the string ones and cannot place a component that
+    // demands anything else.
+    const needed = requiredProps.get(name);
+    if (needed) entry.required = needed;
     if (EXCLUDED_PROPS[name]) entry.exclude = EXCLUDED_PROPS[name];
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what
@@ -285,6 +306,19 @@ for (const [name, entry] of Object.entries(components)) {
    Drift-checked: every name below must exist in the enumerated parts. */
 const ANATOMY_CHILDREN = {
   Accordion: ["Item", "Trigger", "Content"],
+  AlertDialog: ["Trigger", "Content", "Header", "Body", "Footer", "Title", "Description", "Close"],
+  Avatar: ["Badge"],
+  Calendar: ["Header", "PrevTrigger", "ViewTrigger", "NextTrigger", "Weekdays", "Grid", "Cell"],
+  Collapsible: ["Trigger", "Content"],
+  ContextMenu: ["Trigger", "Content", "Item", "Label", "Separator", "Group"],
+  Editable: ["Preview", "Input"],
+  EmptyState: ["Indicator", "Title", "Description", "Actions"],
+  FileUpload: ["Dropzone", "Trigger", "ItemGroup"],
+  HoverCard: ["Trigger", "Content"],
+  Popout: ["Trigger", "Content"],
+  SegmentedControl: ["Item"],
+  Splitter: ["Panel", "Handle"],
+  Toolbar: ["Group", "Separator"],
   Breadcrumb: ["Item", "Link"],
   Card: ["Header", "Title", "Description", "Body", "Footer"],
   Carousel: ["Track", "Slide", "Control", "Prev", "Next", "Indicators", "Indicator", "AutoPlayTrigger", "ProgressText"],
@@ -318,6 +352,48 @@ for (const [owner, children] of Object.entries(ANATOMY_CHILDREN)) {
     }
   }
   entry.anatomy = { children };
+}
+
+/* An alias root (AlertDialogRoot, CalendarRoot) carries the very same part
+   objects as its canonical name, proven by identity, so it carries the same
+   anatomy without a second table entry. */
+for (const [name, entry] of Object.entries(components)) {
+  if (!entry.parts || entry.anatomy) continue;
+  const twin = Object.entries(components).find(
+    ([other, candidate]) =>
+      other !== name &&
+      candidate.anatomy &&
+      candidate.anatomy.children.every((part) => rootExports[other][part] === rootExports[name][part]),
+  );
+  if (twin) entry.anatomy = { children: [...twin[1].anatomy.children] };
+}
+
+/* Content and the anatomy gate, both measured by rendering the built
+   package. A part that throws on its own belongs in the table above; a part
+   listed there that renders fine alone is only a claim about nesting, which
+   is still true, so only the first direction is checked. */
+const measured = measureContent(rootExports, components);
+for (const [name, entry] of Object.entries(components)) {
+  const content = measured.content.get(name);
+  if (content) entry.content = content;
+  const parts = measured.partContent.get(name);
+  if (parts) entry.partContent = parts;
+  entry.domRoot = measured.domRoot.get(name) === true;
+  const partRoots = measured.partDomRoot.get(name);
+  if (partRoots) entry.partDomRoot = partRoots;
+  const exportsOfParts = measured.partExports.get(name);
+  if (exportsOfParts) entry.partExports = exportsOfParts;
+  const nesting = measured.within.get(name);
+  if (nesting && entry.anatomy) entry.anatomy = { ...entry.anatomy, within: nesting };
+  else if (nesting) fail(`anatomy: ${name} has parts that need a sibling part above them but no anatomy entry`);
+}
+for (const [owner, parts] of measured.needsRoot) {
+  const listed = components[owner].anatomy?.children ?? [];
+  for (const part of parts) {
+    if (!listed.includes(part)) {
+      fail(`anatomy: ${owner}.${part} throws when rendered outside <${owner}> but is not listed as its child`);
+    }
+  }
 }
 
 /* ---- class inventory (same extraction as the coverage gate) --------------- */
