@@ -3,6 +3,42 @@
 Notable changes to astralis-ui. Versions before 0.7.0 predate this file;
 their history lives in the git log.
 
+## Unreleased
+
+### Spec
+
+The system spec now says what a component needs and what it does with
+children, both derived, none of it authored twice:
+
+- **`required`** — props the types make mandatory, by kind (`string`,
+  `number`, `boolean`, `other`), read from the rolled-up d.ts. A builder
+  fills the string ones (Image's `src` and `alt`) and cannot place a
+  component that demands anything else (TableOfContents wants `items`).
+- **`content`** and **`partContent`** — `text`, `element` or `none`,
+  measured by server-rendering each component (and each part in its place)
+  with a probe. An `<input>` ignores text, a Modal.Trigger clones one
+  element, a Button shows what it is given.
+- **`partExports`** — the flat export that *is* each part, by identity, so
+  `Tag.Group` resolves to `CheckableTagGroup` and its props are findable.
+- **`anatomy.within`** — parts that need a sibling part between them and
+  the root (Accordion's Trigger sits within Item), measured by trying each.
+- Anatomy now covers AlertDialog, Avatar, Calendar, Collapsible,
+  ContextMenu, Editable, EmptyState, FileUpload, HoverCard, Popout,
+  SegmentedControl, Splitter and Toolbar, and alias roots (CalendarRoot,
+  AlertDialogRoot) carry their canonical name's anatomy by identity. A
+  part that throws "must be used within" on its own without being listed
+  fails the spec build, so the table cannot go stale.
+
+### Fixed
+
+- **AstralisProvider** toggles `astralis-dark` on the document it renders
+  into, not the global one, so a provider portalled into an iframe themes
+  that frame rather than the page around it.
+- **Image** forwards its DOM remainder (`id`, `data-*`, `aria-*`) to its
+  outermost element — the `img`, the ratio box, or the figure — where it
+  used to drop them. It also notices an image that finished loading before
+  React attached its listener, instead of staying in the loading state.
+
 ## 0.7.8 — 2026-08-22
 
 Medium tier, batch two. (A fourth candidate, Lightbox, was built and then

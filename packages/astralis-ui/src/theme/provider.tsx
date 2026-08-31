@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { ReactNode } from "react";
 import { generateThemeTokens } from "./css-vars";
 import { ThemeProviderContext } from "./theme-context";
@@ -34,6 +34,7 @@ export function AstralisProvider({
   tokens,
 }: ThemeProviderProps) {
   // 1. Initialize state with static server-safe values to eliminate hydration mismatch errors
+  const containerRef = useRef<HTMLDivElement>(null);
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
 
@@ -73,8 +74,10 @@ export function AstralisProvider({
   //    The provider takes ownership of the document root dark class when mounted.
   //    In Storybook, the provider is NOT used in the decorator so there is no conflict
   //    with the withThemeByClassName addon.
+  //    The document is the one the provider renders into: a provider portalled
+  //    into an iframe themes that frame, not the page around it.
   useEffect(() => {
-    const root = document.documentElement;
+    const root = (containerRef.current?.ownerDocument ?? document).documentElement;
     if (resolvedTheme === "dark") {
       root.classList.add("astralis-dark");
     } else {
@@ -90,6 +93,7 @@ export function AstralisProvider({
   return (
     <ThemeProviderContext.Provider value={{ theme, setTheme: setThemeState, resolvedTheme, tokens }}>
       <div
+        ref={containerRef}
         className={`astralis ${className}`.trim()}
         style={{
           minHeight: "100vh",
