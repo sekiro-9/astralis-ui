@@ -21,7 +21,7 @@ export function AvatarRoot({
   src, alt, name, icon, size, shape, colorScheme, ring, children, className = "", style,
   ...rest
 }: AvatarProps) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
   const [imgError, setImgError] = useState(false);
 
   // An AvatarGroup clones size/ring into these props; explicit props win.
@@ -47,6 +47,7 @@ export function AvatarRoot({
         className,
       )}
       style={{ ...placementStyle, ...style }}
+      {...domRest}
     >
       {showImage ? (
         <img

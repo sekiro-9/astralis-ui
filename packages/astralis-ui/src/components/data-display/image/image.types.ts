@@ -1,5 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { CSSProperties, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
 
 export type ImageObjectFit =
   | "contain"
@@ -58,7 +58,7 @@ export interface ImageGroupItem {
   caption?: ReactNode;
 }
 
-export interface ImageGroupProps {
+export interface ImageGroupProps extends ComponentPropsWithoutRef<"div"> {
   items: ImageGroupItem[];
   columns?: 2 | 3 | 4;
   gap?: "sm" | "md" | "lg";

@@ -1,12 +1,12 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type AvatarShape = "circle" | "rounded" | "square";
 export type AvatarStatus = "online" | "away" | "busy" | "offline";
 
-export interface AvatarProps extends PlacementProps {
+export interface AvatarProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   src?: string;
   alt?: string;
   /** Name — used for initials and (unless `colorScheme` is set) a deterministic hue. */
@@ -25,7 +25,7 @@ export interface AvatarProps extends PlacementProps {
   style?: CSSProperties;
 }
 
-export interface AvatarGroupProps {
+export interface AvatarGroupProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   /** Cap the number shown; the rest collapse into a "+N" chip. */
   max?: number;
@@ -36,7 +36,7 @@ export interface AvatarGroupProps {
   style?: CSSProperties;
 }
 
-export interface AvatarBadgeProps {
+export interface AvatarBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   status?: AvatarStatus;
   /** Custom dot colour, overriding `status`. */
   color?: string;

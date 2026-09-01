@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode, ReactElement } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, ReactElement } from "react";
 import type { ModalRole, ModalSize } from "./modal.context";
 
 export interface ModalProps {
@@ -16,8 +16,9 @@ export interface ModalProps {
   role?: ModalRole;
 }
 
-/** Trigger/Close wrap a single element and augment it (asChild-style). */
-export interface ModalSlotProps {
+/** Trigger/Close wrap a single element and augment it (asChild-style);
+ *  attributes other than `children` are forwarded onto it. */
+export interface ModalSlotProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   children: ReactElement<any>;
 }
 

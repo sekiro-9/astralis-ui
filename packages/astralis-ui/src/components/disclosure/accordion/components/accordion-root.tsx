@@ -24,10 +24,11 @@ export function AccordionRoot({
   hideIndicator = false,
   headingLevel = 3,
   onValueChange,
+  onKeyDown,
   className = "",
   ...rest
 }: AccordionProps) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, rest: domProps } = splitPlacement(rest);
   const rootId = useId();
   const [internalValue, setInternalValue] = useState<string | string[] | undefined>(defaultValue);
   const currentValue = value ?? internalValue;
@@ -57,6 +58,7 @@ export function AccordionRoot({
 
   // Roving focus across triggers (the accordion pattern's keyboard contract).
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(e);
     const target = e.target as HTMLElement;
     if (!target.matches('button[data-accordion-trigger="true"]')) return;
 
@@ -76,7 +78,7 @@ export function AccordionRoot({
     else if (e.key === "ArrowUp") focus(i - 1);
     else if (e.key === "Home") focus(0);
     else if (e.key === "End") focus(triggers.length - 1);
-  }, []);
+  }, [onKeyDown]);
 
   const ctx = useMemo(
     () => ({
@@ -100,7 +102,7 @@ export function AccordionRoot({
       <div
         onKeyDown={handleKeyDown}
         className={astralisMerge(accordionRootVariants({ variant }), accentClass(colorScheme), placementClass, className)}
-        style={placementStyle}
+        {...domProps}
       >
         {children}
       </div>

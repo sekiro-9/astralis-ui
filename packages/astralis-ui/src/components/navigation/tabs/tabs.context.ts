@@ -26,6 +26,9 @@ export interface TabsContextValue {
   loop: boolean;
   /** Stable id root for trigger/panel aria wiring. */
   baseId: string;
+  /** A trigger announces itself on mount; with no value chosen, the first
+   *  one becomes active, so uncontrolled tabs never show an empty panel. */
+  register: (value: string) => void;
 }
 
 export const TabsContext = createContext<TabsContextValue | null>(null);

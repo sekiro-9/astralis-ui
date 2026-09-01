@@ -10,10 +10,10 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * arrangement. Reads orientation from context: a centered bar under the slides
  * when horizontal, a full-height column beside them when vertical.
  */
-export function CarouselControl({ children, className = "" }: CarouselControlGroupProps) {
+export function CarouselControl({ children, className = "", ...rest }: CarouselControlGroupProps) {
   const { orientation } = useCarousel();
   return (
-    <div className={astralisMerge(carouselControlGroupVariants({ orientation }), className)}>
+    <div className={astralisMerge(carouselControlGroupVariants({ orientation }), className)} {...rest}>
       {children}
     </div>
   );

@@ -93,3 +93,39 @@ describe("Tabs.List overflow containment", () => {
     expect([...list.classList]).not.toContain("astralis:overflow-x-auto");
   });
 });
+
+/**
+ * Uncontrolled tabs with no `defaultValue` used to show no panel at all: the
+ * first trigger is the obvious choice, and a visual tool that assembles tabs
+ * part by part has no moment at which to pick one.
+ */
+describe("Tabs with nothing chosen", () => {
+  it("activates the first trigger and shows its panel", () => {
+    const { getByRole, getByText } = render(
+      <Tabs>
+        <Tabs.List aria-label="Sections">
+          <Tabs.Trigger value="a">Alpha</Tabs.Trigger>
+          <Tabs.Trigger value="b">Bravo</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="a">Panel A</Tabs.Content>
+        <Tabs.Content value="b">Panel B</Tabs.Content>
+      </Tabs>,
+    );
+    expect(getByRole("tab", { name: "Alpha" }).getAttribute("aria-selected")).toBe("true");
+    expect(getByText("Panel A")).toBeTruthy();
+  });
+
+  it("still honours defaultValue", () => {
+    const { getByText } = render(
+      <Tabs defaultValue="b">
+        <Tabs.List aria-label="Sections">
+          <Tabs.Trigger value="a">Alpha</Tabs.Trigger>
+          <Tabs.Trigger value="b">Bravo</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="a">Panel A</Tabs.Content>
+        <Tabs.Content value="b">Panel B</Tabs.Content>
+      </Tabs>,
+    );
+    expect(getByText("Panel B")).toBeTruthy();
+  });
+});

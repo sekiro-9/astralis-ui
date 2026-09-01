@@ -5,7 +5,7 @@ import type { CarouselProgressTextProps } from "../carousel.types";
 import { carouselProgressVariants } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
-export function CarouselProgressText({ className = "", format }: CarouselProgressTextProps) {
+export function CarouselProgressText({ className = "", format, ...rest }: CarouselProgressTextProps) {
   const { index, slideCount } = useCarousel();
   return (
     <div
@@ -13,6 +13,7 @@ export function CarouselProgressText({ className = "", format }: CarouselProgres
       aria-atomic="true"
       aria-label={`Slide ${index + 1} of ${slideCount}`}
       className={astralisMerge(carouselProgressVariants(), className)}
+      {...rest}
     >
       {format ? format(index, slideCount) : `${index + 1} / ${slideCount}`}
     </div>

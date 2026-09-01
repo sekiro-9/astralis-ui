@@ -1,5 +1,6 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type {
+  ComponentPropsWithoutRef,
   InputHTMLAttributes,
   ReactNode,
   TextareaHTMLAttributes,
@@ -22,7 +23,7 @@ export interface InputProps extends Omit<
   className?: string;
 }
 
-export interface InputGroupProps {
+export interface InputGroupProps extends Omit<ComponentPropsWithoutRef<"div">, "prefix"> {
   /** Icon or element rendered at the start of the input */
   prefix?: ReactNode;
   /** Icon or element rendered at the end of the input */

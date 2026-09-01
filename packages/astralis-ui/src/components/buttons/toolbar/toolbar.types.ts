@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { BoxStyleProps } from "../../layout/box/box.types";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
@@ -11,3 +12,7 @@ export interface ToolbarProps extends ComponentPropsWithoutRef<"div"> {
 }
 
 export type ToolbarGroupProps = ComponentPropsWithoutRef<"div">;
+
+/** Separator retypes the Box style names (`color`, `w`…) as tokens, so only
+ *  the plain attributes pass through the preset. */
+export type ToolbarSeparatorProps = Omit<ComponentPropsWithoutRef<"div">, keyof BoxStyleProps>;

@@ -59,7 +59,7 @@ export function QrCodeRoot({
   style,
   ...rest
 }: QrCodeRootProps) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
   const px = pixelSize ?? SIZE_PX[size];
   const svgRef = useRef<HTMLDivElement>(null);
   const [svgString, setSvgString] = useState<string>("");
@@ -127,6 +127,7 @@ export function QrCodeRoot({
         .filter(Boolean)
         .join(" ")}
       style={{ ...placementStyle, ...style }}
+      {...domRest}
     >
       {/* QR Canvas */}
       <div

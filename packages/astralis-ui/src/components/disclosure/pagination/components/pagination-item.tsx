@@ -5,12 +5,12 @@ import { usePagination } from "../pagination.context";
 import { paginationItemVariants } from "../pagination.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
-export function PaginationItem({ page, children, className = "" }: PaginationItemProps) {
+export function PaginationItem({ page, children, className = "", ...rest }: PaginationItemProps) {
   const { page: activePage, setPage, variant, size, rounded, disabled } = usePagination();
   const active = page === activePage;
 
   return (
-    <li>
+    <li {...rest}>
       <button
         type="button"
         aria-label={`Go to page ${page}`}

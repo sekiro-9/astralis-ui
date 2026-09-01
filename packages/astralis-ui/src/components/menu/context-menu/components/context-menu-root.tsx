@@ -21,7 +21,7 @@ export function ContextMenuRoot({ children, ...props }: ContextMenuProps) {
 
 ContextMenuRoot.displayName = "ContextMenu";
 
-export function ContextMenuTrigger({ children }: ContextMenuTriggerProps) {
+export function ContextMenuTrigger({ children, ...rest }: ContextMenuTriggerProps) {
   const { setOpen, triggerRef, open, contentId } = useMenu();
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const child = resolveServerChild(children) as ContextMenuTriggerProps["children"];
@@ -36,6 +36,7 @@ export function ContextMenuTrigger({ children }: ContextMenuTriggerProps) {
   return (
     <>
       {cloneElement(child, {
+        ...rest,
         onContextMenu: (e: MouseEvent) => {
           (child.props.onContextMenu as ((e: MouseEvent) => void) | undefined)?.(e);
           e.preventDefault();

@@ -192,7 +192,7 @@ export function SliderBase({
   ref,
   ...rest
 }: SliderProps & { ref?: Ref<HTMLDivElement> }) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, rest: domRest } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -301,7 +301,7 @@ export function SliderBase({
           placementClass,
           className,
         )}
-        style={placementStyle}
+        {...domRest}
       >
         <div
           ref={trackRef}
@@ -360,7 +360,7 @@ export function RangeSliderBase({
   ref,
   ...rest
 }: RangeSliderProps & { ref?: Ref<HTMLDivElement> }) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, rest: domRest } = splitPlacement(rest);
     const field = useFieldContext();
     const isDisabled = disabledProp ?? field?.disabled;
     const isInvalid = invalidProp ?? field?.invalid;
@@ -482,7 +482,7 @@ export function RangeSliderBase({
           placementClass,
           className,
         )}
-        style={placementStyle}
+        {...domRest}
       >
         <div
           ref={trackRef}

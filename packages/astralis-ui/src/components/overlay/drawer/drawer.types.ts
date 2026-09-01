@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode, ReactElement } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, ReactElement } from "react";
 import type { DrawerPlacement, DrawerSize } from "./drawer.context";
 
 export interface DrawerProps {
@@ -13,7 +13,8 @@ export interface DrawerProps {
   closeOnEsc?: boolean;
 }
 
-export interface DrawerSlotProps {
+/** Trigger/Close wrap a single element; attributes other than `children` are forwarded onto it. */
+export interface DrawerSlotProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   children: ReactElement<any>;
 }
 

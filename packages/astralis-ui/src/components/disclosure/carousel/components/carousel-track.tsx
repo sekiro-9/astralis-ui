@@ -6,7 +6,7 @@ import { useCarousel, CarouselItemContext } from "../carousel.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
 
-export function CarouselTrack({ children, className = "" }: CarouselTrackProps) {
+export function CarouselTrack({ children, className = "", style, ...rest }: CarouselTrackProps) {
   const {
     index, setIndex, setSlideCount, slideCount,
     slidesPerView, slidesToScroll, slideGap,
@@ -59,8 +59,9 @@ export function CarouselTrack({ children, className = "" }: CarouselTrackProps) 
       <div
         aria-live="polite"
         className={astralisMerge("astralis:relative astralis:grid astralis:overflow-hidden", isVertical ? "astralis:flex-1" : "astralis:w-full", className)}
-        style={dragStyle}
+        style={{ ...dragStyle, ...style }}
         {...gestures}
+        {...rest}
       >
         {items}
       </div>
@@ -75,7 +76,11 @@ export function CarouselTrack({ children, className = "" }: CarouselTrackProps) 
   const move = `calc(-1 * ${scroll} * (100% + ${slideGap}px) / ${slidesPerView})`;
 
   return (
-    <div className={astralisMerge("astralis:overflow-hidden", isVertical ? "astralis:h-full astralis:flex-1" : "astralis:w-full", className)}>
+    <div
+      className={astralisMerge("astralis:overflow-hidden", isVertical ? "astralis:h-full astralis:flex-1" : "astralis:w-full", className)}
+      style={style}
+      {...rest}
+    >
       <div
         aria-live="polite"
         className={`astralis:flex ${isVertical ? "astralis:flex-col astralis:h-full" : "astralis:flex-row astralis:w-full"}`}

@@ -3,7 +3,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
 import { statValueSizeMap, statValueVariants } from "../stat.styles";
 
-export function StatValue({ children, className = "", size = "md" }: StatValueProps) {
+export function StatValue({ children, className = "", size = "md", ...rest }: StatValueProps) {
   return (
     <span
       className={astralisMerge(
@@ -11,6 +11,7 @@ export function StatValue({ children, className = "", size = "md" }: StatValuePr
           .className,
         className,
       )}
+      {...rest}
     >
       {children}
     </span>

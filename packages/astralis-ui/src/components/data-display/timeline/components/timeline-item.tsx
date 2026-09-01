@@ -9,24 +9,24 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * beside it. Splits its children into the Indicator and everything else by
  * displayName.
  */
-export function TimelineItem({ children, className = "" }: TimelineItemProps) {
+export function TimelineItem({ children, className = "", ...rest }: TimelineItemProps) {
   let indicator: ReactElement | null = null;
-  const rest: ReactNode[] = [];
+  const others: ReactNode[] = [];
   Children.forEach(children, (child) => {
     if (isValidElement(child) && (child.type as { displayName?: string })?.displayName === "Timeline.Indicator") {
       indicator = child;
     } else {
-      rest.push(child);
+      others.push(child);
     }
   });
 
   return (
-    <div data-timeline-item="" className={astralisMerge("astralis:flex astralis:gap-3", className)}>
+    <div data-timeline-item="" className={astralisMerge("astralis:flex astralis:gap-3", className)} {...rest}>
       <div className={astralisMerge("astralis:flex astralis:flex-col astralis:items-center astralis:shrink-0", timelineColumnWidth)}>
         {indicator}
         <div className={timelineConnectorClasses} />
       </div>
-      <div className="astralis:flex-1 astralis:min-w-0 astralis:pb-6">{rest}</div>
+      <div className="astralis:flex-1 astralis:min-w-0 astralis:pb-6">{others}</div>
     </div>
   );
 }

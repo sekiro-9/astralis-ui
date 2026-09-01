@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactElement, ReactNode } from "react";
 import type { Side, Align } from "../../hooks/use-anchor-position";
 
 export interface MenuProps {
@@ -17,7 +17,8 @@ export interface MenuProps {
   closeOnSelect?: boolean;
 }
 
-export interface MenuTriggerProps {
+/** Attributes other than `children` are forwarded onto the wrapped element. */
+export interface MenuTriggerProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   /** A single focusable element (e.g. a Button); the menu wires it up via props. */
   children: ReactElement<Record<string, unknown>>;
 }

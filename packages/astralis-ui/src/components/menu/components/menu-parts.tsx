@@ -14,10 +14,11 @@ import {
   menuShortcutClasses,
 } from "../menu.styles";
 
-export function MenuTrigger({ children }: MenuTriggerProps) {
+export function MenuTrigger({ children, ...rest }: MenuTriggerProps) {
   const { toggle, open, triggerRef, contentId } = useMenu();
   const child = resolveServerChild(children) as ReactElement<Record<string, unknown>>;
   return cloneElement(child, {
+    ...rest,
     ref: triggerRef,
     onClick: (e: MouseEvent) => {
       (child.props.onClick as ((e: MouseEvent) => void) | undefined)?.(e);

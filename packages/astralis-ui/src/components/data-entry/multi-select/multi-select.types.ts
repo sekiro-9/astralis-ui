@@ -1,5 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type MultiSelectSize = "sm" | "md" | "lg";
@@ -22,7 +22,8 @@ export type MultiSelectOptionOrGroup =
   | MultiSelectOptionItem
   | MultiSelectOptionGroup;
 
-export interface MultiSelectProps extends PlacementProps {
+export interface MultiSelectProps
+  extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue">, PlacementProps {
   options?: MultiSelectOptionOrGroup[];
   /** Controlled array of selected values */
   value?: Array<string | number>;

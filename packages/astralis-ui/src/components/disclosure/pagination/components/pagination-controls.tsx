@@ -16,19 +16,19 @@ import {
 interface ControlButtonProps extends PaginationControlProps {
   label: string;
   disabled: boolean;
-  onClick: () => void;
+  onActivate: () => void;
   defaultIcon: ReactNode;
 }
 
-function ControlButton({ icon, className = "", label, disabled, onClick, defaultIcon }: ControlButtonProps) {
+function ControlButton({ icon, className = "", label, disabled, onActivate, defaultIcon, ...rest }: ControlButtonProps) {
   const { size, rounded } = usePagination();
   return (
-    <li>
+    <li {...rest}>
       <button
         type="button"
         aria-label={label}
         disabled={disabled}
-        onClick={onClick}
+        onClick={onActivate}
         className={astralisMerge(paginationControlVariants({ size, rounded }), className)}
       >
         {icon ?? defaultIcon}
@@ -44,7 +44,7 @@ export function PaginationPrev(props: PaginationControlProps) {
       {...props}
       label="Previous page"
       disabled={disabled || page <= 1}
-      onClick={() => setPage(page - 1)}
+      onActivate={() => setPage(page - 1)}
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronLeftIcon /></Icon>}
     />
   );
@@ -57,7 +57,7 @@ export function PaginationNext(props: PaginationControlProps) {
       {...props}
       label="Next page"
       disabled={disabled || page >= totalPages}
-      onClick={() => setPage(page + 1)}
+      onActivate={() => setPage(page + 1)}
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronRightIcon /></Icon>}
     />
   );
@@ -70,7 +70,7 @@ export function PaginationFirst(props: PaginationControlProps) {
       {...props}
       label="First page"
       disabled={disabled || page <= 1}
-      onClick={() => setPage(1)}
+      onActivate={() => setPage(1)}
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronsLeftIcon /></Icon>}
     />
   );
@@ -83,7 +83,7 @@ export function PaginationLast(props: PaginationControlProps) {
       {...props}
       label="Last page"
       disabled={disabled || page >= totalPages}
-      onClick={() => setPage(totalPages)}
+      onActivate={() => setPage(totalPages)}
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronsRightIcon /></Icon>}
     />
   );

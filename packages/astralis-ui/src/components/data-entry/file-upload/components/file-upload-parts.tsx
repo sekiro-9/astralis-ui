@@ -66,12 +66,14 @@ export function FileUploadDropzone({ children, className = "", ...rest }: FileUp
 FileUploadDropzone.displayName = "FileUpload.Dropzone";
 
 /** Wraps a single element (e.g. a Button) and opens the picker on click. */
-export function FileUploadTrigger({ children }: FileUploadTriggerProps) {
+export function FileUploadTrigger({ children, onClick, ...rest }: FileUploadTriggerProps) {
   const { openPicker } = useFileUploadContext();
   const child = resolveServerChild(children) as FileUploadTriggerProps["children"];
   return cloneElement(child, {
-    onClick: (e: MouseEvent) => {
+    ...rest,
+    onClick: (e: MouseEvent<HTMLElement>) => {
       (child.props.onClick as ((e: MouseEvent) => void) | undefined)?.(e);
+      onClick?.(e);
       openPicker();
     },
   } as Record<string, unknown>);

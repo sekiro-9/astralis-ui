@@ -3,7 +3,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
 import { statHelpSizeMap, statIndicatorVariants } from "../stat.styles";
 
-export function StatIndicator({ type = "increase", children, className = "", size = "md" }: StatIndicatorProps) {
+export function StatIndicator({ type = "increase", children, className = "", size = "md", ...rest }: StatIndicatorProps) {
   const isIncrease = type === "increase";
 
   return (
@@ -17,6 +17,7 @@ export function StatIndicator({ type = "increase", children, className = "", siz
         isIncrease ? "astralis:text-green-solid" : "astralis:text-red-solid",
         className,
       )}
+      {...rest}
     >
       <span aria-hidden>{isIncrease ? "▲" : "▼"}</span>
       {children}

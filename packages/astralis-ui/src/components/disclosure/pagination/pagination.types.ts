@@ -1,12 +1,12 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type PaginationVariant = "solid" | "outline" | "subtle" | "plain";
 export type PaginationSize = "xs" | "sm" | "md" | "lg";
 export type PaginationRounded = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
-export interface PaginationProps extends PlacementProps {
+export interface PaginationProps extends ComponentPropsWithoutRef<"nav">, PlacementProps {
   /** Current page (controlled). */
   page?: number;
   /** Initial page when uncontrolled. @default 1 */
@@ -29,22 +29,26 @@ export interface PaginationProps extends PlacementProps {
   children: ReactNode;
 }
 
-export interface PaginationListProps {
+export interface PaginationListProps extends ComponentPropsWithoutRef<"ul"> {
   children: ReactNode;
   className?: string;
 }
 
-export interface PaginationItemProps {
+/** DOM attributes land on the `<li>`; `className` styles the button inside it. */
+export interface PaginationItemProps extends ComponentPropsWithoutRef<"li"> {
   page: number;
   children: ReactNode;
   className?: string;
 }
 
-export interface PaginationControlProps {
+/** DOM attributes land on the `<li>`; `className` styles the button inside it. */
+export interface PaginationControlProps extends ComponentPropsWithoutRef<"li"> {
   /** Override the default chevron with any node. */
   icon?: ReactNode;
   className?: string;
 }
+
+export type PaginationEllipsisProps = ComponentPropsWithoutRef<"li">;
 
 export interface PaginationPagesProps {
   /** Pages shown on each side of the current page. @default 1 */
@@ -53,13 +57,14 @@ export interface PaginationPagesProps {
   boundaryCount?: number;
 }
 
-export interface PaginationPageTextProps {
+export interface PaginationPageTextProps extends ComponentPropsWithoutRef<"li"> {
   className?: string;
   /** Custom text; receives the pagination state. Defaults to "Page X of Y". */
   format?: (state: { page: number; totalPages: number; count?: number; pageSize?: number }) => ReactNode;
 }
 
-export interface PaginationJumperProps {
+/** DOM attributes land on the `<li>`; `className` styles the input inside it. */
+export interface PaginationJumperProps extends ComponentPropsWithoutRef<"li"> {
   className?: string;
   /** Label before the input. @default "Go to" */
   label?: ReactNode;

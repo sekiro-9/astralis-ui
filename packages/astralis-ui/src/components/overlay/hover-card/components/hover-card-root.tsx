@@ -48,10 +48,11 @@ export function HoverCardRoot({
 
 HoverCardRoot.displayName = "HoverCard";
 
-export function HoverCardTrigger({ children }: HoverCardTriggerProps) {
+export function HoverCardTrigger({ children, ...rest }: HoverCardTriggerProps) {
   const { scheduleOpen, scheduleClose, showNow, hide, open, triggerRef, contentId } = useHoverCard();
   const child = resolveServerChild(children) as HoverCardTriggerProps["children"];
   return cloneElement(child, {
+    ...rest,
     ref: triggerRef,
     onMouseEnter: (e: MouseEvent) => { (child.props.onMouseEnter as ((e: MouseEvent) => void) | undefined)?.(e); scheduleOpen(); },
     onMouseLeave: (e: MouseEvent) => { (child.props.onMouseLeave as ((e: MouseEvent) => void) | undefined)?.(e); scheduleClose(); },

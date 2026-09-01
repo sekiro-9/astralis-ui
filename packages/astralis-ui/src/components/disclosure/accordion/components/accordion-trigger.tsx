@@ -15,6 +15,8 @@ export function AccordionTrigger({
   indicator: indicatorProp,
   hideIndicator: hideIndicatorProp,
   className = "",
+  onClick,
+  ...rest
 }: AccordionTriggerProps) {
   const root = useAccordion();
   const { value, open, disabled, triggerId, contentId } = useAccordionItem();
@@ -49,11 +51,12 @@ export function AccordionTrigger({
         disabled={disabled}
         aria-expanded={open}
         aria-controls={contentId}
-        onClick={() => { if (!disabled) root.toggle(value); }}
+        onClick={(e) => { onClick?.(e); if (!disabled) root.toggle(value); }}
         className={astralisMerge(
           accordionTriggerVariants({ size: root.size, variant: root.variant, open }),
           className,
         )}
+        {...rest}
       >
         {atStart && indicator}
         <span className="astralis:flex-1 astralis:text-left">{children}</span>

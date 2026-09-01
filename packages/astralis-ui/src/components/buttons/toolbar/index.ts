@@ -10,4 +10,4 @@ export const Toolbar = Object.assign(ToolbarRoot, {
 export { ToolbarGroup, ToolbarSeparator };
 
 // 3️⃣ Type exports
-export type { ToolbarProps, ToolbarGroupProps, ToolbarOrientation } from "./toolbar.types";
+export type { ToolbarProps, ToolbarGroupProps, ToolbarSeparatorProps, ToolbarOrientation } from "./toolbar.types";

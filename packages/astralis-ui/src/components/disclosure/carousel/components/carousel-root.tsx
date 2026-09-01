@@ -1,7 +1,7 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
 import { CarouselContext } from "../carousel.context";
 import type { CarouselProps } from "../carousel.types";
@@ -31,11 +31,13 @@ export function CarouselRoot({
   size = "md",
   colorScheme = "brand",
   className = "",
-  style,
+  onKeyDown,
+  onMouseEnter,
+  onMouseLeave,
   children,
   ...rest
 }: CarouselProps) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, rest: domProps } = splitPlacement(rest);
   const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultIndex);
   const [slideCount, setSlideCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
@@ -82,18 +84,25 @@ export function CarouselRoot({
 
   const toggleAutoPlay = useCallback(() => setIsPlaying((p) => !p), []);
 
-  const handleMouseEnter = useCallback(() => { if (pauseOnHover) isPausedRef.current = true; }, [pauseOnHover]);
-  const handleMouseLeave = useCallback(() => { isPausedRef.current = false; }, []);
+  const handleMouseEnter = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => { onMouseEnter?.(e); if (pauseOnHover) isPausedRef.current = true; },
+    [onMouseEnter, pauseOnHover],
+  );
+  const handleMouseLeave = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => { onMouseLeave?.(e); isPausedRef.current = false; },
+    [onMouseLeave],
+  );
 
   // Arrow keys move by a page; the orientation picks the axis.
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(e);
       const prevKey = orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
       const nextKey = orientation === "vertical" ? "ArrowDown" : "ArrowRight";
       if (e.key === prevKey) { e.preventDefault(); goTo(index - slidesToScroll); }
       else if (e.key === nextKey) { e.preventDefault(); goTo(index + slidesToScroll); }
     },
-    [orientation, goTo, index, slidesToScroll],
+    [onKeyDown, orientation, goTo, index, slidesToScroll],
   );
 
   const ctx = useMemo(
@@ -123,7 +132,7 @@ export function CarouselRoot({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={astralisMerge(layout, "astralis:outline-none", accentClass(colorScheme), placementClass, className)}
-        style={{ ...placementStyle, ...style }}
+        {...domProps}
       >
         {children}
       </div>

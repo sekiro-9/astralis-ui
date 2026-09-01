@@ -7,12 +7,13 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * no context, so the group itself is a Server Component (the Input inside is
  * client either way; it owns focus/typing).
  */
-export function InputGroup({ prefix, suffix, children, className = "" }: InputGroupProps) {
+export function InputGroup({ prefix, suffix, children, className = "", ...rest }: InputGroupProps) {
   return (
     <div
       data-inputgroup-prefix={prefix ? "" : undefined}
       data-inputgroup-suffix={suffix ? "" : undefined}
       className={astralisMerge("astralis:relative astralis:flex astralis:items-center", className)}
+      {...rest}
     >
       {prefix && (
         <span className="astralis:absolute astralis:left-3 astralis:z-10 astralis:flex astralis:items-center astralis:text-label-subtle astralis:pointer-events-none">

@@ -12,7 +12,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * wrapper clips the overflow. Content mounts lazily on first open (unless
  * `keepMounted`) and stays mounted afterwards so the collapse still animates.
  */
-export function AccordionContent({ children, className = "" }: AccordionContentProps) {
+export function AccordionContent({ children, className = "", style, ...rest }: AccordionContentProps) {
   const { size, keepMounted } = useAccordion();
   const { open, triggerId, contentId } = useAccordionItem();
 
@@ -27,7 +27,8 @@ export function AccordionContent({ children, className = "" }: AccordionContentP
       aria-labelledby={triggerId}
       data-state={open ? "open" : "closed"}
       className="astralis:grid astralis:transition-all astralis:duration-moderate"
-      style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+      style={{ gridTemplateRows: open ? "1fr" : "0fr", ...style }}
+      {...rest}
     >
       <div className="astralis:overflow-hidden astralis:min-h-0" inert={!open}>
         <div className={astralisMerge(accordionContentVariants({ size }), className)}>

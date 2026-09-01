@@ -7,7 +7,7 @@ import { paginationJumperInputVariants } from "../pagination.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 /** A quick-jump input (Ant's showQuickJumper). Press Enter to jump. */
-export function PaginationJumper({ className = "", label = "Go to" }: PaginationJumperProps) {
+export function PaginationJumper({ className = "", label = "Go to", ...rest }: PaginationJumperProps) {
   const { setPage, totalPages, size, disabled } = usePagination();
   const [value, setValue] = useState("");
 
@@ -18,7 +18,7 @@ export function PaginationJumper({ className = "", label = "Go to" }: Pagination
   };
 
   return (
-    <li className="astralis:inline-flex astralis:items-center astralis:gap-2">
+    <li className="astralis:inline-flex astralis:items-center astralis:gap-2" {...rest}>
       {label && <span className="astralis:text-sm astralis:text-label-muted">{label}</span>}
       <input
         type="number"

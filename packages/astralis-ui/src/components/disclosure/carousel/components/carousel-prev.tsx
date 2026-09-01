@@ -7,7 +7,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { ChevronLeftIcon, ChevronUpIcon } from "../../../icon/internal-icons";
 
-export function CarouselPrev({ icon, className = "" }: CarouselControlProps) {
+export function CarouselPrev({ icon, className = "", onClick, ...rest }: CarouselControlProps) {
   const { index, setIndex, slidesToScroll, orientation, disabled, loop, size } = useCarousel();
   const isVertical = orientation === "vertical";
   const isDisabled = !loop && (disabled || index <= 0);
@@ -17,8 +17,9 @@ export function CarouselPrev({ icon, className = "" }: CarouselControlProps) {
       type="button"
       aria-label="Previous slide"
       disabled={isDisabled}
-      onClick={() => setIndex(index - slidesToScroll)}
+      onClick={(e) => { onClick?.(e); setIndex(index - slidesToScroll); }}
       className={astralisMerge(carouselControlVariants({ size }), className)}
+      {...rest}
     >
       {icon ?? (
         <Icon size={controlIconSize[size]}>

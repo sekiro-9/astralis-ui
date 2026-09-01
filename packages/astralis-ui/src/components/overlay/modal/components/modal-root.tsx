@@ -38,10 +38,11 @@ export function ModalRoot({
 }
 
 /** Wraps a single element and opens the modal on click (asChild-style). */
-export function ModalTrigger({ children }: ModalSlotProps) {
+export function ModalTrigger({ children, ...rest }: ModalSlotProps) {
   const { setOpen, open } = useModal();
   const child = resolveServerChild(children) as ModalSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     onClick: (e: MouseEvent) => {
       child.props.onClick?.(e);
       setOpen(true);
@@ -52,10 +53,11 @@ export function ModalTrigger({ children }: ModalSlotProps) {
 }
 
 /** Wraps a single element and closes the modal on click. */
-export function ModalClose({ children }: ModalSlotProps) {
+export function ModalClose({ children, ...rest }: ModalSlotProps) {
   const { close } = useModal();
   const child = resolveServerChild(children) as ModalSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     onClick: (e: MouseEvent) => {
       child.props.onClick?.(e);
       close();

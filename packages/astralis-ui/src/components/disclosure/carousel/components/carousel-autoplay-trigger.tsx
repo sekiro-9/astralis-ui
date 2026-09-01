@@ -7,7 +7,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { PlayIcon, PauseIcon } from "../../../icon/internal-icons";
 
-export function CarouselAutoPlayTrigger({ className = "", children }: CarouselAutoPlayTriggerProps) {
+export function CarouselAutoPlayTrigger({ className = "", children, onClick, ...rest }: CarouselAutoPlayTriggerProps) {
   const { isPlaying, toggleAutoPlay, disabled, size } = useCarousel();
   return (
     <button
@@ -15,8 +15,9 @@ export function CarouselAutoPlayTrigger({ className = "", children }: CarouselAu
       aria-label={isPlaying ? "Pause autoplay" : "Start autoplay"}
       aria-pressed={isPlaying}
       disabled={disabled}
-      onClick={toggleAutoPlay}
+      onClick={(e) => { onClick?.(e); toggleAutoPlay(); }}
       className={astralisMerge(carouselControlVariants({ size }), className)}
+      {...rest}
     >
       {children ? (
         children(isPlaying)

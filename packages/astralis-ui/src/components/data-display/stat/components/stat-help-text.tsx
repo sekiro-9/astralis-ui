@@ -5,7 +5,7 @@ import { inheritProps } from "../../../../utils/inherit-props";
 import { statHelpSizeMap, statHelpVariants } from "../stat.styles";
 import { StatIndicator } from "./stat-indicator";
 
-export function StatHelpText({ children, className = "", size = "md" }: StatHelpTextProps) {
+export function StatHelpText({ children, className = "", size = "md", ...rest }: StatHelpTextProps) {
   return (
     <span
       className={astralisMerge(
@@ -13,6 +13,7 @@ export function StatHelpText({ children, className = "", size = "md" }: StatHelp
           .className,
         className,
       )}
+      {...rest}
     >
       {/* The indicator's documented home is inside the help text, one level
           below the root's reach — so the help text re-injects the size. */}

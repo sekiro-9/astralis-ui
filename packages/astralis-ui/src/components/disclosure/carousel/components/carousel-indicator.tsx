@@ -6,7 +6,7 @@ import { carouselDotVariants } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 /** A single dot bound to one slide index — for hand-composed indicator rows. */
-export function CarouselIndicator({ index, className = "" }: CarouselIndicatorProps) {
+export function CarouselIndicator({ index, className = "", onClick, ...rest }: CarouselIndicatorProps) {
   const { index: activeIndex, setIndex, slideCount, size } = useCarousel();
   const active = index === activeIndex;
   return (
@@ -15,8 +15,9 @@ export function CarouselIndicator({ index, className = "" }: CarouselIndicatorPr
       role="tab"
       aria-label={`Go to slide ${index + 1} of ${slideCount}`}
       aria-selected={active}
-      onClick={() => setIndex(index)}
+      onClick={(e) => { onClick?.(e); setIndex(index); }}
       className={astralisMerge(carouselDotVariants({ size, active }), className)}
+      {...rest}
     />
   );
 }

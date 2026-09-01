@@ -31,8 +31,13 @@ export function TabsRoot({
 }: TabsProps) {
   const isControlled = valueProp !== undefined;
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
-  const value = isControlled ? valueProp : uncontrolled;
+  const [first, setFirst] = useState<string | undefined>(undefined);
+  const value = isControlled ? valueProp : (uncontrolled ?? first);
   const baseId = useId();
+
+  const register = useCallback((candidate: string) => {
+    setFirst((current) => current ?? candidate);
+  }, []);
 
   const setValue = useCallback(
     (next: string) => {
@@ -43,8 +48,8 @@ export function TabsRoot({
   );
 
   const ctx = useMemo(
-    () => ({ value, setValue, orientation, variant, size, fitted, rounded, activationMode, keepMounted, loop, baseId }),
-    [value, setValue, orientation, variant, size, fitted, rounded, activationMode, keepMounted, loop, baseId],
+    () => ({ value, setValue, orientation, variant, size, fitted, rounded, activationMode, keepMounted, loop, baseId, register }),
+    [value, setValue, orientation, variant, size, fitted, rounded, activationMode, keepMounted, loop, baseId, register],
   );
 
   const { placementClass, rest: domProps } = splitPlacement(rest);

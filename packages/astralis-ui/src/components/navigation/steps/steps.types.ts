@@ -55,12 +55,12 @@ export interface StepsIndicatorProps extends ComponentPropsWithoutRef<"span"> {
   children?: ReactNode;
 }
 
-export interface StepsTitleProps {
+export interface StepsTitleProps extends Omit<ComponentPropsWithoutRef<"p">, "color"> {
   children: ReactNode;
   className?: string;
 }
 
-export interface StepsDescriptionProps {
+export interface StepsDescriptionProps extends Omit<ComponentPropsWithoutRef<"p">, "color"> {
   children: ReactNode;
   className?: string;
 }

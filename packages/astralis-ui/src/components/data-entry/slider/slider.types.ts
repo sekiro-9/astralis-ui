@@ -1,4 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
+import type { ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type SliderSize = "sm" | "md" | "lg";
@@ -8,7 +9,8 @@ export interface SliderMark {
   label?: string;
 }
 
-export interface SliderProps extends PlacementProps {
+export interface SliderProps
+  extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue">, PlacementProps {
   min?: number;
   max?: number;
   step?: number;
@@ -31,7 +33,7 @@ export interface SliderProps extends PlacementProps {
   id?: string;
 }
 
-export interface RangeSliderProps {
+export interface RangeSliderProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue"> {
   min?: number;
   max?: number;
   step?: number;

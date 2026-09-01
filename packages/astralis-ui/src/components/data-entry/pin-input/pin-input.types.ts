@@ -1,9 +1,11 @@
 import type { PlacementProps } from "../../../utils/placement";
+import type { ComponentPropsWithoutRef } from "react";
 export type PinInputType = "numeric" | "alphanumeric" | "alpha";
 export type PinInputSize = "sm" | "md" | "lg";
 export type PinInputVariant = "outline" | "filled";
 
-export interface PinInputProps extends PlacementProps {
+export interface PinInputProps
+  extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue">, PlacementProps {
   /** Number of individual boxes (default 4) */
   length?: number;
   /** Controlled value — the full combined string */

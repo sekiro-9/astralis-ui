@@ -1,5 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type AccordionType = "single" | "multiple";
@@ -8,7 +8,7 @@ export type AccordionSize = "sm" | "md" | "lg";
 export type AccordionIndicatorPosition = "start" | "end";
 export type AccordionHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export interface AccordionProps extends PlacementProps {
+export interface AccordionProps extends Omit<ComponentPropsWithoutRef<"div">, "defaultValue">, PlacementProps {
   children?: ReactNode;
   /** `single` keeps one item open; `multiple` allows many. */
   type?: AccordionType;
@@ -35,14 +35,14 @@ export interface AccordionProps extends PlacementProps {
   className?: string;
 }
 
-export interface AccordionItemProps {
+export interface AccordionItemProps extends ComponentPropsWithoutRef<"div"> {
   children?: ReactNode;
   value: string;
   disabled?: boolean;
   className?: string;
 }
 
-export interface AccordionTriggerProps {
+export interface AccordionTriggerProps extends ComponentPropsWithoutRef<"button"> {
   children?: ReactNode;
   /** Per-trigger indicator override. */
   indicator?: ReactNode;
@@ -50,7 +50,7 @@ export interface AccordionTriggerProps {
   className?: string;
 }
 
-export interface AccordionContentProps {
+export interface AccordionContentProps extends ComponentPropsWithoutRef<"div"> {
   children?: ReactNode;
   className?: string;
 }

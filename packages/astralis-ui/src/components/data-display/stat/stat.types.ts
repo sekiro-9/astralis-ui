@@ -29,25 +29,25 @@ export interface StatProps extends HTMLAttributes<HTMLDivElement>, PlacementProp
  * cloning replaced the old context). Set it manually only when rendering a
  * part standalone or through a wrapper element the root can't see through.
  */
-export interface StatLabelProps {
+export interface StatLabelProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
   className?: string;
   size?: ResponsiveProp<StatSize>;
 }
 
-export interface StatValueProps {
+export interface StatValueProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
   className?: string;
   size?: ResponsiveProp<StatSize>;
 }
 
-export interface StatHelpTextProps {
+export interface StatHelpTextProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
   className?: string;
   size?: ResponsiveProp<StatSize>;
 }
 
-export interface StatIndicatorProps {
+export interface StatIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
   type?: "increase" | "decrease";
   children?: ReactNode;
   className?: string;

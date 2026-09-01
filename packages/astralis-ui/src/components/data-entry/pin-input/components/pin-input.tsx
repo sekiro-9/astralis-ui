@@ -41,7 +41,7 @@ export function PinInputBase({
   id: idProp,
   ...rest
 }: PinInputProps) {
-  const { placementClass, placementStyle } = splitPlacement(rest);
+  const { placementClass, rest: domRest } = splitPlacement(rest);
 
   const field = useFieldContext();
   const isDisabled = disabledProp ?? field?.disabled;
@@ -181,7 +181,7 @@ export function PinInputBase({
       role="group"
       aria-label="PIN input"
       className={astralisMerge("astralis:flex astralis:items-center astralis:gap-2", placementClass, className)}
-      style={placementStyle}
+      {...domRest}
     >
       {Array.from({ length }, (_, i) => (
         <input

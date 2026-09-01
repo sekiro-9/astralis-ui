@@ -10,7 +10,7 @@ import {
 } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
-export function CarouselIndicators({ className = "", variant = "dot" }: CarouselIndicatorsProps) {
+export function CarouselIndicators({ className = "", variant = "dot", ...rest }: CarouselIndicatorsProps) {
   const { slideCount, index, setIndex, lastIndex, slidesToScroll, orientation, size } = useCarousel();
   if (slideCount <= 1) return null;
 
@@ -21,7 +21,7 @@ export function CarouselIndicators({ className = "", variant = "dot" }: Carousel
 
   if (variant === "number") {
     return (
-      <div aria-label="Slide progress" className={astralisMerge(carouselProgressVariants(), className)}>
+      <div aria-label="Slide progress" className={astralisMerge(carouselProgressVariants(), className)} {...rest}>
         {activePage + 1}
         <span className="astralis:mx-1">/</span>
         {pageCount}
@@ -30,7 +30,7 @@ export function CarouselIndicators({ className = "", variant = "dot" }: Carousel
   }
 
   return (
-    <div role="tablist" aria-label="Slides" className={astralisMerge(carouselIndicatorsVariants({ orientation }), className)}>
+    <div role="tablist" aria-label="Slides" className={astralisMerge(carouselIndicatorsVariants({ orientation }), className)} {...rest}>
       {Array.from({ length: pageCount }).map((_, p) => {
         const active = p === activePage;
         return (

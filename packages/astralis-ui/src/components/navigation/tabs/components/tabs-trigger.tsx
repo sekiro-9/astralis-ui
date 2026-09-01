@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, type KeyboardEvent } from "react";
+import { useCallback, useEffect, type KeyboardEvent } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useTabsContext } from "../tabs.context";
 import { tabsTriggerVariants } from "../tabs.styles";
@@ -13,8 +13,12 @@ import type { TabsTriggerProps } from "../tabs.types";
  * decides whether arrowing also selects (automatic) or just moves focus (manual).
  */
 export function TabsTrigger({ value, disabled = false, className, children, onClick, onKeyDown, ...rest }: TabsTriggerProps) {
-  const { value: active, setValue, orientation, variant, size, fitted, rounded, activationMode, loop, baseId } = useTabsContext();
+  const { value: active, setValue, orientation, variant, size, fitted, rounded, activationMode, loop, baseId, register } = useTabsContext();
   const isActive = value === active;
+
+  useEffect(() => {
+    if (!disabled) register(value);
+  }, [register, value, disabled]);
 
   const triggerId = `${baseId}-trigger-${value}`;
   const panelId = `${baseId}-panel-${value}`;

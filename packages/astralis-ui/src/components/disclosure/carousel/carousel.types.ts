@@ -1,5 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
-import type { ReactNode, CSSProperties } from "react";
+import type { ComponentPropsWithoutRef, ReactNode, CSSProperties } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type CarouselAnimation = "slide" | "fade";
@@ -7,7 +7,7 @@ export type CarouselOrientation = "horizontal" | "vertical";
 export type CarouselIndicatorVariant = "dot" | "line" | "number";
 export type CarouselSize = "sm" | "md" | "lg";
 
-export interface CarouselProps extends PlacementProps {
+export interface CarouselProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /** Active leading-slide index (controlled). */
   index?: number;
   /** Initial index when uncontrolled. @default 0 */
@@ -49,45 +49,45 @@ export interface CarouselProps extends PlacementProps {
   children: ReactNode;
 }
 
-export interface CarouselTrackProps {
+export interface CarouselTrackProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
   className?: string;
 }
 
-export interface CarouselSlideProps {
+export interface CarouselSlideProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
   className?: string;
 }
 
 /** Lays out the navigation controls (Prev/Next/Indicators/etc.); orientation-aware. */
-export interface CarouselControlGroupProps {
+export interface CarouselControlGroupProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
   className?: string;
 }
 
-export interface CarouselControlProps {
+export interface CarouselControlProps extends ComponentPropsWithoutRef<"button"> {
   /** Override the default chevron icon. */
   icon?: ReactNode;
   className?: string;
 }
 
-export interface CarouselIndicatorProps {
+export interface CarouselIndicatorProps extends ComponentPropsWithoutRef<"button"> {
   index: number;
   className?: string;
 }
 
-export interface CarouselIndicatorsProps {
+export interface CarouselIndicatorsProps extends ComponentPropsWithoutRef<"div"> {
   className?: string;
   /** @default "dot" */
   variant?: CarouselIndicatorVariant;
 }
 
-export interface CarouselProgressTextProps {
+export interface CarouselProgressTextProps extends ComponentPropsWithoutRef<"div"> {
   className?: string;
   format?: (index: number, total: number) => ReactNode;
 }
 
-export interface CarouselAutoPlayTriggerProps {
+export interface CarouselAutoPlayTriggerProps extends Omit<ComponentPropsWithoutRef<"button">, "children"> {
   className?: string;
   children?: (isPlaying: boolean) => ReactNode;
 }

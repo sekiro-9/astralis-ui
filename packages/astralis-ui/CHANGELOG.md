@@ -22,6 +22,12 @@ children, both derived, none of it authored twice:
   `Tag.Group` resolves to `CheckableTagGroup` and its props are findable.
 - **`anatomy.within`** — parts that need a sibling part between them and
   the root (Accordion's Trigger sits within Item), measured by trying each.
+- **`content: "block"`** — text that lands in a layout element (a Card.Body)
+  rather than a text-bearing one (a Card.Title), so a builder knows which
+  parts are containers.
+- **`domRoot`** and **`partDomRoot`** — whether a DOM attribute given to the
+  component reaches an element of its own. False for a context (Modal), a
+  relocation (Portal), and an overlay's content while closed.
 - Anatomy now covers AlertDialog, Avatar, Calendar, Collapsible,
   ContextMenu, Editable, EmptyState, FileUpload, HoverCard, Popout,
   SegmentedControl, Splitter and Toolbar, and alias roots (CalendarRoot,
@@ -29,8 +35,22 @@ children, both derived, none of it authored twice:
   part that throws "must be used within" on its own without being listed
   fails the spec build, so the table cannot go stale.
 
+### Changed
+
+- **Tabs** with neither `value` nor `defaultValue` activate their first
+  trigger instead of showing no panel. A tool that assembles tabs part by
+  part has no moment at which to pick one, and an empty panel helped no one.
+
 ### Fixed
 
+- **DOM attributes reach the root element** across the library: `id`,
+  `data-*` and `aria-*` given to Accordion, Avatar, Carousel, DataList,
+  Pagination, Stat, Steps, Tabs, Timeline, Toolbar, the data-entry
+  wrappers (Combobox, MultiSelect, PinInput, Slider, RangeSlider,
+  InputGroup, Editable, FileUpload), QrCode, ImageGroup, TableOfContents
+  and every overlay Trigger and Close slot now land on the element they
+  render (a slot merges them into the element it clones). Pinned by
+  `src/dom-identity.test.tsx`, which renders every export with a probe.
 - **AstralisProvider** toggles `astralis-dark` on the document it renders
   into, not the global one, so a provider portalled into an iframe themes
   that frame rather than the page around it.

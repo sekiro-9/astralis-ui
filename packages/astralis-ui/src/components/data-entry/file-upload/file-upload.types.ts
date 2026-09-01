@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactElement, ReactNode } from "react";
 
 /** Why a picked file was refused. */
 export interface FileUploadRejection {
@@ -27,7 +27,8 @@ export interface FileUploadDropzoneProps extends ComponentPropsWithoutRef<"div">
   children?: ReactNode;
 }
 
-export interface FileUploadTriggerProps {
+/** Everything but `children` is cloned onto the wrapped element. */
+export interface FileUploadTriggerProps extends HTMLAttributes<HTMLElement> {
   /** A single element (typically a Button) that opens the file picker. */
   children: ReactElement<Record<string, unknown>>;
 }

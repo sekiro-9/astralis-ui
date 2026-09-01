@@ -1,4 +1,4 @@
-import type { ReactNode, ReactElement } from "react";
+import type { HTMLAttributes, ReactNode, ReactElement } from "react";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
 
 export interface TooltipProps {
@@ -15,7 +15,8 @@ export interface TooltipProps {
   avoidCollisions?: boolean;
 }
 
-export interface TooltipTriggerProps {
+/** Wraps a single element; attributes other than `children` are forwarded onto it. */
+export interface TooltipTriggerProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   children: ReactElement<any>;
 }
 

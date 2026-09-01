@@ -2,7 +2,7 @@ import type { DataListLabelProps } from "../data-list.types";
 import { dataListLabelLayout, dataListTextSize } from "../data-list.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
-export function DataListLabel({ children, className = "", style }: DataListLabelProps) {
+export function DataListLabel({ children, className = "", style, ...rest }: DataListLabelProps) {
   return (
     <dt
       className={astralisMerge(
@@ -12,6 +12,7 @@ export function DataListLabel({ children, className = "", style }: DataListLabel
         className,
       )}
       style={style}
+      {...rest}
     >
       {children}
     </dt>

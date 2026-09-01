@@ -36,10 +36,11 @@ export function TooltipRoot({
   return <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>;
 }
 
-export function TooltipTrigger({ children }: TooltipTriggerProps) {
+export function TooltipTrigger({ children, ...rest }: TooltipTriggerProps) {
   const { show, showNow, hide, open, triggerRef, tooltipId } = useTooltip();
   const child = resolveServerChild(children) as TooltipTriggerProps["children"];
   return cloneElement(child, {
+    ...rest,
     ref: triggerRef,
     onMouseEnter: (e: MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
     onMouseLeave: (e: MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },

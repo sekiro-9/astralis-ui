@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactElement, ReactNode } from "react";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
 
 export interface HoverCardProps {
@@ -18,7 +18,8 @@ export interface HoverCardProps {
   avoidCollisions?: boolean;
 }
 
-export interface HoverCardTriggerProps {
+/** Attributes other than `children` are forwarded onto the wrapped element. */
+export interface HoverCardTriggerProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   /** A single element (typically a Link); the card wires it up via props. */
   children: ReactElement<Record<string, unknown>>;
 }

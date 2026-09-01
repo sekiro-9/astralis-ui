@@ -44,10 +44,11 @@ export function PopoverRoot({
   return <PopoverContext.Provider value={ctx}>{children}</PopoverContext.Provider>;
 }
 
-export function PopoverTrigger({ children }: PopoverSlotProps) {
+export function PopoverTrigger({ children, ...rest }: PopoverSlotProps) {
   const { toggle, open, triggerRef, contentId } = usePopover();
   const child = resolveServerChild(children) as PopoverSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     ref: triggerRef,
     onClick: (e: MouseEvent) => { child.props.onClick?.(e); toggle(); },
     "aria-haspopup": "dialog",
@@ -56,10 +57,11 @@ export function PopoverTrigger({ children }: PopoverSlotProps) {
   } as Record<string, unknown>);
 }
 
-export function PopoverClose({ children }: PopoverSlotProps) {
+export function PopoverClose({ children, ...rest }: PopoverSlotProps) {
   const { close } = usePopover();
   const child = resolveServerChild(children) as PopoverSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     onClick: (e: MouseEvent) => { child.props.onClick?.(e); close(); },
   } as Record<string, unknown>);
 }

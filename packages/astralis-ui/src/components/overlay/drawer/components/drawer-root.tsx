@@ -36,20 +36,22 @@ export function DrawerRoot({
   return <DrawerContext.Provider value={ctx}>{children}</DrawerContext.Provider>;
 }
 
-export function DrawerTrigger({ children }: DrawerSlotProps) {
+export function DrawerTrigger({ children, ...rest }: DrawerSlotProps) {
   const { setOpen, open } = useDrawer();
   const child = resolveServerChild(children) as DrawerSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     onClick: (e: MouseEvent) => { child.props.onClick?.(e); setOpen(true); },
     "aria-haspopup": "dialog",
     "aria-expanded": open,
   } as Record<string, unknown>);
 }
 
-export function DrawerClose({ children }: DrawerSlotProps) {
+export function DrawerClose({ children, ...rest }: DrawerSlotProps) {
   const { close } = useDrawer();
   const child = resolveServerChild(children) as DrawerSlotProps["children"];
   return cloneElement(child, {
+    ...rest,
     onClick: (e: MouseEvent) => { child.props.onClick?.(e); close(); },
   } as Record<string, unknown>);
 }

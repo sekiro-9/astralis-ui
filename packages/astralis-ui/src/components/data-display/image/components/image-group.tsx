@@ -25,6 +25,7 @@ export function ImageGroup({
   objectFit = "cover",
   className = "",
   style,
+  ...rest
 }: ImageGroupProps) {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
@@ -56,6 +57,7 @@ export function ImageGroup({
           .filter(Boolean)
           .join(" ")}
         style={style}
+        {...rest}
       >
         {items.map((item, index) => (
           <div

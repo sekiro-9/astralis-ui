@@ -1,7 +1,7 @@
 "use client";
 
 import type { KeyboardEvent, Ref } from "react";
-import type { ToolbarProps, ToolbarGroupProps } from "../toolbar.types";
+import type { ToolbarProps, ToolbarGroupProps, ToolbarSeparatorProps } from "../toolbar.types";
 import { toolbarRoot, toolbarVertical, toolbarGroup } from "../toolbar.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useRovingFocus } from "../../../../hooks/use-roving-focus";
@@ -60,11 +60,12 @@ export function ToolbarGroup({ className = "", ...rest }: ToolbarGroupProps) {
 ToolbarGroup.displayName = "Toolbar.Group";
 
 /** A Separator preset matching the toolbar's cross axis. */
-export function ToolbarSeparator({ className = "" }: { className?: string }) {
+export function ToolbarSeparator({ className = "", ...rest }: ToolbarSeparatorProps) {
   return (
     <Separator
       orientation="vertical"
       className={astralisMerge("astralis:h-5 astralis:mx-1 astralis:self-center", className)}
+      {...rest}
     />
   );
 }

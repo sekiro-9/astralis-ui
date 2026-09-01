@@ -5,13 +5,13 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { AvatarRoot } from "./avatar-root";
 
-export function AvatarGroup({ children, max, spacing = -8, size = "md", className = "", style }: AvatarGroupProps) {
+export function AvatarGroup({ children, max, spacing = -8, size = "md", className = "", style, ...rest }: AvatarGroupProps) {
   const all = Children.toArray(children).filter(isValidElement);
   const visible = max !== undefined ? all.slice(0, max) : all;
   const overflow = max !== undefined ? all.length - max : 0;
 
   return (
-    <div className={astralisMerge("astralis:inline-flex astralis:items-center", className)} style={style}>
+    <div className={astralisMerge("astralis:inline-flex astralis:items-center", className)} style={style} {...rest}>
       {visible.map((child, i) => (
         <div key={i} style={{ marginLeft: i === 0 ? 0 : spacing }}>
           {/* Size and the overlap ring are cloned into direct Avatar children

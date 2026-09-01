@@ -6,7 +6,7 @@ import { accordionItemVariants } from "../accordion.styles";
 import type { AccordionItemProps } from "../accordion.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
-export function AccordionItem({ children, value, disabled = false, className = "" }: AccordionItemProps) {
+export function AccordionItem({ children, value, disabled = false, className = "", ...rest }: AccordionItemProps) {
   const { rootId, variant, isOpen, disabled: rootDisabled } = useAccordion();
 
   const itemDisabled = disabled || rootDisabled;
@@ -29,6 +29,7 @@ export function AccordionItem({ children, value, disabled = false, className = "
         data-state={open ? "open" : "closed"}
         data-disabled={itemDisabled ? "" : undefined}
         className={astralisMerge(accordionItemVariants({ variant, disabled: itemDisabled }), className)}
+        {...rest}
       >
         {children}
       </div>

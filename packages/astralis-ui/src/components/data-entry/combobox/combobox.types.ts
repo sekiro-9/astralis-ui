@@ -1,4 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
+import type { ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 import type { InputSize, InputVariant } from "../input/input.types";
 
@@ -15,7 +16,8 @@ export interface ComboboxOptionGroup {
 
 export type ComboboxOptionOrGroup = ComboboxOptionItem | ComboboxOptionGroup;
 
-export interface ComboboxProps extends PlacementProps {
+export interface ComboboxProps
+  extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue">, PlacementProps {
   options?: ComboboxOptionOrGroup[];
   /** Controlled selected value; `null` = nothing selected. */
   value?: string | number | null;
