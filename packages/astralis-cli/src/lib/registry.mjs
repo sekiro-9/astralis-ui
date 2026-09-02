@@ -1,3 +1,4 @@
+import { isAbsolute, resolve, sep } from "node:path";
 import { fail } from "./ui.mjs";
 
 /**
@@ -13,14 +14,27 @@ import { fail } from "./ui.mjs";
 const DEFAULT_REGISTRY = "https://astralis-zeta.vercel.app/r";
 
 export function registryBase(flag) {
-  const base = flag ?? process.env.ASTRALIS_REGISTRY ?? DEFAULT_REGISTRY;
+  const base = flag ?? (process.env.ASTRALIS_REGISTRY || DEFAULT_REGISTRY);
   return base.replace(/\/+$/, "");
+}
+
+export const REGISTRY_TIMEOUT_MS = 10_000;
+
+/** fetch() that gives up after `ms`, body read included, with a readable error. */
+export async function fetchWithTimeout(url, ms = REGISTRY_TIMEOUT_MS) {
+  const signal = AbortSignal.timeout(ms);
+  try {
+    return { response: await fetch(url, { signal }), signal };
+  } catch (error) {
+    throw signal.aborted ? new Error(`timed out after ${ms / 1000}s`) : error;
+  }
 }
 
 async function getJson(url) {
   let response;
+  let signal;
   try {
-    response = await fetch(url);
+    ({ response, signal } = await fetchWithTimeout(url));
   } catch (error) {
     fail(`Could not reach the block registry at ${url}\n  ${error.message}`);
   }
@@ -39,7 +53,7 @@ async function getJson(url) {
   try {
     return await response.json();
   } catch {
-    fail(`Registry returned invalid JSON for ${url}`);
+    fail(signal.aborted ? `Registry timed out sending ${url}` : `Registry returned invalid JSON for ${url}`);
   }
 }
 
@@ -48,6 +62,25 @@ export async function fetchIndex(base) {
   const data = await getJson(`${base}/index.json`);
   if (!data) fail(`No block catalogue at ${base}/index.json`);
   return data;
+}
+
+/** Block ids are what the registry builder emits: lowercase words and dashes. */
+export function isBlockId(id) {
+  return /^[a-z0-9]+(-[a-z0-9]+)*$/.test(id);
+}
+
+/**
+ * Where a registry file may be written: inside `target`, or nowhere. The
+ * registry is remote input, so a path that is absolute or climbs out with
+ * `..` is refused rather than normalised. Returns the absolute path, or null.
+ */
+export function resolveBlockFile(target, filePath) {
+  if (typeof filePath !== "string" || filePath === "" || filePath.includes("\0")) return null;
+  if (isAbsolute(filePath) || /^[\\/]|^[a-z]:/i.test(filePath)) return null;
+  if (filePath.split(/[\\/]/).some((segment) => segment === ".." || segment === "")) return null;
+  const root = resolve(target);
+  const full = resolve(root, filePath);
+  return full.startsWith(root + sep) ? full : null;
 }
 
 /** One block, with the full text of its files. Null when the id is unknown. */

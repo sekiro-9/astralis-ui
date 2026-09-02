@@ -2,7 +2,7 @@ import { parseArgs } from "node:util";
 import { readFileSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { readPackageJson, detectPackageManager, detectFramework, findEntryFile } from "../lib/detect.mjs";
-import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports } from "../lib/edits.mjs";
+import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports, parses } from "../lib/edits.mjs";
 import { ok, warn, info, fail, bold, dim, cyan } from "../lib/ui.mjs";
 
 const PROVIDER_IMPORT = 'import { AstralisProvider } from "astralis-ui";';
@@ -141,7 +141,11 @@ export async function run(argv, { nested = false } = {}) {
     apply(addTagAttribute(source, "html", "suppressHydrationWarning"), "suppressHydrationWarning on <html>");
   }
 
-  // 3. Write
+  // 3. Write — never a file that no longer parses; hand over to the manual steps instead.
+  if (source !== original && !parses(source)) {
+    source = original;
+    notes.push(`${entry.relative}: the edits would leave it unparseable, so nothing was written`);
+  }
   if (source !== original) {
     if (dryRun) step(() => info(`would update ${entry.relative}`));
     else writeFileSync(entry.path, source);

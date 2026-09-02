@@ -4,7 +4,7 @@ import { dirname, join, relative } from "node:path";
 import { ok, warn, info, fail, cyan, dim, bold, confirm } from "../lib/ui.mjs";
 import { readPackageJson, detectPackageManager } from "../lib/detect.mjs";
 import { resolveBlocksDir } from "../lib/blocks-dir.mjs";
-import { registryBase, fetchIndex, fetchBlock } from "../lib/registry.mjs";
+import { registryBase, fetchIndex, fetchBlock, isBlockId, resolveBlockFile } from "../lib/registry.mjs";
 
 /**
  * Copies a block's source into the project.
@@ -86,6 +86,11 @@ export async function run(argv) {
     fail(`Name at least one block — try ${cyan("astralis add --list")}.\n\n${USAGE}`);
   }
 
+  const badIds = positionals.filter((id) => !isBlockId(id));
+  if (badIds.length > 0) {
+    fail(`Not a block id: ${badIds.map((id) => cyan(id)).join(", ")} — ids are lowercase, like hero-01.`);
+  }
+
   /* --- resolve every id before writing anything -------------------------- */
   const items = [];
   for (const id of positionals) {
@@ -103,6 +108,18 @@ export async function run(argv) {
   const target = join(cwd, dirRelative);
   const dryRun = values["dry-run"];
 
+  // Every destination is checked before the first write, so a bad entry
+  // leaves the project untouched rather than half-written.
+  const writes = items.flatMap((block) =>
+    (Array.isArray(block.contents) ? block.contents : []).map((file) => {
+      const path = resolveBlockFile(target, file?.path);
+      if (!path || typeof file.content !== "string") {
+        fail(`The registry entry for ${cyan(block.id)} has an unsafe or malformed file (${JSON.stringify(file?.path)}) — nothing was written.`);
+      }
+      return { path, content: file.content };
+    }),
+  );
+
   // Paths are shown forward-slashed on every platform: they end up in an
   // import statement, where a Windows separator would be wrong anyway.
   const posix = (path) => path.split("\\").join("/");
@@ -117,34 +134,31 @@ export async function run(argv) {
   let written = 0;
   let skipped = 0;
 
-  for (const block of items) {
-    for (const file of block.contents) {
-      const path = join(target, file.path);
-      const shown = posix(relative(cwd, path));
+  for (const { path, content } of writes) {
+    const shown = posix(relative(cwd, path));
 
-      if (existsSync(path) && !values.overwrite) {
-        if (dryRun) {
-          warn(`${shown} ${dim("exists — would ask before replacing")}`);
-          skipped += 1;
-          continue;
-        }
-        const replace = await confirm(`${shown} already exists. Replace it?`);
-        if (!replace) {
-          warn(`skipped ${shown}`);
-          skipped += 1;
-          continue;
-        }
-      }
-
+    if (existsSync(path) && !values.overwrite) {
       if (dryRun) {
-        ok(`${shown} ${dim(`(${Buffer.byteLength(file.content)} bytes)`)}`);
-      } else {
-        mkdirSync(dirname(path), { recursive: true });
-        writeFileSync(path, file.content);
-        ok(shown);
+        warn(`${shown} ${dim("exists — would ask before replacing")}`);
+        skipped += 1;
+        continue;
       }
-      written += 1;
+      const replace = await confirm(`${shown} already exists. Replace it?`);
+      if (!replace) {
+        warn(`skipped ${shown}`);
+        skipped += 1;
+        continue;
+      }
     }
+
+    if (dryRun) {
+      ok(`${shown} ${dim(`(${Buffer.byteLength(content)} bytes)`)}`);
+    } else {
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(path, content);
+      ok(shown);
+    }
+    written += 1;
   }
 
   /* --- the one dependency a block actually has --------------------------- */
