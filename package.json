@@ -11,5 +11,16 @@
     "build:ui": "pnpm --filter astralis-ui build",
     "build:playground": "pnpm --filter astralis-playground build",
     "build:docs": "pnpm --filter astralis-docs build"
+  },
+  "pnpm": {
+    "overrides": {
+      "@hono/node-server": "^1.19.15",
+      "baseline-browser-mapping": "^2.11.0",
+      "fast-uri": "^3.1.6",
+      "hono": "^4.13.5",
+      "ip-address": "^10.3.1",
+      "qs": "^6.16.0",
+      "sharp": "^0.35.4"
+    }
   }
 }

@@ -1,13 +1,10 @@
 "use client";
 
+import { useMemo, useRef } from "react";
 import { splitPlacement } from "../../../utils/placement";
-import { useEffect, useRef, useState, useCallback } from "react";
-import QRCode from "qrcode";
+import { astralisMerge } from "../../../utils/astralis-merge";
+import { encodeQr, qrPath } from "./qr-encoder";
 import type { QrCodeRootProps, QrCodeSize } from "./qr-code.types";
-
-/* ------------------------------------------------------------------ */
-/* Size map                                                             */
-/* ------------------------------------------------------------------ */
 
 const SIZE_PX: Record<QrCodeSize, number> = {
   sm: 96,
@@ -16,9 +13,8 @@ const SIZE_PX: Record<QrCodeSize, number> = {
   xl: 280,
 };
 
-/* ------------------------------------------------------------------ */
-/* Spinner                                                              */
-/* ------------------------------------------------------------------ */
+/** Quiet zone, in modules, around the code. */
+const MARGIN = 1;
 
 function Spinner({ size }: { size: number }) {
   return (
@@ -31,16 +27,13 @@ function Spinner({ size }: { size: number }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ animation: "astralis-qr-spin 0.8s linear infinite" }}
+      className="astralis:animate-spin"
+      aria-hidden="true"
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />
     </svg>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* QrCodeRoot                                                           */
-/* ------------------------------------------------------------------ */
 
 export function QrCodeRoot({
   value,
@@ -55,55 +48,29 @@ export function QrCodeRoot({
   onRefresh,
   downloadable = false,
   downloadFileName = "qrcode",
-  className = "",
+  className,
   style,
   ...rest
 }: QrCodeRootProps) {
   const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
   const px = pixelSize ?? SIZE_PX[size];
-  const svgRef = useRef<HTMLDivElement>(null);
-  const [svgString, setSvgString] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
-  /* Inject spinner keyframe once */
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (document.getElementById("astralis-qr-keyframes")) return;
-    const style = document.createElement("style");
-    style.id = "astralis-qr-keyframes";
-    style.textContent = `@keyframes astralis-qr-spin { to { transform: rotate(360deg); } }`;
-    document.head.appendChild(style);
-  }, []);
-
-  const generate = useCallback(async () => {
-    if (!value) return;
+  // Encoding is synchronous, so a render can never show a previous value.
+  const code = useMemo(() => {
+    if (!value) return null;
     try {
-      const svg = await QRCode.toString(value, {
-        type: "svg",
-        errorCorrectionLevel: errorLevel,
-        color: {
-          dark: color,
-          light: bgColor === "transparent" ? "#ffffff00" : bgColor,
-        },
-        width: px,
-        margin: 1,
-      });
-      setSvgString(svg);
-      setError(null);
-    } catch (e) {
-      setError(String(e));
+      const matrix = encodeQr(value, errorLevel);
+      return { dimension: matrix.size + MARGIN * 2, path: qrPath(matrix, MARGIN) };
+    } catch {
+      return "error" as const;
     }
-  }, [value, errorLevel, color, bgColor, px]);
+  }, [value, errorLevel]);
 
-  useEffect(() => {
-    generate();
-  }, [generate]);
-
-  /* ── Download ──────────────────────────────────────────────────── */
   const handleDownload = () => {
-    if (!svgString) return;
-    const blob = new Blob([svgString], { type: "image/svg+xml" });
-    const url = URL.createObjectURL(blob);
+    if (!svgRef.current) return;
+    const markup = new XMLSerializer().serializeToString(svgRef.current);
+    const url = URL.createObjectURL(new Blob([markup], { type: "image/svg+xml" }));
     const a = document.createElement("a");
     a.href = url;
     a.download = `${downloadFileName}.svg`;
@@ -119,43 +86,48 @@ export function QrCodeRoot({
 
   return (
     <div
-      className={[
+      className={astralisMerge(
         "astralis:inline-flex astralis:flex-col astralis:items-center astralis:gap-3",
         placementClass,
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
       style={{ ...placementStyle, ...style }}
       {...domRest}
     >
-      {/* QR Canvas */}
       <div
         className="astralis:relative astralis:rounded-lg astralis:border astralis:border-stroke-base astralis:bg-white astralis:overflow-hidden"
         style={{ width: px, height: px }}
       >
-        {/* SVG QR code */}
-        {!error && svgString && (
-          <div
+        {code && code !== "error" && (
+          <svg
             ref={svgRef}
+            xmlns="http://www.w3.org/2000/svg"
+            width={px}
+            height={px}
+            viewBox={`0 0 ${code.dimension} ${code.dimension}`}
+            shapeRendering="crispEdges"
+            role="img"
+            aria-label={value}
             style={{
               position: "absolute",
               inset: 0,
               filter: isObscured ? "blur(5px)" : "none",
               transition: "filter 0.3s",
             }}
-            dangerouslySetInnerHTML={{ __html: svgString }}
-          />
+          >
+            {bgColor !== "transparent" && (
+              <rect width={code.dimension} height={code.dimension} fill={bgColor} />
+            )}
+            <path d={code.path} fill={color} />
+          </svg>
         )}
 
-        {/* Error state */}
-        {error && (
+        {code === "error" && (
           <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:items-center astralis:justify-center astralis:text-error-label astralis:text-xs astralis:p-2 astralis:text-center">
             Failed to generate QR code
           </div>
         )}
 
-        {/* Status overlay */}
         {status === "loading" && (
           <div className="astralis:absolute astralis:inset-0 astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2 astralis:text-label-muted">
             <Spinner size={px} />
@@ -173,6 +145,7 @@ export function QrCodeRoot({
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -185,6 +158,7 @@ export function QrCodeRoot({
             </span>
             {onRefresh && (
               <button
+                type="button"
                 onClick={onRefresh}
                 className="astralis:text-xs astralis:px-2 astralis:py-1 astralis:rounded astralis:bg-brand-solid astralis:text-brand-contrast astralis:hover:opacity-higher astralis:transition-colors"
               >
@@ -202,6 +176,7 @@ export function QrCodeRoot({
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -215,7 +190,6 @@ export function QrCodeRoot({
           </div>
         )}
 
-        {/* Logo/icon overlay — only on active */}
         {overlay && status === "active" && (
           <div
             className="astralis:absolute astralis:flex astralis:items-center astralis:justify-center astralis:bg-white astralis:rounded-md astralis:shadow-sm astralis:border astralis:border-stroke-base astralis:overflow-hidden"
@@ -231,9 +205,9 @@ export function QrCodeRoot({
         )}
       </div>
 
-      {/* Download button */}
       {downloadable && status === "active" && (
         <button
+          type="button"
           onClick={handleDownload}
           className={[
             "astralis:inline-flex astralis:items-center astralis:gap-1.5 astralis:text-xs astralis:font-medium",
@@ -242,7 +216,7 @@ export function QrCodeRoot({
             "astralis:transition-colors astralis:duration-150",
           ].join(" ")}
         >
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z" />
             <path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z" />
           </svg>

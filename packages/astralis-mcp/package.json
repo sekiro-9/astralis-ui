@@ -37,8 +37,8 @@
     "start": "node server.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "astralis-cli": "workspace:^",
-    "zod": "^3.23.0"
+    "zod": "^3.25.0"
   }
 }

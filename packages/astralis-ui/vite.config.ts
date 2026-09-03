@@ -1,7 +1,6 @@
 /// <reference types="vitest/config" />
 import { defineConfig, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
 import dts from "vite-plugin-dts";
 
 // https://vite.dev/config/
@@ -44,7 +43,6 @@ const dirname =
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
     dts({
       tsconfigPath: "./tsconfig.build.json",
       rollupTypes: true,
