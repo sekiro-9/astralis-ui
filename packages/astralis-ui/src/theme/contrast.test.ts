@@ -49,6 +49,25 @@ describe("contrast contracts", () => {
     expect(rules.filter((r) => r.includes("contrast on solid"))).toHaveLength(15);
   });
 
+  it("promises 3:1 for every hue's focus ring and the control stroke, both modes", () => {
+    for (const mode of ["light", "dark"] as const) {
+      const nonText = contrastContracts(mode).filter((c) => c.min === 3);
+      expect(nonText.filter((c) => c.rule.includes(": ring on surface-base"))).toHaveLength(15);
+      expect(nonText.map((c) => c.rule)).toContain("stroke-control on surface-base");
+    }
+  });
+
+  it("fails a ring that drops below 3:1", () => {
+    // Yellow's light ring is 700; 500 (1.92:1 on white) is what shipped before.
+    const results = verifyContrast(
+      (ref) => (ref === "yellow-700" ? palette["yellow-500"] : palette[ref]),
+      "light",
+    );
+    const ring = results.find((r) => r.rule === "yellow: ring on surface-base")!;
+    expect(ring.pass).toBe(false);
+    expect(ring.ratio!).toBeLessThan(3);
+  });
+
   it("an unresolvable reference fails rather than passing silently", () => {
     const rs = verifyContrast(() => undefined, "light");
     expect(rs.every((r) => !r.pass)).toBe(true);

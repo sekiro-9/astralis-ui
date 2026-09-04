@@ -1,9 +1,10 @@
 /* ==========================================================================
    ASTRALIS — CONTRAST GATE
    --------------------------------------------------------------------------
-   Fails the build when any promised text pairing (theme/contrast.ts
-   contracts: labels on surfaces, contrast-on-solid, hue label-on-subtle)
-   drops below WCAG AA against the SHIPPED palette, in either mode.
+   Fails the build when any promised pairing (theme/contrast.ts contracts:
+   labels on surfaces, contrast-on-solid, hue label-on-subtle at 4.5:1; focus
+   rings and the form-control stroke at 3:1) drops below its WCAG threshold
+   against the SHIPPED palette, in either mode.
 
    Day-one catch: white text on green/teal/cyan/orange 600 solids shipped at
    3.3–3.7:1 for months while a comment asserted AA. The ratios in comments
@@ -49,4 +50,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`[astralis] contrast: ${total} promised pairings clear WCAG AA in both modes`);
+console.log(`[astralis] contrast: ${total} promised pairings (text and non-text) clear WCAG in both modes`);

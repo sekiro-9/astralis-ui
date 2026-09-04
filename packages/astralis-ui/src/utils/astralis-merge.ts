@@ -18,7 +18,7 @@ const twMerge = extendTailwindMerge({
       // Only the neutral stroke ladder lives here — a status border is a palette
       // role (`border-error-stroke`), which tailwind-merge already parses.
       "border-color": [{
-        border: ["stroke-base", "stroke-muted", "stroke-subtle", "stroke-inverted"]
+        border: ["stroke-base", "stroke-muted", "stroke-subtle", "stroke-inverted", "stroke-control"]
       }]
     }
   }

@@ -57,6 +57,12 @@ describe("generateBrandTokens", () => {
     }
   });
 
+  it("takes the ring step from the spec, so it clears 3:1 on white", () => {
+    const shades = generateBrandShades("#eab308") as Record<string, string>;
+    const light = generateBrandTokens("#eab308", "light") as Record<string, string>;
+    expect(light["--astralis-color-brand-ring"]).toBe(shades["--astralis-color-brand-700"]);
+  });
+
   it("uses different role recipes for light and dark", () => {
     const light = generateBrandTokens(VIOLET, "light") as Record<string, string>;
     const dark = generateBrandTokens(VIOLET, "dark") as Record<string, string>;

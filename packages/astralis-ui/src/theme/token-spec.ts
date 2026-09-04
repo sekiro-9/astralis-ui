@@ -70,11 +70,16 @@ export type RoleTarget = Step | "white" | "black" | "auto";
  * The recipe every hue follows unless it overrides below. `contrast` is the
  * readable text color on the `solid` fill — for a static hue it is authored,
  * for the dynamic brand it is computed (see contrastOn in theme-math.ts).
+ *
+ * `ring` is the focus indicator, so it must clear 3:1 against the page
+ * (WCAG 1.4.11; the contrast gate enforces it). In light mode 500 fails for
+ * orange, green, teal and cyan; 600 is the first step that clears for every
+ * chromatic hue except yellow.
  */
 const STANDARD: Record<Mode, Record<Role, RoleTarget>> = {
   light: {
     solid: 600, contrast: "white", label: 700, subtle: 100,
-    muted: 200, stroke: 500, ring: 500,
+    muted: 200, stroke: 500, ring: 600,
   },
   dark: {
     solid: 600, contrast: "white", label: 300, subtle: 900,
@@ -104,7 +109,7 @@ const STANDARD: Record<Mode, Record<Role, RoleTarget>> = {
  */
 const OVERRIDES: Partial<Record<Hue, Partial<Record<Mode, Partial<Record<Role, RoleTarget>>>>>> = {
   gray: {
-    light: { solid: 900, label: 800, stroke: 200, ring: 400 },
+    light: { solid: 900, label: 800, stroke: 200, ring: 500 },
     dark: { solid: "white", contrast: "black", label: 200, stroke: 800, ring: 400 },
   },
   orange: {
@@ -126,11 +131,12 @@ const OVERRIDES: Partial<Record<Hue, Partial<Record<Mode, Partial<Record<Role, R
     dark: { contrast: "auto" },
   },
   yellow: {
-    light: { solid: 300, contrast: "black", label: 800 },
+    light: { solid: 300, contrast: "black", label: 800, ring: 700 },
     dark: { solid: 300, contrast: "black", stroke: 500 },
   },
   brand: {
-    light: { solid: 500, contrast: "auto" },
+    // The default brand is yellow, whose 600 ring is 2.94:1 on white.
+    light: { solid: 500, contrast: "auto", ring: 700 },
     dark: { solid: 500, contrast: "auto" },
   },
   error: {
@@ -233,6 +239,14 @@ export const GLOBAL_SEMANTICS: Record<string, [string, string]> = {
   "stroke-muted": ["gray-400", "gray-700"],
   "stroke-subtle": ["gray-200", "gray-900"],
   "stroke-inverted": ["black", "white"],
+
+  /*
+   * The boundary of a form control (input, select, checkbox). Unlike the
+   * decorative ladder above it is the only cue that the control exists, so it
+   * must clear 3:1 on the page (WCAG 1.4.11): gray-500 is the lightest step
+   * that does in light mode and the only one in dark.
+   */
+  "stroke-control": ["gray-500", "gray-500"],
 };
 
 /* ==========================================================================

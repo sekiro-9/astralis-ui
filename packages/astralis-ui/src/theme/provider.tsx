@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { generateThemeTokens } from "./css-vars";
 import { ThemeProviderContext } from "./theme-context";
 import type { Theme, ThemeTokens } from "./theme-context";
+import { THEME_STORAGE_KEY, isTheme, readStoredTheme, writeStoredTheme } from "./theme-storage";
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -14,84 +15,62 @@ interface ThemeProviderProps {
   tokens?: ThemeTokens;
 }
 
-/**
- * Pure helper function to resolve "system" theme down to light or dark safely.
- * Safeguarded against Server-Side Rendering execution environments.
- */
-function resolveTheme(theme: Theme): "light" | "dark" {
-  if (theme === "system") {
-    if (typeof window === "undefined") return "light"; // Server-side fallback default
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-  return theme;
-}
+const DARK_QUERY = "(prefers-color-scheme: dark)";
 
 export function AstralisProvider({
   children,
   defaultTheme = "system",
-  storageKey = "astralis-ui-theme",
+  storageKey = THEME_STORAGE_KEY,
   className = "",
   tokens,
 }: ThemeProviderProps) {
-  // 1. Initialize state with static server-safe values to eliminate hydration mismatch errors
   const containerRef = useRef<HTMLDivElement>(null);
+  // Server and first client render agree: the default theme, system = light.
+  // The stored preference and the media query are read after hydration.
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [systemDark, setSystemDark] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
-  // 2. Client-only hook to read client state (localStorage / system preference) safely post-hydration
+  const resolvedTheme: "light" | "dark" =
+    theme === "system" ? (systemDark ? "dark" : "light") : theme;
+
   useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as Theme | null;
-    const activeTheme = stored || defaultTheme;
-    
-    setThemeState(activeTheme);
-    setResolvedTheme(resolveTheme(activeTheme));
+    setThemeState(readStoredTheme(storageKey) ?? defaultTheme);
+    const media = window.matchMedia(DARK_QUERY);
+    setSystemDark(media.matches);
+    setHydrated(true);
+    const onChange = () => setSystemDark(media.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
   }, [defaultTheme, storageKey]);
 
-  // 3. Listen and respond to active runtime theme state changes
+  // Only an explicit choice is persisted, so a changed defaultTheme still
+  // reaches visitors who never picked one.
+  const setTheme = useCallback(
+    (next: Theme) => {
+      if (!isTheme(next)) return;
+      setThemeState(next);
+      writeStoredTheme(storageKey, next);
+    },
+    [storageKey],
+  );
+
+  // The provider owns the root dark class. Waiting for the stored preference
+  // keeps it from stripping the class a pre-paint ThemeScript already set.
+  // The document is the one the provider renders into, so a provider
+  // portalled into an iframe themes that frame, not the page around it.
   useEffect(() => {
-    const currentResolved = resolveTheme(theme);
-    setResolvedTheme(currentResolved);
-
-    if (theme !== "system") {
-      localStorage.setItem(storageKey, theme);
-    } else {
-      localStorage.removeItem(storageKey);
-    }
-  }, [theme, storageKey]);
-
-  // 4. Listen for native system preference alterations when theme setting is set to "system"
-  useEffect(() => {
-    if (theme !== "system") return;
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const updateTheme = () => setResolvedTheme(resolveTheme("system"));
-    
-    mediaQuery.addEventListener("change", updateTheme);
-    return () => mediaQuery.removeEventListener("change", updateTheme);
-  }, [theme]);
-
-  // 5. Sync astralis-dark to <html> — same pattern as Chakra UI, MUI, shadcn/ui.
-  //    The provider takes ownership of the document root dark class when mounted.
-  //    In Storybook, the provider is NOT used in the decorator so there is no conflict
-  //    with the withThemeByClassName addon.
-  //    The document is the one the provider renders into: a provider portalled
-  //    into an iframe themes that frame, not the page around it.
-  useEffect(() => {
+    if (!hydrated) return;
     const root = (containerRef.current?.ownerDocument ?? document).documentElement;
-    if (resolvedTheme === "dark") {
-      root.classList.add("astralis-dark");
-    } else {
-      root.classList.remove("astralis-dark");
-    }
-  }, [resolvedTheme]);
+    root.classList.toggle("astralis-dark", resolvedTheme === "dark");
+  }, [hydrated, resolvedTheme]);
 
-  // Compute the seed's overrides inline — primitives AND the semantic tokens
-  // that point at them, theme-aware (semantics are baked at :root, so
-  // overriding a primitive alone never recolors components).
+  // Semantic tokens are baked at :root, so the seed's overrides re-declare
+  // the roles that point at an overridden primitive, per mode.
   const tokenStyles = generateThemeTokens(tokens, resolvedTheme);
 
   return (
-    <ThemeProviderContext.Provider value={{ theme, setTheme: setThemeState, resolvedTheme, tokens }}>
+    <ThemeProviderContext.Provider value={{ theme, setTheme, resolvedTheme, tokens }}>
       <div
         ref={containerRef}
         className={`astralis ${className}`.trim()}
@@ -100,7 +79,7 @@ export function AstralisProvider({
           width: "100%",
           ...tokenStyles,
         }}
-        suppressHydrationWarning /* Prevents React from screaming about localstorage modifications */
+        suppressHydrationWarning
       >
         {children}
       </div>

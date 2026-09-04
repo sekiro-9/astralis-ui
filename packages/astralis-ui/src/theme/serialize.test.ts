@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { themeCss, parseThemeCss, parseThemeSeed, validateSeed, isEmptySeed } from "./serialize";
+import { themeCss, parseThemeCss, parseThemeSeed, validateSeed, sanitizeSeed, isEmptySeed } from "./serialize";
 import { generateThemeTokens } from "./theme-math";
 import { SCALE_GROUPS } from "./token-spec";
 import type { ThemeSeed } from "./token-spec";
@@ -241,5 +241,37 @@ describe("isEmptySeed", () => {
     expect(isEmptySeed({ spacingScale: 1 })).toBe(true);
     expect(isEmptySeed({ brandColor: "#8b5cf6" })).toBe(false);
     expect(isEmptySeed({ motionScale: 0 })).toBe(false);
+  });
+});
+
+describe("untrusted seeds", () => {
+  // The shared-link payload from the September 2026 audit (DOC-D4).
+  const INJECTION = "x*/ body{display:none} /*";
+
+  it("rejects a font stack that could leave its declaration or the seed comment", () => {
+    for (const font of [INJECTION, "Inter; color: red", "a{b}", "</style>", "a\\62", "a\nb"]) {
+      expect(validateSeed({ fontBody: font }).map((i) => i.field), font).toEqual(["fontBody"]);
+    }
+    expect(validateSeed({ fontBody: '"Inter Variable", system-ui, -apple-system, sans-serif' })).toEqual([]);
+  });
+
+  it("serialises the audit's injection payload without emitting a rule", () => {
+    const css = themeCss({ brandColor: "#2563eb", fontBody: INJECTION, fontMono: "red;}body{display:none" });
+    expect(css).not.toContain("display:none");
+    expect(css).not.toContain("--astralis-font-body");
+    expect(css).toContain("--astralis-color-brand-500: #2563eb;");
+    // Only the banner and the seed comment close a comment.
+    expect(css.match(/\*\//g)).toHaveLength(2);
+  });
+
+  it("drops a colour that is not hex instead of passing it through raw", () => {
+    const css = themeCss({ brandColor: "red;}body{display:none}:root{", grayColor: "#71717a" });
+    expect(css).not.toContain("display:none");
+    expect(css).toContain("--astralis-color-gray-500");
+  });
+
+  it("sanitizeSeed keeps valid fields and drops rejected and unknown ones", () => {
+    const seed = { brandColor: "#fff", fontBody: INJECTION, radiusScale: -1, spacingScale: 1.25, evil: "x" };
+    expect(sanitizeSeed(seed as never)).toEqual({ brandColor: "#fff", spacingScale: 1.25 });
   });
 });

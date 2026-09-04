@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { useTheme } from "astralis-ui";
-import { isEmptySeed, parseThemeSeed, type ThemeSeed } from "astralis-ui/serialize";
+import { isEmptySeed, type ThemeSeed } from "astralis-ui/serialize";
 import {
   DEFAULT_STATE,
   STORAGE_KEY,
@@ -12,6 +12,7 @@ import {
   isDefaultState,
   jsonExport,
   previewVars,
+  restoreSeed,
   type BuilderState,
 } from "@/lib/theme-builder";
 import { ControlRail } from "./components/control-rail";
@@ -41,7 +42,7 @@ const readStorage = () => {
  */
 function useStoredSeed(): ThemeSeed | null {
   const raw = useSyncExternalStore(subscribeToStorage, readStorage, () => null);
-  return useMemo(() => (raw ? parseThemeSeed(raw) : null), [raw]);
+  return useMemo(() => (raw ? restoreSeed(raw) : null), [raw]);
 }
 
 /**

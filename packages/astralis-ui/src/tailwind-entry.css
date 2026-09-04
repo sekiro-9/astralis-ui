@@ -291,6 +291,7 @@
   --color-stroke-muted: var(--astralis-color-stroke-muted);
   --color-stroke-subtle: var(--astralis-color-stroke-subtle);
   --color-stroke-inverted: var(--astralis-color-stroke-inverted);
+  --color-stroke-control: var(--astralis-color-stroke-control);
 
   /* ------------------------------------------------------------------------
      PER-PALETTE SEMANTIC ROLES (solid/contrast/label/subtle/muted/stroke/ring)

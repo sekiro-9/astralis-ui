@@ -252,23 +252,18 @@ export function generateBrandTokens(
   const shades = computeShades(brandColor);
   if (!shades) return { "--astralis-color-brand-500": brandColor };
 
-  // Mirrors the brand role formulas in semantic.css (light / .astralis-dark).
-  const roles =
-    mode === "dark"
-      ? { label: shades[300], subtle: shades[900], muted: shades[800], stroke: shades[400] }
-      : { label: shades[700], subtle: shades[100], muted: shades[200], stroke: shades[500] };
-
-  const role = {
-    solid: shades[500],
-    contrast: contrastOn(shades[500]),
-    ...roles,
-    ring: shades[500],
+  const targets = roleTargets("brand", mode);
+  const hexFor = (target: RoleTarget): string => {
+    if (target === "white" || target === "black") return FLAT[target];
+    if (target === "auto") return contrastOn(hexFor(targets.solid));
+    return shades[target];
   };
 
   const vars: Record<string, string> = { ...generateBrandShades(brandColor) };
-  for (const [name, hex] of Object.entries(role)) {
-    vars[`--astralis-color-brand-${name}`] = hex;
-    vars[`--astralis-color-accent-${name}`] = hex;
+  for (const role of ROLES) {
+    const hex = hexFor(targets[role]);
+    vars[`--astralis-color-brand-${role}`] = hex;
+    vars[`--astralis-color-accent-${role}`] = hex;
   }
   return vars;
 }

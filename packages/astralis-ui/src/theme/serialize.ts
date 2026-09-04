@@ -45,24 +45,57 @@ const SCALE_FIELDS = ["radiusScale", "spacingScale", "fontSizeScale", "motionSca
 export type SeedIssue = { field: string; message: string };
 
 /**
- * Rejects values that would produce nonsense CSS. Scales allow 0 (squared-off
- * corners, motion disabled) but not negatives, which would emit negative rem.
+ * Anything that lets a font stack leave its declaration or close the seed
+ * comment in a generated stylesheet. Real font stacks need none of these.
+ */
+const UNSAFE_FONT = /[;{}<>\\]|\/\*|\*\/|\p{Cc}/u;
+
+/**
+ * Rejects values that would produce nonsense or injected CSS. Scales allow 0
+ * (squared-off corners, motion disabled) but not negatives, which would emit
+ * negative rem.
  */
 export function validateSeed(seed: ThemeSeed): SeedIssue[] {
   const issues: SeedIssue[] = [];
   for (const field of COLOR_FIELDS) {
     const value = seed[field];
-    if (value !== undefined && !HEX.test(value)) {
+    if (value !== undefined && (typeof value !== "string" || !HEX.test(value))) {
       issues.push({ field, message: `"${value}" is not a hex colour — expected #rgb or #rrggbb.` });
+    }
+  }
+  for (const field of FONT_FIELDS) {
+    const value = seed[field];
+    if (value !== undefined && (typeof value !== "string" || UNSAFE_FONT.test(value))) {
+      issues.push({
+        field,
+        message: "a font stack may not contain ; { } < > \\, comment markers or control characters.",
+      });
     }
   }
   for (const field of SCALE_FIELDS) {
     const value = seed[field];
     if (value === undefined) continue;
-    if (!Number.isFinite(value)) issues.push({ field, message: `must be a finite number.` });
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      issues.push({ field, message: `must be a finite number.` });
+    }
     else if (value < 0) issues.push({ field, message: `must not be negative (got ${value}).` });
   }
   return issues;
+}
+
+/**
+ * The seed minus every field `validateSeed` rejects and every unknown key. A
+ * seed from a shared link or storage is untrusted input; this is what makes it
+ * safe to serialise.
+ */
+export function sanitizeSeed(seed: ThemeSeed): ThemeSeed {
+  const rejected = new Set(validateSeed(seed).map((issue) => issue.field));
+  const clean: ThemeSeed = {};
+  for (const field of [...COLOR_FIELDS, ...FONT_FIELDS, ...SCALE_FIELDS]) {
+    const value = seed[field];
+    if (value !== undefined && !rejected.has(field)) Object.assign(clean, { [field]: value });
+  }
+  return clean;
 }
 
 /** True when the seed would produce no overrides at all. */
@@ -88,7 +121,8 @@ export interface ThemeCssOptions {
 
 /**
  * A seed as a stylesheet: a `:root` block plus a `.astralis-dark` block for
- * whatever differs in dark mode.
+ * whatever differs in dark mode. Invalid fields are dropped (see sanitizeSeed),
+ * so an untrusted seed cannot inject CSS.
  *
  * Import order matters — these are plain `:root` declarations competing with
  * the library's own, and both are unlayered, so ordinary source order decides.
@@ -97,8 +131,9 @@ export interface ThemeCssOptions {
  * Returns "" for a seed with nothing to say, so callers can skip writing a
  * file that would do nothing.
  */
-export function themeCss(seed: ThemeSeed | undefined, options: ThemeCssOptions = {}): string {
-  if (!seed) return "";
+export function themeCss(input: ThemeSeed | undefined, options: ThemeCssOptions = {}): string {
+  if (!input) return "";
+  const seed = sanitizeSeed(input);
 
   const light = generateThemeTokens(seed, "light", { forCss: true });
   const dark = generateThemeTokens(seed, "dark", { forCss: true });
@@ -121,7 +156,8 @@ export function themeCss(seed: ThemeSeed | undefined, options: ThemeCssOptions =
 
   return [
     banner,
-    `/* astralis-seed: ${JSON.stringify(seed)} */`,
+    // `*\/` is JSON's own escape for "*/", so the comment still parses back.
+    `/* astralis-seed: ${JSON.stringify(seed).replace(/\*\//g, "*\\/")} */`,
     ...block(":root", light),
     ...block(".astralis-dark", darkOnly),
     "",

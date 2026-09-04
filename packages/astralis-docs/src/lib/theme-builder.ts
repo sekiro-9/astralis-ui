@@ -1,5 +1,11 @@
 import { generateThemeTokens } from "astralis-ui/theme-math";
-import { themeCss, isEmptySeed, parseThemeSeed, type ThemeSeed } from "astralis-ui/serialize";
+import {
+  themeCss,
+  isEmptySeed,
+  parseThemeSeed,
+  validateSeed,
+  type ThemeSeed,
+} from "astralis-ui/serialize";
 
 /**
  * The theme builder's pure logic.
@@ -273,10 +279,39 @@ export function encodeSeed(seed: ThemeSeed): string {
   return btoa(encodeURIComponent(JSON.stringify(seed)));
 }
 
-/** Inverse of encodeSeed. Returns {} for anything malformed. */
+const FONT_FIELDS: ReadonlySet<keyof ThemeSeed> = new Set(["fontHeading", "fontBody", "fontMono"]);
+
+/**
+ * Anything that lets a font stack leave its declaration, or close the
+ * `astralis-seed` comment, in the stylesheet the user copies. Real stacks need
+ * none of these.
+ */
+const UNSAFE_FONT = /[;{}<>\\]|\/\*|\*\//;
+
+/**
+ * A seed that arrived from outside the builder — a shared link or another
+ * tab's storage — minus every field the library rejects and every font stack
+ * that could inject CSS. The seed is untrusted: a link is anyone's input.
+ */
+export function sanitizeSeed(seed: ThemeSeed): ThemeSeed {
+  const rejected = new Set(validateSeed(seed).map((issue) => issue.field));
+  const clean: ThemeSeed = {};
+  for (const field of Object.keys(seed) as (keyof ThemeSeed)[]) {
+    const value = seed[field];
+    if (value === undefined || rejected.has(field)) continue;
+    if (FONT_FIELDS.has(field) && (typeof value !== "string" || UNSAFE_FONT.test(value))) continue;
+    Object.assign(clean, { [field]: value });
+  }
+  return clean;
+}
+
+/** A seed restored from localStorage: the stored JSON, sanitised. */
+export const restoreSeed = (raw: string): ThemeSeed => sanitizeSeed(parseThemeSeed(raw));
+
+/** Inverse of encodeSeed, sanitised. Returns {} for anything malformed. */
 export function decodeSeed(encoded: string): ThemeSeed {
   try {
-    return parseThemeSeed(decodeURIComponent(atob(encoded)));
+    return restoreSeed(decodeURIComponent(atob(encoded)));
   } catch {
     return {};
   }

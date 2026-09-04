@@ -55,6 +55,8 @@ const MUST_BE_ZERO_CLIENT = [
   "Progress",
   "Skeleton",
   "Spinner",
+  // theme: the pre-paint script renders in a Server Component <head>
+  "ThemeScript",
   // de-contexted compounds (phase 2): size/state travels via data attributes
   "Card",
   "CardHeader",

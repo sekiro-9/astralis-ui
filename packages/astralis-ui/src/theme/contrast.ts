@@ -66,13 +66,16 @@ export interface ContrastContract {
 }
 
 const AA = 4.5;
+/** WCAG 1.4.11: focus indicators and control boundaries. */
+const NON_TEXT = 3;
 
 /**
- * The promised text pairings for one mode, derived from the token tables.
- * Neutral: every label rung on the surfaces content sits on. Hues: the
- * accent-subtle pattern (label on subtle — Alert, Badge, Tag) and solid fills
- * (contrast text on solid — Button). Strokes are decorative by design
- * (stroke-subtle is a deliberate ~1.27:1 divider) and are not text contracts.
+ * The promised pairings for one mode, derived from the token tables.
+ * Text: every label rung on the surfaces content sits on; per hue, label on
+ * subtle (Alert, Badge, Tag) and contrast on solid (Button). Non-text: each
+ * hue's focus ring and the form-control stroke on the surfaces they appear
+ * against. The other strokes are decorative (stroke-subtle is a deliberate
+ * ~1.27:1 divider) and carry no promise.
  */
 export function contrastContracts(mode: Mode): ContrastContract[] {
   const m = mode === "light" ? 0 : 1;
@@ -113,6 +116,23 @@ export function contrastContracts(mode: Mode): ContrastContract[] {
       bg: roleRef(hue, t.solid),
       min: AA,
       rule: `${hue}: contrast on solid`,
+    });
+  }
+
+  // Appended after the text contracts so their order, which callers report
+  // first-failure-first, is unchanged.
+  for (const hue of HUES) {
+    const ring = roleRef(hue, roleTargets(hue, mode).ring);
+    for (const surface of ["surface-base", "surface-raised"]) {
+      contracts.push({ fg: ring, bg: sem(surface), min: NON_TEXT, rule: `${hue}: ring on ${surface}` });
+    }
+  }
+  for (const surface of ["surface-base", "surface-subtle", "surface-raised"]) {
+    contracts.push({
+      fg: sem("stroke-control"),
+      bg: sem(surface),
+      min: NON_TEXT,
+      rule: `stroke-control on ${surface}`,
     });
   }
   return contracts;

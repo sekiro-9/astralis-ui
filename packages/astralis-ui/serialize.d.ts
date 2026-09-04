@@ -32,6 +32,8 @@ export interface ThemeCssOptions {
 
 export declare function validateSeed(seed: ThemeSeed): SeedIssue[];
 
+export declare function sanitizeSeed(seed: ThemeSeed): ThemeSeed;
+
 export declare function isEmptySeed(seed: ThemeSeed | undefined): boolean;
 
 export declare function themeCss(seed: ThemeSeed | undefined, options?: ThemeCssOptions): string;
