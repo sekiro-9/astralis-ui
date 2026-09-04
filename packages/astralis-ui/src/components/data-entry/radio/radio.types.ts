@@ -4,6 +4,8 @@ import type { ColorScheme } from "../../../const/color-schemes";
 
 export type RadioSize = "sm" | "md" | "lg";
 
+/** `className`, `style` and placement props style the visible label; every
+ *  other prop (id, name, aria-*, events) lands on the native input. */
 export interface RadioProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type" | "width" | "height"
@@ -26,7 +28,9 @@ export interface RadioGroupProps
   value?: string;
   /** Default value (uncontrolled) */
   defaultValue?: string;
-  /** Callback when selection changes */
+  /** Fires with the newly selected value. */
+  onValueChange?: (value: string) => void;
+  /** @deprecated Use `onValueChange`. Still fires, with the same value. */
   onChange?: (value: string) => void;
   /** Name attribute applied to all radio inputs in the group */
   name?: string;
@@ -39,6 +43,7 @@ export interface RadioGroupProps
   children: ReactNode;
 }
 
+/** @deprecated Internal context shape; it will stop being exported in the next minor. */
 export interface RadioGroupContextValue {
   groupValue: string;
   selectValue: (val: string) => void;

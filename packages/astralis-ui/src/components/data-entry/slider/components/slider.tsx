@@ -1,177 +1,18 @@
 "use client";
 
+import { useMemo } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, Ref } from "react";
 import { splitPlacement } from "../../../../utils/placement";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, Ref } from "react";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useFieldContext } from "../../field/field.context";
-import { sliderTrackH, sliderThumbSize, CENTER_XY } from "../slider.styles";
-import { astralisMerge } from "../../../../utils/astralis-merge";
-import { accentClass } from "../../../../const/color-schemes";
-import type { RangeSliderProps, SliderMark, SliderProps } from "../slider.types";
+import { buildMarks, clamp, snapToStep, valueForKey } from "../slider.utils";
+import { SliderFrame, SliderThumb } from "./slider-core";
+import { useSliderPointer } from "../use-slider-pointer";
+import type { RangeSliderProps, SliderProps } from "../slider.types";
 
-// ── Shared util ────────────────────────────────────────────────────────────────
-
-function toPercent(value: number, min: number, max: number) {
-  return ((value - min) / (max - min)) * 100;
+function joinIds(...ids: Array<string | undefined>): string | undefined {
+  return ids.filter(Boolean).join(" ") || undefined;
 }
-
-function calcValue(clientX: number, trackEl: HTMLElement, min: number, max: number, step: number): number {
-  const { left, width } = trackEl.getBoundingClientRect();
-  const pct = Math.max(0, Math.min(1, (clientX - left) / width));
-  const raw = min + pct * (max - min);
-  const stepped = Math.round(raw / step) * step;
-  const precision = String(step).includes(".") ? String(step).split(".")[1].length : 0;
-  return parseFloat(Math.max(min, Math.min(max, stepped)).toFixed(precision));
-}
-
-function buildMarks(marks: boolean | SliderMark[] | undefined, min: number, max: number, step: number): SliderMark[] {
-  if (!marks) return [];
-  if (marks === true) {
-    const count = Math.round((max - min) / step);
-    if (count > 20) return [{ value: min }, { value: max }];
-    return Array.from({ length: count + 1 }, (_, i) => ({ value: min + i * step }));
-  }
-  return marks;
-}
-
-// ── Tooltip ────────────────────────────────────────────────────────────────────
-
-function Tooltip({ value, visible }: { value: number; visible: boolean }) {
-  if (!visible) return null;
-  return (
-    <div
-      aria-hidden="true"
-      style={{ bottom: "100%", left: "50%", transform: "translateX(-50%)" }}
-      className="astralis:absolute astralis:mb-2 astralis:pointer-events-none"
-    >
-      <div className="astralis:relative astralis:rounded-sm astralis:bg-surface-inverted astralis:px-1.5 astralis:py-0.5 astralis:text-xs astralis:font-medium astralis:text-label-inverted astralis:whitespace-nowrap astralis:shadow-sm">
-        {value}
-        {/* Arrow */}
-        <div
-          aria-hidden="true"
-          style={{ top: "100%", left: "50%", transform: "translateX(-50%) rotate(45deg)", marginTop: "-3px" }}
-          className="astralis:absolute astralis:h-2 astralis:w-2 astralis:bg-surface-inverted"
-        />
-      </div>
-    </div>
-  );
-}
-
-// ── Thumb ──────────────────────────────────────────────────────────────────────
-
-function Thumb({
-  percent,
-  value,
-  size,
-  isInvalid,
-  isDisabled,
-  isReadOnly,
-  showTooltip,
-  onMouseDown,
-  onKeyDown,
-  ariaMin,
-  ariaMax,
-  label,
-}: {
-  percent: number;
-  value: number;
-  size: SliderProps["size"] & string;
-  isInvalid?: boolean;
-  isDisabled?: boolean;
-  isReadOnly?: boolean;
-  showTooltip: boolean;
-  onMouseDown: (e: ReactMouseEvent) => void;
-  onKeyDown: (e: ReactKeyboardEvent) => void;
-  ariaMin: number;
-  ariaMax: number;
-  label?: string;
-}) {
-  const [isHovering, setIsHovering] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const handleMouseDown = (e: ReactMouseEvent) => {
-    if (isDisabled || isReadOnly) return;
-    setIsDragging(true);
-    onMouseDown(e);
-    const handleUp = () => setIsDragging(false);
-    document.addEventListener("mouseup", handleUp, { once: true });
-  };
-
-  const showTip = showTooltip && (isHovering || isDragging);
-
-  return (
-    <div
-      role="slider"
-      tabIndex={isDisabled ? -1 : 0}
-      aria-valuemin={ariaMin}
-      aria-valuemax={ariaMax}
-      aria-valuenow={value}
-      aria-label={label}
-      aria-disabled={isDisabled}
-      aria-readonly={isReadOnly}
-      style={{ left: `${percent}%`, ...CENTER_XY }}
-      className={astralisMerge(
-        "astralis:absolute astralis:rounded-full astralis:border-moderate astralis:bg-surface-base astralis:shadow-md astralis:transition-shadow",
-        "astralis:outline-none astralis:focus-visible:ring-2 astralis:focus-visible:ring-offset-1 astralis:focus-visible:ring-offset-surface-base",
-        sliderThumbSize[size],
-        isInvalid
-          ? "astralis:border-error-solid astralis:focus-visible:ring-error-muted"
-          : "astralis:border-accent-solid astralis:focus-visible:ring-accent-ring",
-        isDisabled
-          ? "astralis:cursor-not-allowed astralis:border-stroke-base"
-          : isReadOnly
-            ? "astralis:cursor-default"
-            : "astralis:cursor-grab astralis:active:cursor-grabbing astralis:hover:shadow-lg",
-      )}
-      onMouseDown={handleMouseDown}
-      onKeyDown={onKeyDown}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-    >
-      <Tooltip value={value} visible={showTip} />
-    </div>
-  );
-}
-
-// ── Marks ──────────────────────────────────────────────────────────────────────
-
-function Marks({ marksArr, min, max, isActive }: { marksArr: SliderMark[]; min: number; max: number; isActive: (v: number) => boolean }) {
-  return (
-    <>
-      {marksArr.map((mark) => {
-        const mPct = toPercent(mark.value, min, max);
-        return (
-          <div key={mark.value} aria-hidden="true" style={{ left: `${mPct}%`, ...CENTER_XY }} className="astralis:absolute">
-            <div
-              className={astralisMerge(
-                "astralis:h-1.5 astralis:w-1.5 astralis:rounded-full astralis:border-normal",
-                isActive(mark.value)
-                  ? "astralis:bg-accent-solid astralis:border-accent-solid"
-                  : "astralis:bg-surface-base astralis:border-stroke-base",
-              )}
-            />
-            {mark.label && (
-              <span
-                style={{ left: "50%", transform: "translateX(-50%)" }}
-                className="astralis:absolute astralis:top-3 astralis:text-xs astralis:text-label-muted astralis:whitespace-nowrap"
-              >
-                {mark.label}
-              </span>
-            )}
-          </div>
-        );
-      })}
-    </>
-  );
-}
-
-// ── Slider (single thumb) ──────────────────────────────────────────────────────
 
 export function SliderBase({
   min = 0,
@@ -179,6 +20,7 @@ export function SliderBase({
   step = 1,
   value: valueProp,
   defaultValue = 0,
+  onValueChange,
   onChange,
   size = "md",
   colorScheme = "brand",
@@ -187,160 +29,102 @@ export function SliderBase({
   disabled: disabledProp,
   invalid: invalidProp,
   readOnly: readOnlyProp,
+  name,
+  getAriaValueText,
   className = "",
   id: idProp,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+  "aria-describedby": ariaDescribedBy,
   ref,
   ...rest
 }: SliderProps & { ref?: Ref<HTMLDivElement> }) {
   const { placementClass, rest: domRest } = splitPlacement(rest);
-    const field = useFieldContext();
-    const isDisabled = disabledProp ?? field?.disabled;
-    const isInvalid = invalidProp ?? field?.invalid;
-    const isReadOnly = readOnlyProp ?? field?.readOnly;
-    const id = idProp ?? field?.id;
+  const field = useFieldContext();
+  const isDisabled = !!(disabledProp ?? field?.disabled);
+  const isInvalid = !!(invalidProp ?? field?.invalid);
+  const isReadOnly = !!(readOnlyProp ?? field?.readOnly);
+  const interactive = !isDisabled && !isReadOnly;
 
-    const isControlled = valueProp !== undefined;
-    const [internalValue, setInternalValue] = useState(defaultValue);
-    const value = isControlled ? valueProp! : internalValue;
-
-    const trackRef = useRef<HTMLDivElement>(null);
-    const isDraggingRef = useRef(false);
-
-    const paramsRef = useRef({ min, max, step, isControlled, isDisabled, isReadOnly });
-    useEffect(() => {
-      paramsRef.current = { min, max, step, isControlled, isDisabled, isReadOnly };
-    });
-    const onChangeRef = useRef(onChange);
-    useEffect(() => {
-      onChangeRef.current = onChange;
-    });
-    const setValueRef = useRef(setInternalValue);
-
-    const applyClientX = useCallback((clientX: number) => {
-      if (!trackRef.current || paramsRef.current.isDisabled || paramsRef.current.isReadOnly) return;
-      const { min, max, step, isControlled } = paramsRef.current;
-      const v = calcValue(clientX, trackRef.current, min, max, step);
-      if (!isControlled) setValueRef.current(v);
-      onChangeRef.current?.(v);
-    }, []);
-
-    useEffect(() => {
-      const handleMove = (e: MouseEvent | TouchEvent) => {
-        if (!isDraggingRef.current) return;
-        const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-        applyClientX(clientX);
-      };
-      const handleUp = () => {
-        isDraggingRef.current = false;
-      };
-      document.addEventListener("mousemove", handleMove);
-      document.addEventListener("mouseup", handleUp);
-      document.addEventListener("touchmove", handleMove, { passive: true });
-      document.addEventListener("touchend", handleUp);
-      return () => {
-        document.removeEventListener("mousemove", handleMove);
-        document.removeEventListener("mouseup", handleUp);
-        document.removeEventListener("touchmove", handleMove);
-        document.removeEventListener("touchend", handleUp);
-      };
-    }, [applyClientX]);
-
-    const handleTrackMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
-      if (isDisabled || isReadOnly) return;
-      isDraggingRef.current = true;
-      applyClientX(e.clientX);
-    };
-
-    const handleThumbMouseDown = (e: ReactMouseEvent) => {
-      e.stopPropagation();
-      if (isDisabled || isReadOnly) return;
-      isDraggingRef.current = true;
-    };
-
-    const handleKeyDown = (e: ReactKeyboardEvent) => {
-      if (isDisabled || isReadOnly) return;
-      const { min, max, step } = paramsRef.current;
-      let next = value;
-      switch (e.key) {
-        case "ArrowLeft":
-        case "ArrowDown":
-          next = Math.max(min, value - step);
-          break;
-        case "ArrowRight":
-        case "ArrowUp":
-          next = Math.min(max, value + step);
-          break;
-        case "Home":
-          next = min;
-          break;
-        case "End":
-          next = max;
-          break;
-        default:
-          return;
-      }
-      e.preventDefault();
-      if (!isControlled) setInternalValue(next);
+  const [raw, setValue] = useControllableState({
+    value: valueProp,
+    defaultValue,
+    onChange: (next: number) => {
+      onValueChange?.(next);
       onChange?.(next);
-    };
+    },
+  });
+  const value = clamp(raw, min, max);
+  const commit = (next: number) => {
+    if (next !== value) setValue(next);
+  };
 
-    const pct = toPercent(value, min, max);
-    const marksArr = useMemo(() => buildMarks(marks, min, max, step), [marks, min, max, step]);
-    const hasLabels = marksArr.some((m) => m.label);
+  const { trackRef, thumbRefs, activeThumb, trackHandlers } = useSliderPointer({
+    min,
+    max,
+    step,
+    interactive,
+    pickThumb: () => 0,
+    onDrag: (_, next) => commit(next),
+  });
 
-    return (
-      <div
-        ref={ref}
-        id={id}
-        className={astralisMerge(
-          "astralis:relative astralis:w-full astralis:select-none",
-          accentClass(colorScheme),
-          hasLabels && "astralis:mb-6",
-          isDisabled && "astralis:opacity-moderate",
-          isReadOnly && "astralis:opacity-high",
-          placementClass,
-          className,
-        )}
-        {...domRest}
-      >
-        <div
-          ref={trackRef}
-          onMouseDown={handleTrackMouseDown}
-          className={astralisMerge(
-            "astralis:relative astralis:w-full astralis:rounded-full astralis:bg-surface-muted",
-            sliderTrackH[size],
-            isDisabled ? "astralis:cursor-not-allowed" : isReadOnly ? "astralis:cursor-default" : "astralis:cursor-pointer",
-          )}
-        >
-          <div
-            aria-hidden="true"
-            style={{ top: 0, bottom: 0, left: 0, width: `${pct}%` }}
-            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-error-solid" : "astralis:bg-accent-solid")}
-          />
+  const handleKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    const next = valueForKey(e.key, value, min, max, step);
+    if (next === null) return;
+    e.preventDefault();
+    commit(next);
+  };
 
-          <Thumb
-            percent={pct}
-            value={value}
-            size={size}
-            isInvalid={!!isInvalid}
-            isDisabled={!!isDisabled}
-            isReadOnly={!!isReadOnly}
-            showTooltip={showTooltip}
-            onMouseDown={handleThumbMouseDown}
-            onKeyDown={handleKeyDown}
-            ariaMin={min}
-            ariaMax={max}
-          />
+  const marksArr = useMemo(() => buildMarks(marks, min, max, step), [marks, min, max, step]);
 
-          <Marks marksArr={marksArr} min={min} max={max} isActive={(v) => v <= value} />
-        </div>
-      </div>
-    );
+  return (
+    <SliderFrame
+      rootRef={ref}
+      trackRef={trackRef}
+      trackHandlers={trackHandlers}
+      min={min}
+      max={max}
+      size={size}
+      colorScheme={colorScheme}
+      invalid={isInvalid}
+      disabled={isDisabled}
+      readOnly={isReadOnly}
+      fill={[min, value]}
+      marks={marksArr}
+      formValues={name ? { name, values: [value] } : undefined}
+      placementClass={placementClass}
+      className={className}
+      {...domRest}
+    >
+      <SliderThumb
+        index={0}
+        id={idProp ?? field?.id}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy ?? (ariaLabel ? undefined : field?.labelledBy)}
+        aria-describedby={joinIds(ariaDescribedBy, field?.describedBy)}
+        value={value}
+        valueText={getAriaValueText?.(value)}
+        min={min}
+        max={max}
+        ariaMin={min}
+        ariaMax={max}
+        size={size}
+        invalid={isInvalid}
+        disabled={isDisabled}
+        readOnly={isReadOnly}
+        showTooltip={showTooltip}
+        dragging={activeThumb === 0}
+        thumbRef={(node) => {
+          thumbRefs.current[0] = node;
+        }}
+        onKeyDown={handleKeyDown}
+      />
+    </SliderFrame>
+  );
 }
 
 SliderBase.displayName = "Slider";
-
-// ── RangeSlider (dual thumb) ───────────────────────────────────────────────────
 
 export function RangeSliderBase({
   min = 0,
@@ -348,6 +132,7 @@ export function RangeSliderBase({
   step = 1,
   value: valueProp,
   defaultValue = [20, 80],
+  onValueChange,
   onChange,
   size = "md",
   colorScheme = "brand",
@@ -356,183 +141,120 @@ export function RangeSliderBase({
   disabled: disabledProp,
   invalid: invalidProp,
   readOnly: readOnlyProp,
+  name,
+  getAriaValueText,
+  thumbLabels = ["Start value", "End value"],
   className = "",
+  id: idProp,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+  "aria-describedby": ariaDescribedBy,
   ref,
   ...rest
 }: RangeSliderProps & { ref?: Ref<HTMLDivElement> }) {
   const { placementClass, rest: domRest } = splitPlacement(rest);
-    const field = useFieldContext();
-    const isDisabled = disabledProp ?? field?.disabled;
-    const isInvalid = invalidProp ?? field?.invalid;
-    const isReadOnly = readOnlyProp ?? field?.readOnly;
+  const field = useFieldContext();
+  const isDisabled = !!(disabledProp ?? field?.disabled);
+  const isInvalid = !!(invalidProp ?? field?.invalid);
+  const isReadOnly = !!(readOnlyProp ?? field?.readOnly);
+  const interactive = !isDisabled && !isReadOnly;
 
-    const isControlled = valueProp !== undefined;
-    const [internalValue, setInternalValue] = useState<[number, number]>(defaultValue);
-    const value = isControlled ? valueProp! : internalValue;
+  const [raw, setValue] = useControllableState<[number, number]>({
+    value: valueProp,
+    defaultValue,
+    onChange: (next) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
+  const value: [number, number] = [clamp(raw[0], min, max), clamp(raw[1], min, max)];
 
-    const trackRef = useRef<HTMLDivElement>(null);
-    const draggingThumbRef = useRef<0 | 1 | -1>(-1);
+  // A thumb stops one step short of its sibling, so the two never cross.
+  const moveThumb = (thumb: number, target: number) => {
+    const next: [number, number] =
+      thumb === 0
+        ? [snapToStep(Math.min(target, value[1] - step), min, max, step), value[1]]
+        : [value[0], snapToStep(Math.max(target, value[0] + step), min, max, step)];
+    if (next[0] !== value[0] || next[1] !== value[1]) setValue(next);
+  };
 
-    const paramsRef = useRef({ min, max, step, isControlled, isDisabled, isReadOnly, value });
-    useEffect(() => {
-      paramsRef.current = { min, max, step, isControlled, isDisabled, isReadOnly, value };
-    });
-    const onChangeRef = useRef(onChange);
-    useEffect(() => {
-      onChangeRef.current = onChange;
-    });
+  const { trackRef, thumbRefs, activeThumb, trackHandlers } = useSliderPointer({
+    min,
+    max,
+    step,
+    interactive,
+    pickThumb: (target) => {
+      const toStart = Math.abs(target - value[0]);
+      const toEnd = Math.abs(target - value[1]);
+      if (toStart !== toEnd) return toStart < toEnd ? 0 : 1;
+      return target < value[0] ? 0 : 1;
+    },
+    onDrag: moveThumb,
+  });
 
-    const applyClientX = useCallback((clientX: number) => {
-      if (!trackRef.current || paramsRef.current.isDisabled || paramsRef.current.isReadOnly) return;
-      const thumbIdx = draggingThumbRef.current;
-      if (thumbIdx === -1) return;
+  const handleKeyDown = (thumb: 0 | 1) => (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    const next = valueForKey(e.key, value[thumb], min, max, step);
+    if (next === null) return;
+    e.preventDefault();
+    moveThumb(thumb, next);
+  };
 
-      const { min, max, step, isControlled, value } = paramsRef.current;
-      const newV = calcValue(clientX, trackRef.current, min, max, step);
+  const marksArr = useMemo(() => buildMarks(marks, min, max, step), [marks, min, max, step]);
+  const describedBy = joinIds(ariaDescribedBy, field?.describedBy);
 
-      let next: [number, number];
-      if (thumbIdx === 0) {
-        next = [Math.min(newV, value[1] - step), value[1]];
-      } else {
-        next = [value[0], Math.max(newV, value[0] + step)];
-      }
-      if (!isControlled) setInternalValue(next);
-      onChangeRef.current?.(next);
-    }, []);
+  const thumb = (index: 0 | 1) => (
+    <SliderThumb
+      key={index}
+      index={index}
+      aria-label={thumbLabels[index]}
+      aria-describedby={describedBy}
+      value={value[index]}
+      valueText={getAriaValueText?.(value[index])}
+      min={min}
+      max={max}
+      ariaMin={index === 0 ? min : value[0]}
+      ariaMax={index === 0 ? value[1] : max}
+      size={size}
+      invalid={isInvalid}
+      disabled={isDisabled}
+      readOnly={isReadOnly}
+      showTooltip={showTooltip}
+      dragging={activeThumb === index}
+      thumbRef={(node) => {
+        thumbRefs.current[index] = node;
+      }}
+      onKeyDown={handleKeyDown(index)}
+    />
+  );
 
-    useEffect(() => {
-      const handleMove = (e: MouseEvent | TouchEvent) => {
-        if (draggingThumbRef.current === -1) return;
-        const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-        applyClientX(clientX);
-      };
-      const handleUp = () => {
-        draggingThumbRef.current = -1;
-      };
-      document.addEventListener("mousemove", handleMove);
-      document.addEventListener("mouseup", handleUp);
-      document.addEventListener("touchmove", handleMove, { passive: true });
-      document.addEventListener("touchend", handleUp);
-      return () => {
-        document.removeEventListener("mousemove", handleMove);
-        document.removeEventListener("mouseup", handleUp);
-        document.removeEventListener("touchmove", handleMove);
-        document.removeEventListener("touchend", handleUp);
-      };
-    }, [applyClientX]);
-
-    const handleTrackMouseDown = (e: ReactMouseEvent<HTMLDivElement>) => {
-      if (isDisabled || isReadOnly || !trackRef.current) return;
-      const clickV = calcValue(e.clientX, trackRef.current, min, max, step);
-      const distA = Math.abs(clickV - value[0]);
-      const distB = Math.abs(clickV - value[1]);
-      draggingThumbRef.current = distA <= distB ? 0 : 1;
-      applyClientX(e.clientX);
-    };
-
-    const handleThumbMouseDown = (thumb: 0 | 1) => (e: ReactMouseEvent) => {
-      e.stopPropagation();
-      if (isDisabled || isReadOnly) return;
-      draggingThumbRef.current = thumb;
-    };
-
-    const handleKeyDown = (thumb: 0 | 1) => (e: ReactKeyboardEvent) => {
-      if (isDisabled || isReadOnly) return;
-      const current = value[thumb];
-      let next = current;
-      switch (e.key) {
-        case "ArrowLeft":
-        case "ArrowDown":
-          next = Math.max(min, current - step);
-          break;
-        case "ArrowRight":
-        case "ArrowUp":
-          next = Math.min(max, current + step);
-          break;
-        case "Home":
-          next = min;
-          break;
-        case "End":
-          next = max;
-          break;
-        default:
-          return;
-      }
-      e.preventDefault();
-      const newRange: [number, number] =
-        thumb === 0 ? [Math.min(next, value[1] - step), value[1]] : [value[0], Math.max(next, value[0] + step)];
-      if (!isControlled) setInternalValue(newRange);
-      onChange?.(newRange);
-    };
-
-    const pctA = toPercent(value[0], min, max);
-    const pctB = toPercent(value[1], min, max);
-    const marksArr = useMemo(() => buildMarks(marks, min, max, step), [marks, min, max, step]);
-    const hasLabels = marksArr.some((m) => m.label);
-
-    return (
-      <div
-        ref={ref}
-        className={astralisMerge(
-          "astralis:relative astralis:w-full astralis:select-none",
-          accentClass(colorScheme),
-          hasLabels && "astralis:mb-6",
-          isDisabled && "astralis:opacity-moderate",
-          isReadOnly && "astralis:opacity-high",
-          placementClass,
-          className,
-        )}
-        {...domRest}
-      >
-        <div
-          ref={trackRef}
-          onMouseDown={handleTrackMouseDown}
-          className={astralisMerge(
-            "astralis:relative astralis:w-full astralis:rounded-full astralis:bg-surface-muted",
-            sliderTrackH[size],
-            isDisabled ? "astralis:cursor-not-allowed" : isReadOnly ? "astralis:cursor-default" : "astralis:cursor-pointer",
-          )}
-        >
-          <div
-            aria-hidden="true"
-            style={{ top: 0, bottom: 0, left: `${pctA}%`, width: `${pctB - pctA}%` }}
-            className={astralisMerge("astralis:absolute astralis:rounded-full", isInvalid ? "astralis:bg-error-solid" : "astralis:bg-accent-solid")}
-          />
-
-          <Thumb
-            percent={pctA}
-            value={value[0]}
-            size={size}
-            isInvalid={!!isInvalid}
-            isDisabled={!!isDisabled}
-            isReadOnly={!!isReadOnly}
-            showTooltip={showTooltip}
-            onMouseDown={handleThumbMouseDown(0)}
-            onKeyDown={handleKeyDown(0)}
-            ariaMin={min}
-            ariaMax={value[1]}
-            label="Start value"
-          />
-
-          <Thumb
-            percent={pctB}
-            value={value[1]}
-            size={size}
-            isInvalid={!!isInvalid}
-            isDisabled={!!isDisabled}
-            isReadOnly={!!isReadOnly}
-            showTooltip={showTooltip}
-            onMouseDown={handleThumbMouseDown(1)}
-            onKeyDown={handleKeyDown(1)}
-            ariaMin={value[0]}
-            ariaMax={max}
-            label="End value"
-          />
-
-          <Marks marksArr={marksArr} min={min} max={max} isActive={(v) => v >= value[0] && v <= value[1]} />
-        </div>
-      </div>
-    );
+  return (
+    <SliderFrame
+      rootRef={ref}
+      role="group"
+      id={idProp ?? field?.id}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy ?? (ariaLabel ? undefined : field?.labelledBy)}
+      trackRef={trackRef}
+      trackHandlers={trackHandlers}
+      min={min}
+      max={max}
+      size={size}
+      colorScheme={colorScheme}
+      invalid={isInvalid}
+      disabled={isDisabled}
+      readOnly={isReadOnly}
+      fill={value}
+      marks={marksArr}
+      formValues={name ? { name, values: value } : undefined}
+      placementClass={placementClass}
+      className={className}
+      {...domRest}
+    >
+      {thumb(0)}
+      {thumb(1)}
+    </SliderFrame>
+  );
 }
 
 RangeSliderBase.displayName = "RangeSlider";

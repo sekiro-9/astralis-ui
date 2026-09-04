@@ -12,6 +12,14 @@ export interface FieldContextValue {
   required?: boolean;
   /** Whether the field is read-only */
   readOnly?: boolean;
+  /** Stable id Field.Label renders with (`{id}-label`) unless given its own */
+  labelId: string;
+  /**
+   * Id of the Field.Label currently rendered, for controls a `<label for>`
+   * cannot name (a `role="slider"` thumb, a radio group). Undefined when no
+   * label is mounted.
+   */
+  labelledBy?: string;
   /** Stable id Field.HelpText renders with (`{id}-help`) */
   helpTextId: string;
   /** Stable id Field.ErrorText renders with (`{id}-error`) */
@@ -23,7 +31,8 @@ export interface FieldContextValue {
    * mounted.
    */
   describedBy?: string;
-  /** Registration hooks called by HelpText/ErrorText on mount/unmount. */
+  /** Registration hooks called by Label/HelpText/ErrorText on mount/unmount. */
+  setLabelledBy: (id: string | undefined) => void;
   setHasHelpText: (present: boolean) => void;
   setHasErrorText: (present: boolean) => void;
 }
@@ -41,8 +50,8 @@ export interface FieldRootProps extends HTMLAttributes<HTMLDivElement>, Placemen
   id?: string;
 }
 
-export interface FieldLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
+export type FieldLabelProps = LabelHTMLAttributes<HTMLLabelElement>;
 
-export interface FieldHelpTextProps extends HTMLAttributes<HTMLParagraphElement> {}
+export type FieldHelpTextProps = HTMLAttributes<HTMLParagraphElement>;
 
-export interface FieldErrorTextProps extends HTMLAttributes<HTMLParagraphElement> {}
+export type FieldErrorTextProps = HTMLAttributes<HTMLParagraphElement>;

@@ -4,6 +4,8 @@ import type { ColorScheme } from "../../../const/color-schemes";
 
 export type SwitchSize = "sm" | "md" | "lg";
 
+/** `className`, `style` and placement props style the visible label; every
+ *  other prop (id, name, aria-*, events) lands on the native input. */
 export interface SwitchProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type" | "width" | "height"

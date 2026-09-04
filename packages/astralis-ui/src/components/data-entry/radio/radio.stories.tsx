@@ -30,7 +30,7 @@ export const Basic: Story = {
   render: () => {
     const [val, setVal] = useState("monthly");
     return (
-      <Radio.Group value={val} onChange={setVal}>
+      <Radio.Group value={val} onValueChange={setVal}>
         <Radio value="monthly">Monthly</Radio>
         <Radio value="annual">Annual</Radio>
       </Radio.Group>
@@ -84,7 +84,7 @@ export const GroupVertical: Story = {
     return (
       <Field>
         <Field.Label>Select a plan</Field.Label>
-        <Radio.Group value={plan} onChange={setPlan}>
+        <Radio.Group value={plan} onValueChange={setPlan}>
           <Radio value="free">Free — Up to 3 projects</Radio>
           <Radio value="pro">Pro — Unlimited projects</Radio>
           <Radio value="team">Team — Collaboration features</Radio>
@@ -103,7 +103,7 @@ export const GroupHorizontal: Story = {
     return (
       <Field>
         <Field.Label>T-shirt size</Field.Label>
-        <Radio.Group value={size} onChange={setSize} orientation="horizontal">
+        <Radio.Group value={size} onValueChange={setSize} orientation="horizontal">
           <Radio value="xs">XS</Radio>
           <Radio value="sm">SM</Radio>
           <Radio value="md">MD</Radio>
@@ -135,7 +135,7 @@ export const CardStyle: Story = {
       { value: "annual", label: "Annual", price: "$8/mo", desc: "Billed $96/yr — save 33%" },
     ];
     return (
-      <Radio.Group value={selected} onChange={setSelected}>
+      <Radio.Group value={selected} onValueChange={setSelected}>
         <VStack gap="3" alignItems="stretch" w="72">
           {plans.map((plan) => {
             const active = selected === plan.value;
@@ -186,7 +186,7 @@ export const InForm: Story = {
         <VStack gap="4" alignItems="stretch" w="64">
           <Field invalid={isInvalid}>
             <Field.Label>Your role</Field.Label>
-            <Radio.Group value={role} onChange={setRole}>
+            <Radio.Group value={role} onValueChange={setRole}>
               <Radio value="designer">Designer</Radio>
               <Radio value="engineer">Engineer</Radio>
               <Radio value="manager">Manager</Radio>

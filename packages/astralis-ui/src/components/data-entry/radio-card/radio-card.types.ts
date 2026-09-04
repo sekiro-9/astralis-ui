@@ -3,6 +3,8 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 import type { RadioSize } from "../radio/radio.types";
 
+/** `className`, `style` and placement props style the visible card; every
+ *  other prop (id, name, aria-*, events) lands on the native input. */
 export interface RadioCardProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type" | "children" | "width" | "height"

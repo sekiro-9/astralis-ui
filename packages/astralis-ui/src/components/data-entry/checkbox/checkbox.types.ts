@@ -4,6 +4,8 @@ import type { ColorScheme } from "../../../const/color-schemes";
 
 export type CheckboxSize = "sm" | "md" | "lg";
 
+/** `className`, `style` and placement props style the visible label; every
+ *  other prop (id, name, aria-*, events) lands on the native input. */
 export interface CheckboxProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size" | "type" | "width" | "height"
@@ -32,7 +34,9 @@ export interface CheckboxGroupProps
   value?: string[];
   /** Default selected values (uncontrolled) */
   defaultValue?: string[];
-  /** Callback fired when selection changes */
+  /** Fires with the selected values after every toggle. */
+  onValueChange?: (value: string[]) => void;
+  /** @deprecated Use `onValueChange`. Still fires, with the same value. */
   onChange?: (value: string[]) => void;
   /** Disables all checkboxes in the group */
   disabled?: boolean;
@@ -43,6 +47,7 @@ export interface CheckboxGroupProps
   children: ReactNode;
 }
 
+/** @deprecated Internal context shape; it will stop being exported in the next minor. */
 export interface CheckboxGroupContextValue {
   groupValue: string[];
   toggleValue: (val: string) => void;

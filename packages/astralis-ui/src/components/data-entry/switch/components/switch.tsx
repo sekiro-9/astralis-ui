@@ -1,8 +1,8 @@
 "use client";
 
-import { splitPlacement } from "../../../../utils/placement";
-import { useEffect, useState } from "react";
 import type { ChangeEvent, Ref } from "react";
+import { splitPlacement } from "../../../../utils/placement";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useFieldContext } from "../../field/field.context";
 import type { SwitchProps } from "../switch.types";
 import { switchSizes, switchTrack, switchTrackColor } from "../switch.styles";
@@ -24,87 +24,82 @@ export function SwitchBase({
   ref,
   ...props
 }: SwitchProps & { ref?: Ref<HTMLInputElement> }) {
-    const field = useFieldContext();
+  const field = useFieldContext();
 
-    const [localChecked, setLocalChecked] = useState(defaultChecked);
-    const isControlled = checkedProp !== undefined;
-    const isChecked = isControlled ? checkedProp! : localChecked;
+  const [isChecked, setChecked] = useControllableState({ value: checkedProp, defaultValue: defaultChecked });
 
-    const isDisabled = disabledProp ?? field?.disabled;
-    const isInvalid = invalidProp ?? field?.invalid;
-    const isReadOnly = readOnlyProp ?? field?.readOnly;
-    const id = idProp ?? field?.id;
+  const isDisabled = disabledProp ?? field?.disabled;
+  const isInvalid = invalidProp ?? field?.invalid;
+  const isReadOnly = readOnlyProp ?? field?.readOnly;
+  const id = idProp ?? field?.id;
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (isReadOnly) {
-        e.preventDefault();
-        return;
-      }
-      if (!isControlled) setLocalChecked(e.target.checked);
-      onChangeProp?.(e);
-    };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // No preventDefault: on a controlled checkbox it desyncs the painted state
+    // from React's (the browser un-toggles after React has already restored it).
+    if (isReadOnly) return;
+    setChecked(e.target.checked);
+    onChangeProp?.(e);
+  };
 
-    useEffect(() => {
-      if (isControlled) setLocalChecked(checkedProp!);
-    }, [isControlled, checkedProp]);
+  const sz = switchSizes[size];
 
-    const sz = switchSizes[size];
+  const { placementClass, rest } = splitPlacement(props);
+  const { style, ...inputProps } = rest;
 
-    const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
+  return (
+    <label
+      className={astralisMerge(
+        "astralis:inline-flex astralis:items-center astralis:gap-2.5",
+        accentClass(colorScheme),
+        isDisabled
+          ? "astralis:cursor-not-allowed astralis:opacity-moderate"
+          : isReadOnly
+            ? "astralis:cursor-default"
+            : "astralis:cursor-pointer",
+        placementClass, className,
+      )}
+      style={style}
+    >
+      <input
+        ref={ref}
+        type="checkbox"
+        role="switch"
+        id={id}
+        checked={isChecked}
+        disabled={isDisabled}
+        readOnly={isReadOnly}
+        required={field?.required}
+        aria-invalid={isInvalid || undefined}
+        aria-describedby={field?.describedBy}
+        aria-readonly={isReadOnly || undefined}
+        aria-checked={isChecked}
+        onChange={handleChange}
+        className="astralis:sr-only astralis:peer"
+        {...inputProps}
+      />
 
-    return (
-      <label
-        className={astralisMerge(
-          "astralis:inline-flex astralis:items-center astralis:gap-2.5",
-          accentClass(colorScheme),
-          isDisabled
-            ? "astralis:cursor-not-allowed astralis:opacity-moderate"
-            : isReadOnly
-              ? "astralis:cursor-default"
-              : "astralis:cursor-pointer",
-          placementClass, className,
-        )}
-        style={placementStyle}
-      >
-        <input
-          ref={ref}
-          type="checkbox"
-          role="switch"
-          id={id}
-          checked={isChecked}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          aria-invalid={isInvalid || undefined}
-          aria-describedby={field?.describedBy}
-          aria-readonly={isReadOnly || undefined}
-          aria-checked={isChecked}
-          onChange={handleChange}
-          className="astralis:sr-only astralis:peer"
-          {...domProps}
+      <span aria-hidden="true" className={astralisMerge(sz.track, switchTrack, switchTrackColor(isChecked, !!isInvalid))}>
+        <span
+          aria-hidden="true"
+          className={astralisMerge(
+            sz.thumb,
+            // Deliberately white in BOTH themes (Chakra/Material convention):
+            // a theme-following thumb would go dark on the dark off-track and
+            // vanish. `bg-white` resolves var(--astralis-color-white), so it
+            // stays themable at the primitive layer.
+            "astralis:rounded-full astralis:bg-white astralis:shadow-sm astralis:transition-transform",
+            isChecked ? sz.on : "astralis:translate-x-0",
+          )}
         />
+      </span>
 
-        <span aria-hidden="true" className={astralisMerge(sz.track, switchTrack, switchTrackColor(isChecked, !!isInvalid))}>
-          <span
-            aria-hidden="true"
-            className={astralisMerge(
-              sz.thumb,
-              // Deliberately white in BOTH themes (Chakra/Material convention):
-              // a theme-following thumb would go dark on the dark off-track and
-              // vanish. `bg-white` resolves var(--astralis-color-white), so it
-              // stays themable at the primitive layer.
-              "astralis:rounded-full astralis:bg-white astralis:shadow-sm astralis:transition-transform",
-              isChecked ? sz.on : "astralis:translate-x-0",
-            )}
-          />
+      {children && (
+        <span className={astralisMerge(sz.label, "astralis:text-label-base astralis:select-none")}>
+          {children}
         </span>
-
-        {children && (
-          <span className={astralisMerge(sz.label, "astralis:text-label-base astralis:select-none")}>
-            {children}
-          </span>
-        )}
-      </label>
-    );
+      )}
+    </label>
+  );
 }
 
 SwitchBase.displayName = "Switch";

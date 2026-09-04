@@ -3,20 +3,17 @@ import { FieldLabel } from "./components/field-label";
 import { FieldHelpText } from "./components/field-help-text";
 import { FieldErrorText } from "./components/field-error-text";
 
-// 1️⃣ Compound API
 export const Field = Object.assign(FieldRoot, {
   Label: FieldLabel,
   HelpText: FieldHelpText,
   ErrorText: FieldErrorText,
 });
 
-// 2️⃣ Flat exports for tree-shaking
 export { FieldLabel, FieldHelpText, FieldErrorText };
 
-// 3️⃣ Context hook for custom components
+// Public on purpose: custom controls read Field state through it.
 export { useFieldContext } from "./field.context";
 
-// 4️⃣ Type exports
 export type {
   FieldRootProps,
   FieldLabelProps,

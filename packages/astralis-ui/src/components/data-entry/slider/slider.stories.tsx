@@ -13,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          "Slider is a custom-built range control with full keyboard support (← → Home End), mouse/touch drag, optional value tooltip, tick marks with labels, `colorScheme`, and a RangeSlider variant for selecting a min–max interval.",
+          "Slider is a custom-built range control with full keyboard support (← → PageUp PageDown Home End), pointer drag for mouse, touch and pen, optional value tooltip, tick marks with labels, `colorScheme`, and a RangeSlider variant for selecting a min–max interval.",
       },
     },
   },
@@ -28,7 +28,7 @@ export const Basic: Story = {
     const [val, setVal] = useState(40);
     return (
       <VStack gap="4" alignItems="stretch">
-        <Slider value={val} onChange={setVal} />
+        <Slider value={val} onValueChange={setVal} />
         <Text size="sm" color="muted">
           Value: <Text as="span" weight="semibold" color="base">{val}</Text>
         </Text>
@@ -66,7 +66,7 @@ export const WithStep: Story = {
     const [val, setVal] = useState(25);
     return (
       <VStack gap="4" alignItems="stretch">
-        <Slider min={0} max={100} step={25} value={val} onChange={setVal} />
+        <Slider min={0} max={100} step={25} value={val} onValueChange={setVal} />
         <Text size="sm" color="muted">
           Value: <Text as="span" weight="semibold" color="base">{val}</Text> (step 25)
         </Text>
@@ -83,7 +83,7 @@ export const WithMarks: Story = {
       <VStack gap="10" alignItems="stretch">
         <Box>
           <Box mb="4"><Text size="xs" color="subtle">Auto marks (step=25)</Text></Box>
-          <Slider step={25} marks value={val} onChange={setVal} />
+          <Slider step={25} marks value={val} onValueChange={setVal} />
         </Box>
         <Box>
           <Box mb="4"><Text size="xs" color="subtle">Custom marks with labels</Text></Box>
@@ -96,7 +96,7 @@ export const WithMarks: Story = {
               { value: 100, label: "100°C" },
             ]}
             value={val}
-            onChange={setVal}
+            onValueChange={setVal}
           />
         </Box>
       </VStack>
@@ -121,7 +121,7 @@ export const Range: Story = {
     const [val, setVal] = useState<[number, number]>([20, 75]);
     return (
       <VStack gap="4" alignItems="stretch">
-        <RangeSlider value={val} onChange={setVal} />
+        <RangeSlider value={val} onValueChange={setVal} />
         <Text size="sm" color="muted">
           Range: <Text as="span" weight="semibold" color="base">{val[0]}</Text> — <Text as="span" weight="semibold" color="base">{val[1]}</Text>
         </Text>
@@ -141,7 +141,7 @@ export const RangeWithMarks: Story = {
           max={10000}
           step={500}
           value={val}
-          onChange={setVal}
+          onValueChange={setVal}
           colorScheme="teal"
           marks={[
             { value: 0, label: "$0" },
@@ -171,7 +171,7 @@ export const InField: Story = {
           max={100}
           step={5}
           value={volume}
-          onChange={setVolume}
+          onValueChange={setVolume}
           marks={[
             { value: 0, label: "0" },
             { value: 50, label: "50" },
@@ -195,8 +195,21 @@ export const NoTooltip: Story = {
           <Text size="sm" weight="semibold" color="base">{val}</Text>
           <Text size="sm" color="muted">100</Text>
         </HStack>
-        <Slider value={val} onChange={setVal} showTooltip={false} />
+        <Slider value={val} onValueChange={setVal} showTooltip={false} />
       </VStack>
     );
   },
+};
+
+/** Named by `Field.Label`, announced with `getAriaValueText`, and submitted with a form through `name`. */
+export const FormAndLabel: Story = {
+  render: () => (
+    <form>
+      <Field>
+        <Field.Label>Brightness</Field.Label>
+        <Slider name="brightness" defaultValue={60} getAriaValueText={(v) => `${v} percent`} />
+        <Field.HelpText>Applies to every screen.</Field.HelpText>
+      </Field>
+    </form>
+  ),
 };

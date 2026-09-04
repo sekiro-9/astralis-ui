@@ -23,10 +23,12 @@ export function FieldRoot({
   const generatedId = useId();
   const id = userProvidedId ?? generatedId;
 
-  // HelpText/ErrorText report their presence so inputs can point
-  // aria-describedby at only the ids that actually exist in the DOM.
+  // The parts report their presence so controls only point aria-labelledby
+  // and aria-describedby at ids that actually exist in the DOM.
+  const [labelledBy, setLabelledBy] = useState<string | undefined>(undefined);
   const [hasHelpText, setHasHelpText] = useState(false);
   const [hasErrorText, setHasErrorText] = useState(false);
+  const labelId = `${id}-label`;
   const helpTextId = `${id}-help`;
   const errorTextId = `${id}-error`;
 
@@ -37,13 +39,12 @@ export function FieldRoot({
         .join(" ") || undefined;
     return {
       id, invalid, disabled, required, readOnly,
-      helpTextId, errorTextId, describedBy,
-      setHasHelpText, setHasErrorText,
+      labelId, labelledBy, helpTextId, errorTextId, describedBy,
+      setLabelledBy, setHasHelpText, setHasErrorText,
     };
-  }, [id, invalid, disabled, required, readOnly, helpTextId, errorTextId, hasHelpText, hasErrorText]);
+  }, [id, invalid, disabled, required, readOnly, labelId, labelledBy, helpTextId, errorTextId, hasHelpText, hasErrorText]);
 
   const { placementClass, rest: domProps } = splitPlacement(props);
-
 
   return (
     <FieldContext.Provider value={ctx}>

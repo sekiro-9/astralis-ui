@@ -1,8 +1,8 @@
 "use client";
 
-import { splitPlacement } from "../../../../utils/placement";
-import { useEffect, useState } from "react";
 import type { ChangeEvent, Ref } from "react";
+import { splitPlacement } from "../../../../utils/placement";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useRadioGroupContext } from "../../radio/radio.context";
 import { useFieldContext } from "../../field/field.context";
 import type { RadioCardProps } from "../radio-card.types";
@@ -38,39 +38,32 @@ export function RadioCard({
   value,
   name: nameProp,
   className = "",
+  id: idProp,
   ref,
   ...props
 }: RadioCardProps & { ref?: Ref<HTMLInputElement> }) {
   const group = useRadioGroupContext();
   const field = useFieldContext();
 
-  const [localChecked, setLocalChecked] = useState(defaultChecked);
+  const [localChecked, setLocalChecked] = useControllableState({ value: checkedProp, defaultValue: defaultChecked });
   const isGroupMember = group != null && value != null;
-  const isControlled = checkedProp !== undefined;
-
-  const isChecked: boolean = isGroupMember
-    ? group.groupValue === String(value)
-    : isControlled
-      ? checkedProp!
-      : localChecked;
+  const isChecked = isGroupMember ? group.groupValue === String(value) : localChecked;
 
   const isDisabled = disabledProp ?? group?.disabled ?? field?.disabled;
   const isInvalid = invalidProp ?? field?.invalid;
+  const id = idProp ?? (group ? undefined : field?.id);
   const name = nameProp ?? group?.name;
   const hue = colorScheme ?? group?.colorScheme ?? "brand";
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (isGroupMember) group.selectValue(String(value));
-    else if (!isControlled) setLocalChecked(e.target.checked);
+    else setLocalChecked(e.target.checked);
     onChangeProp?.(e);
   };
 
-  useEffect(() => {
-    if (isControlled) setLocalChecked(checkedProp!);
-  }, [isControlled, checkedProp]);
-
   const sz = selectionCardSizes[size];
-  const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
+  const { placementClass, rest } = splitPlacement(props);
+  const { style, ...inputProps } = rest;
 
   return (
     <label
@@ -80,20 +73,22 @@ export function RadioCard({
         placementClass,
         className,
       )}
-      style={placementStyle}
+      style={style}
     >
       <input
         ref={ref}
         type="radio"
+        id={id}
         name={name}
         checked={isChecked}
         disabled={isDisabled}
         value={value}
         aria-invalid={isInvalid || undefined}
-        aria-describedby={field?.describedBy}
+        required={field?.required}
+        aria-describedby={group ? undefined : field?.describedBy}
         onChange={handleChange}
         className="astralis:sr-only astralis:peer"
-        {...domProps}
+        {...inputProps}
       />
       <span className={astralisMerge(sz.card, selectionCard, selectionCardColor(isChecked, !!isInvalid))}>
         {addon && <span className="astralis:shrink-0">{addon}</span>}

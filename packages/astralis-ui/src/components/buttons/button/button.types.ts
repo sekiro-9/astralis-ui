@@ -1,6 +1,7 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, ElementType, ComponentPropsWithoutRef } from "react";
 import type { VariantProps } from "class-variance-authority";
+import type { PolymorphicRef } from "../../../types";
 import { buttonVariants, type ButtonVariant, type ButtonColorScheme } from "./button.styles";
 
 export type ButtonLoaderPlacement = "start" | "end";
@@ -34,5 +35,6 @@ interface ButtonOwnProps
  * `Link`); the forwarded HTML props follow that element automatically. Defaults
  * to a native `<button>`.
  */
-export type ButtonProps<T extends ElementType = "button"> = { as?: T } & ButtonOwnProps &
+export type ButtonProps<T extends ElementType = "button"> = { as?: T; ref?: PolymorphicRef<T> } &
+  ButtonOwnProps &
   Omit<ComponentPropsWithoutRef<T>, keyof ButtonOwnProps | "as">;

@@ -1,4 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
+import type { ColorScheme } from "../../../const/color-schemes";
 import type {
   ComponentPropsWithoutRef,
   InputHTMLAttributes,
@@ -19,6 +20,8 @@ export interface InputProps extends Omit<
   variant?: InputVariant;
   /** Marks the input as invalid. Can also be inherited from Field context */
   invalid?: boolean;
+  /** Hue of the focus border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */
+  colorScheme?: ColorScheme;
   /** Extra class names */
   className?: string;
 }
@@ -32,7 +35,7 @@ export interface InputGroupProps extends Omit<ComponentPropsWithoutRef<"div">, "
   className?: string;
 }
 
-export interface InputPasswordProps extends Omit<InputProps, "type"> {}
+export type InputPasswordProps = Omit<InputProps, "type">;
 
 export interface InputSearchProps extends Omit<InputProps, "type"> {
   /** Callback fired when the search is submitted (Enter key or button click) */
@@ -54,6 +57,8 @@ export interface InputTextareaProps extends Omit<
   variant?: InputVariant;
   /** Marks the textarea as invalid */
   invalid?: boolean;
+  /** Hue of the focus border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */
+  colorScheme?: ColorScheme;
   /** Shows a character counter below the textarea */
   showCount?: boolean;
   /** Extra class names */

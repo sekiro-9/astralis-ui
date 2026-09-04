@@ -1,13 +1,16 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo } from "react";
 import RadioGroupContext from "../radio.context";
 import type { RadioGroupProps } from "../radio.types";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { useFieldContext } from "../../field/field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 export function RadioGroup({
   value,
   defaultValue = "",
+  onValueChange,
   onChange,
   name: nameProp,
   disabled,
@@ -17,21 +20,32 @@ export function RadioGroup({
   className,
   ...rest
 }: RadioGroupProps) {
+  const field = useFieldContext();
   const generatedName = useId();
   const name = nameProp ?? generatedName;
 
-  const [internalValue, setInternalValue] = useState<string>(defaultValue);
-  const groupValue = value ?? internalValue;
+  const [groupValue, selectValue] = useControllableState({
+    value,
+    defaultValue,
+    onChange: (next: string) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
 
-  const selectValue = (val: string) => {
-    setInternalValue(val);
-    onChange?.(val);
-  };
+  const ctx = useMemo(
+    () => ({ groupValue, selectValue, name, disabled, colorScheme }),
+    [groupValue, selectValue, name, disabled, colorScheme],
+  );
 
   return (
-    <RadioGroupContext.Provider value={{ groupValue, selectValue, name, disabled, colorScheme }}>
+    <RadioGroupContext.Provider value={ctx}>
       <div
         role="radiogroup"
+        aria-labelledby={field?.labelledBy}
+        aria-describedby={field?.describedBy}
+        aria-required={field?.required || undefined}
+        aria-invalid={field?.invalid || undefined}
         className={astralisMerge(
           "astralis:flex",
           orientation === "horizontal"

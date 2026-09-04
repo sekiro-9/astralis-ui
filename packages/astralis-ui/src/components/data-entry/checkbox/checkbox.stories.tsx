@@ -84,7 +84,7 @@ export const Group: Story = {
     return (
       <Field>
         <Field.Label>Favourite frameworks</Field.Label>
-        <Checkbox.Group value={selected} onChange={setSelected}>
+        <Checkbox.Group value={selected} onValueChange={setSelected}>
           <Checkbox value="react">React</Checkbox>
           <Checkbox value="vue">Vue</Checkbox>
           <Checkbox value="svelte">Svelte</Checkbox>
@@ -105,7 +105,7 @@ export const GroupHorizontal: Story = {
     return (
       <Field>
         <Field.Label>Notification channels</Field.Label>
-        <Checkbox.Group value={selected} onChange={setSelected} orientation="horizontal" colorScheme="green">
+        <Checkbox.Group value={selected} onValueChange={setSelected} orientation="horizontal" colorScheme="green">
           <Checkbox value="email">Email</Checkbox>
           <Checkbox value="sms">SMS</Checkbox>
           <Checkbox value="push">Push</Checkbox>
@@ -147,7 +147,7 @@ export const SelectAll: Story = {
         </Checkbox>
 
         <Box pl="6">
-          <Checkbox.Group value={selected} onChange={setSelected}>
+          <Checkbox.Group value={selected} onValueChange={setSelected}>
             {options.map((opt) => (
               <Checkbox key={opt} value={opt}>{opt}</Checkbox>
             ))}

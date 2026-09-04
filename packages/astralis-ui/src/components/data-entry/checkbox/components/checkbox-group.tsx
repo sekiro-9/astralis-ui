@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 import CheckboxGroupContext from "../checkbox.context";
 import type { CheckboxGroupProps } from "../checkbox.types";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { useFieldContext } from "../../field/field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 export function CheckboxGroup({
   value,
   defaultValue = [],
+  onValueChange,
   onChange,
   disabled,
   colorScheme,
@@ -16,21 +19,33 @@ export function CheckboxGroup({
   className,
   ...rest
 }: CheckboxGroupProps) {
-  const [internalValue, setInternalValue] = useState<string[]>(defaultValue);
-  const groupValue = value ?? internalValue;
+  const field = useFieldContext();
+  const [groupValue, setGroupValue] = useControllableState<string[]>({
+    value,
+    defaultValue,
+    onChange: (next) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
 
-  const toggleValue = (val: string) => {
-    const next = groupValue.includes(val)
-      ? groupValue.filter((v) => v !== val)
-      : [...groupValue, val];
-    setInternalValue(next);
-    onChange?.(next);
-  };
+  const ctx = useMemo(
+    () => ({
+      groupValue,
+      toggleValue: (val: string) =>
+        setGroupValue(groupValue.includes(val) ? groupValue.filter((v) => v !== val) : [...groupValue, val]),
+      disabled,
+      colorScheme,
+    }),
+    [groupValue, setGroupValue, disabled, colorScheme],
+  );
 
   return (
-    <CheckboxGroupContext.Provider value={{ groupValue, toggleValue, disabled, colorScheme }}>
+    <CheckboxGroupContext.Provider value={ctx}>
       <div
         role="group"
+        aria-labelledby={field?.labelledBy}
+        aria-describedby={field?.describedBy}
         className={astralisMerge(
           "astralis:flex",
           orientation === "horizontal"

@@ -43,3 +43,23 @@ describe("CheckboxCard", () => {
     expect(onChange).toHaveBeenCalledWith(["a", "b"]);
   });
 });
+
+describe("selection cards", () => {
+  it("put className and style on the card label, and name on the input", () => {
+    const { container } = render(
+      <>
+        <RadioCard className="r" style={{ marginTop: 8 }} name="plan" value="a">A</RadioCard>
+        <CheckboxCard className="c" style={{ marginTop: 8 }} name="extra" value="b">B</CheckboxCard>
+      </>,
+    );
+    const [radioLabel, checkboxLabel] = Array.from(container.querySelectorAll("label"));
+    expect(radioLabel).toHaveClass("r");
+    expect(radioLabel.style.marginTop).toBe("8px");
+    expect(checkboxLabel).toHaveClass("c");
+    expect(checkboxLabel.style.marginTop).toBe("8px");
+    for (const input of Array.from(container.querySelectorAll("input"))) {
+      expect(input.getAttribute("style")).toBeNull();
+      expect(input.getAttribute("name")).not.toBeNull();
+    }
+  });
+});
