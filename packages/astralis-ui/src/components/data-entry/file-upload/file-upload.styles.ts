@@ -6,7 +6,8 @@ export const fileUploadDropzone =
   "astralis:hover:border-stroke-muted astralis:hover:bg-surface-subtle " +
   "astralis:focus-visible:outline-none astralis:focus-visible:ring-2 astralis:focus-visible:ring-accent-ring " +
   // Drag state is a data attribute so consumer styling can key on it too.
-  "astralis:data-[dragging]:border-accent-solid astralis:data-[dragging]:bg-accent-subtle";
+  "astralis:data-[dragging]:border-accent-solid astralis:data-[dragging]:bg-accent-subtle " +
+  "astralis:data-[invalid]:border-error-solid";
 
 export const fileUploadDropzoneDisabled =
   "astralis:cursor-not-allowed astralis:opacity-moderate astralis:hover:border-stroke-base astralis:hover:bg-surface-base";

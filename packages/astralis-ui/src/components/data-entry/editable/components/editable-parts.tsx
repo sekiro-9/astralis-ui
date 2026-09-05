@@ -3,8 +3,9 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
 import { useEditableContext } from "../editable.context";
 import type { EditablePreviewProps, EditableInputProps } from "../editable.types";
-import { editablePreview, editablePreviewEmpty, editableInput } from "../editable.styles";
+import { editablePreview, editablePreviewEmpty, editableInput, editableInputInvalid } from "../editable.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { useFieldContext } from "../../field/field.context";
 
 /** The resting state: shows the value (or placeholder) and enters edit mode
  *  on click or Enter/Space — it is a real button in the accessibility tree. */
@@ -44,7 +45,8 @@ EditablePreview.displayName = "Editable.Preview";
 /** The editing state: auto-focused and text-selected on entry; Enter commits,
  *  Escape cancels, blur follows `submitOnBlur`. */
 export function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: EditableInputProps) {
-  const { draft, editing, submitOnBlur, commit, cancel, setDraft } = useEditableContext();
+  const { draft, editing, invalid, submitOnBlur, commit, cancel, setDraft } = useEditableContext();
+  const field = useFieldContext();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -65,6 +67,9 @@ export function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: Ed
   return (
     <input
       ref={inputRef}
+      id={field?.id}
+      aria-invalid={invalid || undefined}
+      aria-describedby={field?.describedBy}
       value={draft}
       onChange={(e) => setDraft(e.target.value)}
       onKeyDown={handleKeyDown}
@@ -73,7 +78,7 @@ export function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: Ed
         if (submitOnBlur) commit();
         else cancel();
       }}
-      className={astralisMerge(editableInput, className)}
+      className={astralisMerge(editableInput, invalid && editableInputInvalid, className)}
       {...rest}
     />
   );

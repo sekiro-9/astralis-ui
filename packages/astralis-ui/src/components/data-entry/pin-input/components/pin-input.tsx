@@ -1,37 +1,37 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import type { ChangeEvent, ClipboardEvent, FocusEvent, KeyboardEvent } from "react";
 import { splitPlacement } from "../../../../utils/placement";
-import { useEffect, useRef, useState } from "react";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useFieldContext } from "../../field/field.context";
 import { pinCell } from "../pin-input.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { accentClass } from "../../../../const/color-schemes";
 import type { PinInputProps, PinInputType } from "../pin-input.types";
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
 
 function splitToChars(value: string, length: number): string[] {
   return Array.from({ length }, (_, i) => value[i] ?? "");
 }
 
-function validate(char: string, type: PinInputType): boolean {
-  if (!char) return true; // empty always allowed (backspace)
-  if (type === "numeric") return /^\d$/.test(char);
-  if (type === "alpha") return /^[a-zA-Z]$/.test(char);
-  return true; // alphanumeric — accept any printable char
+function keepAllowed(raw: string, type: PinInputType): string {
+  if (type === "numeric") return raw.replace(/\D/g, "");
+  if (type === "alpha") return raw.replace(/[^a-zA-Z]/g, "");
+  return raw.replace(/\s/g, "");
 }
-
-// ── Component ──────────────────────────────────────────────────────────────────
 
 export function PinInputBase({
   length = 4,
   value,
   defaultValue = "",
+  onValueChange,
   onChange,
   onComplete,
   type = "numeric",
   mask = false,
   size = "md",
   variant = "outline",
+  colorScheme,
   disabled: disabledProp,
   invalid: invalidProp,
   readOnly: readOnlyProp,
@@ -39,6 +39,8 @@ export function PinInputBase({
   autoFocus = false,
   className = "",
   id: idProp,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
   ...rest
 }: PinInputProps) {
   const { placementClass, rest: domRest } = splitPlacement(rest);
@@ -48,139 +50,119 @@ export function PinInputBase({
   const isInvalid = invalidProp ?? field?.invalid;
   const isReadOnly = readOnlyProp ?? field?.readOnly;
   const id = idProp ?? field?.id;
+  const labelledBy = ariaLabelledBy ?? (ariaLabel ? undefined : field?.labelledBy);
 
-  // ── Controlled / uncontrolled value ──────────────────────────────────────────
-  const isControlled = value !== undefined;
-  const [internalChars, setInternalChars] = useState<string[]>(() =>
-    splitToChars(defaultValue, length),
-  );
+  // Uncontrolled state is kept per cell so a cleared middle cell stays a gap.
+  const [chars, setChars] = useControllableState<string[]>({
+    value: value === undefined ? undefined : splitToChars(value, length),
+    defaultValue: splitToChars(defaultValue, length),
+  });
 
-  const chars: string[] = isControlled
-    ? splitToChars(value ?? "", length)
-    : internalChars;
-
-  // ── Refs ─────────────────────────────────────────────────────────────────────
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const focusCell = (i: number) => inputRefs.current[Math.max(0, Math.min(i, length - 1))]?.focus();
 
-  // Auto-focus first box on mount
   useEffect(() => {
     if (autoFocus) inputRefs.current[0]?.focus();
   }, [autoFocus]);
 
-  // ── Core update ──────────────────────────────────────────────────────────────
-  const updateChars = (newChars: string[]) => {
-    if (!isControlled) setInternalChars(newChars);
-    const combined = newChars.join("");
+  const updateChars = (next: string[]) => {
+    setChars(next);
+    const combined = next.join("");
+    onValueChange?.(combined);
     onChange?.(combined);
-    if (newChars.every((c) => c !== "")) {
-      onComplete?.(combined);
-    }
+    if (next.every((c) => c !== "")) onComplete?.(combined);
   };
 
-  // ── Handlers ─────────────────────────────────────────────────────────────────
-  const handleChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
+  // A paste or a one-time-code autofill replaces the whole code.
+  const distribute = (raw: string) => {
+    const filtered = keepAllowed(raw, type).slice(0, length);
+    if (!filtered) return;
+    updateChars(splitToChars(filtered, length));
+    focusCell(filtered.length);
+  };
+
+  const handleChange = (i: number, e: ChangeEvent<HTMLInputElement>) => {
     if (isReadOnly) return;
     const incoming = e.target.value;
-    // Take the most-recently-typed character (last char handles type-over)
-    const char = incoming.slice(-1);
+    const previous = chars[i];
+    // Typing over a filled cell whose text is not selected yields "old+new".
+    const entry =
+      previous && incoming.length === 2 && incoming.includes(previous)
+        ? incoming.replace(previous, "")
+        : incoming;
 
-    if (!validate(char, type)) return;
-
-    const newChars = [...chars];
-    newChars[i] = char;
-    updateChars(newChars);
-
-    // Advance focus when a character is entered
-    if (char && i < length - 1) {
-      inputRefs.current[i + 1]?.focus();
+    if (entry.length > 1) {
+      distribute(entry);
+      return;
     }
+    if (entry && !keepAllowed(entry, type)) return;
+
+    const next = [...chars];
+    next[i] = entry;
+    updateChars(next);
+    if (entry && i < length - 1) focusCell(i + 1);
   };
 
-  const handleKeyDown = (
-    i: number,
-    e: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleKeyDown = (i: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (isReadOnly) {
-      if (e.key === "Backspace" || e.key === "Delete") {
-        e.preventDefault();
-      }
+      if (e.key === "Backspace" || e.key === "Delete") e.preventDefault();
       return;
     }
     switch (e.key) {
-      case "Backspace":
-        if (chars[i]) {
-          // Clear the current box
-          const newChars = [...chars];
-          newChars[i] = "";
-          updateChars(newChars);
-        } else if (i > 0) {
-          // Move to previous box and clear it
-          const newChars = [...chars];
-          newChars[i - 1] = "";
-          updateChars(newChars);
-          inputRefs.current[i - 1]?.focus();
-        }
+      case "Backspace": {
         e.preventDefault();
+        const target = chars[i] ? i : i - 1;
+        if (target < 0) break;
+        const next = [...chars];
+        next[target] = "";
+        updateChars(next);
+        focusCell(target);
         break;
-
+      }
       case "Delete":
         if (chars[i]) {
-          const newChars = [...chars];
-          newChars[i] = "";
-          updateChars(newChars);
           e.preventDefault();
+          const next = [...chars];
+          next[i] = "";
+          updateChars(next);
         }
         break;
-
       case "ArrowLeft":
         if (i > 0) {
-          inputRefs.current[i - 1]?.focus();
           e.preventDefault();
+          focusCell(i - 1);
         }
         break;
-
       case "ArrowRight":
         if (i < length - 1) {
-          inputRefs.current[i + 1]?.focus();
           e.preventDefault();
+          focusCell(i + 1);
         }
         break;
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+  const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (isReadOnly) return;
-    const raw = e.clipboardData.getData("text");
-    // Filter pasted text to match the allowed type
-    const filtered =
-      type === "numeric"
-        ? raw.replace(/\D/g, "")
-        : type === "alpha"
-          ? raw.replace(/[^a-zA-Z]/g, "")
-          : raw;
-
-    const newChars = splitToChars(filtered, length);
-    updateChars(newChars);
-
-    // Focus the last filled box (or last box if all filled)
-    const focusIdx = Math.min(filtered.length, length - 1);
-    inputRefs.current[focusIdx]?.focus();
+    if (!isReadOnly) distribute(e.clipboardData.getData("text"));
   };
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Select all text in the box so typing replaces the existing char
-    e.target.select();
-  };
+  // Typing then replaces the cell's character instead of appending to it.
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => e.target.select();
 
-  // ── Render ───────────────────────────────────────────────────────────────────
   const inputType = mask ? "password" : type === "numeric" ? "tel" : "text";
 
   return (
     <div
       role="group"
-      aria-label="PIN input"
-      className={astralisMerge("astralis:flex astralis:items-center astralis:gap-2", placementClass, className)}
+      aria-label={labelledBy ? undefined : (ariaLabel ?? "PIN input")}
+      aria-labelledby={labelledBy}
+      className={astralisMerge(
+        "astralis:flex astralis:items-center astralis:gap-2",
+        colorScheme && accentClass(colorScheme),
+        placementClass,
+        className,
+      )}
       {...domRest}
     >
       {Array.from({ length }, (_, i) => (
@@ -192,9 +174,9 @@ export function PinInputBase({
           id={i === 0 ? id : undefined}
           type={inputType}
           inputMode={type === "numeric" ? "numeric" : "text"}
-          // One-time-code autofill on first box only
+          // The OS offers a received code to the first cell only; it arrives
+          // as one multi-character change and is spread across the cells.
           autoComplete={i === 0 ? "one-time-code" : "off"}
-          maxLength={2} // allow 2 so onChange can detect type-over; we slice to last char
           value={chars[i]}
           placeholder={placeholder}
           disabled={!!isDisabled}

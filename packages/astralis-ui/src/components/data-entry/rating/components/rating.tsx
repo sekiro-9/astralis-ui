@@ -1,8 +1,10 @@
 "use client";
 
-import { splitPlacement } from "../../../../utils/placement";
 import { useId, useState } from "react";
 import type { Ref } from "react";
+import { splitPlacement } from "../../../../utils/placement";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { useFieldContext } from "../../field/field.context";
 import type { RatingProps } from "../rating.types";
 import { ratingSizes, ratingRoot, ratingStar, ratingStarColor } from "../rating.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -19,24 +21,36 @@ export function Rating({
   max = 5,
   value: valueProp,
   defaultValue = 0,
+  onValueChange,
   onChange,
   size = "md",
   colorScheme = "yellow",
-  readOnly,
-  disabled,
-  label = "Rating",
+  readOnly: readOnlyProp,
+  disabled: disabledProp,
+  invalid: invalidProp,
+  label,
   name: nameProp,
   className = "",
   ref,
   ...props
 }: RatingProps & { ref?: Ref<HTMLDivElement> }) {
+  const field = useFieldContext();
+  const readOnly = readOnlyProp ?? field?.readOnly;
+  const disabled = disabledProp ?? field?.disabled;
+  const invalid = invalidProp ?? field?.invalid;
+
   const generatedName = useId();
   const name = nameProp ?? generatedName;
 
-  const [localValue, setLocalValue] = useState(defaultValue);
+  const [value, setValue] = useControllableState({
+    value: valueProp,
+    defaultValue,
+    onChange: (next: number) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
   const [hoverValue, setHoverValue] = useState<number | null>(null);
-  const isControlled = valueProp !== undefined;
-  const value = isControlled ? valueProp! : localValue;
 
   const { placementClass, placementStyle, rest: domProps } = splitPlacement(props);
   const sz = ratingSizes[size];
@@ -75,17 +89,17 @@ export function Rating({
   }
 
   const displayValue = hoverValue ?? value;
-
-  const select = (star: number) => {
-    if (!isControlled) setLocalValue(star);
-    onChange?.(star);
-  };
+  const labelledBy = label ? undefined : field?.labelledBy;
 
   return (
     <div
       ref={ref}
       role="radiogroup"
-      aria-label={label}
+      aria-label={labelledBy ? undefined : (label ?? "Rating")}
+      aria-labelledby={labelledBy}
+      aria-describedby={field?.describedBy}
+      aria-invalid={invalid || undefined}
+      aria-required={field?.required || undefined}
       onMouseLeave={() => setHoverValue(null)}
       className={astralisMerge(
         ratingRoot,
@@ -111,12 +125,13 @@ export function Rating({
               value={star}
               checked={value === star}
               disabled={disabled}
-              onChange={() => select(star)}
+              required={field?.required}
+              onChange={() => setValue(star)}
               aria-label={`${star} ${star === 1 ? "star" : "stars"}`}
               className="astralis:sr-only astralis:peer"
             />
             <span className={ratingStar}>
-              <StarIcon fill={filled ? "currentColor" : "none"} className={astralisMerge(sz, ratingStarColor(filled))} />
+              <StarIcon fill={filled ? "currentColor" : "none"} className={astralisMerge(sz, ratingStarColor(filled, !!invalid))} />
             </span>
           </label>
         );

@@ -19,9 +19,11 @@ export const segmentedControlItem =
   "astralis:select-none astralis:transition-colors " +
   "astralis:peer-focus-visible:ring-2 astralis:peer-focus-visible:ring-accent-ring astralis:peer-focus-visible:ring-offset-2 astralis:peer-focus-visible:ring-offset-surface-base";
 
-/** Segment fill given its state — the selected segment reads as a raised card. */
-export function segmentedControlItemColor(selected: boolean): string {
-  return selected
-    ? "astralis:bg-surface-base astralis:text-label-base astralis:shadow-sm"
-    : "astralis:text-label-muted astralis:hover:text-label-base";
+/** Segment fill given its state — the selected segment reads as a raised card,
+ *  its label in the accent hue once a `colorScheme` is chosen. */
+export function segmentedControlItemColor(selected: boolean, accented = false): string {
+  if (!selected) return "astralis:text-label-muted astralis:hover:text-label-base";
+  return accented
+    ? "astralis:bg-surface-base astralis:text-accent-label astralis:shadow-sm"
+    : "astralis:bg-surface-base astralis:text-label-base astralis:shadow-sm";
 }

@@ -15,12 +15,14 @@ import {
   formatFileSize,
 } from "../file-upload.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { useFieldContext } from "../../field/field.context";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { UploadIcon, FileIcon, XIcon } from "../../../icon/internal-icons";
 
 /** The drop target — also a click/keyboard target that opens the picker. */
 export function FileUploadDropzone({ children, className = "", ...rest }: FileUploadDropzoneProps) {
-  const { openPicker, addFiles, dragging, setDragging, disabled } = useFileUploadContext();
+  const { openPicker, addFiles, dragging, setDragging, disabled, invalid } = useFileUploadContext();
+  const field = useFieldContext();
 
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
@@ -34,6 +36,8 @@ export function FileUploadDropzone({ children, className = "", ...rest }: FileUp
       role="button"
       tabIndex={disabled ? undefined : 0}
       aria-disabled={disabled || undefined}
+      aria-describedby={field?.describedBy}
+      data-invalid={invalid || undefined}
       data-dragging={dragging || undefined}
       onClick={openPicker}
       onKeyDown={(e: KeyboardEvent) => {

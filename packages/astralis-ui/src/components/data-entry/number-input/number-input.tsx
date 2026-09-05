@@ -1,11 +1,14 @@
 "use client";
 
-import { splitPlacement } from "../../../utils/placement";
 import { useEffect, useRef, useState, type KeyboardEvent, type Ref } from "react";
+import { splitPlacement } from "../../../utils/placement";
+import { useControllableState } from "../../../hooks/use-controllable-state";
 import type { NumberInputProps } from "./number-input.types";
 import { inputVariants } from "../input/input.styles";
 import { useFieldContext } from "../field/field.context";
+import { decimals } from "../slider/slider.utils";
 import { astralisMerge } from "../../../utils/astralis-merge";
+import { accentClass } from "../../../const/color-schemes";
 import { ChevronDownIcon, ChevronUpIcon } from "../../icon/internal-icons";
 
 const stepperClasses =
@@ -13,6 +16,11 @@ const stepperClasses =
   "astralis:text-label-subtle astralis:transition-colors astralis:hover:text-label-base astralis:hover:bg-surface-subtle " +
   "astralis:disabled:opacity-moderate astralis:disabled:pointer-events-none astralis:outline-none " +
   "astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-[-2px] astralis:focus-visible:outline-accent-ring";
+
+/** `base + delta` without binary drift: 0.1 + 0.2 is 0.3 here. */
+function addExact(base: number, delta: number): number {
+  return Number((base + delta).toFixed(Math.max(decimals(base), decimals(delta))));
+}
 
 /**
  * A numeric field with steppers and full spinbutton keyboard support.
@@ -22,6 +30,7 @@ const stepperClasses =
 export function NumberInput({
   value: valueProp,
   defaultValue = null,
+  onValueChange,
   onChange,
   min,
   max,
@@ -29,6 +38,7 @@ export function NumberInput({
   precision,
   size = "md",
   variant = "outline",
+  colorScheme,
   invalid: invalidProp,
   disabled: disabledProp,
   readOnly: readOnlyProp,
@@ -42,108 +52,116 @@ export function NumberInput({
 }: NumberInputProps & { ref?: Ref<HTMLInputElement> }) {
   const { placementClass, placementStyle, rest: domProps } = splitPlacement(rest);
 
-    const field = useFieldContext();
-    const isInvalid = invalidProp ?? field?.invalid;
-    const isDisabled = disabledProp ?? field?.disabled;
-    const isReadOnly = readOnlyProp ?? field?.readOnly;
-    const id = idProp ?? field?.id;
+  const field = useFieldContext();
+  const isInvalid = invalidProp ?? field?.invalid;
+  const isDisabled = disabledProp ?? field?.disabled;
+  const isReadOnly = readOnlyProp ?? field?.readOnly;
+  const id = idProp ?? field?.id;
 
-    const isControlled = valueProp !== undefined;
-    const [internal, setInternal] = useState<number | null>(defaultValue);
-    const committed = isControlled ? (valueProp ?? null) : internal;
+  const [committed, setCommitted] = useControllableState<number | null>({
+    value: valueProp,
+    defaultValue,
+    onChange: (next) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
 
-    // Rapid stepper clicks land in one React batch — reading `committed` from
-    // the closure would apply the same base twice. The ref always holds the
-    // latest committed value, so every nudge stacks.
-    const committedRef = useRef(committed);
-    committedRef.current = committed;
+  // Rapid stepper clicks land in one React batch — reading `committed` from
+  // the closure would apply the same base twice. The ref always holds the
+  // latest committed value, so every nudge stacks.
+  const committedRef = useRef(committed);
+  committedRef.current = committed;
 
-    // Text state lets users type freely ("-", "1.", "") before committing.
-    const [text, setText] = useState(committed == null ? "" : String(committed));
-    useEffect(() => {
-      setText(committed == null ? "" : String(committed));
-    }, [committed]);
+  // Text state lets users type freely ("-", "1.", "") before committing.
+  const [text, setText] = useState(committed == null ? "" : String(committed));
+  useEffect(() => {
+    setText(committed == null ? "" : String(committed));
+  }, [committed]);
 
-    const clamp = (n: number): number => {
-      let result = n;
-      if (min != null) result = Math.max(min, result);
-      if (max != null) result = Math.min(max, result);
-      if (precision != null) result = Number(result.toFixed(precision));
-      return result;
-    };
+  const clamp = (n: number): number => {
+    let result = n;
+    if (min != null) result = Math.max(min, result);
+    if (max != null) result = Math.min(max, result);
+    if (precision != null) result = Number(result.toFixed(precision));
+    return result;
+  };
 
-    const commit = (next: number | null) => {
-      const finalValue = next == null || Number.isNaN(next) ? null : clamp(next);
-      if (!isControlled) setInternal(finalValue);
-      committedRef.current = finalValue;
-      setText(finalValue == null ? "" : String(finalValue));
-      onChange?.(finalValue);
-    };
+  const commit = (next: number | null) => {
+    const finalValue = next == null || Number.isNaN(next) ? null : clamp(next);
+    setText(finalValue == null ? "" : String(finalValue));
+    if (finalValue === committedRef.current) return;
+    committedRef.current = finalValue;
+    setCommitted(finalValue);
+  };
 
-    const nudge = (direction: 1 | -1) => {
-      if (isDisabled || isReadOnly) return;
-      const current = committedRef.current;
-      const base = current ?? (direction === 1 ? (min ?? 0) - step : (max ?? 0) + step);
-      commit(base + direction * step);
-    };
+  const nudge = (direction: 1 | -1) => {
+    if (isDisabled || isReadOnly) return;
+    const current = committedRef.current;
+    const base = current ?? (direction === 1 ? (min ?? 0) - step : (max ?? 0) + step);
+    commit(addExact(base, direction * step));
+  };
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-      onKeyDown?.(e);
-      if (e.key === "ArrowUp") { e.preventDefault(); nudge(1); }
-      else if (e.key === "ArrowDown") { e.preventDefault(); nudge(-1); }
-      else if (e.key === "Home" && min != null) { e.preventDefault(); commit(min); }
-      else if (e.key === "End" && max != null) { e.preventDefault(); commit(max); }
-      else if (e.key === "Enter") { commit(text.trim() === "" ? null : Number(text)); }
-    };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown?.(e);
+    if (e.key === "ArrowUp") { e.preventDefault(); nudge(1); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); nudge(-1); }
+    else if (e.key === "Home" && min != null) { e.preventDefault(); commit(min); }
+    else if (e.key === "End" && max != null) { e.preventDefault(); commit(max); }
+    else if (e.key === "Enter") { commit(text.trim() === "" ? null : Number(text)); }
+  };
 
-    // Placement sits on the wrapper, not the input: the wrapper is what a
-    // parent lays out, and the steppers are positioned against it.
-    return (
-      <div className={astralisMerge("astralis:relative astralis:w-full", placementClass)} style={placementStyle}>
-        <input
-          ref={ref}
-          id={id}
-          type="text"
-          inputMode="decimal"
-          autoComplete="off"
-          role="spinbutton"
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={committed ?? undefined}
-          aria-invalid={isInvalid || undefined}
-          aria-describedby={field?.describedBy}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          required={field?.required}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={(e) => {
-            onBlur?.(e);
-            commit(text.trim() === "" ? null : Number(text));
-          }}
-          className={astralisMerge(
-            inputVariants({ size, variant, invalid: !!isInvalid }),
-            !hideSteppers && "astralis:pr-8",
-            className,
-          )}
-          {...domProps}
-        />
-        {!hideSteppers && (
-          <div
-            aria-hidden="true"
-            className="astralis:absolute astralis:inset-y-1 astralis:right-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:rounded-md astralis:border-normal astralis:border-stroke-base"
-          >
-            <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(1)} className={stepperClasses}>
-              <ChevronUpIcon className="astralis:h-3 astralis:w-3" />
-            </button>
-            <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(-1)} className={astralisMerge(stepperClasses, "astralis:border-t astralis:border-stroke-subtle")}>
-              <ChevronDownIcon className="astralis:h-3 astralis:w-3" />
-            </button>
-          </div>
+  // Placement sits on the wrapper, not the input: the wrapper is what a
+  // parent lays out, and the steppers are positioned against it.
+  return (
+    <div
+      className={astralisMerge("astralis:relative astralis:w-full", colorScheme && accentClass(colorScheme), placementClass)}
+      style={placementStyle}
+    >
+      <input
+        ref={ref}
+        id={id}
+        type="text"
+        inputMode="decimal"
+        autoComplete="off"
+        role="spinbutton"
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={committed ?? undefined}
+        aria-invalid={isInvalid || undefined}
+        aria-describedby={field?.describedBy}
+        disabled={isDisabled}
+        readOnly={isReadOnly}
+        required={field?.required}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={(e) => {
+          onBlur?.(e);
+          commit(text.trim() === "" ? null : Number(text));
+        }}
+        className={astralisMerge(
+          inputVariants({ size, variant, invalid: !!isInvalid }),
+          !hideSteppers && "astralis:pr-8",
+          className,
         )}
-      </div>
-    );
+        {...domProps}
+      />
+      {!hideSteppers && (
+        <div
+          aria-hidden="true"
+          className="astralis:absolute astralis:inset-y-1 astralis:right-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:rounded-md astralis:border-normal astralis:border-stroke-base"
+        >
+          <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(1)} className={stepperClasses}>
+            <ChevronUpIcon className="astralis:h-3 astralis:w-3" />
+          </button>
+          <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(-1)} className={astralisMerge(stepperClasses, "astralis:border-t astralis:border-stroke-subtle")}>
+            <ChevronDownIcon className="astralis:h-3 astralis:w-3" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 NumberInput.displayName = "NumberInput";

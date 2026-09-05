@@ -3,6 +3,9 @@
 import { useCallback, useMemo, useRef, useState, type ChangeEvent } from "react";
 import FileUploadContext from "../file-upload.context";
 import type { FileUploadProps, FileUploadRejection } from "../file-upload.types";
+import { useFieldContext } from "../../field/field.context";
+import { splitPlacement } from "../../../../utils/placement";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 
 /**
  * File picking + drag-and-drop. The root owns the kept list and a hidden
@@ -17,10 +20,15 @@ export function FileUploadRoot({
   maxSize,
   onFilesChange,
   onReject,
-  disabled,
+  disabled: disabledProp,
+  invalid: invalidProp,
   children,
+  className,
   ...rest
 }: FileUploadProps) {
+  const field = useFieldContext();
+  const disabled = disabledProp ?? field?.disabled;
+  const invalid = invalidProp ?? field?.invalid;
   const [files, setFiles] = useState<File[]>([]);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -72,13 +80,15 @@ export function FileUploadRoot({
   };
 
   const ctx = useMemo(
-    () => ({ files, addFiles, removeFile, openPicker, dragging, setDragging, accept, multiple, disabled }),
-    [files, addFiles, removeFile, openPicker, dragging, accept, multiple, disabled],
+    () => ({ files, addFiles, removeFile, openPicker, dragging, setDragging, accept, multiple, disabled, invalid }),
+    [files, addFiles, removeFile, openPicker, dragging, accept, multiple, disabled, invalid],
   );
+
+  const { placementClass, rest: domProps } = splitPlacement(rest);
 
   return (
     <FileUploadContext.Provider value={ctx}>
-      <div {...rest}>
+      <div className={astralisMerge(placementClass, className) || undefined} {...domProps}>
         <input
           ref={inputRef}
           type="file"

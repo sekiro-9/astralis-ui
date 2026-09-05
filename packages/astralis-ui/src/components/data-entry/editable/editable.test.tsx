@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import { Editable } from "./index";
+import { Field } from "../field";
 import { ScrollArea } from "../../layout/scroll-area";
 
 describe("Editable", () => {
@@ -39,6 +40,78 @@ describe("Editable", () => {
     fireEvent.change(input2, { target: { value: "scrapped" } });
     fireEvent.keyDown(input2, { key: "Escape" });
     expect(getByText("Roadmap")).not.toBeNull();
+  });
+});
+
+describe("Editable API and Field", () => {
+  it("fires onValueChange and the deprecated onChange only when a commit changes the value", () => {
+    const onValueChange = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Editable defaultValue="Draft" onValueChange={onValueChange} onChange={onChange}>
+        <Editable.Preview />
+        <Editable.Input aria-label="Title" />
+      </Editable>,
+    );
+    fireEvent.click(screen.getByText("Draft"));
+    fireEvent.keyDown(screen.getByRole("textbox"), { key: "Enter" });
+    expect(onValueChange).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText("Draft"));
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "Final" } });
+    fireEvent.keyDown(screen.getByRole("textbox"), { key: "Enter" });
+    expect(onValueChange).toHaveBeenCalledWith("Final");
+    expect(onChange).toHaveBeenCalledWith("Final");
+  });
+
+  it("locks when its Field is disabled or read-only", () => {
+    const { rerender } = render(
+      <Field disabled>
+        <Editable defaultValue="Locked">
+          <Editable.Preview />
+          <Editable.Input />
+        </Editable>
+      </Field>,
+    );
+    fireEvent.click(screen.getByText("Locked"));
+    expect(screen.queryByRole("textbox")).toBeNull();
+    rerender(
+      <Field readOnly>
+        <Editable defaultValue="Locked">
+          <Editable.Preview />
+          <Editable.Input />
+        </Editable>
+      </Field>,
+    );
+    fireEvent.click(screen.getByText("Locked"));
+    expect(screen.queryByRole("textbox")).toBeNull();
+  });
+
+  it("labels, describes and marks the input invalid from Field while editing", () => {
+    render(
+      <Field id="title" invalid>
+        <Field.Label>Title</Field.Label>
+        <Editable defaultValue="x" startWithEditView>
+          <Editable.Preview />
+          <Editable.Input />
+        </Editable>
+        <Field.ErrorText>Too short</Field.ErrorText>
+      </Field>,
+    );
+    const input = screen.getByRole("textbox", { name: "Title" });
+    expect(input).toHaveAttribute("aria-invalid", "true");
+    expect(input).toHaveAttribute("aria-describedby", "title-error");
+  });
+
+  it("takes placement props and a colorScheme", () => {
+    const { container } = render(
+      <Editable mt="4" colorScheme="green" defaultValue="x">
+        <Editable.Preview />
+      </Editable>,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.classList).toContain("astralis-mt");
+    expect(root).toHaveClass("astralis-accent-green");
   });
 });
 

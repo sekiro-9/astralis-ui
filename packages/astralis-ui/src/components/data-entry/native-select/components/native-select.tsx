@@ -4,8 +4,9 @@ import { splitPlacement } from "../../../../utils/placement";
 import type { Ref } from "react";
 import { useFieldContext } from "../../field/field.context";
 import type { NativeSelectProps } from "../native-select.types";
-import { nativeSelectField, nativeSelectChevron } from "../native-select.styles";
+import { nativeSelectField, nativeSelectChevron, nativeSelectChevronGutter } from "../native-select.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon } from "../../../icon/internal-icons";
 
 /**
@@ -16,6 +17,7 @@ import { ChevronDownIcon } from "../../../icon/internal-icons";
 export function NativeSelect({
   size = "md",
   variant = "outline",
+  colorScheme,
   invalid: invalidProp,
   disabled: disabledProp,
   placeholder,
@@ -36,19 +38,25 @@ export function NativeSelect({
 
   return (
     <span
-      className={astralisMerge("astralis:relative astralis:inline-flex astralis:w-full", placementClass, className)}
+      className={astralisMerge(
+        "astralis:relative astralis:inline-flex astralis:items-center astralis:w-full",
+        colorScheme && accentClass(colorScheme),
+        placementClass,
+        className,
+      )}
       style={placementStyle}
     >
       <select
         ref={ref}
         id={id}
         disabled={isDisabled}
+        required={field?.required}
         aria-invalid={isInvalid || undefined}
         aria-describedby={field?.describedBy}
         // The placeholder is an empty-valued disabled option, so it shows
         // until a choice is made but can never be re-selected.
         defaultValue={placeholder && defaultValue === undefined && props.value === undefined ? "" : defaultValue}
-        className={nativeSelectField({ size, variant, invalid: !!isInvalid })}
+        className={astralisMerge(nativeSelectField({ size, variant, invalid: !!isInvalid }), nativeSelectChevronGutter)}
         {...domProps}
       >
         {placeholder && (
@@ -58,7 +66,11 @@ export function NativeSelect({
         )}
         {children}
       </select>
-      <ChevronDownIcon aria-hidden="true" className={nativeSelectChevron} />
+      <ChevronDownIcon
+        aria-hidden="true"
+        className={nativeSelectChevron}
+        style={{ top: "50%", transform: "translateY(-50%)" }}
+      />
     </span>
   );
 }

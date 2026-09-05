@@ -14,7 +14,9 @@ export interface RatingProps extends Omit<
   value?: number;
   /** Default value (uncontrolled) */
   defaultValue?: number;
-  /** Callback when a star is selected */
+  /** Fires with the selected star count. */
+  onValueChange?: (value: number) => void;
+  /** @deprecated Use `onValueChange`. Still fires, with the same value. */
   onChange?: (value: number) => void;
   /** Visual size of the stars. @default "md" */
   size?: RatingSize;
@@ -22,9 +24,11 @@ export interface RatingProps extends Omit<
   colorScheme?: ColorScheme;
   /** Display-only: renders static stars (incl. halves) with an `img` role */
   readOnly?: boolean;
-  /** Disables interaction */
+  /** Disables interaction. Inherited from `Field`. */
   disabled?: boolean;
-  /** Accessible name for the group. @default "Rating" */
+  /** Marks the rating as invalid. Inherited from `Field`. */
+  invalid?: boolean;
+  /** Accessible name for the group. Inside a `Field` the `Field.Label` names it instead. @default "Rating" */
   label?: string;
   /** Name attribute shared by the star radios (defaults to a generated id) */
   name?: string;

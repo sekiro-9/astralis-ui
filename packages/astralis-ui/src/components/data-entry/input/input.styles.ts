@@ -11,7 +11,8 @@ const base =
   "astralis:outline-none astralis:placeholder:text-label-subtle " +
   "astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate astralis:disabled:bg-surface-muted";
 
-const variantChrome = {
+/** Per-variant field chrome, shared by every control in the input family. */
+export const inputVariantChrome = {
   outline:
     "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:rounded-lg " +
     "astralis:hover:border-stroke-muted " +
@@ -27,7 +28,7 @@ const variantChrome = {
   unstyled: "astralis:border-0 astralis:bg-transparent astralis:rounded-none",
 } as const;
 
-const invalidChrome = {
+export const inputInvalidChrome = {
   outline:
     "astralis:border-error-solid astralis:hover:border-error-solid astralis:focus-visible:border-error-solid astralis:focus-visible:ring-error-muted",
   filled:
@@ -45,13 +46,13 @@ export const inputVariants = cva(base, {
       md: "astralis:h-10 astralis:px-3 astralis:text-sm",
       lg: "astralis:h-12 astralis:px-4 astralis:text-base",
     },
-    variant: variantChrome,
+    variant: inputVariantChrome,
     invalid: { true: "", false: "" },
   },
   compoundVariants: [
-    { invalid: true, variant: "outline", className: invalidChrome.outline },
-    { invalid: true, variant: "filled", className: invalidChrome.filled },
-    { invalid: true, variant: "underline", className: invalidChrome.underline },
+    { invalid: true, variant: "outline", className: inputInvalidChrome.outline },
+    { invalid: true, variant: "filled", className: inputInvalidChrome.filled },
+    { invalid: true, variant: "underline", className: inputInvalidChrome.underline },
   ],
   defaultVariants: { size: "md", variant: "outline", invalid: false },
 });
@@ -64,13 +65,13 @@ export const textareaVariants = cva(base + " astralis:resize-y", {
       md: "astralis:px-3 astralis:py-2 astralis:text-sm",
       lg: "astralis:px-4 astralis:py-3 astralis:text-base",
     },
-    variant: variantChrome,
+    variant: inputVariantChrome,
     invalid: { true: "", false: "" },
   },
   compoundVariants: [
-    { invalid: true, variant: "outline", className: invalidChrome.outline },
-    { invalid: true, variant: "filled", className: invalidChrome.filled },
-    { invalid: true, variant: "underline", className: invalidChrome.underline },
+    { invalid: true, variant: "outline", className: inputInvalidChrome.outline },
+    { invalid: true, variant: "filled", className: inputInvalidChrome.filled },
+    { invalid: true, variant: "underline", className: inputInvalidChrome.underline },
   ],
   defaultVariants: { size: "md", variant: "outline", invalid: false },
 });

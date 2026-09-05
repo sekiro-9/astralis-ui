@@ -29,7 +29,7 @@ export const Basic: Story = {
     const [val, setVal] = useState("");
     return (
       <VStack gap="3" alignItems="start">
-        <PinInput value={val} onChange={setVal} />
+        <PinInput value={val} onValueChange={setVal} />
         <Text size="sm" color="muted">
           Value: <Text as="span" fontFamily="mono">{val || "—"}</Text>
         </Text>
@@ -48,7 +48,7 @@ export const OTP: Story = {
         <PinInput
           length={6}
           value={val}
-          onChange={(v) => {
+          onValueChange={(v) => {
             setVal(v);
             setDone(false);
           }}
@@ -71,12 +71,14 @@ export const Sizes: Story = {
   ),
 };
 
-/** Two variants: `outline` and `filled`. */
+/** The same four variants as Input: `outline`, `filled`, `underline` and `unstyled`. */
 export const Variants: Story = {
   render: () => (
     <VStack gap="4" alignItems="start">
       <PinInput variant="outline" defaultValue="1234" />
       <PinInput variant="filled" defaultValue="1234" />
+      <PinInput variant="underline" defaultValue="1234" />
+      <PinInput variant="unstyled" defaultValue="1234" />
     </VStack>
   ),
 };
@@ -99,7 +101,7 @@ export const Masked: Story = {
     const [val, setVal] = useState("");
     return (
       <VStack gap="3" alignItems="start">
-        <PinInput mask value={val} onChange={setVal} length={6} placeholder="·" />
+        <PinInput mask value={val} onValueChange={setVal} length={6} placeholder="·" />
         <Text size="sm" color="muted">
           Raw: <Text as="span" fontFamily="mono">{val || "—"}</Text>
         </Text>
@@ -114,7 +116,7 @@ export const Alphanumeric: Story = {
     const [val, setVal] = useState("");
     return (
       <VStack gap="3" alignItems="start">
-        <PinInput type="alphanumeric" length={6} value={val} onChange={setVal} placeholder="·" />
+        <PinInput type="alphanumeric" length={6} value={val} onValueChange={setVal} placeholder="·" />
         <Text size="sm" color="muted">
           Code: <Text as="span" fontFamily="mono">{val || "—"}</Text>
         </Text>
@@ -130,7 +132,7 @@ export const InField: Story = {
     return (
       <Field>
         <Field.Label>Verification code</Field.Label>
-        <PinInput length={6} value={val} onChange={setVal} />
+        <PinInput length={6} value={val} onValueChange={setVal} />
         <Field.HelpText>Enter the 6-digit code sent to your email.</Field.HelpText>
       </Field>
     );
@@ -157,7 +159,7 @@ export const InForm: Story = {
             <PinInput
               length={6}
               value={code}
-              onChange={(v) => {
+              onValueChange={(v) => {
                 setCode(v);
                 setSubmitted(false);
               }}

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import { FileUpload } from "./index";
+import { Field } from "../field";
 
 const file = (name: string, size = 100) =>
   new File([new ArrayBuffer(size)], name, { type: "text/plain" });
@@ -51,5 +52,36 @@ describe("FileUpload", () => {
     expect(dropzone.getAttribute("data-dragging")).toBe("true");
     fireEvent.dragLeave(dropzone);
     expect(dropzone.getAttribute("data-dragging")).toBeNull();
+  });
+});
+
+describe("FileUpload and Field", () => {
+  it("reads disabled and invalid from Field and is described by its help text", () => {
+    const onFilesChange = vi.fn();
+    render(
+      <Field disabled invalid id="docs">
+        <FileUpload onFilesChange={onFilesChange}>
+          <FileUpload.Dropzone />
+        </FileUpload>
+        <Field.HelpText>PDF only</Field.HelpText>
+      </Field>,
+    );
+    const dropzone = screen.getByRole("button");
+    expect(dropzone).toHaveAttribute("aria-disabled", "true");
+    expect(dropzone).toHaveAttribute("data-invalid", "true");
+    expect(dropzone).toHaveAttribute("aria-describedby", "docs-help");
+    fireEvent.drop(dropzone, { dataTransfer: { files: [file("a.pdf")] } });
+    expect(onFilesChange).not.toHaveBeenCalled();
+  });
+
+  it("takes placement props", () => {
+    const { container } = render(
+      <FileUpload mt="4">
+        <FileUpload.Dropzone />
+      </FileUpload>,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.classList).toContain("astralis-mt");
+    expect(root.hasAttribute("mt")).toBe(false);
   });
 });

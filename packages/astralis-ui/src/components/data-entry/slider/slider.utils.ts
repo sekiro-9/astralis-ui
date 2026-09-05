@@ -8,7 +8,7 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function decimals(n: number): number {
+export function decimals(n: number): number {
   const s = String(n);
   const exp = s.indexOf("e-");
   if (exp !== -1) return Number(s.slice(exp + 2));

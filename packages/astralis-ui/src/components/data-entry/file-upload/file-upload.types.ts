@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, HTMLAttributes, ReactElement, ReactNode } from "react";
+import type { PlacementProps } from "../../../utils/placement";
 
 /** Why a picked file was refused. */
 export interface FileUploadRejection {
@@ -6,7 +7,7 @@ export interface FileUploadRejection {
   reason: "size" | "count";
 }
 
-export interface FileUploadProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange"> {
+export interface FileUploadProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange">, PlacementProps {
   /** Native accept filter (e.g. "image/*,.pdf") — enforced by the picker. */
   accept?: string;
   /** Allow more than one file. @default false */
@@ -19,7 +20,10 @@ export interface FileUploadProps extends Omit<ComponentPropsWithoutRef<"div">, "
   onFilesChange?: (files: File[]) => void;
   /** Fires with the picks that were refused and why. */
   onReject?: (rejections: FileUploadRejection[]) => void;
+  /** Inherited from `Field`. */
   disabled?: boolean;
+  /** Paints the dropzone as invalid. Inherited from `Field`. */
+  invalid?: boolean;
   children: ReactNode;
 }
 
@@ -35,6 +39,7 @@ export interface FileUploadTriggerProps extends HTMLAttributes<HTMLElement> {
 
 export type FileUploadItemGroupProps = ComponentPropsWithoutRef<"ul">;
 
+/** @deprecated Internal context shape; it will stop being exported in the next minor. */
 export interface FileUploadContextValue {
   files: File[];
   addFiles: (list: FileList | File[]) => void;
@@ -45,4 +50,5 @@ export interface FileUploadContextValue {
   accept?: string;
   multiple: boolean;
   disabled?: boolean;
+  invalid?: boolean;
 }

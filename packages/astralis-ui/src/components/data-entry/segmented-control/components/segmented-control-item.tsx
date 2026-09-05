@@ -11,6 +11,7 @@ export function SegmentedControlItem({
   children,
   disabled: disabledProp,
   className = "",
+  style,
   onChange: onChangeProp,
   ref,
   ...props
@@ -27,7 +28,7 @@ export function SegmentedControlItem({
   };
 
   return (
-    <label className={astralisMerge("astralis:relative", group.fullWidth && "astralis:flex-1", className)}>
+    <label className={astralisMerge("astralis:relative", group.fullWidth && "astralis:flex-1", className)} style={style}>
       <input
         ref={ref}
         type="radio"
@@ -43,7 +44,7 @@ export function SegmentedControlItem({
         className={astralisMerge(
           segmentedControlSizes[group.size],
           segmentedControlItem,
-          segmentedControlItemColor(isSelected),
+          segmentedControlItemColor(isSelected, group.accented),
           isDisabled ? "astralis:cursor-not-allowed" : "astralis:cursor-pointer",
         )}
       >

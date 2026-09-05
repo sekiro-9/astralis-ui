@@ -106,3 +106,37 @@ describe("NumberInput steppers", () => {
     expect(down).toBeDisabled();
   });
 });
+
+describe("NumberInput commits", () => {
+  it("does not fire when a blur or Enter leaves the value unchanged", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput defaultValue={5} onValueChange={onValueChange} />);
+    spin().focus();
+    await user.tab();
+    await user.click(spin());
+    await user.keyboard("{Enter}");
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it("steps without binary drift", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<NumberInput defaultValue={0.2} step={0.1} onValueChange={onValueChange} />);
+    spin().focus();
+    await user.keyboard("{ArrowUp}");
+    expect(onValueChange).toHaveBeenLastCalledWith(0.3);
+    expect(spin().value).toBe("0.3");
+  });
+
+  it("keeps the deprecated onChange firing next to onValueChange", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const onValueChange = vi.fn();
+    render(<NumberInput defaultValue={1} onChange={onChange} onValueChange={onValueChange} />);
+    spin().focus();
+    await user.keyboard("{ArrowUp}");
+    expect(onChange).toHaveBeenCalledWith(2);
+    expect(onValueChange).toHaveBeenCalledWith(2);
+  });
+});

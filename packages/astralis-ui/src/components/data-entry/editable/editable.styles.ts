@@ -18,3 +18,5 @@ export const editableInput =
   "astralis:inline-block astralis:w-full astralis:rounded-md astralis:px-1.5 astralis:py-0.5 astralis:-mx-1.5 " +
   "astralis:bg-surface-base astralis:text-label-base astralis:outline-none " +
   "astralis:ring-2 astralis:ring-accent-ring";
+
+export const editableInputInvalid = "astralis:ring-error-muted";
