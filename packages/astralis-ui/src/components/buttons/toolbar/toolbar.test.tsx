@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import { describe, expect, it } from "vitest";
 import { render, fireEvent } from "@testing-library/react";
 import { Toolbar } from "./index";
@@ -33,5 +34,21 @@ describe("Toolbar", () => {
     expect(document.activeElement).toBe(getByText("Italic"));
     fireEvent.keyDown(container.querySelector('[role="toolbar"]')!, { key: "End" });
     expect(document.activeElement).toBe(getByText("Link"));
+  });
+
+  it("feeds a consumer ref without breaking arrow-key focus", () => {
+    const ref = createRef<HTMLDivElement>();
+    const { container, getByText } = render(
+      <Toolbar label="Formatting" ref={ref}>
+        <button>Bold</button>
+        <button>Italic</button>
+      </Toolbar>,
+    );
+    const bar = container.querySelector('[role="toolbar"]')!;
+
+    expect(ref.current).toBe(bar);
+    getByText("Bold").focus();
+    fireEvent.keyDown(bar, { key: "ArrowRight" });
+    expect(document.activeElement).toBe(getByText("Italic"));
   });
 });

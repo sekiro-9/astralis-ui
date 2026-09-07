@@ -5,9 +5,11 @@ import { useStepItemContext, useStepsContext } from "../steps.context";
 import { stepIndicatorVariants, stepDotVariants } from "../steps.styles";
 import type { StepsIndicatorProps } from "../steps.types";
 
-/** Check mark shown on completed steps. */
+/** Sized in em so it tracks the indicator's text size. */
+const CHECK_SIZE = { width: "1.1em", height: "1.1em" };
+
 const CheckIcon = () => (
-  <svg viewBox="0 0 20 20" fill="none" className="astralis:size-[1.1em]" aria-hidden="true">
+  <svg viewBox="0 0 20 20" fill="none" style={CHECK_SIZE} aria-hidden="true">
     <path d="M5 10.5l3.5 3.5L15 6.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
@@ -24,7 +26,6 @@ export function StepsIndicator({ children, className, ...rest }: StepsIndicatorP
     return (
       <span
         data-status={status}
-        aria-current={status === "active" ? "step" : undefined}
         className={astralisMerge(stepDotVariants({ size, status }), className)}
         {...rest}
       />
@@ -38,7 +39,6 @@ export function StepsIndicator({ children, className, ...rest }: StepsIndicatorP
   return (
     <span
       data-status={status}
-      aria-current={status === "active" ? "step" : undefined}
       className={astralisMerge(stepIndicatorVariants({ size, variant, status }), className)}
       {...rest}
     >

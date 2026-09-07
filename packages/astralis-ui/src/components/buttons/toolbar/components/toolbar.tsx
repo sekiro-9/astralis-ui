@@ -4,6 +4,8 @@ import type { KeyboardEvent, Ref } from "react";
 import type { ToolbarProps, ToolbarGroupProps, ToolbarSeparatorProps } from "../toolbar.types";
 import { toolbarRoot, toolbarVertical, toolbarGroup } from "../toolbar.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
+import { useMergedRefs } from "../../../../utils/merge-refs";
 import { useRovingFocus } from "../../../../hooks/use-roving-focus";
 import { Separator } from "../../../layout/separator";
 
@@ -26,6 +28,8 @@ export function ToolbarRoot({
     orientation,
     typeahead: false,
   });
+  const mergedRef = useMergedRefs(roving.containerRef, ref);
+  const { placementClass, rest: domProps } = splitPlacement(rest);
 
   const handleKeyDown = (e: KeyboardEvent) => {
     onKeyDown?.(e as KeyboardEvent<HTMLDivElement>);
@@ -34,17 +38,18 @@ export function ToolbarRoot({
 
   return (
     <div
-      ref={(node) => {
-        roving.containerRef.current = node;
-        if (typeof ref === "function") ref(node);
-        else if (ref) ref.current = node;
-      }}
+      ref={mergedRef}
       role="toolbar"
       aria-label={label}
       aria-orientation={orientation}
       onKeyDown={handleKeyDown}
-      className={astralisMerge(toolbarRoot, orientation === "vertical" && toolbarVertical, className)}
-      {...rest}
+      className={astralisMerge(
+        toolbarRoot,
+        orientation === "vertical" && toolbarVertical,
+        placementClass,
+        className,
+      )}
+      {...domProps}
     >
       {children}
     </div>

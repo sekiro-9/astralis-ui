@@ -55,4 +55,5 @@ export type {
   StepsSize,
   StepsLabelPlacement,
   StepStatus,
+  StepsStatusLabels,
 } from "./steps.context";

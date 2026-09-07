@@ -33,6 +33,13 @@ export interface TabsContextValue {
 
 export const TabsContext = createContext<TabsContextValue | null>(null);
 
+/** Tab values are free text, but an id must be one token: escape everything
+ *  outside [A-Za-z0-9-] (including `_`, so distinct values stay distinct). */
+export function tabsPartId(baseId: string, part: "trigger" | "panel", value: string): string {
+  const token = value.replace(/[^A-Za-z0-9-]/g, (ch) => `_${ch.charCodeAt(0).toString(16)}_`);
+  return `${baseId}-${part}-${token}`;
+}
+
 export function useTabsContext(): TabsContextValue {
   const ctx = useContext(TabsContext);
   if (!ctx) throw new Error("Tabs sub-components must be used within <Tabs.Root>");

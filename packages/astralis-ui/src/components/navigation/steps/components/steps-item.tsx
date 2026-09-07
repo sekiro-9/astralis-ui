@@ -11,6 +11,7 @@ import {
 } from "../steps.context";
 import { stepSizeClasses, stepConnectorVariants, stepTriggerVariants } from "../steps.styles";
 import type { StepsItemProps } from "../steps.types";
+import { StepsIndicator } from "./steps-indicator";
 
 /** Pull the single <Steps.Indicator> out of the children; everything else is label content. */
 function splitChildren(children: ReactNode) {
@@ -18,8 +19,7 @@ function splitChildren(children: ReactNode) {
   const rest: ReactNode[] = [];
   Children.toArray(resolveServerChild(children)).forEach((rawChild) => {
     const child = resolveServerChild(rawChild);
-    const name = isValidElement(child) ? (child.type as any)?.displayName : undefined;
-    if (name === "Steps.Indicator" && indicator === null) indicator = child;
+    if (indicator === null && isValidElement(child) && child.type === StepsIndicator) indicator = child;
     else rest.push(child);
   });
   return { indicator, rest };
@@ -38,7 +38,8 @@ export function StepsItem({
   className,
   ...rest
 }: StepsItemProps) {
-  const { step, count, orientation, labelPlacement, size, linear, clickable, setStep } = useStepsContext();
+  const { step, count, orientation, labelPlacement, size, linear, clickable, setStep, statusLabels } =
+    useStepsContext();
   const bottom = labelPlacement === "bottom";
 
   const status: StepStatus = error
@@ -59,22 +60,29 @@ export function StepsItem({
 
   const { indicator, rest: labelParts } = splitChildren(children);
   const sz = stepSizeClasses[size];
+  const current = status === "active" ? "step" : undefined;
+  // Completed and error are otherwise only colour and an icon.
+  const statusText =
+    status === "completed" ? statusLabels.completed : status === "error" ? statusLabels.error : undefined;
 
-  // Make the indicator a button when the parent opted into click navigation.
+  // aria-current goes on the focusable button when there is one, else on the <li>.
   const renderIndicator = (node: ReactNode) =>
     clickable ? (
       <button
         type="button"
         disabled={disabled}
         onClick={() => setStep(index)}
-        aria-current={status === "active" ? "step" : undefined}
-        aria-label={`Go to step ${index + 1}`}
+        aria-current={current}
+        aria-label={statusText ? `Go to step ${index + 1}, ${statusText}` : `Go to step ${index + 1}`}
         className={stepTriggerVariants()}
       >
         {node}
       </button>
     ) : (
-      node
+      <>
+        {node}
+        {statusText && <span className="astralis:sr-only">{statusText}</span>}
+      </>
     );
 
   const label =
@@ -170,7 +178,14 @@ export function StepsItem({
 
   return (
     <StepItemContext.Provider value={itemCtx}>
-      <li role="listitem" data-status={status} data-index={index} className={itemClass} {...rest}>
+      <li
+        role="listitem"
+        aria-current={clickable ? undefined : current}
+        data-status={status}
+        data-index={index}
+        className={itemClass}
+        {...rest}
+      >
         {inner}
       </li>
     </StepItemContext.Provider>

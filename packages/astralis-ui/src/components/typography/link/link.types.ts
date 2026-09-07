@@ -15,8 +15,9 @@ interface LinkCustomProps<C extends ElementType = "a"> {
   colorScheme?: ColorScheme;
   /** Opens in a new tab with `rel="noopener noreferrer"` and an ↗ marker. */
   external?: boolean;
+  /** Screen-reader text the external marker stands for. @default "(opens in new tab)" */
+  externalLabel?: string;
   className?: string;
-  /** React 19: ref is a regular prop — no forwardRef, no polymorphic cast. */
   ref?: Ref<HTMLElement>;
   children: ReactNode;
   lineClamp?: ResponsiveProp<TextLineClamp>;

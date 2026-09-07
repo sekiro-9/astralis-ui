@@ -1,8 +1,9 @@
 import type { ComponentPropsWithoutRef, ReactNode, RefObject } from "react";
+import type { PlacementProps } from "../../../utils/placement";
 
 export type SplitterOrientation = "horizontal" | "vertical";
 
-export interface SplitterProps extends Omit<ComponentPropsWithoutRef<"div">, "onResize"> {
+export interface SplitterProps extends Omit<ComponentPropsWithoutRef<"div">, "onResize">, PlacementProps {
   /** Split axis: "horizontal" = panels side by side. @default "horizontal" */
   orientation?: SplitterOrientation;
   /** Controlled first-panel share, percent (0–100). */

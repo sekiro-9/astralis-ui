@@ -1,15 +1,13 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, ComponentPropsWithoutRef } from "react";
+import type { ColorScheme } from "../../../const/color-schemes";
 import type {
   StepsOrientation,
   StepsVariant,
   StepsSize,
   StepsLabelPlacement,
+  StepsStatusLabels,
 } from "./steps.context";
-
-/* ------------------------------------------------------------------ */
-/* Root                                                                */
-/* ------------------------------------------------------------------ */
 
 export interface StepsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChange">, PlacementProps {
   /** Controlled active step index (0-based). */
@@ -29,12 +27,12 @@ export interface StepsProps extends Omit<ComponentPropsWithoutRef<"div">, "onCha
   labelPlacement?: StepsLabelPlacement;
   /** Make each indicator a button that jumps to its step. */
   clickable?: boolean;
+  /** Hue for the active and completed steps (via the accent channel). @default "brand" */
+  colorScheme?: ColorScheme;
+  /** Screen-reader text announcing a completed or failed step. */
+  statusLabels?: StepsStatusLabels;
   children: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* Sub-components                                                      */
-/* ------------------------------------------------------------------ */
 
 export interface StepsListProps extends ComponentPropsWithoutRef<"ol"> {
   children: ReactNode;

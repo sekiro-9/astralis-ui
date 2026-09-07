@@ -129,3 +129,49 @@ describe("Tabs with nothing chosen", () => {
     expect(getByText("Panel B")).toBeTruthy();
   });
 });
+
+describe("Tabs accessible naming", () => {
+  it.each(["horizontal", "vertical"] as const)("puts aria-label on the tablist (%s)", (orientation) => {
+    const { getByRole } = render(<ManyTabs orientation={orientation} />);
+    expect(getByRole("tablist").getAttribute("aria-label")).toBe("Sections");
+  });
+
+  it("leaves no naming attribute on the scroll wrapper", () => {
+    const { getByRole } = render(<ManyTabs />);
+    const wrapper = getByRole("tablist").parentElement!;
+
+    expect(wrapper.hasAttribute("aria-label")).toBe(false);
+  });
+});
+
+describe("Tabs ids from free-text values", () => {
+  function Spaced() {
+    return (
+      <Tabs defaultValue="first tab">
+        <Tabs.List aria-label="Spaced">
+          <Tabs.Trigger value="first tab">One</Tabs.Trigger>
+          <Tabs.Trigger value="first_tab">Two</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="first tab">Panel one</Tabs.Content>
+        <Tabs.Content value="first_tab">Panel two</Tabs.Content>
+      </Tabs>
+    );
+  }
+
+  it("wires trigger and panel through single-token ids", () => {
+    const { getAllByRole, getByRole } = render(<Spaced />);
+    const [first] = getAllByRole("tab");
+    const panel = getByRole("tabpanel");
+
+    expect(first.id).not.toMatch(/\s/);
+    expect(first.getAttribute("aria-controls")).toBe(panel.id);
+    expect(panel.getAttribute("aria-labelledby")).toBe(first.id);
+  });
+
+  it("keeps values that differ only in punctuation apart", () => {
+    const { getAllByRole } = render(<Spaced />);
+    const [first, second] = getAllByRole("tab");
+
+    expect(first.id).not.toBe(second.id);
+  });
+});

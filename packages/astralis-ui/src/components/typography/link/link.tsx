@@ -1,5 +1,5 @@
 import { splitPlacement } from "../../../utils/placement";
-import type { ElementType } from "react";
+import type { CSSProperties, ElementType } from "react";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
 import { accentClass } from "../../../const/color-schemes";
@@ -13,6 +13,7 @@ export function Link<C extends ElementType = "a">({
   variant,
   colorScheme = "brand",
   external = false,
+  externalLabel = "(opens in new tab)",
   className = "",
   ref,
   children,
@@ -32,7 +33,7 @@ export function Link<C extends ElementType = "a">({
 }: LinkProps<C>) {
   const { placementClass, rest: split } = splitPlacement(rest);
   // splitPlacement folds placement vars under rest.style (user style last).
-  const { style, ...domProps } = split as Record<string, any>;
+  const { style, ...domProps } = split as Record<string, unknown> & { style?: CSSProperties };
 
   const Element = (as || "a") as ElementType;
   const externalProps = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
@@ -76,9 +77,12 @@ export function Link<C extends ElementType = "a">({
     >
       {children}
       {external && (
-        <span aria-hidden="true" className="astralis:ml-0.5 astralis:align-super astralis:text-2xs">
-          ↗
-        </span>
+        <>
+          <span aria-hidden="true" className="astralis:ml-0.5 astralis:align-super astralis:text-2xs">
+            ↗
+          </span>
+          <span className="astralis:sr-only"> {externalLabel}</span>
+        </>
       )}
     </Element>
   );

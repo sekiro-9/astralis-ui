@@ -5,6 +5,7 @@ import SplitterContext from "../splitter.context";
 import type { SplitterProps } from "../splitter.types";
 import { splitterRoot, splitterRootVertical } from "../splitter.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 
 /**
@@ -21,8 +22,7 @@ export function SplitterRoot({
   maxSize = 90,
   children,
   className = "",
-  style,
-  ...rest
+  ...props
 }: SplitterProps) {
   const [size, setSizeRaw] = useControllableState({ value: sizeProp, defaultValue: defaultSize, onChange: onResize });
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -32,13 +32,22 @@ export function SplitterRoot({
     return { orientation, size, setSize, minSize, maxSize, containerRef };
   }, [orientation, size, setSizeRaw, minSize, maxSize]);
 
+  // Placement vars arrive folded into `style`, ahead of the caller's own.
+  const { placementClass, rest } = splitPlacement(props);
+  const { style, ...domProps } = rest;
+
   return (
     <SplitterContext.Provider value={ctx}>
       <div
         ref={containerRef}
-        className={astralisMerge(splitterRoot, orientation === "vertical" && splitterRootVertical, className)}
+        className={astralisMerge(
+          splitterRoot,
+          orientation === "vertical" && splitterRootVertical,
+          placementClass,
+          className,
+        )}
         style={{ "--astralis-splitter-size": `${size}%`, ...style } as CSSProperties}
-        {...rest}
+        {...domProps}
       >
         {children}
       </div>

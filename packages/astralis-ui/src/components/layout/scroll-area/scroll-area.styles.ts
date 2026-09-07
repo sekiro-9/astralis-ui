@@ -22,3 +22,6 @@ export const scrollAreaBar =
 
 export const scrollAreaHidden =
   "astralis:[scrollbar-width:none] astralis:[&::-webkit-scrollbar]:hidden";
+
+export const scrollAreaFocus =
+  "astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring";

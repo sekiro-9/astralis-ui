@@ -18,11 +18,13 @@ function hueFromName(name: string): ColorScheme {
 }
 
 export function AvatarRoot({
-  src, alt, name, icon, size, shape, colorScheme, ring, children, className = "", style,
+  src, alt, name, icon, size, shape, colorScheme, ring, children, className = "",
   ...rest
 }: AvatarProps) {
-  const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
-  const [imgError, setImgError] = useState(false);
+  // `style` stays in `rest`: splitPlacement folds the placement vars under it.
+  const { placementClass, rest: domRest } = splitPlacement(rest);
+  // Keyed by src, so a new src gets a fresh attempt after an earlier failure.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   // An AvatarGroup clones size/ring into these props; explicit props win.
   const resolvedSize = size ?? "md";
@@ -34,7 +36,10 @@ export function AvatarRoot({
     ? name.split(" ").filter(Boolean).map((p) => p[0]).slice(0, 2).join("").toUpperCase()
     : null;
 
-  const showImage = src && !imgError;
+  const showImage = !!src && failedSrc !== src;
+  // Without an image the initials or glyph are the picture, so the root is.
+  const label = alt ?? name;
+  const fallbackA11y = !showImage && label ? { role: "img", "aria-label": label } : {};
 
   return (
     <div
@@ -46,27 +51,25 @@ export function AvatarRoot({
         placementClass,
         className,
       )}
-      style={{ ...placementStyle, ...style }}
+      {...fallbackA11y}
       {...domRest}
     >
       {showImage ? (
         <img
           src={src}
           alt={alt ?? name ?? "Avatar"}
-          onError={() => setImgError(true)}
+          onError={() => setFailedSrc(src)}
           className="astralis:size-full astralis:object-cover"
         />
       ) : initials ? (
-        <span>{initials}</span>
+        <span aria-hidden="true">{initials}</span>
       ) : icon ? (
         icon
       ) : (
-        <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: "60%", height: "60%", opacity: 0.6 }}>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" style={{ width: "60%", height: "60%", opacity: 0.6 }}>
           <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
         </svg>
       )}
-      {/* The badge inherits this avatar's size (an improvement on the old
-          group-context read: it now matches its OWN avatar, grouped or not). */}
       {inheritProps(children, new Map([[AvatarBadge, { size: resolvedSize }]]))}
     </div>
   );

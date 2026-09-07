@@ -43,6 +43,10 @@ import { Combobox } from "./data-entry/combobox";
 import { MultiSelect } from "./data-entry/multi-select";
 import { ThemeToggle } from "./buttons/theme-toggle";
 import { Image } from "./data-display/image";
+import { Toolbar } from "./buttons/toolbar";
+import { ScrollArea } from "./layout/scroll-area";
+import { Splitter } from "./layout/splitter";
+import { TableOfContents } from "./navigation/table-of-contents";
 import { AstralisProvider } from "../theme/provider";
 
 /**
@@ -110,6 +114,10 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Combobox", (p) => <Combobox {...p} options={[]} />],
   ["MultiSelect", (p) => <MultiSelect {...p} options={[]} />],
   ["Image", (p) => <Image {...p} src="x.png" alt="x" />],
+  ["Toolbar", (p) => <Toolbar {...p} label="t"><button>a</button></Toolbar>],
+  ["ScrollArea", (p) => <ScrollArea {...p}>a</ScrollArea>],
+  ["Splitter", (p) => <Splitter {...p}><Splitter.Panel>a</Splitter.Panel><Splitter.Handle /><Splitter.Panel>b</Splitter.Panel></Splitter>],
+  ["TableOfContents", (p) => <TableOfContents {...p} items={[]} />],
 ];
 
 describe.each(ADOPTERS)("placement on %s", (_name, render_) => {

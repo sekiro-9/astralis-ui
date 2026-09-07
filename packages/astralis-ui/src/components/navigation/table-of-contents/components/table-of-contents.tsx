@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { TableOfContentsProps } from "../table-of-contents.types";
 import { tocLabel, tocList, tocLink, tocLinkActive } from "../table-of-contents.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 
 /**
  * "On this page" navigation with scroll-spy: the entry whose heading is
@@ -20,6 +21,7 @@ export function TableOfContents({
   ...rest
 }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const { placementClass, rest: domProps } = splitPlacement(rest);
 
   useEffect(() => {
     const headings = items
@@ -47,7 +49,7 @@ export function TableOfContents({
   }, [items, offset]);
 
   return (
-    <nav aria-label={label} className={className} {...rest}>
+    <nav aria-label={label} className={astralisMerge(placementClass, className)} {...domProps}>
       {showLabel && <div className={tocLabel}>{label}</div>}
       <ul className={tocList}>
         {items.map((item) => (

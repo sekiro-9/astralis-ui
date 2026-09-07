@@ -35,11 +35,15 @@ const SCROLL_STEP_RATIO = 0.8;
  *    model. Ant Design collapses overflow into a "more" dropdown instead; the
  *    long-running complaint about that is you cannot tell hidden tabs exist.
  *    Arrows keep it discoverable, and touch devices still get native swipe.
- *
- * Without this the row simply widened its parent, so a page with more tab
- * labels than viewport scrolled sideways as a whole.
  */
-export function TabsList({ children, className, ...rest }: TabsListProps) {
+export function TabsList({
+  children,
+  className,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
+  "aria-describedby": ariaDescribedBy,
+  ...rest
+}: TabsListProps) {
   const { orientation, variant, rounded, value } = useTabsContext();
   const listRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState<CSSProperties>({ opacity: 0 });
@@ -107,10 +111,9 @@ export function TabsList({ children, className, ...rest }: TabsListProps) {
     const active = list?.querySelector<HTMLElement>('[role="tab"][data-state="active"]');
     if (!list || !active) return;
 
-    // Deliberately not `scrollIntoView`: that walks every scrollable ancestor
-    // up to the document, so a tab set mounted below the fold scrolled the
-    // whole PAGE down to itself on load. Moving the strip's own scrollLeft
-    // cannot touch anything outside the strip.
+    // Not `scrollIntoView`: it scrolls every scrollable ancestor, so a tab set
+    // below the fold would drag the page down to itself on load. The strip's
+    // own scrollLeft cannot move anything outside the strip.
     const start = active.offsetLeft;
     const end = start + active.offsetWidth;
 
@@ -132,11 +135,14 @@ export function TabsList({ children, className, ...rest }: TabsListProps) {
       ref={listRef}
       role="tablist"
       aria-orientation={orientation}
+      // The name belongs on the tablist even when a scroll wrapper is the root.
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
+      aria-describedby={ariaDescribedBy}
       data-orientation={orientation}
       className={astralisMerge(
         tabsListVariants({ orientation, variant, rounded }),
-        // Vertical keeps the old single-element shape, so consumer classes and
-        // DOM props still land on the tablist itself.
+        // Vertical has no wrapper, so the tablist is the root and takes these.
         scrollable ? "" : className,
       )}
       {...(scrollable ? {} : rest)}

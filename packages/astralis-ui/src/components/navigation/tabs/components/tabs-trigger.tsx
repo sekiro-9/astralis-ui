@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, type KeyboardEvent } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
-import { useTabsContext } from "../tabs.context";
+import { tabsPartId, useTabsContext } from "../tabs.context";
 import { tabsTriggerVariants } from "../tabs.styles";
 import type { TabsTriggerProps } from "../tabs.types";
 
@@ -20,8 +20,8 @@ export function TabsTrigger({ value, disabled = false, className, children, onCl
     if (!disabled) register(value);
   }, [register, value, disabled]);
 
-  const triggerId = `${baseId}-trigger-${value}`;
-  const panelId = `${baseId}-panel-${value}`;
+  const triggerId = tabsPartId(baseId, "trigger", value);
+  const panelId = tabsPartId(baseId, "panel", value);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLButtonElement>) => {

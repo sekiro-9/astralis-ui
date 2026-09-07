@@ -30,12 +30,8 @@ export const stepSizeClasses = {
   },
 } as const;
 
-/* ------------------------------------------------------------------ */
-/* Indicator — circle (solid / subtle variants)                        */
-/* Colours come from semantic + brand-role tokens, so it flips cleanly */
-/* between light/dark. compoundVariants pair variant × status.         */
-/* ------------------------------------------------------------------ */
-
+/** Circle indicator. Progress paints with accent-* tokens, so the Root's
+ *  `colorScheme` recolours it; error keeps the status palette. */
 export const stepIndicatorVariants = cva(
   "astralis:flex astralis:items-center astralis:justify-center astralis:rounded-full astralis:border-moderate astralis:font-medium astralis:shrink-0 astralis:transition-colors",
   {
@@ -49,24 +45,18 @@ export const stepIndicatorVariants = cva(
       status: { upcoming: "", active: "", completed: "", error: "" },
     },
     compoundVariants: [
-      // solid
       { variant: "solid", status: "upcoming", class: "astralis:bg-transparent astralis:text-label-subtle astralis:border-stroke-base" },
-      { variant: "solid", status: "active", class: "astralis:bg-brand-solid astralis:text-brand-contrast astralis:border-brand-solid" },
-      { variant: "solid", status: "completed", class: "astralis:bg-brand-solid astralis:text-brand-contrast astralis:border-brand-solid" },
+      { variant: "solid", status: "active", class: "astralis:bg-accent-solid astralis:text-accent-contrast astralis:border-accent-solid" },
+      { variant: "solid", status: "completed", class: "astralis:bg-accent-solid astralis:text-accent-contrast astralis:border-accent-solid" },
       { variant: "solid", status: "error", class: "astralis:bg-error-subtle astralis:text-error-label astralis:border-error-stroke" },
-      // subtle
       { variant: "subtle", status: "upcoming", class: "astralis:bg-transparent astralis:text-label-subtle astralis:border-stroke-base" },
-      { variant: "subtle", status: "active", class: "astralis:bg-brand-subtle astralis:text-brand-label astralis:border-brand-solid" },
-      { variant: "subtle", status: "completed", class: "astralis:bg-brand-subtle astralis:text-brand-label astralis:border-brand-subtle" },
+      { variant: "subtle", status: "active", class: "astralis:bg-accent-subtle astralis:text-accent-label astralis:border-accent-solid" },
+      { variant: "subtle", status: "completed", class: "astralis:bg-accent-subtle astralis:text-accent-label astralis:border-accent-subtle" },
       { variant: "subtle", status: "error", class: "astralis:bg-error-subtle astralis:text-error-label astralis:border-error-stroke" },
     ],
     defaultVariants: { size: "md", variant: "solid", status: "upcoming" },
   },
 );
-
-/* ------------------------------------------------------------------ */
-/* Indicator — dot variant                                             */
-/* ------------------------------------------------------------------ */
 
 export const stepDotVariants = cva(
   "astralis:rounded-full astralis:shrink-0 astralis:transition-colors",
@@ -79,18 +69,14 @@ export const stepDotVariants = cva(
       },
       status: {
         upcoming: "astralis:bg-surface-subtle",
-        active: "astralis:bg-brand-solid",
-        completed: "astralis:bg-brand-solid",
+        active: "astralis:bg-accent-solid",
+        completed: "astralis:bg-accent-solid",
         error: "astralis:bg-error-solid",
       },
     },
     defaultVariants: { size: "md", status: "upcoming" },
   },
 );
-
-/* ------------------------------------------------------------------ */
-/* Connector line — the bar/line between steps                         */
-/* ------------------------------------------------------------------ */
 
 export const stepConnectorVariants = cva(
   "astralis:rounded-full astralis:transition-colors",
@@ -101,7 +87,7 @@ export const stepConnectorVariants = cva(
         vertical: "astralis:w-0.5 astralis:flex-1 astralis:min-h-6 astralis:my-1",
       },
       done: {
-        true: "astralis:bg-brand-solid",
+        true: "astralis:bg-accent-solid",
         false: "astralis:bg-stroke-base",
       },
     },
@@ -109,15 +95,11 @@ export const stepConnectorVariants = cva(
   },
 );
 
-/* ------------------------------------------------------------------ */
-/* Clickable indicator wrapper (button) + nav triggers (Prev/Next)     */
-/* ------------------------------------------------------------------ */
-
 export const stepTriggerVariants = cva(
   // Hover feedback via opacity keeps it legible on any indicator colour.
-  "astralis:rounded-full astralis:cursor-pointer astralis:transition-opacity astralis:hover:opacity-higher astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate",
+  "astralis:rounded-full astralis:cursor-pointer astralis:transition-opacity astralis:outline-none astralis:hover:opacity-higher astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate",
 );
 
 export const stepNavVariants = cva(
-  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:gap-2 astralis:rounded-md astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:text-label-base astralis:px-4 astralis:py-2 astralis:text-sm astralis:font-medium astralis:transition-colors astralis:cursor-pointer astralis:hover:bg-surface-subtle astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed astralis:disabled:pointer-events-none",
+  "astralis:inline-flex astralis:items-center astralis:justify-center astralis:gap-2 astralis:rounded-md astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:text-label-base astralis:px-4 astralis:py-2 astralis:text-sm astralis:font-medium astralis:transition-colors astralis:cursor-pointer astralis:outline-none astralis:hover:bg-surface-subtle astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed astralis:disabled:pointer-events-none",
 );

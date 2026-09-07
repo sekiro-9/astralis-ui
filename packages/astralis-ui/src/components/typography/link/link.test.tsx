@@ -43,3 +43,27 @@ describe("Link typography", () => {
     expect(cls(container)).toContain("astralis:lg:text-md");
   });
 });
+
+describe("Link external", () => {
+  it("opens in a new tab safely and says so to screen readers", () => {
+    const { getByRole } = render(<Link href="https://x.dev" external>Docs</Link>);
+    const a = getByRole("link");
+
+    expect(a.getAttribute("target")).toBe("_blank");
+    expect(a.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(a.textContent).toContain("(opens in new tab)");
+    expect(getByRole("link", { name: /Docs.*opens in new tab/ })).toBe(a);
+  });
+
+  it("takes a translated label", () => {
+    const { getByRole } = render(
+      <Link href="https://x.dev" external externalLabel="(nouvel onglet)">Docs</Link>,
+    );
+    expect(getByRole("link").textContent).toContain("(nouvel onglet)");
+  });
+
+  it("adds nothing to an internal link", () => {
+    const { getByRole } = render(<Link href="/docs">Docs</Link>);
+    expect(getByRole("link").textContent).toBe("Docs");
+  });
+});

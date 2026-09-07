@@ -1,7 +1,7 @@
 "use client";
 
 import { astralisMerge } from "../../../../utils/astralis-merge";
-import { useTabsContext } from "../tabs.context";
+import { tabsPartId, useTabsContext } from "../tabs.context";
 import { tabsContentVariants } from "../tabs.styles";
 import type { TabsContentProps } from "../tabs.types";
 
@@ -17,9 +17,9 @@ export function TabsContent({ value, className, children, ...rest }: TabsContent
 
   return (
     <div
-      id={`${baseId}-panel-${value}`}
+      id={tabsPartId(baseId, "panel", value)}
       role="tabpanel"
-      aria-labelledby={`${baseId}-trigger-${value}`}
+      aria-labelledby={tabsPartId(baseId, "trigger", value)}
       tabIndex={0}
       hidden={!isActive}
       data-state={isActive ? "active" : "inactive"}

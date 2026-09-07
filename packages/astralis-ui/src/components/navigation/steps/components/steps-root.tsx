@@ -3,6 +3,7 @@
 import { splitPlacement } from "../../../../utils/placement";
 import { useCallback, useMemo, useState } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { accentClass } from "../../../../const/color-schemes";
 import { StepsContext } from "../steps.context";
 import type { StepsProps } from "../steps.types";
 
@@ -23,6 +24,8 @@ export function StepsRoot({
   linear = false,
   labelPlacement = "inline",
   clickable = false,
+  colorScheme = "brand",
+  statusLabels,
   className,
   children,
   ...rest
@@ -44,6 +47,9 @@ export function StepsRoot({
     [linear, step, count, isControlled, onStepChange],
   );
 
+  const completedLabel = statusLabels?.completed ?? "Completed";
+  const errorLabel = statusLabels?.error ?? "Error";
+
   const ctx = useMemo(
     () => ({
       step,
@@ -56,8 +62,9 @@ export function StepsRoot({
       linear,
       labelPlacement,
       clickable,
+      statusLabels: { completed: completedLabel, error: errorLabel },
     }),
-    [step, setStep, count, orientation, variant, size, linear, labelPlacement, clickable],
+    [step, setStep, count, orientation, variant, size, linear, labelPlacement, clickable, completedLabel, errorLabel],
   );
 
   const { placementClass, rest: domProps } = splitPlacement(rest);
@@ -70,7 +77,9 @@ export function StepsRoot({
         className={astralisMerge(
           "astralis:flex astralis:flex-col astralis:gap-6",
           orientation === "horizontal" && "astralis:w-full",
-          placementClass, className,
+          accentClass(colorScheme),
+          placementClass,
+          className,
         )}
         {...domProps}
       >

@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef } from "react";
+import type { PlacementProps } from "../../../utils/placement";
 
 export interface TableOfContentsItem {
   /** The id of the heading element this entry targets (`<h2 id="...">`). */
@@ -8,7 +9,7 @@ export interface TableOfContentsItem {
   depth?: number;
 }
 
-export interface TableOfContentsProps extends ComponentPropsWithoutRef<"nav"> {
+export interface TableOfContentsProps extends ComponentPropsWithoutRef<"nav">, PlacementProps {
   items: TableOfContentsItem[];
   /** Accessible name for the nav. @default "On this page" */
   label?: string;

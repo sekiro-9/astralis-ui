@@ -1,9 +1,10 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { BoxStyleProps } from "../../layout/box/box.types";
+import type { PlacementProps } from "../../../utils/placement";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 
-export interface ToolbarProps extends ComponentPropsWithoutRef<"div"> {
+export interface ToolbarProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /** Arrow-key axis and layout direction. @default "horizontal" */
   orientation?: ToolbarOrientation;
   /** Accessible name — a toolbar without one is just a row of buttons. */
