@@ -62,7 +62,7 @@ export const Basic: Story = {
     const [val, setVal] = useState<Array<string | number>>([]);
     return (
       <VStack gap="3" alignItems="stretch">
-        <MultiSelect options={skills} value={val} onChange={setVal} placeholder="Pick your skills…" />
+        <MultiSelect options={skills} value={val} onValueChange={setVal} placeholder="Pick your skills…" />
         {val.length > 0 && <Text size="sm" color="muted">Selected: {val.join(", ")}</Text>}
       </VStack>
     );
@@ -73,7 +73,7 @@ export const Basic: Story = {
 export const PreSelected: Story = {
   render: () => {
     const [val, setVal] = useState<Array<string | number>>(["react", "typescript", "tailwind"]);
-    return <MultiSelect options={skills} value={val} onChange={setVal} clearable placeholder="Pick your skills…" />;
+    return <MultiSelect options={skills} value={val} onValueChange={setVal} clearable placeholder="Pick your skills…" />;
   },
 };
 
@@ -88,12 +88,14 @@ export const Sizes: Story = {
   ),
 };
 
-/** Two variants: `outline` and `filled`. */
+/** Four variants, matching Input: `outline`, `filled`, `underline` and `unstyled`. */
 export const Variants: Story = {
   render: () => (
     <VStack gap="4" alignItems="stretch">
       <MultiSelect options={skills} variant="outline" defaultValue={["react"]} placeholder="Outline" />
       <MultiSelect options={skills} variant="filled" defaultValue={["react"]} placeholder="Filled" />
+      <MultiSelect options={skills} variant="underline" defaultValue={["react"]} placeholder="Underline" />
+      <MultiSelect options={skills} variant="unstyled" defaultValue={["react"]} placeholder="Unstyled" />
     </VStack>
   ),
 };
@@ -126,7 +128,7 @@ export const MaxSelection: Story = {
     const [val, setVal] = useState<Array<string | number>>(["react"]);
     return (
       <VStack gap="3" alignItems="stretch">
-        <MultiSelect options={skills} value={val} onChange={setVal} max={3} clearable placeholder="Pick up to 3 skills…" />
+        <MultiSelect options={skills} value={val} onValueChange={setVal} max={3} clearable placeholder="Pick up to 3 skills…" />
         <Text size="sm" color="muted">{val.length}/3 selected</Text>
       </VStack>
     );
@@ -137,7 +139,7 @@ export const MaxSelection: Story = {
 export const OptionGroups: Story = {
   render: () => {
     const [val, setVal] = useState<Array<string | number>>([]);
-    return <MultiSelect options={techStack} value={val} onChange={setVal} clearable placeholder="Select technologies…" />;
+    return <MultiSelect options={techStack} value={val} onValueChange={setVal} clearable placeholder="Select technologies…" />;
   },
 };
 
@@ -148,7 +150,7 @@ export const InField: Story = {
     return (
       <Field>
         <Field.Label>Tech stack</Field.Label>
-        <MultiSelect options={techStack} value={val} onChange={setVal} clearable placeholder="Select technologies…" />
+        <MultiSelect options={techStack} value={val} onValueChange={setVal} clearable placeholder="Select technologies…" />
         <Field.HelpText>Choose all technologies your team uses.</Field.HelpText>
       </Field>
     );
@@ -175,7 +177,7 @@ export const InForm: Story = {
             <MultiSelect
               options={skills}
               value={tags}
-              onChange={(v) => {
+              onValueChange={(v) => {
                 setTags(v);
                 setSubmitted(false);
               }}

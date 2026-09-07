@@ -3,11 +3,13 @@ import type { ColorScheme } from "../../../const/color-schemes";
 import type { PlacementProps } from "../../../utils/placement";
 
 export type SelectSize = "sm" | "md" | "lg";
-export type SelectVariant = "outline" | "filled";
+export type SelectVariant = "outline" | "filled" | "underline" | "unstyled";
 
 export interface SelectOptionItem {
   value: string | number;
   label: ReactNode;
+  /** Plain text the search matches against. Defaults to the label's text. */
+  searchLabel?: string;
   disabled?: boolean;
 }
 
@@ -19,14 +21,10 @@ export interface SelectOptionGroup {
 export type SelectOptionOrGroup = SelectOptionItem | SelectOptionGroup;
 
 /**
- * Extends the trigger's own button props so anything a caller passes — most
- * importantly `aria-label` — actually reaches the `role="combobox"` element.
- * Previously every prop was destructured explicitly with no rest, so a label
- * passed from outside was silently dropped and the only way to name a Select
- * was a Field wrapper.
- *
- * PlacementProps land on the wrapper: the parent decides how wide the control
- * is, the recipe decides how it looks.
+ * Extends the trigger's own button props, so `aria-label` and friends reach
+ * the `role="combobox"` element. PlacementProps, `className` and the form
+ * bridge land on the wrapper: the parent decides how wide the control is, the
+ * recipe decides how it looks.
  */
 export interface SelectProps
   extends Omit<
@@ -49,7 +47,9 @@ export interface SelectProps
   value?: string | number | null;
   /** Uncontrolled default value */
   defaultValue?: string | number | null;
-  /** Called when selection changes; receives `null` when cleared */
+  /** Called when the selection changes; receives `null` when cleared */
+  onValueChange?: (value: string | number | null) => void;
+  /** @deprecated Use `onValueChange`. Still called, after `onValueChange`. */
   onChange?: (value: string | number | null) => void;
   /** Called when selection is explicitly cleared */
   onClear?: () => void;

@@ -3,7 +3,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
 export type MultiSelectSize = "sm" | "md" | "lg";
-export type MultiSelectVariant = "outline" | "filled";
+export type MultiSelectVariant = "outline" | "filled" | "underline" | "unstyled";
 
 export interface MultiSelectOptionItem {
   value: string | number;
@@ -30,6 +30,8 @@ export interface MultiSelectProps
   /** Default selected values for uncontrolled usage */
   defaultValue?: Array<string | number>;
   /** Fires whenever the selection changes */
+  onValueChange?: (values: Array<string | number>) => void;
+  /** @deprecated Use `onValueChange`. Still called, after `onValueChange`. */
   onChange?: (values: Array<string | number>) => void;
   placeholder?: string;
   size?: MultiSelectSize;

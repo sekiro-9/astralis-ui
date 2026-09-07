@@ -1,27 +1,22 @@
 "use client";
 
 import { splitPlacement } from "../../../utils/placement";
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useId,
-  useImperativeHandle,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { useFieldContext } from "../field/field.context";
 import { inputVariants } from "../input/input.styles";
-import { flattenOptions, isGroup, OptionRow } from "../shared/options";
+import { filterOptions, flattenOptions, isGroup, optionId } from "../shared/options";
+import { OptionRow } from "../shared/option-row";
+import { useMenuPosition } from "../shared/menu-position";
+import { consumeEscape, usePickerLayer } from "../shared/use-picker-layer";
 import { astralisMerge } from "../../../utils/astralis-merge";
-import { menuPosition } from "../shared/menu-position";
+import { useControllableState } from "../../../hooks/use-controllable-state";
 import { accentClass } from "../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../icon/internal-icons";
-import type { ComboboxOptionOrGroup, ComboboxProps } from "./combobox.types";
+import type { ComboboxOptionItem, ComboboxProps } from "./combobox.types";
+
+type Value = string | number | null;
 
 /**
  * A filterable single-value picker on the ARIA combobox pattern: type to
@@ -34,6 +29,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       options = [],
       value,
       defaultValue = null,
+      onValueChange,
       onChange,
       onInputChange,
       placeholder = "Search…",
@@ -62,9 +58,14 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const id = idProp ?? field?.id;
     const listboxId = useId();
 
-    const isControlled = value !== undefined;
-    const [internalValue, setInternalValue] = useState<string | number | null>(defaultValue);
-    const selectedValue = isControlled ? (value ?? null) : internalValue;
+    const [selectedValue, setSelectedValue] = useControllableState<Value>({
+      value,
+      defaultValue,
+      onChange: (next) => {
+        onValueChange?.(next);
+        onChange?.(next);
+      },
+    });
 
     const flatAll = useMemo(() => flattenOptions(options), [options]);
     const selectedOption = useMemo(() => flatAll.find((o) => o.value === selectedValue) ?? null, [flatAll, selectedValue]);
@@ -87,66 +88,16 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       setText(committedText);
     }, [committedText]);
 
-    const filtered = useMemo<ComboboxOptionOrGroup[]>(() => {
-      const q = text.toLowerCase().trim();
-      if (!hasTyped || !q) return options;
-      return options
-        .map((o): ComboboxOptionOrGroup | null => {
-          if (isGroup(o)) {
-            const matches = o.options.filter((opt) => opt.label.toLowerCase().includes(q));
-            return matches.length ? { ...o, options: matches } : null;
-          }
-          return o.label.toLowerCase().includes(q) ? o : null;
-        })
-        .filter((o): o is ComboboxOptionOrGroup => o !== null);
-    }, [options, text, hasTyped]);
-
+    const filtered = useMemo(() => filterOptions(options, hasTyped ? text : ""), [options, text, hasTyped]);
     const flatFiltered = useMemo(() => flattenOptions(filtered), [filtered]);
     const navigable = useMemo(() => flatFiltered.filter((o) => !o.disabled), [flatFiltered]);
+    const activeOption = activeIdx >= 0 ? (navigable[activeIdx] ?? null) : null;
 
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => inputRef.current!, []);
 
-    const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
-    const updatePos = useCallback(() => {
-      if (!inputRef.current) return;
-      const r = inputRef.current.getBoundingClientRect();
-      setPos(menuPosition(r, dropdownRef.current));
-    }, []);
-
-    useLayoutEffect(() => {
-      if (!isOpen) return;
-      updatePos();
-      // Filtering changes the menu's height; a flipped menu must follow or
-      // it drifts away from its anchor.
-      const observer = new ResizeObserver(updatePos);
-      if (dropdownRef.current) observer.observe(dropdownRef.current);
-      window.addEventListener("scroll", updatePos, true);
-      window.addEventListener("resize", updatePos);
-      return () => {
-        observer.disconnect();
-        window.removeEventListener("scroll", updatePos, true);
-        window.removeEventListener("resize", updatePos);
-      };
-    }, [isOpen, updatePos]);
-
-    useEffect(() => {
-      if (!isOpen) return;
-      // Capture phase, deliberately: the press that dismisses this combobox
-      // may also unmount it (selecting elsewhere in an app that swaps panels).
-      // A bubble listener would be torn down mid-propagation and never fire,
-      // silently dropping the typed text; capture runs before any of that.
-      const handler = (e: PointerEvent) => {
-        const target = e.target as Node;
-        if (!inputRef.current?.contains(target) && !dropdownRef.current?.contains(target)) {
-          settleRef.current();
-        }
-      };
-      document.addEventListener("pointerdown", handler, true);
-      return () => document.removeEventListener("pointerdown", handler, true);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen]);
+    const pos = useMenuPosition(isOpen, inputRef, dropdownRef);
 
     /** Close; optionally revert the text to the committed selection. */
     const close = (revert: boolean) => {
@@ -156,13 +107,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       if (revert) setText(committedText);
     };
 
-    const commit = (next: string | number | null) => {
-      if (!isControlled) setInternalValue(next);
-      onChange?.(next);
+    const commit = (next: Value) => {
+      setSelectedValue(next);
       const picked = flatAll.find((o) => o.value === next) ?? null;
-      setText(
-        picked ? String(picked.label) : allowCustomValue && next != null ? String(next) : "",
-      );
+      setText(picked ? String(picked.label) : allowCustomValue && next != null ? String(next) : "");
       setIsOpen(false);
       setActiveIdx(-1);
       setHasTyped(false);
@@ -182,9 +130,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         commit(null);
         return;
       }
-      const match = flatAll.find(
-        (o) => !o.disabled && String(o.label).toLowerCase() === typed.toLowerCase(),
-      );
+      const match = flatAll.find((o) => !o.disabled && String(o.label).toLowerCase() === typed.toLowerCase());
       commit(match ? match.value : typed);
     };
 
@@ -194,12 +140,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       else close(true);
     };
 
-    // The outside-click listener attaches once per open and must not commit
-    // the text it closed over — it reads the latest settle through a ref.
-    const settleRef = useRef(settle);
-    useEffect(() => {
-      settleRef.current = settle;
-    });
+    usePickerLayer(isOpen, [inputRef, dropdownRef], settle);
 
     const handleKeyDown = (e: ReactKeyboardEvent) => {
       if (isReadOnly || isDisabled) return;
@@ -214,16 +155,19 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
           setActiveIdx((i) => Math.max(i - 1, 0));
           break;
         case "Enter":
-          if (isOpen && activeIdx >= 0 && navigable[activeIdx]) {
+          if (isOpen && activeOption) {
             e.preventDefault();
-            commit(navigable[activeIdx].value);
+            commit(activeOption.value);
           } else if (allowCustomValue) {
             e.preventDefault();
             commitText();
           }
           break;
         case "Escape":
-          if (isOpen) close(true);
+          if (isOpen) {
+            consumeEscape(e);
+            close(true);
+          }
           break;
         case "Tab":
           if (isOpen) settle();
@@ -239,7 +183,17 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     };
 
     const showClear = clearable && selectedValue != null && !isDisabled && !isReadOnly;
-    const activeOption = activeIdx >= 0 ? navigable[activeIdx] : null;
+
+    const renderOption = (opt: ComboboxOptionItem) => (
+      <OptionRow
+        key={String(opt.value)}
+        id={optionId(listboxId, flatFiltered.indexOf(opt))}
+        option={opt}
+        isActive={opt === activeOption}
+        isSelected={opt.value === selectedValue}
+        onPick={commit}
+      />
+    );
 
     return (
       <div
@@ -256,7 +210,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-controls={isOpen ? listboxId : undefined}
-          aria-activedescendant={activeOption ? `${listboxId}-${String(activeOption.value)}` : undefined}
+          aria-activedescendant={activeOption ? optionId(listboxId, flatFiltered.indexOf(activeOption)) : undefined}
           aria-autocomplete="list"
           aria-invalid={isInvalid || undefined}
           aria-describedby={field?.describedBy}
@@ -282,11 +236,20 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
           {loading ? (
             <SpinnerIcon />
           ) : showClear ? (
-            <button type="button" aria-label="Clear selection" onMouseDown={(e) => e.preventDefault()} onClick={handleClear} className="astralis:cursor-pointer astralis:transition-colors astralis:hover:text-label-base">
-              <XIcon className="astralis:h-3.5 astralis:w-3.5" />
+            <button
+              type="button"
+              aria-label="Clear selection"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={handleClear}
+              className="astralis:cursor-pointer astralis:transition-colors astralis:hover:text-label-base"
+            >
+              <XIcon aria-hidden="true" className="astralis:h-3.5 astralis:w-3.5" />
             </button>
           ) : (
-            <ChevronDownIcon aria-hidden="true" className={astralisMerge("astralis:h-4 astralis:w-4 astralis:transition-transform", isOpen && "astralis:rotate-180")} />
+            <ChevronDownIcon
+              aria-hidden="true"
+              className={astralisMerge("astralis:h-4 astralis:w-4 astralis:transition-transform", isOpen && "astralis:rotate-180")}
+            />
           )}
         </span>
 
@@ -297,6 +260,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
               ref={dropdownRef}
               id={listboxId}
               role="listbox"
+              aria-labelledby={id}
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
                 "astralis",
@@ -310,33 +274,13 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
               {filtered.map((entry) =>
                 isGroup(entry) ? (
                   <div key={entry.group} role="group" aria-label={entry.group}>
-                    <div className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:font-medium astralis:text-label-subtle">{entry.group}</div>
-                    {entry.options.map((opt) => {
-                      return (
-                        <OptionRow
-                          key={String(opt.value)}
-                          id={`${listboxId}-${String(opt.value)}`}
-                          option={opt}
-                          isActive={navigable[activeIdx] === opt}
-                          isSelected={opt.value === selectedValue}
-                          onPick={commit}
-                        />
-                      );
-                    })}
+                    <div aria-hidden="true" className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:font-medium astralis:text-label-subtle">
+                      {entry.group}
+                    </div>
+                    {entry.options.map(renderOption)}
                   </div>
                 ) : (
-                  (() => {
-                    return (
-                      <OptionRow
-                        key={String(entry.value)}
-                        id={`${listboxId}-${String(entry.value)}`}
-                        option={entry}
-                        isActive={navigable[activeIdx] === entry}
-                        isSelected={entry.value === selectedValue}
-                        onPick={commit}
-                      />
-                    );
-                  })()
+                  renderOption(entry)
                 ),
               )}
             </div>,

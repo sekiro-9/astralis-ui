@@ -1,6 +1,8 @@
 import { cva } from "class-variance-authority";
 import type { MultiSelectSize, MultiSelectVariant } from "./multi-select.types";
 
+const invalidBorder = "astralis:border-error-solid astralis:hover:border-error-solid";
+
 /** The tag-wrapping trigger container. Focus ring is applied separately (React-driven). */
 export const msContainer = cva(
   "astralis:w-full astralis:flex astralis:items-center astralis:flex-wrap astralis:gap-1.5 astralis:cursor-text astralis:transition-colors",
@@ -14,19 +16,25 @@ export const msContainer = cva(
       variant: {
         outline: "astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:rounded-lg astralis:hover:border-stroke-muted",
         filled: "astralis:border-normal astralis:border-transparent astralis:bg-surface-subtle astralis:rounded-lg astralis:hover:bg-surface-muted",
+        underline:
+          "astralis:border-0 astralis:border-b-2 astralis:border-stroke-base astralis:bg-transparent astralis:rounded-none astralis:px-0 astralis:hover:border-stroke-muted",
+        unstyled: "astralis:border-0 astralis:bg-transparent astralis:rounded-none",
       },
       invalid: { true: "", false: "" },
     },
     compoundVariants: [
-      { invalid: true, variant: "outline", className: "astralis:border-error-solid astralis:hover:border-error-solid" },
-      { invalid: true, variant: "filled", className: "astralis:border-error-solid astralis:hover:border-error-solid" },
+      { invalid: true, variant: "outline", className: invalidBorder },
+      { invalid: true, variant: "filled", className: invalidBorder },
+      { invalid: true, variant: "underline", className: invalidBorder },
     ],
     defaultVariants: { size: "md", variant: "outline", invalid: false },
   },
 );
 
-/** Focus-ring chrome applied while the inline search input is focused. */
+/** Focus chrome applied while the inline search input is focused. */
 export function msFocusRing(variant: MultiSelectVariant, invalid: boolean): string {
+  if (variant === "unstyled") return "";
+  if (variant === "underline") return invalid ? "astralis:border-error-solid" : "astralis:border-accent-stroke";
   const bg = variant === "filled" ? "astralis:bg-surface-base " : "";
   if (invalid) return bg + "astralis:border-error-solid astralis:ring-2 astralis:ring-error-muted";
   return bg + "astralis:border-accent-stroke astralis:ring-2 astralis:ring-accent-ring";
@@ -44,10 +52,3 @@ export const msInputText: Record<MultiSelectSize, string> = {
   md: "astralis:text-sm",
   lg: "astralis:text-base",
 };
-
-/** Fill/text for one option row given its state. */
-export function msOptionClasses(active: boolean, disabled: boolean): string {
-  if (disabled) return "astralis:cursor-not-allowed astralis:opacity-moderate astralis:text-label-subtle";
-  if (active) return "astralis:bg-accent-subtle astralis:text-accent-label";
-  return "astralis:text-label-base astralis:hover:bg-surface-subtle";
-}

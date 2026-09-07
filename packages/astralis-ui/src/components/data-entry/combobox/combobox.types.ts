@@ -6,6 +6,8 @@ import type { InputSize, InputVariant } from "../input/input.types";
 export interface ComboboxOptionItem {
   label: string;
   value: string | number;
+  /** Text the filter matches against, when it should differ from the label. */
+  searchLabel?: string;
   disabled?: boolean;
 }
 
@@ -23,6 +25,8 @@ export interface ComboboxProps
   value?: string | number | null;
   defaultValue?: string | number | null;
   /** Fires when a selection commits (pick or clear). */
+  onValueChange?: (value: string | number | null) => void;
+  /** @deprecated Use `onValueChange`. Still called, after `onValueChange`. */
   onChange?: (value: string | number | null) => void;
   /** Fires on every keystroke in the filter text. */
   onInputChange?: (text: string) => void;

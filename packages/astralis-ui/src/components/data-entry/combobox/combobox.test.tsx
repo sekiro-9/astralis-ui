@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Combobox } from "./combobox";
+import { Modal } from "../../overlay/modal";
+import { Popover } from "../../overlay/popover";
 
 const OPTIONS = [
   { label: "Next.js", value: "next" },
@@ -154,5 +156,77 @@ describe("Combobox custom values", () => {
 
     expect(onChange).not.toHaveBeenCalled();
     expect(input().value).toBe("Next.js");
+  });
+});
+
+describe("Combobox API and overlays", () => {
+  it("fires onValueChange and the deprecated onChange on commit", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const onChange = vi.fn();
+    render(<Combobox options={OPTIONS} onValueChange={onValueChange} onChange={onChange} />);
+
+    await user.type(input(), "ast");
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(onValueChange).toHaveBeenCalledWith("astro");
+    expect(onChange).toHaveBeenCalledWith("astro");
+  });
+
+  it("option ids stay valid when values contain spaces", async () => {
+    const user = userEvent.setup();
+    render(<Combobox options={[{ label: "New York", value: "new york" }]} />);
+
+    await user.type(input(), "new");
+    await user.keyboard("{ArrowDown}");
+    const id = input().getAttribute("aria-activedescendant")!;
+    expect(id).not.toMatch(/\s/);
+    expect(document.getElementById(id)).toHaveTextContent("New York");
+  });
+
+  it("filters by searchLabel when given", async () => {
+    const user = userEvent.setup();
+    render(<Combobox options={[{ label: "United Kingdom", value: "uk", searchLabel: "united kingdom britain gb" }]} />);
+    await user.type(input(), "brit");
+    expect(visibleOptions().map((o) => o.textContent)).toEqual(["United Kingdom"]);
+  });
+
+  it("Escape closes the listbox only, not the Modal around it", async () => {
+    const user = userEvent.setup();
+    render(
+      <Modal defaultOpen>
+        <Modal.Content>
+          <Modal.Title>Pick</Modal.Title>
+          <Combobox aria-label="Framework" options={OPTIONS} />
+        </Modal.Content>
+      </Modal>,
+    );
+    await waitFor(() => expect(input()).toHaveFocus());
+    await waitFor(() => expect(listbox()).toBeInTheDocument());
+
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("listbox")).toBeNull();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("choosing an option inside a Popover keeps the Popover open", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <Popover>
+        <Popover.Trigger>
+          <button>Filters</button>
+        </Popover.Trigger>
+        <Popover.Content>
+          <Popover.Title>Filters</Popover.Title>
+          <Combobox options={OPTIONS} onValueChange={onValueChange} />
+        </Popover.Content>
+      </Popover>,
+    );
+    await user.click(screen.getByRole("button", { name: "Filters" }));
+    await user.click(await screen.findByRole("combobox"));
+    await user.click(screen.getByRole("option", { name: "Vite" }));
+
+    expect(onValueChange).toHaveBeenCalledWith("vite");
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 });

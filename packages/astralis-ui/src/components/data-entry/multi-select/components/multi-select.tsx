@@ -1,51 +1,33 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  forwardRef,
-} from "react";
+import { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useFieldContext } from "../../field/field.context";
-import {
-  msContainer,
-  msFocusRing,
-  msTagSizes,
-  msInputText,
-  msOptionClasses,
-} from "../multi-select.styles";
+import { msContainer, msFocusRing, msTagSizes, msInputText } from "../multi-select.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
-import { menuPosition } from "../../shared/menu-position";
-import { flattenOptions, isGroup } from "../../shared/options";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { useMenuPosition } from "../../shared/menu-position";
+import { filterOptions, flattenOptions, isGroup, optionId, optionSearchText } from "../../shared/options";
+import { OptionRow } from "../../shared/option-row";
+import { consumeEscape, usePickerLayer } from "../../shared/use-picker-layer";
 import { accentClass } from "../../../../const/color-schemes";
-import { ChevronDownIcon, XIcon, CheckIcon, SpinnerIcon } from "../../../icon/internal-icons";
-import type {
-  MultiSelectOptionGroup,
-  MultiSelectOptionItem,
-  MultiSelectOptionOrGroup,
-  MultiSelectProps,
-  MultiSelectSize,
-} from "../multi-select.types";
+import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../../icon/internal-icons";
+import type { MultiSelectOptionItem, MultiSelectProps, MultiSelectSize } from "../multi-select.types";
 
-
-function getSearchText(opt: MultiSelectOptionItem): string {
-  return opt.searchLabel ?? String(opt.label);
-}
+type Values = Array<string | number>;
+const NO_VALUES: Values = [];
 
 function Tag({
   label,
+  name,
   onRemove,
   disabled,
   size,
 }: {
   label: ReactNode;
+  name: string;
   onRemove: () => void;
   disabled?: boolean;
   size: MultiSelectSize;
@@ -62,50 +44,17 @@ function Tag({
         <button
           type="button"
           tabIndex={-1}
-          aria-label="Remove"
+          aria-label={`Remove ${name}`}
           onMouseDown={(e) => {
-            e.preventDefault(); // don't blur the container
+            e.preventDefault(); // don't blur the search input
             onRemove();
           }}
           className="astralis:flex astralis:items-center astralis:shrink-0 astralis:transition-colors astralis:hover:text-accent-solid"
         >
-          <XIcon className="astralis:h-2.5 astralis:w-2.5" />
+          <XIcon aria-hidden="true" className="astralis:h-2.5 astralis:w-2.5" />
         </button>
       )}
     </span>
-  );
-}
-
-function OptionItem({
-  option,
-  isActive,
-  isSelected,
-  onToggle,
-}: {
-  option: MultiSelectOptionItem;
-  isActive: boolean;
-  isSelected: boolean;
-  onToggle: (value: string | number) => void;
-}) {
-  return (
-    <div
-      role="option"
-      aria-selected={isSelected}
-      aria-disabled={option.disabled}
-      onMouseDown={(e) => {
-        e.preventDefault();
-        if (!option.disabled) onToggle(option.value);
-      }}
-      className={astralisMerge(
-        "astralis:flex astralis:items-center astralis:justify-between astralis:gap-2",
-        "astralis:px-3 astralis:py-2 astralis:rounded-lg astralis:text-sm astralis:cursor-pointer astralis:transition-colors",
-        msOptionClasses(isActive, !!option.disabled),
-        isSelected && "astralis:font-medium",
-      )}
-    >
-      <span className="astralis:truncate">{option.label}</span>
-      {isSelected && <CheckIcon className="astralis:h-3.5 astralis:w-3.5 astralis:shrink-0 astralis:text-accent-solid" />}
-    </div>
   );
 }
 
@@ -114,7 +63,8 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     {
       options = [],
       value,
-      defaultValue = [],
+      defaultValue = NO_VALUES,
+      onValueChange,
       onChange,
       placeholder = "Select options…",
       size = "md",
@@ -130,6 +80,8 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
       name,
       className = "",
       id: idProp,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
       ...rest
     },
     ref,
@@ -140,92 +92,53 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
     const isInvalid = invalidProp ?? field?.invalid;
     const isReadOnly = readOnlyProp ?? field?.readOnly;
     const id = idProp ?? field?.id;
+    const listboxId = useId();
 
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [activeIdx, setActiveIdx] = useState(-1);
     const [isFocused, setIsFocused] = useState(false);
 
-    const isControlled = value !== undefined;
-    const [internalValues, setInternalValues] = useState<Array<string | number>>(defaultValue);
-    const selectedValues = isControlled ? (value ?? []) : internalValues;
+    const [selectedValues, setSelectedValues] = useControllableState<Values>({
+      value,
+      defaultValue,
+      onChange: (next) => {
+        onValueChange?.(next);
+        onChange?.(next);
+      },
+    });
 
     const flatAll = useMemo(() => flattenOptions(options), [options]);
-
     const selectedOptions = useMemo(
       () => flatAll.filter((o) => selectedValues.includes(o.value)),
       [flatAll, selectedValues],
     );
 
-    const filteredOptions = useMemo<MultiSelectOptionOrGroup[]>(() => {
-      const q = search.toLowerCase().trim();
-      if (!q) return options;
-      return options
-        .map((o): MultiSelectOptionOrGroup | null => {
-          if (isGroup(o)) {
-            const filtered = o.options.filter((opt) => getSearchText(opt).toLowerCase().includes(q));
-            return filtered.length ? { ...o, options: filtered } : null;
-          }
-          return getSearchText(o).toLowerCase().includes(q) ? o : null;
-        })
-        .filter((o): o is MultiSelectOptionOrGroup => o !== null);
-    }, [options, search]);
-
+    const filteredOptions = useMemo(() => filterOptions(options, search), [options, search]);
     const flatFiltered = useMemo(() => flattenOptions(filteredOptions), [filteredOptions]);
-    const navigable = useMemo(() => flatFiltered.filter((o) => !o.disabled), [flatFiltered]);
-
     const isMaxReached = max != null && selectedValues.length >= max;
+    // At the cap, unselected options can't be picked, so arrows skip them too.
+    const isBlocked = (o: MultiSelectOptionItem) => !!o.disabled || (isMaxReached && !selectedValues.includes(o.value));
+    const navigable = flatFiltered.filter((o) => !isBlocked(o));
+    const activeOption = activeIdx >= 0 ? (navigable[activeIdx] ?? null) : null;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
-
     useImperativeHandle(ref, () => containerRef.current!, []);
 
-    const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+    const pos = useMenuPosition(isOpen, containerRef, dropdownRef);
 
-    const updatePos = useCallback(() => {
-      if (!containerRef.current) return;
-      const r = containerRef.current.getBoundingClientRect();
-      setPos(menuPosition(r, dropdownRef.current));
-    }, []);
+    const closeMenu = () => {
+      setIsOpen(false);
+      setSearch("");
+      setActiveIdx(-1);
+    };
 
-    useLayoutEffect(() => {
-      if (!isOpen) return;
-      updatePos();
-      // Filtering changes the menu's height; a flipped menu must follow or
-      // it drifts away from its anchor.
-      const observer = new ResizeObserver(updatePos);
-      if (dropdownRef.current) observer.observe(dropdownRef.current);
-      window.addEventListener("scroll", updatePos, true);
-      window.addEventListener("resize", updatePos);
-      return () => {
-        observer.disconnect();
-        window.removeEventListener("scroll", updatePos, true);
-        window.removeEventListener("resize", updatePos);
-      };
-    }, [isOpen, updatePos]);
+    usePickerLayer(isOpen, [containerRef, dropdownRef], closeMenu);
 
     useEffect(() => {
-      if (isOpen) {
-        setActiveIdx(-1);
-        requestAnimationFrame(() => searchRef.current?.focus());
-      } else {
-        setSearch("");
-        setActiveIdx(-1);
-      }
-    }, [isOpen]);
-
-    useEffect(() => {
-      if (!isOpen) return;
-      const handler = (e: MouseEvent) => {
-        const target = e.target as Node;
-        if (!containerRef.current?.contains(target) && !dropdownRef.current?.contains(target)) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handler);
-      return () => document.removeEventListener("mousedown", handler);
+      if (isOpen) searchRef.current?.focus({ preventScroll: true });
     }, [isOpen]);
 
     const toggleValue = (val: string | number) => {
@@ -235,43 +148,45 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
         : isMaxReached
           ? selectedValues
           : [...selectedValues, val];
-
-      if (!isControlled) setInternalValues(next);
-      onChange?.(next);
+      setSelectedValues(next);
     };
 
     const removeValue = (val: string | number) => {
       if (isReadOnly) return;
-      const next = selectedValues.filter((v) => v !== val);
-      if (!isControlled) setInternalValues(next);
-      onChange?.(next);
+      setSelectedValues(selectedValues.filter((v) => v !== val));
     };
 
     const clearAll = (e: ReactMouseEvent) => {
       e.stopPropagation();
       if (isReadOnly) return;
-      if (!isControlled) setInternalValues([]);
-      onChange?.([]);
+      setSelectedValues([]);
+      searchRef.current?.focus();
     };
 
-    const handleContainerClick = () => {
-      if (!isDisabled && !isReadOnly) setIsOpen((o) => !o);
+    const handleContainerClick = (e: ReactMouseEvent) => {
+      if (isDisabled || isReadOnly) return;
+      // A click on the input already opened it through focus; only the rest
+      // of the container toggles.
+      if (e.target === searchRef.current) setIsOpen(true);
+      else if (isOpen) closeMenu();
+      else setIsOpen(true);
+      searchRef.current?.focus();
     };
 
     const handleKeyDown = (e: ReactKeyboardEvent) => {
       if (isReadOnly) {
-        if (e.key === "Tab") setIsOpen(false);
-        else e.preventDefault();
+        if (e.key !== "Tab") e.preventDefault();
         return;
       }
       switch (e.key) {
         case "Backspace":
-          if (!search && selectedValues.length > 0) {
-            removeValue(selectedValues[selectedValues.length - 1]);
-          }
+          if (!search && selectedValues.length > 0) removeValue(selectedValues[selectedValues.length - 1]);
           break;
         case "Escape":
-          setIsOpen(false);
+          if (isOpen) {
+            consumeEscape(e);
+            closeMenu();
+          }
           break;
         case "ArrowDown":
           e.preventDefault();
@@ -285,15 +200,26 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
         case "Enter":
           e.preventDefault();
           if (!isOpen) setIsOpen(true);
-          else if (activeIdx >= 0 && navigable[activeIdx]) toggleValue(navigable[activeIdx].value);
+          else if (activeOption) toggleValue(activeOption.value);
           break;
         case "Tab":
-          setIsOpen(false);
+          if (isOpen) closeMenu();
           break;
       }
     };
 
     const showClear = clearable && selectedValues.length > 0 && !isDisabled && !isReadOnly;
+
+    const renderOption = (item: MultiSelectOptionItem) => (
+      <OptionRow
+        key={String(item.value)}
+        id={optionId(listboxId, flatFiltered.indexOf(item))}
+        option={isBlocked(item) && !item.disabled ? { ...item, disabled: true } : item}
+        isActive={item === activeOption}
+        isSelected={selectedValues.includes(item.value)}
+        onPick={toggleValue}
+      />
+    );
 
     return (
       <div
@@ -303,18 +229,9 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
         {/* Native form bridge — one hidden input per selected value (repeated
             name), so the selection reaches <form> submission. */}
         {name != null &&
-          selectedValues.map((v) => (
-            <input key={String(v)} type="hidden" name={name} value={v} disabled={!!isDisabled} />
-          ))}
+          selectedValues.map((v) => <input key={String(v)} type="hidden" name={name} value={v} disabled={!!isDisabled} />)}
         <div
           ref={containerRef}
-          id={id}
-          role="combobox"
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-          aria-invalid={isInvalid || undefined}
-          aria-describedby={field?.describedBy}
-          aria-readonly={isReadOnly || undefined}
           onClick={handleContainerClick}
           className={astralisMerge(
             msContainer({ size, variant, invalid: !!isInvalid }),
@@ -327,6 +244,7 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
             <Tag
               key={String(opt.value)}
               label={opt.label}
+              name={optionSearchText(opt)}
               size={size}
               disabled={!!isDisabled || !!isReadOnly}
               onRemove={() => removeValue(opt.value)}
@@ -335,8 +253,20 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
 
           <input
             ref={searchRef}
-            aria-label="Search options"
+            id={id}
             type="text"
+            role="combobox"
+            autoComplete="off"
+            aria-haspopup="listbox"
+            aria-expanded={isOpen}
+            aria-controls={isOpen ? listboxId : undefined}
+            aria-activedescendant={activeOption ? optionId(listboxId, flatFiltered.indexOf(activeOption)) : undefined}
+            aria-autocomplete="list"
+            aria-label={ariaLabel ?? (ariaLabelledBy || field ? undefined : placeholder)}
+            aria-labelledby={ariaLabelledBy}
+            aria-invalid={isInvalid || undefined}
+            aria-describedby={field?.describedBy}
+            aria-required={field?.required || undefined}
             placeholder={selectedValues.length === 0 ? placeholder : ""}
             value={search}
             onChange={(e) => {
@@ -353,7 +283,6 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
             onBlur={() => setIsFocused(false)}
             disabled={!!isDisabled}
             readOnly={isReadOnly}
-            aria-readonly={isReadOnly || undefined}
             className={astralisMerge(
               "astralis:flex-1 astralis:min-w-16 astralis:bg-transparent astralis:outline-none astralis:text-label-base astralis:placeholder:text-label-subtle",
               msInputText[size],
@@ -368,15 +297,16 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
                 {showClear && (
                   <button
                     type="button"
-                    tabIndex={-1}
                     aria-label="Clear all"
-                    onMouseDown={clearAll}
-                    className="astralis:flex astralis:items-center astralis:rounded-sm astralis:p-0.5 astralis:transition-colors astralis:hover:text-label-base"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={clearAll}
+                    className="astralis:flex astralis:items-center astralis:rounded-sm astralis:p-0.5 astralis:transition-colors astralis:hover:text-label-base astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-accent-ring"
                   >
-                    <XIcon className="astralis:h-3.5 astralis:w-3.5" />
+                    <XIcon aria-hidden="true" className="astralis:h-3.5 astralis:w-3.5" />
                   </button>
                 )}
                 <ChevronDownIcon
+                  aria-hidden="true"
                   className={astralisMerge(
                     "astralis:h-4 astralis:w-4 astralis:shrink-0 astralis:transition-transform",
                     isOpen && "astralis:rotate-180",
@@ -391,8 +321,6 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
           createPortal(
             <div
               ref={dropdownRef}
-              role="listbox"
-              aria-multiselectable="true"
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
                 "astralis astralis:bg-surface-raised astralis:border-normal astralis:border-stroke-base astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
@@ -400,46 +328,41 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
               )}
             >
               {isMaxReached && (
-                <div className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:text-label-subtle astralis:border-b astralis:border-stroke-subtle astralis:bg-surface-subtle">
+                <div
+                  role="status"
+                  className="astralis:px-3 astralis:py-1.5 astralis:text-xs astralis:text-label-subtle astralis:border-b astralis:border-stroke-subtle astralis:bg-surface-subtle"
+                >
                   Maximum {max} item{max !== 1 ? "s" : ""} selected
                 </div>
               )}
 
-              <div className="astralis:max-h-60 astralis:overflow-y-auto astralis:p-1.5">
+              <div
+                id={listboxId}
+                role="listbox"
+                aria-multiselectable="true"
+                aria-labelledby={id}
+                className="astralis:max-h-60 astralis:overflow-y-auto astralis:p-1.5"
+              >
                 {filteredOptions.length === 0 ? (
                   <div className="astralis:px-3 astralis:py-4 astralis:text-sm astralis:text-label-subtle astralis:text-center">
                     {emptyText}
                   </div>
                 ) : (
-                  filteredOptions.map((opt, i) => {
-                    if (isGroup(opt)) {
-                      return (
-                        <div key={`g-${i}`}>
-                          <div className="astralis:px-2 astralis:pt-2 astralis:pb-1 astralis:text-xs astralis:font-semibold astralis:uppercase astralis:tracking-wider astralis:text-label-subtle">
-                            {opt.group}
-                          </div>
-                          {opt.options.map((item) => (
-                            <OptionItem
-                              key={String(item.value)}
-                              option={isMaxReached && !selectedValues.includes(item.value) ? { ...item, disabled: true } : item}
-                              isActive={navigable.findIndex((n) => n.value === item.value) === activeIdx}
-                              isSelected={selectedValues.includes(item.value)}
-                              onToggle={toggleValue}
-                            />
-                          ))}
+                  filteredOptions.map((opt, i) =>
+                    isGroup(opt) ? (
+                      <div key={`g-${i}`} role="group" aria-label={opt.group}>
+                        <div
+                          aria-hidden="true"
+                          className="astralis:px-2 astralis:pt-2 astralis:pb-1 astralis:text-xs astralis:font-semibold astralis:uppercase astralis:tracking-wider astralis:text-label-subtle"
+                        >
+                          {opt.group}
                         </div>
-                      );
-                    }
-                    return (
-                      <OptionItem
-                        key={String(opt.value)}
-                        option={isMaxReached && !selectedValues.includes(opt.value) ? { ...opt, disabled: true } : opt}
-                        isActive={navigable.findIndex((n) => n.value === opt.value) === activeIdx}
-                        isSelected={selectedValues.includes(opt.value)}
-                        onToggle={toggleValue}
-                      />
-                    );
-                  })
+                        {opt.options.map(renderOption)}
+                      </div>
+                    ) : (
+                      renderOption(opt)
+                    ),
+                  )
                 )}
               </div>
             </div>,

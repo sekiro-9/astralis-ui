@@ -68,7 +68,7 @@ export const Basic: Story = {
     const [val, setVal] = useState<string | number | null>(null);
     return (
       <Box w="64">
-        <Select options={fruits} value={val} onChange={setVal} placeholder="Pick a fruit" />
+        <Select options={fruits} value={val} onValueChange={setVal} placeholder="Pick a fruit" />
         {val && <Box mt="2"><Text size="sm" color="muted">Selected: {val}</Text></Box>}
       </Box>
     );
@@ -86,12 +86,14 @@ export const Sizes: Story = {
   ),
 };
 
-/** Two variants: `outline` and `filled`. */
+/** Four variants, matching Input: `outline`, `filled`, `underline` and `unstyled`. */
 export const Variants: Story = {
   render: () => (
     <VStack gap="3" alignItems="stretch" w="64">
       <Select options={fruits} variant="outline" placeholder="Outline (default)" />
       <Select options={fruits} variant="filled" placeholder="Filled" />
+      <Select options={fruits} variant="underline" placeholder="Underline" />
+      <Select options={fruits} variant="unstyled" placeholder="Unstyled" />
     </VStack>
   ),
 };
@@ -127,7 +129,7 @@ export const Clearable: Story = {
     const [val, setVal] = useState<string | number | null>("cherry");
     return (
       <Box w="64">
-        <Select options={fruits} value={val} onChange={setVal} clearable placeholder="Pick a fruit" />
+        <Select options={fruits} value={val} onValueChange={setVal} clearable placeholder="Pick a fruit" />
         <Box mt="2"><Text size="sm" color="muted">Value: {val ?? "null"}</Text></Box>
       </Box>
     );
@@ -140,7 +142,7 @@ export const Searchable: Story = {
     const [val, setVal] = useState<string | number | null>(null);
     return (
       <Box w="72">
-        <Select options={countries} value={val} onChange={setVal} searchable clearable placeholder="Search a country…" />
+        <Select options={countries} value={val} onValueChange={setVal} searchable clearable placeholder="Search a country…" />
       </Box>
     );
   },
@@ -152,7 +154,7 @@ export const OptionGroups: Story = {
     const [val, setVal] = useState<string | number | null>(null);
     return (
       <Box w="64">
-        <Select options={grouped} value={val} onChange={setVal} placeholder="Pick a technology" />
+        <Select options={grouped} value={val} onValueChange={setVal} placeholder="Pick a technology" />
       </Box>
     );
   },
@@ -164,7 +166,7 @@ export const SearchableGroups: Story = {
     const [val, setVal] = useState<string | number | null>(null);
     return (
       <Box w="64">
-        <Select options={grouped} value={val} onChange={setVal} searchable clearable placeholder="Search technologies…" />
+        <Select options={grouped} value={val} onValueChange={setVal} searchable clearable placeholder="Search technologies…" />
       </Box>
     );
   },
@@ -178,7 +180,7 @@ export const InField: Story = {
       <Box w="72">
         <Field>
           <Field.Label>Country of residence</Field.Label>
-          <Select options={countries} value={val} onChange={setVal} searchable clearable placeholder="Select a country" />
+          <Select options={countries} value={val} onValueChange={setVal} searchable clearable placeholder="Select a country" />
           <Field.HelpText>This will be used for billing purposes.</Field.HelpText>
         </Field>
       </Box>
@@ -210,7 +212,7 @@ export const InForm: Story = {
         <VStack gap="4" alignItems="stretch" w="72">
           <Field invalid={isInvalid} required>
             <Field.Label>Your role</Field.Label>
-            <Select options={roleOptions} value={role} onChange={setRole} invalid={isInvalid} placeholder="Select your role" />
+            <Select options={roleOptions} value={role} onValueChange={setRole} invalid={isInvalid} placeholder="Select your role" />
             {isInvalid && <Field.ErrorText>Please select a role to continue.</Field.ErrorText>}
           </Field>
           <Button type="submit">{submitted && role ? `✓ Submitted as ${role}` : "Submit"}</Button>
