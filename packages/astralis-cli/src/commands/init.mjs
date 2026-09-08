@@ -1,9 +1,10 @@
-import { parseArgs } from "node:util";
 import { readFileSync, writeFileSync } from "node:fs";
-import { spawnSync } from "node:child_process";
 import { readPackageJson, detectPackageManager, detectFramework, findEntryFile } from "../lib/detect.mjs";
 import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports, parses } from "../lib/edits.mjs";
 import { ok, warn, info, fail, bold, dim, cyan } from "../lib/ui.mjs";
+import { parseCommandArgs } from "../lib/args.mjs";
+import { commandNamed } from "../lib/commands.mjs";
+import { runCommand } from "../lib/run.mjs";
 
 const PROVIDER_IMPORT = 'import { AstralisProvider } from "astralis-ui";';
 const STYLES_IMPORT = 'import "astralis-ui/styles.css";';
@@ -24,14 +25,13 @@ const MANUAL_SNIPPET = `
 /**
  * `nested` is set when `create` calls this as its wiring step. It suppresses
  * the sign-off, because create prints its own "Next steps" immediately after —
- * two closing blocks in one run read as the command finishing twice.
+ * two closing blocks in one run read as the command finishing twice. `pm` is
+ * create's package manager: a fresh scaffold has no lockfile to detect it from.
  */
-export async function run(argv, { nested = false } = {}) {
-  const { values } = parseArgs({
-    args: argv,
-    options: { "dry-run": { type: "boolean", default: false } },
-  });
-  const dryRun = values["dry-run"];
+export async function run(argv, { nested = false, pm: givenPm } = {}) {
+  const args = parseCommandArgs(commandNamed("init"), argv);
+  if (!args) return;
+  const dryRun = args.values["dry-run"];
   const cwd = process.cwd();
 
   const pkg = readPackageJson(cwd);
@@ -54,7 +54,7 @@ export async function run(argv, { nested = false } = {}) {
     console.log(MANUAL_SNIPPET);
     return;
   }
-  const pm = detectPackageManager(cwd);
+  const pm = givenPm ?? detectPackageManager(cwd);
 
   /*
    * Step output is buffered until we know whether anything actually changed.
@@ -92,9 +92,7 @@ export async function run(argv, { nested = false } = {}) {
     changed = true;
     flush();
     info(`installing astralis-ui with ${pm}…`);
-    // One command string: pm binaries are .cmd shims on Windows (need a shell),
-    // and shell+args-array triggers Node's unescaped-args deprecation.
-    const result = spawnSync(`${pm} add astralis-ui`, { stdio: "inherit", shell: true });
+    const result = runCommand(pm, ["add", "astralis-ui"]);
     if (result.status !== 0) fail(`${pm} add astralis-ui failed — install it manually, then re-run init.`);
     ok("astralis-ui installed");
   }
@@ -169,5 +167,9 @@ export async function run(argv, { nested = false } = {}) {
 
   if (nested) return;
 
+  if (dryRun) {
+    console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan("astralis init")} to apply it.`);
+    return;
+  }
   console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
 }

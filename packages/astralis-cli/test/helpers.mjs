@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { delimiter, dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
@@ -51,4 +51,26 @@ export async function serve(routes) {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const url = `http://127.0.0.1:${server.address().port}`;
   return { url, close: () => new Promise((resolve) => server.close(resolve)) };
+}
+
+/**
+ * Put a fake executable called `name` in `dir`, running `script` (JS source)
+ * with node: a .cmd shim on Windows, a sh script elsewhere. Prepend `dir` to
+ * PATH to have the CLI find it instead of the real one.
+ */
+export function fakeBin(dir, name, script) {
+  mkdirSync(dir, { recursive: true });
+  const js = join(dir, `${name}.fake.mjs`);
+  writeFileSync(js, script);
+  if (process.platform === "win32") {
+    writeFileSync(join(dir, `${name}.cmd`), `@"${process.execPath}" "${js}" %*\r\n`);
+  } else {
+    writeFileSync(join(dir, name), `#!/bin/sh\nexec "${process.execPath}" "${js}" "$@"\n`, { mode: 0o755 });
+  }
+}
+
+/** PATH with `dir` first, under whichever key this platform spells it. */
+export function pathWith(dir) {
+  const key = Object.keys(process.env).find((k) => k.toUpperCase() === "PATH") ?? "PATH";
+  return { [key]: `${dir}${delimiter}${process.env[key] ?? ""}` };
 }

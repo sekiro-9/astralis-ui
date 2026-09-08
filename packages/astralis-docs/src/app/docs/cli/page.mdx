@@ -1,12 +1,13 @@
 export const metadata = {
   title: "CLI",
-  description: "Scaffold a project, generate a static brand theme, and connect AI agents — the astralis command-line tool.",
+  description: "Scaffold a project, add blocks, generate a static brand theme, validate code against the design system, and connect AI agents — the astralis command-line tool.",
 };
 
 # CLI
 
-Scaffold a project, generate a static brand theme, and connect AI agents — the
-`astralis` command-line tool.
+Scaffold a project, add blocks, generate a static brand theme, validate code
+against the design system, and connect AI agents — the `astralis`
+command-line tool.
 
 ## Running it
 
@@ -23,14 +24,14 @@ pnpm add -g astralis-cli
 astralis <command>
 ```
 
-Run `astralis --help` for the command list, or `astralis <command> --help` for
-a command's options.
+It needs Node `^22.18` or `>=24.11`. Run `astralis --help` for the command
+list, or `astralis <command> --help` for a command's options. The option
+tables on this page are generated from the same source as `--help`.
 
 ## `create` — start a new project
 
 Scaffolds a fresh app with the official `create-next-app` / `create-vite`
-prompts, then wires Astralis into it — the stylesheet import and the
-`<AstralisProvider>` are already in place when it finishes.
+prompts, then wires Astralis into it.
 
 ```bash
 npx astralis-cli create my-app
@@ -38,15 +39,18 @@ npx astralis-cli create my-app
 
 It asks which framework you want — Next.js, or React via Vite — then hands
 off to that scaffolder's own prompts, so you get the official setup rather
-than a copy of it that drifts. When it finishes you have a running app with
-the stylesheet imported, the provider mounted, and a welcome page you can
-delete.
+than a copy of it that drifts. When it finishes, the stylesheet is imported,
+the provider is mounted, and a welcome page you can delete replaces the
+scaffolder's demo. Run `npm run dev` (or your package manager's equivalent)
+inside the new folder to start it.
 
 | Option | |
 | --- | --- |
-| `--framework next\|vite` | Skip the framework prompt. |
-| `--no-starter` | Keep the scaffolder's own demo page instead of the Astralis welcome screen. |
-| *extra args* | Anything after the name passes straight to the underlying scaffolder. |
+| `--framework <next\|vite>` | Skip the framework prompt. |
+| `--no-starter` | Keep the scaffolder's demo page instead of the Astralis welcome screen. |
+
+With `--yes` it asks nothing: pass `--framework`, and it tells the scaffolder
+to take its defaults too.
 
 ## `init` — add Astralis to an existing project
 
@@ -61,7 +65,12 @@ npx astralis-cli init
 
 | Option | |
 | --- | --- |
-| `--dry-run` | Print the changes it would make without writing anything. |
+| `--dry-run` | Show the changes without writing anything. |
+
+It reads your entry file rather than pattern-matching it, so an import that is
+already there (however it's quoted or wrapped) isn't added twice, and it never
+writes a file that no longer parses. If your entry file is a shape it can't
+edit safely, it prints the manual steps instead. Running it twice is safe.
 
 ## `add` — copy a block into your project
 
@@ -82,38 +91,130 @@ npx astralis-cli add --list
 
 | Option | |
 | --- | --- |
-| `--list` | Print every available block, grouped by category, and exit. |
-| `--dir <path>` | Where to write (default `[src/]components/blocks`). |
+| `--list` | Print every available block, by category, and exit. |
+| `--dir <path>` | Where to write. Default: src/components/blocks, or components/blocks without a src/. |
 | `--overwrite` | Replace existing files without asking. |
-| `--dry-run` | Show what would be written, write nothing. |
-| `--registry <url>` | Read from a different registry host. |
+| `--dry-run` | Show what would be written; write nothing. |
+| `--registry <url>` | Read blocks from a different registry host. |
 
 This command is deliberately small compared with the equivalent in other
 libraries, and the reason is architectural: a block imports only
 `astralis-ui`, React, or a sibling file — the registry builder rejects
 anything else — and the stylesheet is precompiled. So there are no import
 paths to rewrite, no dependency graph between blocks, and no Tailwind config
-to merge. It fetches text and writes files.
+to merge. It fetches text and writes files, and refuses any file path that
+would land outside the target folder.
 
 ## `theme` — generate a static theme
 
 Produces a plain CSS stylesheet from a brand seed, for when you want your theme
 baked into a file rather than derived at runtime by the provider. See
-[Theming](/docs/theming) for how the two approaches compare.
+[Theming](/docs/theming) for how the two approaches compare, or build a seed
+visually in the [theme builder](/theme-builder).
 
 ```bash
-npx astralis-cli theme --brand "#6d3bf5" --out astralis-theme.css
+npx astralis-cli theme "#6d3bf5"
 ```
 
 | Option | |
 | --- | --- |
-| `--brand / --gray <hex>` | Brand and neutral seed colors. |
-| `--font-heading / -body / -mono <stack>` | Font family stacks. |
-| `--radius / --spacing / --font-scale / --motion <n>` | Scale multipliers. |
-| `--out <file>` | Output path (default `astralis-theme.css`). |
+| `--brand <hex>` | Brand hue, e.g. "#8b5cf6". A bare hex argument means the same. |
+| `--gray <hex>` | Neutral hue: every surface, label and border. |
+| `--error <hex>` | Seeds the error palette. Default: red. |
+| `--warning <hex>` | Seeds the warning palette. Default: orange. |
+| `--success <hex>` | Seeds the success palette. Default: green. |
+| `--info <hex>` | Seeds the info palette. Default: blue. |
+| `--font-heading <stack>` | Heading font stack. |
+| `--font-body <stack>` | Body font stack. |
+| `--font-mono <stack>` | Monospace font stack. |
+| `--radius <n>` | Border-radius multiplier. Default: 1. |
+| `--spacing <n>` | Spacing multiplier: the density dial. Default: 1. |
+| `--font-scale <n>` | Font-size multiplier. Default: 1. |
+| `--motion <n>` | Duration multiplier; 0 turns transitions off. Default: 1. |
+| `--out <file>` | Where to write the stylesheet. Default: src/astralis-theme.css, or astralis-theme.css without a src/. |
 | `--force` | Overwrite an existing file. |
+| `--no-import` | Write the file but leave the entry file alone. |
+| `--strict-contrast` | Exit 1, writing nothing, if any promised pairing fails WCAG AA. |
 
-Run `astralis theme --help` for the full list of scales and defaults.
+It uses your project's own `astralis-ui` for the colour maths, so the file
+matches the version it's loaded next to, and imports the file into your entry
+point after the library stylesheet. Before writing, it checks every text and
+fill pairing the theme promises against WCAG AA in light and dark mode;
+failures are warnings unless you pass `--strict-contrast`.
+
+## `validate` — check code against the design system
+
+Checks your TSX and JSX against the machine-readable spec of the `astralis-ui`
+version you have installed. It catches what type-checks and still fails:
+components and compound parts that don't exist, prop values outside their
+token sets, `astralis:*` classes missing from the compiled CSS (they render as
+nothing), undeclared token variables, illegal breakpoint and state keys,
+compound parts outside their root, Tabs triggers with no panel, and
+accessibility mistakes such as misspelled `aria-*` attributes, invalid roles,
+and images with no `alt`.
+
+```bash
+npx astralis-cli validate              # the current directory
+npx astralis-cli validate src/app      # a folder, or single files
+npx astralis-cli validate --json       # one JSON report, for CI and tools
+```
+
+| Option | |
+| --- | --- |
+| `--json` | Print one JSON report instead of text, for CI and tools. |
+| `--spec <path>` | Validate against this system-spec.json. Default: the installed astralis-ui's. |
+| `--strict-tokens` | Also warn on raw colors that bypass the tokens. |
+
+It skips `node_modules`, `.git`, `.next`, `dist`, `build` and `out`. Each
+finding names the file, line and column, a rule code, and — where there's a
+closed set — the nearest valid value.
+
+### Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| `0` | No errors. Warnings alone never fail the run. |
+| `1` | At least one error — or the run couldn't start: no spec found, no `.tsx`/`.jsx` files, a path that doesn't exist. |
+
+### JSON output
+
+`--json` prints a single object. `results` lists only files with findings;
+every finding has the same five fields.
+
+```json
+{
+  "spec": { "name": "astralis-ui", "version": "0.7.8", "specVersion": 1 },
+  "files": 12,
+  "errors": 1,
+  "warnings": 0,
+  "results": [
+    {
+      "file": "src/app/page.tsx",
+      "errors": [
+        {
+          "code": "invalid-recipe-value",
+          "file": "src/app/page.tsx",
+          "line": 8,
+          "column": 15,
+          "message": "Button: \"primary\" is not a variant value (valid: link, text, subtle, solid, surface, outline)"
+        }
+      ],
+      "warnings": []
+    }
+  ]
+}
+```
+
+### Raw colours: `--strict-tokens`
+
+Arbitrary values are a feature — `bg="#ff0000"` is valid CSS and renders. But
+a raw colour won't follow the theme or dark mode. `--strict-tokens` adds an
+`off-token-color` warning for each one, as a drift check, without failing the
+run.
+
+The same validator runs inside the [MCP server](/docs/ai-agents) as the
+`validate_code` tool, so an AI agent checks its own output against the rules
+you run in CI.
 
 ## `connect-mcp` — connect an AI coding agent
 
@@ -127,9 +228,22 @@ npx astralis-cli connect-mcp
 
 | Option | |
 | --- | --- |
-| `--client claude-code\|codex\|cursor\|claude-desktop\|antigravity` | Skip the prompt and configure that client directly. |
+| `--client <claude-code\|codex\|cursor\|claude-desktop\|antigravity>` | Skip the prompt and configure this client. |
 
 For Claude Code and Codex it runs the client's own `mcp add` command; for
 Cursor, Claude Desktop, and Antigravity it writes the client's JSON config
-(backing up any existing one first). Full details on the
-[AI Agents](/docs/ai-agents) page.
+(backing up any existing one first, never over an earlier backup). Full
+details on the [AI Agents](/docs/ai-agents) page.
+
+## Global options
+
+Every command takes these, and `astralis --version` prints the CLI's version.
+
+| Option | |
+| --- | --- |
+| `-y, --yes` | Never prompt; take the default answer. Replacing files still needs --overwrite or --force. |
+| `-h, --help` | Show this command's options. |
+| `--debug` | Print the stack trace if something fails unexpectedly. |
+
+Without a terminal — in CI, say — a command that needs an answer stops and
+tells you which flag supplies it, rather than guessing.

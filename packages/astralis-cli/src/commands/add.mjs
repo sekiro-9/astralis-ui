@@ -1,7 +1,8 @@
-import { parseArgs } from "node:util";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
-import { ok, warn, info, fail, cyan, dim, bold, confirm } from "../lib/ui.mjs";
+import { ok, warn, info, fail, cyan, dim, bold, confirm, isAssumeYes, posix } from "../lib/ui.mjs";
+import { parseCommandArgs } from "../lib/args.mjs";
+import { commandNamed } from "../lib/commands.mjs";
 import { readPackageJson, detectPackageManager } from "../lib/detect.mjs";
 import { resolveBlocksDir } from "../lib/blocks-dir.mjs";
 import { registryBase, fetchIndex, fetchBlock, isBlockId, resolveBlockFile } from "../lib/registry.mjs";
@@ -16,25 +17,6 @@ import { registryBase, fetchIndex, fetchBlock, isBlockId, resolveBlockFile } fro
  * aliases, no dependency graph between blocks, and no Tailwind config to
  * merge. Fetch text, write files, check one dependency.
  */
-
-const USAGE = `Usage: astralis add <block>... [options]
-
-  Copies a block's source into your project. The files are yours after that —
-  no dependency to configure around.
-
-  Options
-    --list              print every available block and exit
-    --dir <path>        where to write (default: [src/]components/blocks)
-    --overwrite         replace existing files without asking
-    --dry-run           show what would be written, write nothing
-    --registry <url>    read from a different registry host
-    -h, --help          this message
-
-  Examples
-    astralis add hero-01
-    astralis add login-01 dashboard-02 --dir src/ui/blocks
-    astralis add --list
-`;
 
 /** Group ids by category for a readable --list. */
 function printCatalogue(blocks) {
@@ -56,26 +38,9 @@ function printCatalogue(blocks) {
 }
 
 export async function run(argv) {
-  let parsed;
-  try {
-    parsed = parseArgs({
-      args: argv,
-      allowPositionals: true,
-      options: {
-        list: { type: "boolean", default: false },
-        dir: { type: "string" },
-        overwrite: { type: "boolean", default: false },
-        "dry-run": { type: "boolean", default: false },
-        registry: { type: "string" },
-        help: { type: "boolean", short: "h", default: false },
-      },
-    });
-  } catch (error) {
-    fail(`${error.message}\n\n${USAGE}`);
-  }
-
-  const { values, positionals } = parsed;
-  if (values.help) return console.log(USAGE);
+  const args = parseCommandArgs(commandNamed("add"), argv);
+  if (!args) return;
+  const { values, positionals } = args;
 
   const cwd = process.cwd();
   const base = registryBase(values.registry);
@@ -83,7 +48,7 @@ export async function run(argv) {
   if (values.list) return printCatalogue((await fetchIndex(base)).blocks);
 
   if (positionals.length === 0) {
-    fail(`Name at least one block — try ${cyan("astralis add --list")}.\n\n${USAGE}`);
+    fail(`Name at least one block, or list them with ${cyan("astralis add --list")}.`);
   }
 
   const badIds = positionals.filter((id) => !isBlockId(id));
@@ -120,10 +85,6 @@ export async function run(argv) {
     }),
   );
 
-  // Paths are shown forward-slashed on every platform: they end up in an
-  // import statement, where a Windows separator would be wrong anyway.
-  const posix = (path) => path.split("\\").join("/");
-
   console.log("");
   info(
     `Writing to ${cyan(posix(dirRelative))}` +
@@ -138,12 +99,14 @@ export async function run(argv) {
     const shown = posix(relative(cwd, path));
 
     if (existsSync(path) && !values.overwrite) {
-      if (dryRun) {
-        warn(`${shown} ${dim("exists — would ask before replacing")}`);
+      if (dryRun || isAssumeYes()) {
+        warn(`${shown} ${dim(dryRun ? "exists — would ask before replacing" : "exists — skipped; --overwrite replaces it")}`);
         skipped += 1;
         continue;
       }
-      const replace = await confirm(`${shown} already exists. Replace it?`);
+      const replace = await confirm(`${shown} already exists. Replace it?`, {
+        hint: "Pass --overwrite to replace existing files.",
+      });
       if (!replace) {
         warn(`skipped ${shown}`);
         skipped += 1;

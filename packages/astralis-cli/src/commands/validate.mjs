@@ -3,18 +3,14 @@
    --------------------------------------------------------------------------
    Loads dist/system-spec.json from the installed astralis-ui (or --spec) and
    runs the validator core over every .tsx/.jsx under the given paths. Exits
-   non-zero when anything that typechecks-but-fails is found: unknown
-   components or parts, off-set keyword values, dead astralis:* classes,
-   undeclared token variables, illegal breakpoint/state keys.
-
-     astralis validate                    # the whole project
-     astralis validate src/components    # a subtree or single files
-     astralis validate --json            # machine-readable, for tooling/CI
+   1 when anything that typechecks-but-fails is found.
    ========================================================================== */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { bold, cyan, dim, red, yellow, green, ok, fail } from "../lib/ui.mjs";
+import { parseCommandArgs } from "../lib/args.mjs";
+import { commandNamed } from "../lib/commands.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
 import { findInstalledSpec } from "../lib/spec-resolve.mjs";
 
@@ -38,33 +34,35 @@ function collectFiles(path, into) {
 }
 
 function loadSpec(explicitPath) {
-  if (explicitPath) {
-    return JSON.parse(readFileSync(resolve(explicitPath), "utf8"));
-  }
-  const found = findInstalledSpec(process.cwd());
-  if (!found) {
+  const path = explicitPath ? resolve(explicitPath) : findInstalledSpec(process.cwd());
+  if (!path) {
     fail(`Could not find astralis-ui's system spec here — is astralis-ui installed? (or pass ${cyan("--spec <path>")})`);
   }
-  return JSON.parse(readFileSync(found, "utf8"));
+  let text;
+  try {
+    text = readFileSync(path, "utf8");
+  } catch (error) {
+    fail(`Can't read the spec at ${path} (${error.code ?? error.message}).`);
+  }
+  let spec;
+  try {
+    spec = JSON.parse(text);
+  } catch {
+    fail(`${path} isn't valid JSON — expected astralis-ui's dist/system-spec.json.`);
+  }
+  if (!spec?.components || !Array.isArray(spec.classes)) {
+    fail(`${path} isn't an astralis-ui system spec (it has no components or classes).`);
+  }
+  return spec;
 }
 
-export async function run(args) {
-  const paths = [];
-  let specPath = null;
-  let asJson = false;
-  let strictTokens = false;
+export async function run(argv) {
+  const args = parseCommandArgs(commandNamed("validate"), argv);
+  if (!args) return;
+  const paths = args.positionals.length > 0 ? args.positionals : ["."];
+  const strictTokens = args.values["strict-tokens"];
 
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--spec") specPath = args[++i];
-    else if (arg === "--json") asJson = true;
-    else if (arg === "--strict-tokens") strictTokens = true;
-    else if (arg.startsWith("--")) fail(`Unknown option "${arg}"`);
-    else paths.push(arg);
-  }
-  if (paths.length === 0) paths.push(".");
-
-  const spec = loadSpec(specPath);
+  const spec = loadSpec(args.values.spec);
   const prepared = prepareSpec(spec);
   const files = paths.reduce((acc, p) => collectFiles(resolve(p), acc), []);
   if (files.length === 0) fail("No .tsx/.jsx files found under the given paths.");
@@ -81,7 +79,7 @@ export async function run(args) {
     if (errors.length || warnings.length) results.push({ file: rel, errors, warnings });
   }
 
-  if (asJson) {
+  if (args.values.json) {
     console.log(JSON.stringify({
       spec: { name: spec.name, version: spec.version, specVersion: spec.specVersion },
       files: files.length,

@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { invokingPackageManager, buildScaffoldCommand } from "../src/commands/create.mjs";
+import { invokingPackageManager, buildScaffoldCommand as scaffoldArgv } from "../src/commands/create.mjs";
+
+const buildScaffoldCommand = (...args) => scaffoldArgv(...args).join(" ");
 
 test("invoking package manager comes from the npm user agent", () => {
   assert.equal(invokingPackageManager("pnpm/10.28.0 npm/? node/v24"), "pnpm");
@@ -85,4 +87,18 @@ test("a caller's own template wins — JS and the compiler templates stay reacha
 
 test("yarn gets no @latest tag", () => {
   assert.equal(buildScaffoldCommand("next", "app", [], "yarn"), "yarn create next-app app");
+});
+
+/* CLI-F12: the argv reaches the scaffolder as an array, one element per argument. */
+test("forwarded arguments stay whole, spaces and globs included", () => {
+  const argv = scaffoldArgv("next", "app", ["--import-alias", "@/*", "--src-dir"], "pnpm");
+  assert.deepEqual(argv, ["pnpm", "create", "next-app@latest", "app", "--import-alias", "@/*", "--src-dir"]);
+});
+
+/* CLI-F15: --yes turns off each scaffolder's own prompts too. */
+test("--yes passes each scaffolder its non-interactive switch, once", () => {
+  assert.match(buildScaffoldCommand("next", "app", [], "pnpm", undefined, { yes: true }), / --yes$/);
+  assert.match(buildScaffoldCommand("vite", "app", [], "pnpm", undefined, { yes: true }), / --no-interactive$/);
+  const own = scaffoldArgv("next", "app", ["--yes"], "pnpm", undefined, { yes: true });
+  assert.equal(own.filter((arg) => arg === "--yes").length, 1);
 });

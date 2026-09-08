@@ -28,8 +28,14 @@
   },
   "exports": {
     "./cli": "./src/index.mjs",
-    "./validate": "./src/lib/validate.mjs",
-    "./validate-core": "./src/lib/validate-core.mjs"
+    "./validate": {
+      "types": "./src/lib/validate.d.mts",
+      "default": "./src/lib/validate.mjs"
+    },
+    "./validate-core": {
+      "types": "./src/lib/validate-core.d.mts",
+      "default": "./src/lib/validate-core.mjs"
+    }
   },
   "files": [
     "src"
