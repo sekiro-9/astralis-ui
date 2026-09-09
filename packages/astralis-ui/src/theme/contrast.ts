@@ -206,7 +206,7 @@ export function parsePaletteFromCss(cssText: string): Record<string, string> {
       if (!(name in palette)) palette[name] = value;
     } else {
       // Role palettes (brand-*, error-*, ...) alias hues via var() — follow.
-      // Tailwind's @theme layer also emits SELF-referential declarations
+      // Stylesheets from 0.7.x open with SELF-referential declarations
       // (--astralis-color-info-600: var(--astralis-color-info-600)) before
       // the real alias appears; those carry no information and must not win.
       const target = value.slice("var(--astralis-color-".length, -1);

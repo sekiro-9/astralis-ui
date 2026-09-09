@@ -40,10 +40,10 @@ import {
   type ContainerKey,
 } from "../const/channel";
 
-/** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
-export const BREAKPOINTS = ["sm", "md", "lg", "xl"] as const;
+import { BREAKPOINTS, type Breakpoint } from "../const/breakpoints";
 
-export type Breakpoint = (typeof BREAKPOINTS)[number];
+/** Ordered breakpoints. `base` is the unprefixed/mobile-first value. */
+export { BREAKPOINTS, type Breakpoint };
 /** Viewport keys (sm..xl) plus container keys (@sm..@xl) — the latter resolve
  *  against the nearest `container` ancestor instead of the window. */
 export type ResponsiveKey = "base" | Breakpoint | ContainerKey;

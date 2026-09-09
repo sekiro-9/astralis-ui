@@ -44,9 +44,9 @@ const fail = (msg) => problems.push(msg);
 /* ---- meta ---------------------------------------------------------------- */
 const pkg = JSON.parse(readFileSync(join(PKG, "package.json"), "utf8"));
 
-/* ---- breakpoints (same source the coverage gate checks for drift) -------- */
-const entryCss = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
-const breakpoints = {};
+/* ---- breakpoints ---------------------------------------------------------- */
+const { BREAKPOINT_WIDTHS } = await import(distUrl("const/breakpoints.js"));
+const breakpoints = { ...BREAKPOINT_WIDTHS };
 /* Container-query responsive keys (@sm..@xl) — same thresholds as the
    viewport breakpoints, resolved against the nearest `container` ancestor.
    Read from the built package so the spec can never drift from the engine. */
@@ -64,11 +64,6 @@ for (const mode of ["light", "dark"]) {
     rule: r.rule, fg: r.fg, bg: r.bg, min: r.min, ratio: r.ratio === undefined ? null : Math.round(r.ratio * 100) / 100, pass: r.pass,
   }));
   if (contrast[mode].some((r) => !r.pass)) fail(`contrast contract failing in spec emission (${mode}) — gate should have caught this`);
-}
-for (const bp of ["sm", "md", "lg", "xl"]) {
-  const m = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
-  if (m) breakpoints[bp] = m[1];
-  else fail(`--breakpoint-${bp} not declared in tailwind-entry.css`);
 }
 
 /* ---- engine constants, from the built package ---------------------------- */

@@ -1,30 +1,17 @@
 /* ==========================================================================
+   AUTO-GENERATED — DO NOT EDIT BY HAND
+   Source: scripts/gen-tokens.mjs  <-  src/theme/token-spec.ts (HUES x ROLES)
+
    ACCENT CHANNEL
-   A virtual palette that any component can paint with via `accent-*` utilities
-   (e.g. `bg-accent-solid`, `text-accent-contrast`, `outline-accent-ring`).
-
-   `--astralis-color-accent-*` defaults to the brand hue. A `.astralis-accent-{hue}`
-   scope class rebinds the channel to a real hue for its subtree — so a single set
-   of utilities recolours at runtime. Because each rebind points at the hue's own
-   role tokens (which are already light/dark-aware), the accent follows the theme
-   automatically; no per-mode duplication needed.
-
-   This is the mechanism behind `colorScheme` — add a hue here and every component
-   that uses `accent-*` supports it for free.
+   A virtual palette any component paints with via `accent-*` utilities
+   (bg-accent-solid, text-accent-contrast, outline-accent-ring).
+   It defaults to brand; a `.astralis-accent-{hue}` scope class rebinds it
+   to a real hue for its subtree. Each rebind points at the hue's own role
+   tokens, which are already light/dark-aware. This is how `colorScheme`
+   works: add a hue to HUES and every accent-painting component takes it.
    ========================================================================== */
 
 :root {
-  /* Default accent = brand */
-  --astralis-color-accent-solid: var(--astralis-color-brand-solid);
-  --astralis-color-accent-contrast: var(--astralis-color-brand-contrast);
-  --astralis-color-accent-label: var(--astralis-color-brand-label);
-  --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
-  --astralis-color-accent-muted: var(--astralis-color-brand-muted);
-  --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
-  --astralis-color-accent-ring: var(--astralis-color-brand-ring);
-}
-
-.astralis-accent-brand {
   --astralis-color-accent-solid: var(--astralis-color-brand-solid);
   --astralis-color-accent-contrast: var(--astralis-color-brand-contrast);
   --astralis-color-accent-label: var(--astralis-color-brand-label);
@@ -132,6 +119,16 @@
   --astralis-color-accent-muted: var(--astralis-color-pink-muted);
   --astralis-color-accent-stroke: var(--astralis-color-pink-stroke);
   --astralis-color-accent-ring: var(--astralis-color-pink-ring);
+}
+
+.astralis-accent-brand {
+  --astralis-color-accent-solid: var(--astralis-color-brand-solid);
+  --astralis-color-accent-contrast: var(--astralis-color-brand-contrast);
+  --astralis-color-accent-label: var(--astralis-color-brand-label);
+  --astralis-color-accent-subtle: var(--astralis-color-brand-subtle);
+  --astralis-color-accent-muted: var(--astralis-color-brand-muted);
+  --astralis-color-accent-stroke: var(--astralis-color-brand-stroke);
+  --astralis-color-accent-ring: var(--astralis-color-brand-ring);
 }
 
 .astralis-accent-error {

@@ -1,48 +1,26 @@
 /* ==========================================================================
-   ASTRALIS — VAR-CHANNEL RULES
-   --------------------------------------------------------------------------
+   AUTO-GENERATED — DO NOT EDIT BY HAND
+   Source: scripts/gen-tokens.mjs  <-  src/const/channel.ts + src/const/breakpoints.ts
+
+   VAR-CHANNEL RULES
    One rule per value-bearing prop per breakpoint, reading a custom property
    the responsive engine sets on the element's style attribute. The class says
-   WHERE the value lands; the variable says WHAT it is. This replaces the
-   enumerated class-per-token-per-breakpoint safelist for these props.
+   WHERE the value lands; the variable says WHAT it is.
 
-   Contracts (the coverage gate asserts the first two):
-   - Every slug in const/channel.ts CHANNEL_PROPS exists here at base, at all
-     four breakpoint suffixes (-sm/-md/-lg/-xl), and at all three interaction
-     states (.astralis-<state>-<slug>).
-   - Breakpoints are LITERAL and must match the --breakpoint-* values in
-     tailwind-entry.css (40/48/64/80 rem) — CSS forbids var() in @media.
-   - Layer: `channels`, declared ABOVE `utilities` in tailwind-entry.css. An
-     explicit per-element prop must beat a recipe's ambient utility class
-     (e.g. Table's wrapper `astralis:w-full`, Separator's variant
-     `astralis:h-full`) — tailwind-merge used to arbitrate those as
-     same-system utilities, but channel classes carry no value it can
-     compare, so the cascade ranks them instead. Inline `style` (the
-     documented one-off escape hatch) still beats everything.
-   - Source order inside each block: shorthand before longhand (p before
-     px/py before pt/...), so at equal specificity the longhand wins.
-
-   Interaction states cover EVERY channel prop (the old 5-paint-prop limit
-   existed only because enumerated state classes were expensive — a var-read
-   rule costs nothing). States come after the breakpoint blocks so a state
-   value beats a breakpoint value while the state is active. States do not
-   compose with breakpoints (no hover.md) — one var per state.
-
-   Inheritance note: custom properties inherit, but a child never carries the
-   channel class unless it received the prop itself, so inherited --astralis-*
-   values are inert.
-
-   Media blocks are additive (base rule still matches at >=md); the block
-   appearing later in source wins, which yields replace semantics per
-   breakpoint with no counter-class machinery.
-
-   This file is regenerable but committed as source — keep edits in sync with
-   const/channel.ts (the gate will catch a missing slug either way).
+   - Layer `channels` sits ABOVE `utilities`, so an explicit per-element prop
+     beats a recipe's ambient utility class (Table's wrapper w-full,
+     Separator's h-full). Inline `style` still beats everything.
+   - Within each block, shorthand before longhand (p before px/py before
+     pt/...), so at equal specificity the longhand wins.
+   - Media and container blocks are additive; the later block wins, which
+     gives replace semantics per breakpoint with no counter-classes.
+   - States follow the breakpoint blocks, so an active state beats a
+     breakpoint value. States do not compose with breakpoints.
+   - Custom properties inherit, but a child only carries the channel class
+     when it received the prop itself, so inherited values are inert.
    ========================================================================== */
 
 @layer channels {
-
-
   /* --- padding --- */
   .astralis-p { padding: var(--astralis-p); }
   .astralis-py { padding-block: var(--astralis-py); }
@@ -330,19 +308,9 @@
     .astralis-opacity-xl { opacity: var(--astralis-opacity-xl); }
   }
 
-
-  /* ==========================================================================
-     CONTAINER VARIANTS (@sm..@xl responsive keys)
-     --------------------------------------------------------------------------
-     Mirrors of the @media blocks above, resolved against the NEAREST ANCESTOR
-     CONTAINER (.astralis-container / the `container` prop) instead of the
-     viewport. Same rem thresholds as the breakpoints - one token set, one
-     mental model; the coverage gate asserts all three stay in sync (theme,
-     @media, @container). Class suffix -cq-<bp>, variable suffix likewise.
-     ========================================================================== */
-  /* The container establishment class: `container` prop on Box-composing
-     primitives. inline-size, not size - height containment would collapse
-     normal-flow children. */
+  /* Container keys (@sm..@xl): the same widths, resolved against the nearest
+     `container` ancestor. inline-size, not size: height containment would
+     collapse normal-flow children. */
   .astralis-container { container-type: inline-size; }
   /* ===== @sm (40rem) ===== */
   @container (min-width: 40rem) {
@@ -398,6 +366,7 @@
     .astralis-shadow-cq-sm { box-shadow: var(--astralis-shadow-cq-sm); }
     .astralis-opacity-cq-sm { opacity: var(--astralis-opacity-cq-sm); }
   }
+
   /* ===== @md (48rem) ===== */
   @container (min-width: 48rem) {
     .astralis-p-cq-md { padding: var(--astralis-p-cq-md); }
@@ -452,6 +421,7 @@
     .astralis-shadow-cq-md { box-shadow: var(--astralis-shadow-cq-md); }
     .astralis-opacity-cq-md { opacity: var(--astralis-opacity-cq-md); }
   }
+
   /* ===== @lg (64rem) ===== */
   @container (min-width: 64rem) {
     .astralis-p-cq-lg { padding: var(--astralis-p-cq-lg); }
@@ -506,6 +476,7 @@
     .astralis-shadow-cq-lg { box-shadow: var(--astralis-shadow-cq-lg); }
     .astralis-opacity-cq-lg { opacity: var(--astralis-opacity-cq-lg); }
   }
+
   /* ===== @xl (80rem) ===== */
   @container (min-width: 80rem) {
     .astralis-p-cq-xl { padding: var(--astralis-p-cq-xl); }

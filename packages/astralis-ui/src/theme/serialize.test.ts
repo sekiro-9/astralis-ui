@@ -59,9 +59,8 @@ describe("themeCss", () => {
 
 describe("theme-namespace aliases", () => {
   /*
-   * The utilities read the prefixed Tailwind namespace, not the source token,
-   * and that alias is baked at :root. Emitting only the source name made
-   * radius/font-size/motion silent no-ops — these lock in the fix.
+   * Current utilities read the source token; 0.7.x stylesheets read the
+   * alias, baked at :root. A seed writes both so it themes either build.
    */
   it.each([
     ["radiusScale", SCALE_GROUPS.radius, "lg"],

@@ -10,9 +10,8 @@
 
    2. CHANNEL completeness — every CHANNEL_PROPS slug has its fixed rule in
       the compiled CSS at base, at all four breakpoint suffixes, and at all
-      three interaction states. This is what makes the hand-authored
-      theme/channels.css safe to edit. Also asserts the four @media
-      min-widths in channels.css match the --breakpoint-* theme values.
+      three interaction states. Also asserts every @media / @container
+      min-width in the shipped CSS comes from const/breakpoints.ts.
 
    3. TOKEN -> VALUE totality — every entry in every branded value map is a
       non-empty CSS value, contains no leftover class string, and every
@@ -34,11 +33,11 @@ import {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
-const BREAKPOINTS = ["sm", "md", "lg", "xl"];
+const { BREAKPOINTS, BREAKPOINT_WIDTHS } = await import(
+  pathToFileURL(join(PKG, "dist", "const", "breakpoints.js")).href
+);
 const STATES = ["hover", "focus-visible", "active"];
-// Container-key thresholds — must equal the breakpoint widths (drift-checked
-// below against theme, @media, AND @container literals).
-const CONTAINER_WIDTHS = { sm: "40rem", md: "48rem", lg: "64rem", xl: "80rem" };
+const CONTAINER_WIDTHS = BREAKPOINT_WIDTHS;
 const CHANNEL_MAP_BRAND = Symbol.for("astralis.channel-map");
 
 const missing = [];
@@ -95,25 +94,15 @@ for (const slug of slugs) {
   }
 }
 
-// Breakpoints must stay literal AND in sync with the theme. channels.css
-// carries them as @media literals; the entry declares --breakpoint-*.
-const channelsCss = readFileSync(join(PKG, "src", "theme", "channels.css"), "utf8");
-const entryCss = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
-const channelWidths = [...channelsCss.matchAll(/@media \(min-width: ([\d.]+rem)\)/g)].map((m) => m[1]);
-const containerWidths = [...channelsCss.matchAll(/@container \(min-width: ([\d.]+rem)\)/g)].map((m) => m[1]);
-for (const [i, bp] of BREAKPOINTS.entries()) {
-  const theme = entryCss.match(new RegExp(`--breakpoint-${bp}:\\s*([\\d.]+rem)`));
-  const inChannels = channelWidths[i];
-  if (!theme || theme[1] !== inChannels) {
-    missing.push(
-      `breakpoint ${bp}: channels.css says ${inChannels ?? "(absent)"}, theme says ${theme?.[1] ?? "(absent)"}  [breakpoint drift]`,
-    );
-  }
-  if (containerWidths[i] !== CONTAINER_WIDTHS[bp] || (theme && theme[1] !== CONTAINER_WIDTHS[bp])) {
-    missing.push(
-      `container key @${bp}: @container says ${containerWidths[i] ?? "(absent)"}, expected ${CONTAINER_WIDTHS[bp]}  [container-breakpoint drift]`,
-    );
-  }
+// Every min-width query in the shipped CSS (Tailwind's sm..xl variants and the
+// channel blocks alike) must use a width from const/breakpoints.ts.
+const widths = new Set(Object.values(BREAKPOINT_WIDTHS));
+for (const kind of ["media", "container"]) {
+  const used = new Set(
+    [...css.matchAll(new RegExp(`@${kind} \\(min-width: ?([\\d.]+rem)\\)`, "g"))].map((m) => m[1]),
+  );
+  for (const w of used) if (!widths.has(w)) missing.push(`@${kind} (min-width: ${w})  [breakpoint drift]`);
+  for (const w of widths) if (!used.has(w)) missing.push(`@${kind} (min-width: ${w})  [breakpoint missing]`);
 }
 if (!defined.has("astralis-container")) {
   missing.push("astralis-container  [container establishment class]");

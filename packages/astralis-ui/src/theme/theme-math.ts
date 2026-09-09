@@ -2,7 +2,7 @@
  * The theme math, dependency- and React-free so it can run anywhere: the
  * AstralisProvider consumes it at runtime, astralis-cli's `theme` command
  * imports it in Node (via the "astralis-ui/theme-math" subpath) to generate
- * static theme CSS, and scripts/gen-semantic-css.mjs uses it at build time —
+ * static theme CSS, and scripts/gen-tokens.mjs uses it at build time —
  * one source of truth for the ramps.
  *
  * The ROLE formulas this applies live in ./token-spec, which also generates

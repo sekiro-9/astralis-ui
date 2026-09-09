@@ -1,0 +1,22 @@
+/* ==========================================================================
+   AUTO-GENERATED — DO NOT EDIT BY HAND
+   Source: scripts/gen-tokens.mjs  <-  src/const/breakpoints.ts
+
+   BREAKPOINTS
+   --breakpoint-* drives Tailwind's sm..xl variants; the --astralis-breakpoint-*
+   copies are for scripts that read the widths at runtime (matchMedia).
+   ========================================================================== */
+
+@theme inline reference {
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+:root {
+  --astralis-breakpoint-sm: 40rem;
+  --astralis-breakpoint-md: 48rem;
+  --astralis-breakpoint-lg: 64rem;
+  --astralis-breakpoint-xl: 80rem;
+}

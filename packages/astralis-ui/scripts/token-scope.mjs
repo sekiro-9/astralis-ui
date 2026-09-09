@@ -9,7 +9,7 @@
  * - RESPONSIVE tokens: only classes that the runtime responsive engine can
  *   breakpoint-prefix — i.e. values inside the token maps handed to
  *   `resolveStyleProps` (everything in src/const, plus `export const
- *   *Map = {...}` blocks in *.styles.ts). Only these need sm/md/lg/xl
+ *   *Map = {...}` blocks in *.style(s).ts). Only these need sm/md/lg/xl
  *   variants force-generated.
  *
  * Since the var-channel migration, both scopes cover KEYWORD props only —
@@ -90,7 +90,8 @@ export function collectResponsiveTokens() {
     tokensInText(readFileSync(file, "utf8"), tokens);
   }
   for (const file of collectFiles(join(SRC, "components"))) {
-    if (!/\.styles\.tsx?$/.test(file)) continue;
+    // Singular too: layout/flex ships flex.style.ts.
+    if (!/\.styles?\.tsx?$/.test(file)) continue;
     for (const block of mapBlocks(readFileSync(file, "utf8"))) tokensInText(block, tokens);
   }
   return tokens;

@@ -8,7 +8,7 @@
  * formulas in semantic.css". Two copies, synced by hand.
  *
  * Now both are generated from here:
- *   - tokens/semantic.css  via scripts/gen-semantic-css.mjs (build time)
+ *   - tokens/semantic.css and tokens/accent.css via scripts/gen-tokens.mjs
  *   - the provider's inline overrides via theme-math.ts (runtime)
  *
  * Dependency- and React-free, like theme-math.ts — it runs in Node for the
@@ -364,21 +364,17 @@ export const scaleVarName = (group: string, step: string, forCss: boolean) =>
 /* ==========================================================================
    THEME-NAMESPACE ALIASES
    --------------------------------------------------------------------------
-   The utilities do not all read the source token. `@theme` maps an Astralis
-   token onto a Tailwind namespace, and `prefix(astralis)` renames that
-   namespace back into our own — so `--radius-lg: var(--astralis-border-radius-lg)`
-   ships as `--astralis-radius-lg: var(--astralis-border-radius-lg)`, and
-   `.astralis:rounded-lg` reads the ALIAS, not the source.
+   `@theme` maps an Astralis token onto a Tailwind namespace, and
+   `prefix(astralis)` renames that namespace into our own: `--radius-lg` becomes
+   `--astralis-radius-lg`. The @theme block is `inline`, so `.astralis:rounded-lg`
+   compiles straight to the source token and overriding the source is enough.
 
-   That alias is declared at :root, where its var() resolves ONCE — the same
-   baking problem the colour roles have. Overriding only the source token on a
-   wrapper div therefore does nothing: verified in-browser, an override of
-   --astralis-border-radius-lg alone left the utility at its default 8px, while
-   setting both names moved it to 32px.
+   Stylesheets built by astralis-ui 0.7.x and earlier read the alias instead,
+   declared at :root where its var() resolved once. A seed therefore still
+   writes the alias too, so a theme generated today also themes those builds.
 
-   Where the Tailwind name happens to match the source name (spacing, fonts),
-   the two collide into one declaration and the source override works directly.
-   Those groups have alias: null.
+   Where the Tailwind name matches the source name (spacing, fonts) there is
+   no alias: alias is null.
 
    scripts/check-token-sync.mjs asserts this table against tailwind-entry.css.
    ========================================================================== */
@@ -386,7 +382,7 @@ export const scaleVarName = (group: string, step: string, forCss: boolean) =>
 export type ScaleGroup = {
   /** The Astralis source token group, e.g. "border-radius". */
   source: string;
-  /** The prefixed Tailwind namespace the utilities read, if it differs. */
+  /** The prefixed Tailwind namespace for this group, if it differs. */
   alias: string | null;
   /**
    * Base var for Tailwind's dynamic spacing form. Integer steps compile to

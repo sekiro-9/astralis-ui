@@ -19,6 +19,8 @@
    enumerated Tailwind classes — do not add them here.
    ========================================================================== */
 
+import { BREAKPOINT_WIDTHS } from "./breakpoints";
+
 export const CHANNEL_PROPS = {
   // Padding
   p: "p",
@@ -119,18 +121,16 @@ export const channelClass = (slug: string, bp?: string): string =>
  *     <Card size={{ base: "sm", "@md": "lg" }} />   // md = the Box is >=48rem
  *   </Box>
  *
- * The widths must stay literal here (CSS forbids var() in @container exactly
- * as in @media); the coverage gate asserts they match --breakpoint-* in the
- * theme, the @media literals in channels.css, and the @container literals.
+ * The widths come from const/breakpoints.ts, like every other breakpoint copy.
  * With no container ancestor, @container rules resolve against the small
  * viewport — the prop appears inert. That failure mode is documented, and the
  * validator warns when "@" keys are used with no `container` in the file.
  */
 export const CONTAINER_BREAKPOINT_WIDTHS = {
-  "@sm": "40rem",
-  "@md": "48rem",
-  "@lg": "64rem",
-  "@xl": "80rem",
+  "@sm": BREAKPOINT_WIDTHS.sm,
+  "@md": BREAKPOINT_WIDTHS.md,
+  "@lg": BREAKPOINT_WIDTHS.lg,
+  "@xl": BREAKPOINT_WIDTHS.xl,
 } as const;
 
 export type ContainerKey = keyof typeof CONTAINER_BREAKPOINT_WIDTHS;

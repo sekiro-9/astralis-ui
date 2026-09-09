@@ -7,7 +7,7 @@
    The responsive engine builds breakpoint-prefixed classes dynamically
    (e.g. "astralis:md:flex"), which Tailwind's source scanner can't see. This
    script reads the RESPONSIVE token scope (src/const maps + the *Map blocks
-   in *.styles.ts — the only classes the engine can prefix; see
+   in *.style(s).ts — the only classes the engine can prefix; see
    token-scope.mjs) and emits a "@source inline(...)" partial that
    force-generates the sm/md/lg/xl variant of each. Run before the Tailwind
    build — zero manual drift; the coverage gate verifies the result.
@@ -22,9 +22,10 @@ import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { collectResponsiveTokens } from "./token-scope.mjs";
+import { loadTs } from "./load-ts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BREAKPOINTS = ["sm", "md", "lg", "xl"];
+const [{ BREAKPOINTS, BREAKPOINT_WIDTHS }] = await loadTs("const/breakpoints.ts");
 const PREFIX = "astralis:";
 
 const utils = [...collectResponsiveTokens()].sort();
@@ -32,9 +33,8 @@ const bpGroup = `{${BREAKPOINTS.join(",")}}`;
 
 // Container-key variants (@sm..@xl responsive keys). Arbitrary widths, not
 // Tailwind's named @md: — its --container-* scale also feeds max-w-* and must
-// not be overridden. Literals must match const/channel.ts
-// CONTAINER_BREAKPOINT_WIDTHS; the coverage gate asserts the compiled result.
-const CONTAINER_WIDTHS = ["40rem", "48rem", "64rem", "80rem"];
+// not be overridden.
+const CONTAINER_WIDTHS = BREAKPOINTS.map((bp) => BREAKPOINT_WIDTHS[bp]);
 const cqGroup = `{${CONTAINER_WIDTHS.map((w) => `@min-[${w}]`).join(",")}}`;
 
 const lines = [

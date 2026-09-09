@@ -1,50 +1,63 @@
 /* ==========================================================================
    ASTRALIS — TOKEN SYNC GATE
    --------------------------------------------------------------------------
-   Two drift checks, both of which used to be "remember to keep these in sync":
+   Drift checks for everything that used to be "remember to keep these in sync":
 
-   1. tokens/semantic.css matches what token-spec.ts generates. Editing the
-      generated file by hand desyncs it from the provider's runtime overrides,
-      and nothing at runtime would tell you.
+   1. The generated stylesheets (semantic, accent, breakpoints, channels) match
+      what scripts/token-css.mjs emits from the TypeScript tables. A hand edit
+      to one desyncs it from the runtime that reads the same tables.
 
    2. The numeric scale tables in token-spec.ts (SPACING_SCALE, RADIUS_SCALE,
       FONT_SIZE_SCALE) match the hand-authored CSS they mirror. Those files stay
       authored because they carry non-scalable siblings (border styles, font
       weights), so this asserts the mirror instead of generating it.
 
+   3. SCALE_GROUPS aliases match the @theme block.
+
+   4. COLOR_SCHEMES lists exactly the palettes in HUES.
+
    Run via `pnpm run check:tokens` (wired into build:css).
    ========================================================================== */
 
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
-import { loadSpec, loadPalette, semanticCss } from "./gen-semantic-css.mjs";
+import { dirname, join, relative } from "node:path";
+import {
+  OUTPUTS,
+  accentCss,
+  breakpointsCss,
+  channelsCss,
+  loadLayout,
+  loadPalette,
+  loadSpec,
+  semanticCss,
+} from "./token-css.mjs";
+import { loadTs } from "./load-ts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const TOKENS = join(__dirname, "..", "src", "theme", "tokens");
+const PKG = join(__dirname, "..");
+const TOKENS = join(PKG, "src", "theme", "tokens");
 
-/**
- * Read with line endings normalized to LF.
- *
- * The generated CSS is compared byte-for-byte against what the generator would
- * emit, and the generator always writes LF. On Windows `core.autocrlf` checks
- * the committed file out as CRLF, so every line differed and the gate failed
- * against artifacts that were in fact correct. Comparing content, not the
- * checkout's line-ending convention.
- */
+/** Read with line endings normalized to LF: a Windows checkout may be CRLF. */
 const read = (file) => readFileSync(file, "utf8").replace(/\r\n/g, "\n");
 
-const spec = await loadSpec();
+const [spec, layout] = await Promise.all([loadSpec(), loadLayout()]);
 const failures = [];
 
-/* --- 1. semantic.css is in sync ---------------------------------------- */
-const onDisk = read(join(TOKENS, "semantic.css"));
-const expected = semanticCss(spec, loadPalette());
-if (onDisk !== expected) {
-  failures.push(
-    "semantic.css is out of sync with token-spec.ts.\n" +
-      "    Run `pnpm run gen:semantic` — and edit token-spec.ts, not the CSS.",
-  );
+/* --- 1. generated stylesheets are in sync ------------------------------- */
+const generated = {
+  [OUTPUTS.semantic]: semanticCss(spec, loadPalette()),
+  [OUTPUTS.accent]: accentCss(spec),
+  [OUTPUTS.breakpoints]: breakpointsCss(layout),
+  [OUTPUTS.channels]: channelsCss(layout),
+};
+for (const [path, expected] of Object.entries(generated)) {
+  if (read(path) !== expected) {
+    failures.push(
+      `${relative(PKG, path).replace(/\\/g, "/")} is out of sync with its source table.\n` +
+        "    Run `pnpm run gen:tokens` — and edit the TypeScript source, not the CSS.",
+    );
+  }
 }
 
 /* --- 2. scale tables mirror the authored CSS --------------------------- */
@@ -86,10 +99,10 @@ compare("RADIUS_SCALE", spec.RADIUS_SCALE, parseScale("border.css", "border-radi
 
 /* --- 3. SCALE_GROUPS aliases match the @theme block --------------------- */
 /*
- * The utilities read the prefixed Tailwind namespace, not the source token, and
- * that alias is baked at :root — so an alias this table gets wrong makes the
- * corresponding seed field a silent no-op. Assert every group against the real
- * @theme mapping in tailwind-entry.css.
+ * A seed scales a group by writing its source token (and the alias older
+ * stylesheets read). If the @theme mapping pointed that group's utilities at
+ * anything else, the seed field would be a silent no-op, so assert every group
+ * against the real mapping in tailwind-entry.css.
  */
 const entry = read(join(__dirname, "..", "src", "tailwind-entry.css"));
 const themeMap = new Map(); // tailwind name -> astralis source name
@@ -121,10 +134,22 @@ for (const [key, group] of Object.entries(spec.SCALE_GROUPS)) {
   }
 }
 
+/* --- 4. COLOR_SCHEMES lists exactly HUES ------------------------------- */
+const [{ COLOR_SCHEMES }] = await loadTs("const/color-schemes.ts");
+const schemes = new Set(COLOR_SCHEMES);
+const hues = new Set(spec.HUES);
+const notHues = [...schemes].filter((s) => !hues.has(s));
+const notSchemes = [...hues].filter((h) => !schemes.has(h));
+if (notHues.length || notSchemes.length || schemes.size !== COLOR_SCHEMES.length) {
+  failures.push(
+    `COLOR_SCHEMES must list each palette in HUES once — missing [${notSchemes}], unknown [${notHues}].`,
+  );
+}
+
 if (failures.length) {
   console.error("\n✗ token sync check failed:\n");
   for (const f of failures) console.error(`  - ${f}`);
   console.error("");
   process.exit(1);
 }
-console.log("✓ tokens in sync (semantic.css + scale tables)");
+console.log("✓ tokens in sync (generated CSS, scale tables, @theme aliases, colour schemes)");

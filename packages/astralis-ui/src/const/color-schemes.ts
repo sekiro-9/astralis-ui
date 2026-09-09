@@ -3,8 +3,8 @@
  * `accent-*` utilities can expose `colorScheme` by applying `accentClass(scheme)` —
  * the scope class that rebinds the accent channel to a real hue (see accent.css).
  *
- * Add a hue here AND a matching `.astralis-accent-{hue}` block in accent.css to
- * make it available everywhere at once.
+ * Must list exactly the palettes in HUES (theme/token-spec.ts), which also
+ * generates the `.astralis-accent-{hue}` blocks; the token-sync gate checks both.
  */
 export const COLOR_SCHEMES = [
   "brand", "gray", "red", "orange", "yellow", "green", "teal", "blue", "cyan", "purple", "pink",

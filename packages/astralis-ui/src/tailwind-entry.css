@@ -55,6 +55,7 @@
 @import "./theme/tokens/shadow.css";
 @import "./theme/tokens/semantic.css";
 @import "./theme/tokens/accent.css";
+@import "./theme/tokens/breakpoints.css";
 
 /* Var-channel rules: one class per value-bearing prop per breakpoint, reading
    the custom property the responsive engine sets inline. Lives in
@@ -70,8 +71,12 @@
 
 /* ==========================================================================
    THE COMPLETE TAILWIND V4 ENGINE MAPPING
+   `inline` compiles each utility straight to the Astralis token it names, and
+   `reference` stops Tailwind declaring the theme variables themselves: under
+   prefix(astralis) most of them would share the source token's name and ship
+   as `--astralis-color-red-50: var(--astralis-color-red-50)`.
    ========================================================================== */
-@theme {
+@theme inline reference {
   /* ------------------------------------------------------------------------
      COLORS (Base, Dynamic Brand, & Semantic)
      ------------------------------------------------------------------------ */
@@ -723,16 +728,7 @@
   --opacity-highest: var(--astralis-opacity-highest);
   --opacity-max: var(--astralis-opacity-max);
 
-  /* Breakpoints (drive responsive prop variants: sm/md/lg/xl).
-     MUST be literal values, never var() references: Tailwind inlines these
-     into @media queries, and CSS forbids var() there — browsers silently
-     drop every responsive rule. Keep in sync with common.css
-     --astralis-breakpoint-* (kept for runtime/JS consumers). */
-  --breakpoint-sm: 40rem;
-  --breakpoint-md: 48rem;
-  --breakpoint-lg: 64rem;
-  --breakpoint-xl: 80rem;
-  --breakpoint-2xl: 96rem;
+  /* Breakpoints (--breakpoint-sm..xl) are generated into tokens/breakpoints.css. */
 
   /* ------------------------------------------------------------------------
      ANIMATIONS & TIMINGS
