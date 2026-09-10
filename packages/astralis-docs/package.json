@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "pnpm run gen:thumbs && pnpm run gen:registry && next dev",
-    "build": "pnpm run gen:thumbs && pnpm run gen:registry && next build",
+    "build": "pnpm run gen:thumbs && pnpm run gen:registry && next build && pnpm run gen:search",
     "gen:thumbs": "node scripts/gen-block-thumbnails.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "gen:registry": "node scripts/gen-block-registry.mjs"
+    "gen:registry": "node scripts/gen-block-registry.mjs",
+    "gen:search": "node scripts/build-search-index.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -38,6 +39,7 @@
     "esbuild": "^0.25.12",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
+    "pagefind": "^1.5.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.2.4"

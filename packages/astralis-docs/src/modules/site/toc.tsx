@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 interface TocEntry {
   id: string;
@@ -9,28 +8,46 @@ interface TocEntry {
   level: 2 | 3;
 }
 
+const HEADINGS = "article h2[id], article h3[id]";
+
+/**
+ * The outline as a string, so useSyncExternalStore can compare snapshots by
+ * value: a fresh array on every read would never be equal and loop forever.
+ */
+function readOutline(): string {
+  const headings = document.querySelectorAll<HTMLHeadingElement>(HEADINGS);
+  return JSON.stringify(
+    Array.from(headings, (h): TocEntry => ({
+      id: h.id,
+      text: Array.from(h.childNodes)
+        .filter((node) => !(node instanceof HTMLElement && node.hasAttribute("data-heading-anchor")))
+        .map((node) => node.textContent)
+        .join(""),
+      level: h.tagName === "H2" ? 2 : 3,
+    })),
+  );
+}
+
+/** Client navigation swaps the article's children, which is what re-reads the outline. */
+function subscribeToArticle(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.querySelector("article") ?? document.body, {
+    childList: true,
+    subtree: true,
+  });
+  return () => observer.disconnect();
+}
+
 /**
  * Builds its outline from the rendered article's h2/h3 headings (ids come
  * from rehype-slug) and scroll-spies them with an IntersectionObserver.
  */
 export function Toc() {
-  const pathname = usePathname();
-  const [entries, setEntries] = useState<TocEntry[]>([]);
+  const outline = useSyncExternalStore(subscribeToArticle, readOutline, () => "[]");
+  const entries = useMemo(() => JSON.parse(outline) as TocEntry[], [outline]);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    const headings = Array.from(
-      document.querySelectorAll<HTMLHeadingElement>("article h2[id], article h3[id]"),
-    );
-
-    setEntries(
-      headings.map((h) => ({
-        id: h.id,
-        text: h.textContent ?? "",
-        level: h.tagName === "H2" ? 2 : 3,
-      })),
-    );
-
     const observer = new IntersectionObserver(
       (observed) => {
         // The topmost heading inside the activation band wins.
@@ -42,9 +59,9 @@ export function Toc() {
       { rootMargin: "-88px 0px -70% 0px" },
     );
 
-    headings.forEach((h) => observer.observe(h));
+    document.querySelectorAll(HEADINGS).forEach((h) => observer.observe(h));
     return () => observer.disconnect();
-  }, [pathname]);
+  }, [outline]);
 
   if (entries.length === 0) return null;
 

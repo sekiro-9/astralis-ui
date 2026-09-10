@@ -33,6 +33,9 @@ function AnchorHeading(Tag: "h2" | "h3", baseClassName: string) {
           <a
             href={`#${id}`}
             aria-label="Link to this section"
+            // The TOC and the search index read heading text; the "#" is not part of it.
+            data-heading-anchor
+            data-pagefind-ignore
             className="ml-2 text-accent-label opacity-0 transition-opacity group-hover:opacity-100"
           >
             #

@@ -6,6 +6,7 @@ import { Separator, Tag, ThemeToggle } from "astralis-ui";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 import { navLinks as links } from "./nav-links";
+import { Search } from "./search";
 
 export function Header({ version }: { version: string }) {
   const pathname = usePathname();
@@ -36,13 +37,12 @@ export function Header({ version }: { version: string }) {
         </div>
 
         <div className="flex items-center gap-2">
+          <Search />
           {/* Read from astralis-ui's package.json, not typed in — it read
               0.2.0 for two releases after the library moved on. */}
           <Tag variant="subtle" colorScheme="brand">
             {version}
           </Tag>
-          {/* Prefixed: vertical brings h-full + self-stretch, and only a
-              prefixed class merges against them. */}
           <Separator
             orientation="vertical"
             h="4"
@@ -50,7 +50,7 @@ export function Header({ version }: { version: string }) {
             className="mx-1 hidden sm:block"
           />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
-          <MobileNav />
+          <MobileNav version={version} />
         </div>
       </div>
     </header>

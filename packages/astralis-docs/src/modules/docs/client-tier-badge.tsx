@@ -31,7 +31,7 @@ export function ClientTierBadge({ tiers }: { tiers: Record<string, keyof typeof 
   return (
     <Tooltip>
       <Tooltip.Trigger>
-        <Badge colorScheme={scheme} variant="subtle">
+        <Badge colorScheme={scheme} variant="subtle" data-pagefind-ignore>
           {text}
         </Badge>
       </Tooltip.Trigger>

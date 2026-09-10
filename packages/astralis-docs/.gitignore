@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# search index, written by scripts/build-search-index.mjs
+/public/pagefind/
+
 # production
 /build
 
