@@ -1,6 +1,6 @@
 {
   "name": "astralis-mcp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "MCP server exposing Astralis UI docs to AI coding agents — current component APIs, props tables, demo sources, theming guides, and a validate_code tool that checks generated TSX against the design system's machine-readable spec.",
   "type": "module",
   "license": "MIT",
@@ -31,10 +31,11 @@
     "server.mjs"
   ],
   "engines": {
-    "node": ">=18"
+    "node": "^22.18.0 || >=24.11.0"
   },
   "scripts": {
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

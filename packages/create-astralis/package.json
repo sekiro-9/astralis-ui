@@ -1,6 +1,6 @@
 {
   "name": "create-astralis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scaffold a new Next.js or Vite project with Astralis UI wired in — `npm create astralis`.",
   "type": "module",
   "license": "MIT",
@@ -29,9 +29,12 @@
     "index.mjs"
   ],
   "engines": {
-    "node": ">=18"
+    "node": "^22.18.0 || >=24.11.0"
   },
   "dependencies": {
     "astralis-cli": "workspace:^"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
   }
 }

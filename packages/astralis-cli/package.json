@@ -1,7 +1,7 @@
 {
   "name": "astralis-cli",
-  "version": "0.4.4",
-  "description": "Setup and tooling CLI for Astralis UI — wire up a project, generate a static brand theme, connect the MCP server.",
+  "version": "0.5.0",
+  "description": "Setup and tooling CLI for Astralis UI — scaffold or wire up a project, add blocks, generate a static brand theme, validate code against the design system, connect the MCP server.",
   "type": "module",
   "license": "MIT",
   "author": "Paul Andrew",
@@ -41,10 +41,11 @@
     "src"
   ],
   "engines": {
-    "node": ">=18"
+    "node": "^22.18.0 || >=24.11.0"
   },
   "scripts": {
-    "test": "node --test"
+    "test": "node --test \"test/*.test.mjs\"",
+    "reference": "node scripts/reference.mjs"
   },
   "dependencies": {
     "@babel/parser": "^8.0.4",
