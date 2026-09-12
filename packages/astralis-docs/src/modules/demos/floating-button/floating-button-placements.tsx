@@ -1,6 +1,6 @@
 "use client";
 
-import { FloatingButton } from "astralis-ui";
+import { Box, FloatingButton } from "astralis-ui";
 
 const anchors = [
   { placement: "top-left", colorScheme: "teal" },
@@ -15,7 +15,17 @@ const anchors = [
    The transform scopes `fixed` to the panel; see floating-button-demo.tsx. */
 export function FloatingButtonPlacements() {
   return (
-    <div className="relative h-64 w-full overflow-hidden rounded-xl border border-stroke-subtle bg-surface-subtle [transform:translateZ(0)]">
+    <Box
+      position="relative"
+      h="64"
+      w="full"
+      overflow="hidden"
+      rounded="xl"
+      border="normal"
+      borderColor="subtle"
+      bg="subtle"
+      style={{ transform: "translateZ(0)" }}
+    >
       {anchors.map(({ placement, colorScheme }) => (
         <FloatingButton
           key={placement}
@@ -29,6 +39,6 @@ export function FloatingButtonPlacements() {
           {placement}
         </FloatingButton>
       ))}
-    </div>
+    </Box>
   );
 }

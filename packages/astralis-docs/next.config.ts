@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname, "../../"),
   },
 
+  async redirects() {
+    return [
+      // The builder's old address. Next carries the query string across.
+      { source: "/themes", destination: "/theme-builder", permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       {

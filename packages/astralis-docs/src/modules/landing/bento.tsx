@@ -1,6 +1,3 @@
-// Flat parts, not `Card.*` / `DataList.*`: this is a Server Component, and
-// compound statics are undefined across the RSC boundary (they live on a
-// client-reference stub). The individual exports are their own references.
 import {
   Card,
   CardHeader,
@@ -11,10 +8,26 @@ import {
   DataListItem,
   DataListLabel,
   DataListValue,
+  Link,
 } from "astralis-ui";
 import { CodeBlock } from "@/modules/docs/code-block";
+import type { SiteStats } from "@/lib/site-stats";
 import { BentoInteractive, BentoResponsiveCell, BentoSchemeCell } from "./bento-cells";
 import { Reveal } from "./reveal";
+
+/**
+ * reports/bench-hydration.md, final table: gzipped First Load JS of one bench
+ * page per library, minus the bare-framework floor. Re-measure there first.
+ */
+const BENCH = [
+  { name: "Astralis", kb: 15.1, self: true },
+  { name: "shadcn/ui", kb: 36.0, self: false },
+  { name: "Radix Themes", kb: 41.4, self: false },
+  { name: "MUI", kb: 58.0, self: false },
+  { name: "Chakra", kb: 94.5, self: false },
+];
+const BENCH_MAX = Math.max(...BENCH.map((row) => row.kb));
+const BENCH_URL = "https://github.com/SekiroDev360/astralis-ui/tree/main/bench";
 
 const tokenRows = [
   { token: "--astralis-color-surface-base", light: "#ffffff", dark: "#000000" },
@@ -50,9 +63,8 @@ function Cell({
       }}
     >
       <CardHeader>
-        {/* Prefixed only where it overrides a class the component sets
-            (Title's text-base); `mt-1` is additive, so plain is fine. */}
-        <CardTitle className="astralis:text-sm">{title}</CardTitle>
+        {/* `style`, not a class: it has to beat Title's own text-base. */}
+        <CardTitle style={{ fontSize: "var(--astralis-font-size-sm)" }}>{title}</CardTitle>
         <CardDescription className="mt-1">{body}</CardDescription>
       </CardHeader>
       {children && <CardBody className="flex min-h-0 flex-1 items-center">{children}</CardBody>}
@@ -60,7 +72,7 @@ function Cell({
   );
 }
 
-export function Bento() {
+export function Bento({ stats }: { stats: SiteStats }) {
   // Live marketing grid: each cell is a real component painting from tokens.
   return (
     <section className="mx-auto max-w-screen-xl px-6 py-24 lg:px-12 lg:py-28">
@@ -69,7 +81,7 @@ export function Bento() {
           Built on tokens, not guesses
         </h2>
         <p className="mt-4 max-w-xl text-lg text-label-muted">
-          Every cell below is live — the same components and tokens you'd ship.
+          Every cell below is live — the same components and tokens you’d ship.
         </p>
       </Reveal>
 
@@ -83,7 +95,7 @@ export function Bento() {
         </Cell>
 
         <Cell
-          title="Eleven color schemes"
+          title={`${stats.hues} hues, ${stats.statusAliases} status aliases`}
           body="One accent channel recolors any component — no per-hue CSS."
           className="lg:col-span-2"
         >
@@ -109,27 +121,28 @@ export function Bento() {
 
         <Cell
           title="Static parts ship zero JavaScript"
-          body="Every static component is a true Server Component — build-gate enforced, labeled on every docs page. Same page, four libraries; client JS beyond the framework:"
+          body="Every static component is a true Server Component — build-gate enforced, labeled on every docs page. The same page in five libraries, and the client JS each adds:"
           className="lg:col-span-2"
         >
           {/* Static markup on purpose: the cell about shipping no JS ships none. */}
-          <div className="flex w-full flex-col gap-2 font-mono text-[12px]">
-            {[
-              { name: "Astralis", kb: 15, pct: 16, self: true },
-              { name: "shadcn/ui", kb: 36, pct: 38, self: false },
-              { name: "MUI", kb: 58, pct: 61, self: false },
-              { name: "Chakra", kb: 95, pct: 100, self: false },
-            ].map((row) => (
+          <figure className="flex w-full flex-col gap-2 font-mono text-[12px]">
+            {BENCH.map((row) => (
               <div key={row.name} className="flex items-center gap-2">
-                <span className="w-16 shrink-0 text-label-muted">{row.name}</span>
+                <span className="w-24 shrink-0 text-label-muted">{row.name}</span>
                 <span
                   className={`h-2.5 rounded-full ${row.self ? "bg-brand-solid" : "bg-surface-muted"}`}
-                  style={{ width: `${row.pct}%` }}
+                  style={{ width: `${(row.kb / BENCH_MAX) * 100}%` }}
                 />
-                <span className="shrink-0 text-label-muted">{row.kb} kB</span>
+                <span className="shrink-0 text-label-muted">{row.kb.toFixed(1)} kB</span>
               </div>
             ))}
-          </div>
+            <figcaption className="mt-1 font-sans text-[11px] leading-snug text-label-subtle">
+              Gzipped, over bare Next.js 16.3 and React 19.2, production build.{" "}
+              <Link href={BENCH_URL} external colorScheme="gray" variant="underline">
+                Method and pages
+              </Link>
+            </figcaption>
+          </figure>
         </Cell>
 
         <Cell
@@ -143,15 +156,14 @@ export function Bento() {
             {tokenRows.map((row) => (
               <DataListItem
                 key={row.token}
-                /* Additive — Item sets only flex/gap, so no prefix needed. */
                 className="items-center justify-between border-b border-stroke-base pb-2 last:border-b-0 last:pb-0"
               >
-                {/* Prefixed: overrides the horizontal Label's fixed w-40, which
-                    would crop these long token names. */}
-                <DataListLabel className="truncate astralis:flex-1" style={{ width: "auto" }}>
+                {/* Overrides the horizontal Label's fixed w-40, which would crop
+                    these long token names. */}
+                <DataListLabel className="truncate" style={{ width: "auto", flex: "1 1 0%" }}>
                   {row.token}
                 </DataListLabel>
-                <DataListValue className="flex items-center gap-1.5 astralis:flex-none">
+                <DataListValue className="flex items-center gap-1.5" style={{ flex: "none" }}>
                   <span
                     className="size-3.5 rounded-full border border-stroke-base"
                     style={{ backgroundColor: row.light }}

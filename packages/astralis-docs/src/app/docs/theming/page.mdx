@@ -105,14 +105,16 @@ eight accent variables at teal's role tokens for that subtree.
 
 Two consequences worth knowing:
 
-- **Zero cost per hue.** Eleven schemes ship as a few lines of variable
-  re-binding each, not eleven copies of every component's CSS.
+- **Zero cost per hue.** Each scheme ships as a few lines of variable
+  re-binding, not another copy of every component's CSS.
 - **Theme-aware for free.** Each scheme points at role tokens that already
   flip for dark mode, so `colorScheme="purple"` looks right in both themes
   without any extra work.
 
-Available schemes: `brand`, `gray`, `red`, `orange`, `yellow`, `green`,
-`teal`, `blue`, `cyan`, `purple`, `pink`.
+Available schemes: eleven hues (`brand`, `gray`, `red`, `orange`, `yellow`,
+`green`, `teal`, `blue`, `cyan`, `purple`, `pink`) plus four status aliases
+(`error`, `warning`, `success`, `info`) that follow your theme's status
+colors.
 
 ## Overriding tokens yourself
 
@@ -135,3 +137,13 @@ declared, so overriding a *primitive* (like `--astralis-color-brand-500`) on
 a nested element won't reach components — they read *role* tokens that were
 already resolved higher up. Override the role tokens themselves, or use
 `generateBrandTokens` as shown above, which handles exactly this.
+
+## Build a theme by eye
+
+The [Theme builder](/theme-builder) tunes the brand, neutral and status
+colors, radius, spacing, type scale, fonts and motion against a live canvas of
+real components. It hands you a stylesheet to import after
+`astralis-ui/styles.css`, or the same seed as `<AstralisProvider tokens={…}>`
+props, plus a link that reopens the theme exactly as you left it.
+[`npx astralis-cli theme`](/docs/cli) writes the same stylesheet from the
+command line.

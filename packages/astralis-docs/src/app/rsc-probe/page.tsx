@@ -156,7 +156,7 @@ export default function RscProbePage() {
           </EmptyState>
           {/* Backdrop is fixed by design — scope it inside the probe box. */}
           <Box position="relative" h="10" overflow="hidden" rounded="md">
-            <Backdrop className="astralis:absolute" />
+            <Backdrop style={{ position: "absolute" }} />
           </Box>
         </VStack>
 

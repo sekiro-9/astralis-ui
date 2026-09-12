@@ -5,17 +5,18 @@ import { CodeResult } from "@/modules/landing/code-result";
 import { StatsStrip } from "@/modules/landing/stats-strip";
 import { FinalCta } from "@/modules/landing/final-cta";
 import { Footer } from "@/modules/landing/footer";
+import { siteStats } from "@/lib/site-stats";
 
 export default function Home() {
   return (
     <>
-      <Hero />
-      <Bento />
-      <Showcase />
+      <Hero components={siteStats.components} />
+      <Bento stats={siteStats} />
+      <Showcase components={siteStats.components} version={siteStats.version} />
       <CodeResult />
-      <StatsStrip />
+      <StatsStrip stats={siteStats} />
       <FinalCta />
-      <Footer />
+      <Footer version={siteStats.version} />
     </>
   );
 }

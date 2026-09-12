@@ -14,13 +14,9 @@ interface CopyCommandProps {
  * compound rather than a hand-rolled button — a command IS a code block, and
  * CopyTrigger already reads Root's `code`.
  *
- * Flat parts, not `CodeBlock.*`: this is a Server Component, and namespace
- * access on a client-reference stub is undefined across the RSC boundary.
- *
- * Styling: keyword utilities (inline-flex, items-center, ...) ride className;
- * VALUE overrides use the `style` escape hatch with token variables — the
- * per-value utility classes no longer ship since the var-channel migration,
- * and style keeps every override on the theme's own tokens.
+ * Every override rides `style` with token variables: it has to beat
+ * CodeBlock's own layout and padding classes, and it keeps each value on the
+ * theme's tokens.
  */
 export function CopyCommand({ command }: CopyCommandProps) {
   return (
@@ -28,8 +24,10 @@ export function CopyCommand({ command }: CopyCommandProps) {
       variant="outline"
       code={command}
       maxW="full"
-      className="astralis:inline-flex astralis:flex-row astralis:items-center"
       style={{
+        display: "inline-flex",
+        flexDirection: "row",
+        alignItems: "center",
         width: "auto",
         gap: "var(--astralis-spacing-1)",
         borderRadius: "var(--astralis-border-radius-md)",
@@ -41,8 +39,10 @@ export function CopyCommand({ command }: CopyCommandProps) {
     >
       <CodeBlockContent style={{ minWidth: 0, padding: 0 }}>
         <CodeBlockCode
-          className="astralis:text-xs"
-          style={{ color: "var(--astralis-color-label-muted)" }}
+          style={{
+            fontSize: "var(--astralis-font-size-xs)",
+            color: "var(--astralis-color-label-muted)",
+          }}
         >
           {command}
         </CodeBlockCode>

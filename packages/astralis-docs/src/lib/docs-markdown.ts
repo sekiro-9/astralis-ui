@@ -34,7 +34,6 @@ export function listDocs(): DocEntry[] {
   const entries: DocEntry[] = [];
   for (const section of navigation) {
     for (const item of section.items) {
-      if (item.status === "soon") continue;
       const component = item.href.match(/^\/docs\/components\/([a-z0-9-]+)$/);
       const guide = item.href.match(/^\/docs\/([a-z0-9-]+)$/);
       const kind: DocEntry["kind"] | null = component ? "component" : guide ? "guide" : null;
@@ -56,15 +55,6 @@ export function docAsMarkdown(slug: string): string | null {
   const mdxPath = mdxPathFor(slug, "component") ?? mdxPathFor(slug, "guide");
   if (!mdxPath) return null;
   return mdxToMarkdown(mdxPath);
-}
-
-/**
- * The /docs introduction page. Its href fits neither URL scheme, so it lives
- * outside listDocs — but it's the page that answers "what is Astralis", so
- * the assistant's retrieval indexes it explicitly.
- */
-export function introAsMarkdown(): string {
-  return mdxToMarkdown(join(APP_DOCS, "page.mdx"));
 }
 
 function mdxToMarkdown(mdxPath: string): string {
@@ -90,10 +80,9 @@ function mdxToMarkdown(mdxPath: string): string {
   });
 
   // Render each props table from its data module as a markdown table.
-  md = md.replace(/<PropsTable\s+rows=\{([A-Za-z0-9_]+)\}\s*\/>/g, (tag, ident: string) => {
-    const rows = loadPropRows(importPaths.get(ident), ident);
-    return rows ? propsTableMarkdown(rows) : tag;
-  });
+  md = md.replace(/<PropsTable\s+rows=\{([A-Za-z0-9_]+)\}\s*\/>/g, (_, ident: string) =>
+    propsTableMarkdown(loadPropRows(mdxPath, importPaths.get(ident), ident)),
+  );
 
   return md.trim() + "\n";
 }
@@ -121,33 +110,38 @@ const PROP_ROW_SCOPE: Record<string, unknown> = { COLOR_SCHEME_TYPE, COLOR_SCHEM
  * Function-constructor eval is safe and spares us a TS parser.
  *
  * Must be anchored to `ident`: several modules export two arrays (flex/grid/
- * modal/steps each have a root and a parts table), and the previous greedy
- * `/=\s*(\[[\s\S]*\])\s*;/` ran from the first `[` to the last `];` — it
- * swallowed the `export const` between them, threw, and silently leaked the
- * raw `<PropsTable …/>` tag into llms.txt and every MCP `get_component`
- * response. Silent because the failure path returns the tag unchanged.
+ * modal/steps each have a root and a parts table), and a greedy match runs
+ * from the first `[` to the last `];`.
+ *
+ * Every failure throws. These pages feed llms.txt and every MCP
+ * `get_component` response, so a table that cannot be read must fail the
+ * build rather than ship as a raw `<PropsTable …/>` tag.
  */
-function loadPropRows(importPath: string | undefined, ident: string): PropRow[] | null {
-  if (!importPath?.startsWith("@/")) return null;
+function loadPropRows(mdxPath: string, importPath: string | undefined, ident: string): PropRow[] {
+  const fail = (reason: string, cause?: unknown): never => {
+    throw new Error(`${mdxPath}: cannot render <PropsTable rows={${ident}} />: ${reason}`, { cause });
+  };
+
+  if (!importPath?.startsWith("@/")) return fail(`"${ident}" is not imported from an "@/" module`);
   const file = join(SRC_DIR, importPath.slice(2) + ".ts");
-  if (!existsSync(file)) return null;
+  if (!existsSync(file)) return fail(`${file} does not exist`);
   const source = readFileSync(file, "utf8");
 
   // Find `export const <ident> ... = [` and take exactly that array.
   const start = source.match(new RegExp(`export\\s+const\\s+${ident}\\b[^=]*=\\s*\\[`));
-  if (start?.index === undefined) return null;
+  if (start?.index === undefined) return fail(`${file} has no \`export const ${ident} = [\``);
   const literal = sliceArrayLiteral(source, start.index + start[0].length - 1);
-  if (!literal) return null;
+  if (!literal) return fail(`the array literal in ${file} never closes`);
 
+  let rows: unknown;
   try {
     const names = Object.keys(PROP_ROW_SCOPE);
-    const rows = new Function(...names, `return ${literal};`)(
-      ...names.map((n) => PROP_ROW_SCOPE[n]),
-    ) as PropRow[];
-    return Array.isArray(rows) ? rows : null;
-  } catch {
-    return null;
+    rows = new Function(...names, `return ${literal};`)(...names.map((n) => PROP_ROW_SCOPE[n]));
+  } catch (error) {
+    return fail(`the array does not evaluate; a shared constant it names may be missing from PROP_ROW_SCOPE`, error);
   }
+  if (!Array.isArray(rows)) return fail(`${ident} is not an array`);
+  return rows as PropRow[];
 }
 
 /**

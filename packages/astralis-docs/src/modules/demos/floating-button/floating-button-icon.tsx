@@ -1,13 +1,24 @@
 "use client";
 
-import { FloatingButton, Icon } from "astralis-ui";
+import { Box, FloatingButton, Icon } from "astralis-ui";
 import { Plus, Pencil, ArrowUp } from "lucide-react";
 
 /* Icon-only: with no label, Button gives the FAB a square frame, and the
    default `rounded="full"` turns it into the classic circle. */
 export function FloatingButtonIcon() {
   return (
-    <div className="relative h-56 w-full max-w-md overflow-hidden rounded-xl border border-stroke-subtle bg-surface-subtle [transform:translateZ(0)]">
+    <Box
+      position="relative"
+      h="56"
+      w="full"
+      maxW="md"
+      overflow="hidden"
+      rounded="xl"
+      border="normal"
+      borderColor="subtle"
+      bg="subtle"
+      style={{ transform: "translateZ(0)" }}
+    >
       <FloatingButton
         placement="bottom-right"
         size="lg"
@@ -31,6 +42,6 @@ export function FloatingButtonIcon() {
         aria-label="Back to top"
         leftIcon={<Icon as={ArrowUp} size="sm" />}
       />
-    </div>
+    </Box>
   );
 }

@@ -11,7 +11,7 @@ const SECTIONS = [
 export function TableOfContentsDemo() {
   return (
     <HStack gap="8" alignItems="start" w="full" maxW="2xl">
-      <ScrollArea className="astralis:h-56 astralis:flex-1">
+      <ScrollArea style={{ height: "14rem", flex: 1 }}>
         {SECTIONS.map((s) => (
           <Box key={s.id} pb="8">
             <Heading as="h3" id={s.id} size="sm">
@@ -25,7 +25,7 @@ export function TableOfContentsDemo() {
           </Box>
         ))}
       </ScrollArea>
-      <TableOfContents items={SECTIONS} offset={0} className="astralis:w-40 astralis:shrink-0" />
+      <TableOfContents items={SECTIONS} offset={0} style={{ width: "10rem", flexShrink: 0 }} />
     </HStack>
   );
 }

@@ -1,27 +1,37 @@
 "use client";
 
-import { FloatingButton, Icon, Text } from "astralis-ui";
+import { Box, FloatingButton, Icon, Text, VStack } from "astralis-ui";
 import { MessageCircle } from "lucide-react";
 
 /*
- * The `[transform:translateZ(0)]` on the panel is load-bearing: a transformed
+ * The `transform: translateZ(0)` on the panel is load-bearing: a transformed
  * ancestor becomes the containing block for `position: fixed`, so the button
  * pins to this panel instead of the real viewport. Dragging is disabled in
- * these contained demos — the drag math works in viewport coordinates, which a
- * containing block deliberately breaks. The assistant launcher on this site is
- * the free-range, draggable configuration.
+ * these contained demos: the drag math works in viewport coordinates, which a
+ * containing block deliberately breaks.
  */
 export function FloatingButtonDemo() {
   return (
-    <div className="relative h-56 w-full max-w-md overflow-hidden rounded-xl border border-stroke-subtle bg-surface-subtle [transform:translateZ(0)]">
-      <div className="flex flex-col gap-2 p-5">
+    <Box
+      position="relative"
+      h="56"
+      w="full"
+      maxW="md"
+      overflow="hidden"
+      rounded="xl"
+      border="normal"
+      borderColor="subtle"
+      bg="subtle"
+      style={{ transform: "translateZ(0)" }}
+    >
+      <VStack gap="2" p="5" alignItems="start">
         <Text size="xl" weight="medium">
           Your app
         </Text>
         <Text size="sm" color="muted">
           The button floats above the content, pinned to a corner.
         </Text>
-      </div>
+      </VStack>
       <FloatingButton
         draggable={false}
         aria-label="Open chat"
@@ -29,6 +39,6 @@ export function FloatingButtonDemo() {
       >
         Chat
       </FloatingButton>
-    </div>
+    </Box>
   );
 }

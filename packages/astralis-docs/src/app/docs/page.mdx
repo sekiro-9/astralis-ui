@@ -12,19 +12,27 @@ Astralis UI is a React component library built on semantic design tokens, with r
 - **Server-first.** Static components — layout, typography, Card, Table, Stat, Badge and the rest — are true React Server Components: rendering them ships **zero** of their JavaScript to the browser. The boundary is enforced by a build gate, recorded in `system-spec.json`, and labeled on every component page. Only genuinely interactive components hydrate.
 - **Zero build step.** The library ships precompiled CSS — import one stylesheet and every component works. Your app never runs plugins, preprocessors or a theme compiler.
 - **Runtime theming.** Hand `AstralisProvider` a single brand color and the full shade scale, hover states and focus rings are derived at runtime. This page's accent color works exactly that way.
-- **One accent channel, eleven hues.** Components expose a `colorScheme` prop backed by CSS-variable indirection, so any component recolors to any palette without shipping per-hue styles.
+- **One accent channel: eleven hues plus four status aliases.** Components expose a `colorScheme` prop backed by CSS-variable indirection, so any component recolors to any palette without shipping per-hue styles.
 - **Responsive props — viewport and container.** Every style prop accepts breakpoint maps — `size={{ base: "sm", md: "lg" }}` — and every key has a container-query twin (`"@md"`) that resolves against the nearest `container` ancestor instead of the window, so a component styles to the space it actually has. All precompiled, zero runtime cost.
 - **Compound components.** Complex components split into composable parts (`Card.Header`, `Card.Body`) that inherit from their root — through data attributes and server-side cloning, never client context, so composition costs nothing in the browser.
 
 ## How these docs work
 
-Every component page pairs live, rendered examples with their exact source —
-the code tab shows the file that is actually running, so examples can never
-drift. Docs pages are being added one at a time; entries marked **soon** in
-the sidebar show what's coming.
+Every component page pairs live examples with the file that renders them: the
+code tab reads the running source, so the two cannot drift. A badge on each
+page says how much JavaScript the component sends to the browser, and many
+pages add a Playground tab for trying props before you write any code.
 
-Start with the [Button](/docs/components/button) — the first fully documented
-component — or head to the theming guide (soon) to see the token system.
+Every guide and component page is also served as plain markdown at its URL
+plus `.md`, which is what [llms.txt](/llms.txt) and the MCP server read.
+
+## Where to go next
+
+- **[Installation](/docs/installation)**, then the **[Quick Start](/docs/quick-start)**: from an empty app to a working, themed form.
+- **[Theming](/docs/theming)**: tokens, dark mode, the brand color and `colorScheme`. To shape a theme by eye instead, open the **[Theme builder](/theme-builder)** and export the result as one stylesheet.
+- **[CLI](/docs/cli)**: scaffold an app, copy in blocks, generate a theme file and check your code against the design system.
+- **[Blocks](/blocks)**: heroes, pricing tables, dashboards and auth screens you copy into your project with one command, then own.
+- **[AI agents](/docs/ai-agents)**: an MCP server that hands coding agents the current API and checks what they write.
 
 ## The stack
 

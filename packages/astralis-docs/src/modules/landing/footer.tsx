@@ -20,7 +20,7 @@ const columns = [
   },
 ];
 
-export function Footer() {
+export function Footer({ version }: { version: string }) {
   return (
     <footer className="border-t border-stroke-base">
       <div className="mx-auto flex max-w-screen-xl flex-col gap-12 px-6 py-20 sm:flex-row sm:justify-between lg:px-12">
@@ -53,7 +53,7 @@ export function Footer() {
       <div className="border-t border-stroke-base">
         <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6 text-xs text-label-subtle lg:px-12">
           <span>© 2026 Astralis UI</span>
-          <span>v0.1 — in development</span>
+          <span>astralis-ui v{version} · MIT</span>
         </div>
       </div>
     </footer>

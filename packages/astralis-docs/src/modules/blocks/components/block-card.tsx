@@ -41,7 +41,7 @@ export function BlockCard({ block, eager, hidden }: BlockCardProps) {
             of thumbnails is scanned visually, and two lines of prose per tile
             competed with the previews rather than adding to them. */}
         <Card.Body className="flex flex-col items-start gap-2">
-          <Card.Title className="astralis:text-sm">{block.name}</Card.Title>
+          <Card.Title style={{ fontSize: "var(--astralis-font-size-sm)" }}>{block.name}</Card.Title>
           <Tag size="sm" variant="subtle" colorScheme="gray">
             {block.id}
           </Tag>

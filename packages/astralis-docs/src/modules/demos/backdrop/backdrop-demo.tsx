@@ -10,7 +10,7 @@ export function BackdropDemo() {
           <Text size="sm">Content that is busy loading sits behind the scrim.</Text>
         </Card.Body>
       </Card>
-      <Backdrop className="astralis:absolute">
+      <Backdrop style={{ position: "absolute" }}>
         <Spinner colorScheme="gray" />
       </Backdrop>
     </Box>

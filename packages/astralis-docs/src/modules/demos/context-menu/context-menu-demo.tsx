@@ -9,7 +9,10 @@ export function ContextMenuDemo() {
           maxW="md"
           h="32"
           rounded="lg"
-          className="astralis:border-normal astralis:border-dashed astralis:border-stroke-base astralis:select-none"
+          border="normal"
+          borderStyle="dashed"
+          borderColor="base"
+          style={{ userSelect: "none" }}
         >
           <Text size="sm" color="muted">
             Right-click anywhere in this area

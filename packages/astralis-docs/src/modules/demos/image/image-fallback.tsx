@@ -1,6 +1,6 @@
 "use client";
 
-import { Image, HStack } from "astralis-ui";
+import { Image, HStack, Text } from "astralis-ui";
 
 export function ImageFallback() {
   return (
@@ -14,7 +14,7 @@ export function ImageFallback() {
         width={140}
         height={90}
         rounded="lg"
-        fallback={<span>No image 😢</span>}
+        fallback={<Text size="sm" color="muted">No image</Text>}
       />
     </HStack>
   );

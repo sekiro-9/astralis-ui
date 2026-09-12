@@ -3,13 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
 import { Stat } from "astralis-ui";
-
-const numbers = [
-  { label: "Components", value: 83, suffix: "" },
-  { label: "Color schemes", value: 11, suffix: "" },
-  { label: "Live examples", value: 140, suffix: "+" },
-  { label: "Client JS in static parts", value: 0, suffix: " KB" },
-];
+import type { SiteStats } from "@/lib/site-stats";
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -42,7 +36,14 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
   );
 }
 
-export function StatsStrip() {
+export function StatsStrip({ stats }: { stats: SiteStats }) {
+  const numbers = [
+    { label: "Components", value: stats.components, suffix: "" },
+    { label: "Accent hues", value: stats.hues, suffix: "" },
+    { label: "Live examples", value: stats.examples, suffix: "" },
+    { label: "Client JS in static parts", value: 0, suffix: " KB" },
+  ];
+
   return (
     <section className="border-y border-stroke-base bg-surface-subtle/40">
       <div className="mx-auto grid max-w-screen-xl grid-cols-2 gap-x-8 gap-y-10 px-6 py-16 md:grid-cols-4 lg:px-12 lg:py-20">
@@ -53,7 +54,14 @@ export function StatsStrip() {
             className="text-center"
             style={{ gap: "var(--astralis-spacing-2)" }}
           >
-            <Stat.Value className="font-display astralis:text-5xl astralis:tracking-tight">
+            <Stat.Value
+              className="font-display"
+              style={{
+                fontSize: "var(--astralis-font-size-5xl)",
+                lineHeight: "var(--astralis-line-height-none)",
+                letterSpacing: "var(--astralis-letter-spacing-tight)",
+              }}
+            >
               <CountUp target={item.value} suffix={item.suffix} />
             </Stat.Value>
             <Stat.Label>{item.label}</Stat.Label>

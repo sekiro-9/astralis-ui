@@ -58,7 +58,7 @@ The server exposes eight tools:
 
 | Tool | Returns |
 | --- | --- |
-| `list_components` | Every docs page — components and guides — with slug, description, and category. The agent calls this first to discover what exists. |
+| `list_components` | Every docs page — components and guides — with slug, title, description, section, and kind. The agent calls this first to discover what exists. |
 | `get_component` | Full docs for one component: usage, the complete props table, accessibility notes, and runnable demo source. |
 | `get_guide` | One guide page (installation, theming, tokens, and the rest) as markdown. |
 | `search_docs` | Full-text search across all documentation, with a snippet around each hit. |
@@ -71,19 +71,25 @@ The last one is the difference between retrieval and verification: the other
 tools help the agent *write* against the system; `validate_code` proves what
 it wrote is *inside* the system. Validation is pure computation — it runs
 locally in the server process, uses no model, and prefers the spec of the
-astralis-ui version installed in your project.
+astralis-ui version installed in your project. It is the same validator as
+[`astralis validate`](/docs/cli#validate--check-code-against-the-design-system),
+so the rules the agent checks against are the ones you run in CI.
 
-The spec also records each component's `client` tier (`none`, `leaf`, or
-`required`), classified from the shipped module graph at build time — so an
-agent deciding what to render in a Server Component can check whether a
-component ships client JavaScript before writing it.
+The spec itself — `dist/system-spec.json` in the installed package, or
+[/system-spec.json](https://astralis-zeta.vercel.app/system-spec.json) on this
+site — also records each component's `client` field (`none`, `leaf`, or
+`required`), classified from the shipped module graph at build time. No tool
+returns it yet, but an agent that reads the spec can check whether a component
+ships client JavaScript before putting it in a Server Component.
 
 ## How it stays current
 
 The server holds no copy of the docs. It reads them from this site's
 machine-readable endpoints — the same single pipeline that renders the pages you
 are reading now — so its answers can never drift from what's published. Ship a
-doc update and every connected agent sees it.
+doc update and every connected agent sees it. If the site can't be reached,
+every tool returns an error that says so, never an answer the agent might
+trust, such as a real component reported as unknown.
 
 When you're working on unpublished docs, point the server at a local build:
 

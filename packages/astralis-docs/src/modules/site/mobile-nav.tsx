@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Badge, Button, Drawer, Icon } from "astralis-ui";
-import { navigation } from "@/lib/navigation";
+import { isNew, navigation } from "@/lib/navigation";
 import { navLinks } from "./nav-links";
 
 /**
@@ -21,13 +21,18 @@ import { navLinks } from "./nav-links";
  * disappears last. Between the two breakpoints the top-level links appear in
  * both places, which costs nothing and keeps one rule instead of two.
  */
-export function MobileNav() {
+export function MobileNav({ version }: { version: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   // A drawer that survives the navigation it just triggered would cover the
-  // page the reader asked for.
-  useEffect(() => setOpen(false), [pathname]);
+  // page the reader asked for. Adjusted during render rather than in an effect,
+  // so the stale open frame is never committed.
+  const [shownFor, setShownFor] = useState(pathname);
+  if (shownFor !== pathname) {
+    setShownFor(pathname);
+    setOpen(false);
+  }
 
   return (
     <Drawer open={open} onOpenChange={setOpen} placement="left" size="sm">
@@ -79,19 +84,6 @@ export function MobileNav() {
                 </p>
                 <ul className="flex flex-col gap-px">
                   {group.items.map((item) => {
-                    if (item.status === "soon") {
-                      return (
-                        <li key={item.href}>
-                          <span className="flex cursor-default items-center justify-between rounded-lg px-2.5 py-1.5 text-sm text-label-subtle">
-                            {item.title}
-                            <Badge variant="outline" size="xs" className="uppercase tracking-wider">
-                              soon
-                            </Badge>
-                          </span>
-                        </li>
-                      );
-                    }
-
                     const active = pathname === item.href;
                     return (
                       <li key={item.href}>
@@ -105,7 +97,7 @@ export function MobileNav() {
                           }`}
                         >
                           {item.title}
-                          {item.status === "new" && (
+                          {isNew(item, version) && (
                             <Badge colorScheme="brand" size="xs" className="uppercase tracking-wider">
                               new
                             </Badge>

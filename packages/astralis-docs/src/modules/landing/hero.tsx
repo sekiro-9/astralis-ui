@@ -51,7 +51,7 @@ function brandOverride(hex: string, mode: "light" | "dark"): CSSProperties {
   } as CSSProperties;
 }
 
-export function Hero() {
+export function Hero({ components }: { components: number }) {
   const [brand, setBrand] = useState(swatches[0].hex);
   const { resolvedTheme } = useTheme();
   const reduce = useReducedMotion();
@@ -78,7 +78,7 @@ export function Hero() {
           <Entrance delay={0}>
             <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-stroke-base bg-surface/60 px-4 py-2 text-xs font-medium text-label-muted backdrop-blur">
               <Sparkles size={13} className="text-accent-label" />
-              83 components · server-first · 0 KB static parts
+              {components} components · server-first · 0 KB static parts
             </p>
           </Entrance>
 
@@ -177,12 +177,12 @@ export function Hero() {
                       </Avatar.Group>
                       <Switch defaultChecked size="sm">Auto-deploy</Switch>
                     </HStack>
-                    <Tag colorScheme="brand" size="sm">v0.1</Tag>
+                    <Tag colorScheme="brand" size="sm">Production</Tag>
                   </HStack>
 
                   <Stat>
-                    <Stat.Label>Weekly downloads</Stat.Label>
-                    <Stat.Value>48,120</Stat.Value>
+                    <Stat.Label>Deploys this week</Stat.Label>
+                    <Stat.Value>1,284</Stat.Value>
                     <Stat.HelpText>
                       <Stat.Indicator type="increase">18.9%</Stat.Indicator> vs last week
                     </Stat.HelpText>
@@ -210,7 +210,7 @@ export function Hero() {
           <div className="animate-float-slow absolute -bottom-8 -right-4 hidden lg:block" style={{ animationDelay: "1.6s" }}>
             <div className="flex items-center gap-2.5 rounded-2xl border border-stroke-base bg-raised/90 px-4 py-3 shadow-lg backdrop-blur">
               <Avatar name="Nova Starling" size="xs" />
-              <span className="text-xs text-label-muted">Nova deployed <span className="font-medium text-accent-label">v0.1</span></span>
+              <span className="text-xs text-label-muted">Nova deployed <span className="font-medium text-accent-label">to production</span></span>
             </div>
           </div>
         </motion.div>
