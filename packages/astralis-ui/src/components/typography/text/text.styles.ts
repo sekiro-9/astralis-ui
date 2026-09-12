@@ -101,9 +101,9 @@ export const textVariantMap = {
     }
 } as const;
 
+// No default `color`: Text inherits, and the container root already sets the
+// base label colour. textColors is a channel map, so a cva default would also
+// emit its raw `var(...)` value as a class.
 export const textVariants = cva("astralis:transition-colors", {
   variants: textVariantMap,
-  defaultVariants: {
-    color: "base",
-  }
 });

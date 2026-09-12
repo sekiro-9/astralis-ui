@@ -1,13 +1,10 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { ContainerProps } from "./container.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
-
-type ContainerComponent = <T extends ElementType = "div">(
-  props: ContainerProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 /**
  * Container centers its content horizontally (`margin-inline: auto`) up to a max
@@ -15,53 +12,42 @@ type ContainerComponent = <T extends ElementType = "div">(
  * defaults — override them like any style prop. `centerContent` stacks children
  * in a centered column.
  */
-const Container = forwardRef(
-  <T extends ElementType = "div">(
-    {
-      as,
-      className,
-      children,
-      centerContent = false,
-      maxW = "5xl",
-      px = "4",
-      style,
-      ...props
-    }: ContainerProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+function Container<T extends ElementType = "div">({
+  as,
+  className,
+  children,
+  centerContent = false,
+  maxW = "5xl",
+  px = "4",
+  style,
+  ref,
+  ...props
+}: ContainerProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [boxProps, htmlProps] = splitVariantProps(props, BOX_VARIANT_KEYS);
 
-    // Defaults first; any matching box prop in `...props` (e.g. a custom `w`
-    // or `mx`) overrides by plain key overwrite. Centering is the `mx: "auto"`
-    // default rather than a literal class — a class would sit in a later
-    // cascade layer and silently beat a caller's mx prop.
-    const boxVariantProps: Record<string, any> = { w: "full", maxW, px, mx: "auto" };
-    const htmlProps: Record<string, any> = {};
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        if (BOX_VARIANT_KEYS.includes(key)) boxVariantProps[key] = (props as any)[key];
-        else htmlProps[key] = (props as any)[key];
-      }
-    }
+  // Centering is the `mx: "auto"` default rather than a literal class — a
+  // class would sit in a later cascade layer and silently beat a caller's mx.
+  const box = resolveStyleProps(
+    { w: "full", maxW, px, mx: "auto", ...boxProps },
+    { maps: boxVariantMap, variants: boxVariants },
+  );
 
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
+  return (
+    <Element
+      className={astralisMerge(
+        box.className,
+        centerContent && "astralis:flex astralis:flex-col astralis:items-center",
+        className,
+      )}
+      ref={ref}
+      style={{ ...box.style, ...style }}
+      {...htmlProps}
+    >
+      {children}
+    </Element>
+  );
+}
 
-    return (
-      <Element
-        className={astralisMerge(
-          box.className,
-          centerContent && "astralis:flex astralis:flex-col astralis:items-center",
-          className,
-        )}
-        ref={ref}
-        style={{ ...box.style, ...style }}
-        {...htmlProps}
-      >
-        {children}
-      </Element>
-    );
-  },
-) as unknown as ContainerComponent;
-
-(Container as any).displayName = "Container";
+Container.displayName = "Container";
 export default Container;

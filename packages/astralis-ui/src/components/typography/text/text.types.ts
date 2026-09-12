@@ -3,6 +3,7 @@ import type { VariantProps } from "class-variance-authority";
 import type { ElementType, ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ResponsiveProp, Responsive } from "../../../utils/responsive";
 import type { WidenChannelProps } from "../../../const/channel";
+import type { PolymorphicRef } from "../../../types";
 import type { textVariants } from "./text.styles";
 
 export type TextSize = NonNullable<VariantProps<typeof textVariants>["size"]>;
@@ -20,6 +21,7 @@ export type TextStyleProps = Responsive<
 interface TextCustomProps<C extends ElementType = "p"> {
   children?: ReactNode;
   as?: C;
+  ref?: PolymorphicRef<C>;
   className?: string;
   lineClamp?: ResponsiveProp<TextLineClamp>;
 }
@@ -28,5 +30,5 @@ type TextBaseProps<C extends ElementType = "p"> = TextCustomProps<C> &
   PlacementProps &
   TextStyleProps;
 
-export type TextProps<C extends ElementType = "p"> = TextBaseProps<C> & 
+export type TextProps<C extends ElementType = "p"> = TextBaseProps<C> &
   Omit<ComponentPropsWithoutRef<C>, keyof TextBaseProps<C>>;

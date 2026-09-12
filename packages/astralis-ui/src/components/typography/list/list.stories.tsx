@@ -13,7 +13,7 @@ import { List } from "./index";
 const meta: Meta<typeof List> = {
   title: "Components/Typography/List",
   component: List,
-  subcomponents: { "List.Item": List.Item as any },
+  subcomponents: { "List.Item": List.Item },
   tags: ["autodocs"],
   argTypes: {
     styleType: {

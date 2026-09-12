@@ -5,9 +5,11 @@ import type { Responsive } from "../../../utils/responsive";
 import type { StateProps } from "../../../utils/interaction-state";
 import type { WidenChannelProps } from "../../../const/channel";
 import type { AliasesOf } from "../../../const/prop-aliases";
+import type { PolymorphicRef } from "../../../types";
 
 interface BoxCustomProps<T extends ElementType = "div"> {
   as?: T;
+  ref?: PolymorphicRef<T>;
   children?: ReactNode;
   className?: string;
   /**

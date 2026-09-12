@@ -1,55 +1,42 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { SeparatorProps } from "./separator.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { separatorVariants, separatorVariantMap } from "./separator.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 const VARIANT_KEYS = Object.keys(separatorVariantMap);
 
-type SeparatorComponent = <T extends ElementType = "div">(
-  props: SeparatorProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+function Separator<T extends ElementType = "div">({
+  as,
+  className,
+  style,
+  ref,
+  ...props
+}: SeparatorProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [variantProps, boxProps, htmlProps] = splitVariantProps(props, VARIANT_KEYS, BOX_VARIANT_KEYS);
 
-const Separator = forwardRef(
-  <T extends ElementType = "div">(
-    { as, className, style, ...props }: SeparatorProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+  // Scalar orientation drives aria-orientation; a responsive value leaves it unset.
+  const orientation = variantProps.orientation ?? "horizontal";
+  const ariaOrientation = typeof orientation === "string" ? orientation : undefined;
 
-    // Scalar orientation drives aria-orientation; a responsive value leaves it unset.
-    const orientation = (props as any).orientation ?? "horizontal";
-    const ariaOrientation = typeof orientation === "string" ? orientation : undefined;
+  const own = resolveStyleProps(variantProps, { maps: separatorVariantMap, variants: separatorVariants });
+  const box = resolveStyleProps(boxProps, { maps: boxVariantMap, variants: boxVariants });
 
-    const variantProps: Record<string, any> = {};
-    const boxVariantProps: Record<string, any> = {};
-    const htmlProps: Record<string, any> = {};
+  return (
+    <Element
+      role="separator"
+      aria-orientation={ariaOrientation}
+      className={astralisMerge(own.className, box.className, className)}
+      ref={ref}
+      style={{ ...own.style, ...box.style, ...style }}
+      {...htmlProps}
+    />
+  );
+}
 
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        if (VARIANT_KEYS.includes(key)) variantProps[key] = (props as any)[key];
-        else if (BOX_VARIANT_KEYS.includes(key)) boxVariantProps[key] = (props as any)[key];
-        else htmlProps[key] = (props as any)[key];
-      }
-    }
-
-    const own = resolveStyleProps(variantProps, { maps: separatorVariantMap, variants: separatorVariants });
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
-
-    return (
-      <Element
-        role="separator"
-        aria-orientation={ariaOrientation}
-        className={astralisMerge(own.className, box.className, className)}
-        ref={ref}
-        style={{ ...own.style, ...box.style, ...style }}
-        {...htmlProps}
-      />
-    );
-  },
-) as unknown as SeparatorComponent;
-
-(Separator as any).displayName = "Separator";
+Separator.displayName = "Separator";
 export default Separator;

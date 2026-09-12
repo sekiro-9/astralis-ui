@@ -1,76 +1,51 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { GridProps } from "./grid.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { gridVariants, gridVariantMap } from "./grid.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 const VARIANT_KEYS = Object.keys(gridVariantMap);
 
-type GridComponent = <T extends ElementType = "div">(
-  props: GridProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+function GridRoot<T extends ElementType = "div">({
+  children,
+  as,
+  className,
+  templateColumns,
+  templateRows,
+  templateAreas,
+  style,
+  ref,
+  ...props
+}: GridProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [variantProps, boxProps, htmlProps] = splitVariantProps(props, VARIANT_KEYS, BOX_VARIANT_KEYS);
 
-const GridRoot = forwardRef(
-  <T extends ElementType = "div">(
-    {
-      children,
-      as,
-      className,
-      templateColumns,
-      templateRows,
-      templateAreas,
-      style,
-      ...props
-    }: GridProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+  // Arbitrary track/area templates can't be tokenized, so they ride inline style.
+  const templateStyle = {
+    ...(templateColumns ? { gridTemplateColumns: templateColumns } : {}),
+    ...(templateRows ? { gridTemplateRows: templateRows } : {}),
+    ...(templateAreas ? { gridTemplateAreas: templateAreas } : {}),
+  };
 
-    const variantProps: Record<string, any> = {};
-    const boxVariantProps: Record<string, any> = {};
-    const htmlProps: Record<string, any> = {};
+  // Grid's own recipe FIRST, Box props second — same reason as Flex:
+  // `display` is shared, and Grid's cva always emits `grid`.
+  const own = resolveStyleProps(variantProps, { maps: gridVariantMap, variants: gridVariants });
+  const box = resolveStyleProps(boxProps, { maps: boxVariantMap, variants: boxVariants });
 
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        if (VARIANT_KEYS.includes(key)) {
-          variantProps[key] = (props as any)[key];
-        } else if (BOX_VARIANT_KEYS.includes(key)) {
-          boxVariantProps[key] = (props as any)[key];
-        } else {
-          htmlProps[key] = (props as any)[key];
-        }
-      }
-    }
+  return (
+    <Element
+      className={astralisMerge(own.className, box.className, className)}
+      ref={ref}
+      style={{ ...own.style, ...box.style, ...templateStyle, ...style }}
+      {...htmlProps}
+    >
+      {children}
+    </Element>
+  );
+}
 
-    // Arbitrary track/area templates can't be tokenized — apply via inline style.
-    const templateStyle =
-      templateColumns || templateRows || templateAreas
-        ? {
-            ...(templateColumns ? { gridTemplateColumns: templateColumns } : {}),
-            ...(templateRows ? { gridTemplateRows: templateRows } : {}),
-            ...(templateAreas ? { gridTemplateAreas: templateAreas } : {}),
-          }
-        : undefined;
-
-    // Grid's own recipe FIRST, Box props second — same reason as Flex:
-    // `display` is shared, and Grid's cva always emits `grid`.
-    const own = resolveStyleProps(variantProps, { maps: gridVariantMap, variants: gridVariants });
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
-
-    return (
-      <Element
-        className={astralisMerge(own.className, box.className, className)}
-        ref={ref}
-        style={{ ...own.style, ...box.style, ...templateStyle, ...style }}
-        {...htmlProps}
-      >
-        {children}
-      </Element>
-    );
-  },
-) as unknown as GridComponent;
-
-(GridRoot as any).displayName = "Grid";
+GridRoot.displayName = "Grid";
 export default GridRoot;

@@ -1,29 +1,42 @@
+const groupSets = new WeakMap<readonly string[], ReadonlySet<string>>();
+
+/** Key groups are module constants, so each Set is built once, not per render. */
+function setOf(group: readonly string[]): ReadonlySet<string> {
+  let set = groupSets.get(group);
+  if (!set) {
+    set = new Set(group);
+    groupSets.set(group, set);
+  }
+  return set;
+}
+
 /**
- * Splits a props bag into buckets by key ownership — the shared replacement
- * for the hand-rolled `for (const key in props)` loops that Box-composing
- * components (Code, Blockquote, CodeBlock, List, …) each repeated.
- *
- * Keys are claimed by the FIRST group that contains them; anything unclaimed
- * falls through to the trailing HTML-props bucket. Because the groups are
- * derived from the same variant maps that define the styles
- * (`Object.keys(variantMap)`), a new style prop can never leak onto the DOM
- * element as an invalid attribute.
+ * Splits a props bag into one bucket per key group, plus a trailing bucket of
+ * everything unclaimed (the DOM props). A key goes to the FIRST group that
+ * lists it, so pass a component's own variant keys before the Box keys.
  *
  *   const [variantProps, boxProps, htmlProps] =
  *     splitVariantProps(props, VARIANT_KEYS, BOX_VARIANT_KEYS);
  */
 export function splitVariantProps(
-  props: Record<string, unknown>,
+  props: object,
   ...keyGroups: ReadonlyArray<readonly string[]>
 ): Record<string, unknown>[] {
-  const sets = keyGroups.map((group) => new Set(group));
-  const buckets = keyGroups.map(() => ({}) as Record<string, unknown>);
+  const sets = keyGroups.map(setOf);
+  const buckets = keyGroups.map((): Record<string, unknown> => ({}));
   const htmlProps: Record<string, unknown> = {};
+  const source = props as Record<string, unknown>;
 
-  for (const key in props) {
-    if (!Object.prototype.hasOwnProperty.call(props, key)) continue;
-    const owner = sets.findIndex((set) => set.has(key));
-    (owner === -1 ? htmlProps : buckets[owner])[key] = props[key];
+  for (const key in source) {
+    if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
+    let target = htmlProps;
+    for (let i = 0; i < sets.length; i++) {
+      if (sets[i].has(key)) {
+        target = buckets[i];
+        break;
+      }
+    }
+    target[key] = source[key];
   }
 
   return [...buckets, htmlProps];

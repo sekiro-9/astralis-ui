@@ -1,56 +1,44 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { FloatProps } from "./float.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { floatVariants, floatVariantMap } from "./float.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 const VARIANT_KEYS = Object.keys(floatVariantMap);
-
-type FloatComponent = <T extends ElementType = "div">(
-  props: FloatProps<T> & { ref?: Ref<any> },
-) => ReactNode;
 
 /**
  * Float positions its content at the edge/corner of the nearest positioned
  * ancestor — wrap it in a `position="relative"` Box. Ideal for badges, dots,
  * and close buttons overlaid on a container.
  */
-const Float = forwardRef(
-  <T extends ElementType = "div">(
-    { children, as, className, style, ...props }: FloatProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+function Float<T extends ElementType = "div">({
+  children,
+  as,
+  className,
+  style,
+  ref,
+  ...props
+}: FloatProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [variantProps, boxProps, htmlProps] = splitVariantProps(props, VARIANT_KEYS, BOX_VARIANT_KEYS);
 
-    const variantProps: Record<string, any> = {};
-    const boxVariantProps: Record<string, any> = {};
-    const htmlProps: Record<string, any> = {};
+  const box = resolveStyleProps(boxProps, { maps: boxVariantMap, variants: boxVariants });
+  const own = resolveStyleProps(variantProps, { maps: floatVariantMap, variants: floatVariants });
 
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        if (VARIANT_KEYS.includes(key)) variantProps[key] = (props as any)[key];
-        else if (BOX_VARIANT_KEYS.includes(key)) boxVariantProps[key] = (props as any)[key];
-        else htmlProps[key] = (props as any)[key];
-      }
-    }
+  return (
+    <Element
+      className={astralisMerge(box.className, own.className, className)}
+      ref={ref}
+      style={{ ...box.style, ...own.style, ...style }}
+      {...htmlProps}
+    >
+      {children}
+    </Element>
+  );
+}
 
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
-    const own = resolveStyleProps(variantProps, { maps: floatVariantMap, variants: floatVariants });
-
-    return (
-      <Element
-        className={astralisMerge(box.className, own.className, className)}
-        ref={ref}
-        style={{ ...box.style, ...own.style, ...style }}
-        {...htmlProps}
-      >
-        {children}
-      </Element>
-    );
-  },
-) as unknown as FloatComponent;
-
-(Float as any).displayName = "Float";
+Float.displayName = "Float";
 export default Float;

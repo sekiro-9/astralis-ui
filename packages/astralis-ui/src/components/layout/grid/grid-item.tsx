@@ -1,56 +1,40 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { GridItemProps } from "./grid.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { gridItemVariants, gridItemVariantMap } from "./grid.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 const ITEM_VARIANT_KEYS = Object.keys(gridItemVariantMap);
 
-type GridItemComponent = <T extends ElementType = "div">(
-  props: GridItemProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+function GridItem<T extends ElementType = "div">({
+  children,
+  as,
+  className,
+  area,
+  style,
+  ref,
+  ...props
+}: GridItemProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [variantProps, boxProps, htmlProps] = splitVariantProps(props, ITEM_VARIANT_KEYS, BOX_VARIANT_KEYS);
 
-const GridItem = forwardRef(
-  <T extends ElementType = "div">(
-    { children, as, className, area, style, ...props }: GridItemProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+  const box = resolveStyleProps(boxProps, { maps: boxVariantMap, variants: boxVariants });
+  const own = resolveStyleProps(variantProps, { maps: gridItemVariantMap, variants: gridItemVariants });
 
-    const variantProps: Record<string, any> = {};
-    const boxVariantProps: Record<string, any> = {};
-    const htmlProps: Record<string, any> = {};
+  return (
+    <Element
+      className={astralisMerge(box.className, own.className, className)}
+      ref={ref}
+      style={{ ...box.style, ...own.style, ...(area ? { gridArea: area } : {}), ...style }}
+      {...htmlProps}
+    >
+      {children}
+    </Element>
+  );
+}
 
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        const value = (props as any)[key];
-        if (ITEM_VARIANT_KEYS.includes(key)) {
-          variantProps[key] = value;
-        } else if (BOX_VARIANT_KEYS.includes(key)) {
-          boxVariantProps[key] = value;
-        } else {
-          htmlProps[key] = value;
-        }
-      }
-    }
-
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
-    const own = resolveStyleProps(variantProps, { maps: gridItemVariantMap, variants: gridItemVariants });
-
-    return (
-      <Element
-        className={astralisMerge(box.className, own.className, className)}
-        ref={ref}
-        style={{ ...box.style, ...own.style, ...(area ? { gridArea: area } : {}), ...style }}
-        {...htmlProps}
-      >
-        {children}
-      </Element>
-    );
-  },
-) as unknown as GridItemComponent;
-
-(GridItem as any).displayName = "Grid.Item";
+GridItem.displayName = "Grid.Item";
 export default GridItem;

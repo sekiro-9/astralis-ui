@@ -1,60 +1,42 @@
-import { forwardRef, type ElementType, type ReactNode, type Ref } from "react";
+import type { ElementType } from "react";
 import type { FlexProps } from "./flex.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
+import { splitVariantProps } from "../../../utils/split-variant-props";
 import { flexVariants, flexVariantMap } from "./flex.style";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
-import { BOX_VARIANT_KEYS } from "../box/box";
+import { BOX_VARIANT_KEYS } from "../box/box.keys";
 
 const VARIANT_KEYS = Object.keys(flexVariantMap);
 
-type FlexComponent = <T extends ElementType = "div">(
-  props: FlexProps<T> & { ref?: Ref<any> },
-) => ReactNode;
+function FlexRoot<T extends ElementType = "div">({
+  children,
+  as,
+  className,
+  style,
+  ref,
+  ...props
+}: FlexProps<T>) {
+  const Element: ElementType = as ?? "div";
+  const [variantProps, boxProps, htmlProps] = splitVariantProps(props, VARIANT_KEYS, BOX_VARIANT_KEYS);
 
-const FlexRoot = forwardRef(
-  <T extends ElementType = "div">(
-    { children, as, className, style, ...props }: FlexProps<T>,
-    ref: Ref<any>,
-  ) => {
-    const Element = (as || "div") as ElementType;
+  // Flex's own recipe FIRST, Box props second. `display` is the one key the
+  // two families share and Flex's cva always emits `flex`; merged the other
+  // way round it ate an explicit `display={{ base: "hidden", md: "flex" }}`.
+  const own = resolveStyleProps(variantProps, { maps: flexVariantMap, variants: flexVariants });
+  const box = resolveStyleProps(boxProps, { maps: boxVariantMap, variants: boxVariants });
 
-    const variantProps: Record<string, any> = {};
-    const boxVariantProps: Record<string, any> = {};
-    const htmlProps: Record<string, any> = {};
+  return (
+    <Element
+      className={astralisMerge(own.className, box.className, className)}
+      style={{ ...own.style, ...box.style, ...style }}
+      ref={ref}
+      {...htmlProps}
+    >
+      {children}
+    </Element>
+  );
+}
 
-    for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key)) {
-        if (VARIANT_KEYS.includes(key)) {
-          variantProps[key] = (props as any)[key];
-        } else if (BOX_VARIANT_KEYS.includes(key)) {
-          boxVariantProps[key] = (props as any)[key];
-        } else {
-          htmlProps[key] = (props as any)[key];
-        }
-      }
-    }
-
-    // Flex's own recipe FIRST, Box props second. `display` is the one key
-    // the two families share, and Flex's cva always emits `flex` — merged
-    // the other way round it silently ate an explicit display, so
-    // `<Flex display={{ base: "hidden", md: "flex" }} />` typechecked and
-    // then rendered visible at every width.
-    const own = resolveStyleProps(variantProps, { maps: flexVariantMap, variants: flexVariants });
-    const box = resolveStyleProps(boxVariantProps, { maps: boxVariantMap, variants: boxVariants });
-
-    return (
-      <Element
-        className={astralisMerge(own.className, box.className, className)}
-        style={{ ...own.style, ...box.style, ...style }}
-        ref={ref}
-        {...htmlProps}
-      >
-        {children}
-      </Element>
-    );
-  },
-) as unknown as FlexComponent;
-
-(FlexRoot as any).displayName = "Flex";
+FlexRoot.displayName = "Flex";
 export default FlexRoot;
