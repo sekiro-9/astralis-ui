@@ -25,9 +25,7 @@ const kpis = [
  * value with a label, a signed change, and a note.
  *
  * `Stat` IS the root — the compound wrapper stands in for it, which is why no
- * `StatRoot` is exported. A plain `Stat` tag is a real component, unlike the
- * dotted sub-component access that breaks across the RSC boundary, so the
- * children are the flat exports. Four across from md, two below.
+ * `StatRoot` is exported. Four across from md, two below.
  */
 export function Stats02() {
   return (

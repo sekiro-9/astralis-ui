@@ -5,6 +5,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Flex,
   Grid,
   Icon,
@@ -227,21 +228,16 @@ export function Dashboard03() {
         <Box as="header" shrink="0" bg="base" borderB="normal" borderColor="base">
           {/* ---- Tier one: title + actions ---- */}
           <Flex alignItems="center" gap="4" h="16" px={{ base: "4", lg: "6" }}>
-            <Box
-              as="button"
-              type="button"
-              aria-label="Open menu"
-              aria-expanded={open}
-              onClick={() => setOpen(true)}
-              display={{ base: "inline-flex", lg: "hidden" }}
-              cursor="pointer"
-              p="2"
-              rounded="md"
-              bg="transparent"
-              hover={{ bg: "subtle" }}
-              focusVisible={{ borderColor: "brand" }}
-            >
-              <NavIcon path={paths.menu} />
+            <Box display={{ base: "inline-flex", lg: "hidden" }}>
+              <Button
+                variant="text"
+                colorScheme="gray"
+                size="sm"
+                aria-label="Open menu"
+                aria-expanded={open}
+                onClick={() => setOpen(true)}
+                leftIcon={<NavIcon path={paths.menu} />}
+              />
             </Box>
 
             <Text as="h1" size="lg" weight="semibold" letterSpacing="tight">
@@ -250,22 +246,13 @@ export function Dashboard03() {
 
             {/* `ml="auto"` pushes this group to the far edge — no spacer element. */}
             <Flex alignItems="center" gap="3" shrink="0" ml="auto">
-              <Flex
-                as="button"
-                type="button"
+              <Button
+                variant="text"
+                colorScheme="gray"
+                size="sm"
                 aria-label="Notifications"
-                alignItems="center"
-                justifyContent="center"
-                cursor="pointer"
-                p="2"
-                rounded="md"
-                bg="transparent"
-                hover={{ bg: "subtle" }}
-                focusVisible={{ borderColor: "brand" }}
-                color="muted"
-              >
-                <NavIcon path={paths.bell} />
-              </Flex>
+                leftIcon={<NavIcon path={paths.bell} />}
+              />
               <Avatar name="Ada Lovelace" size="sm" />
             </Flex>
           </Flex>

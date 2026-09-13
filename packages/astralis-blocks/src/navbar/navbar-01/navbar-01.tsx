@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   Box,
   Button,
@@ -81,6 +81,7 @@ function Wordmark() {
  */
 export function Navbar01() {
   const [open, setOpen] = useState(false);
+  const menuId = useId();
 
   return (
     <Box
@@ -116,51 +117,49 @@ export function Navbar01() {
             <Button size="sm">Get started</Button>
           </Flex>
 
-          {/* Local state only — wire the links to your own routing. */}
-          <Box
-            as="button"
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
-            display={{ base: "inline-flex", md: "hidden" }}
-            cursor="pointer"
-            p="2"
-            rounded="md"
-            bg="transparent"
-            hover={{ bg: "subtle" }}
-            focusVisible={{ borderColor: "brand" }}
-          >
-            <MenuIcon open={open} />
+          {/* Local state only — wire the links to your own routing. A Button
+              rather than a styled Box, for its focus ring. */}
+          <Box display={{ base: "inline-flex", md: "hidden" }}>
+            <Button
+              variant="text"
+              colorScheme="gray"
+              size="sm"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls={menuId}
+              onClick={() => setOpen((o) => !o)}
+              leftIcon={<MenuIcon open={open} />}
+            />
           </Box>
         </Flex>
       </Container>
 
-      {open && (
-        <Box
-          as="nav"
-          aria-label="Main"
-          borderT="normal"
-          borderColor="subtle"
-          display={{ base: "block", md: "hidden" }}
-        >
-          <Container maxW="6xl" px={{ base: "6", lg: "8" }}>
-            <Stack direction="vertical" alignItems="stretch" gap="4" py="5">
-              {links.map((link) => (
-                <NavLink key={link.label} {...link} />
-              ))}
-              <Stack direction="vertical" alignItems="stretch" gap="2.5" pt="2">
-                <Button size="md" variant="surface" colorScheme="gray" fullWidth>
-                  Sign in
-                </Button>
-                <Button size="md" fullWidth>
-                  Get started
-                </Button>
-              </Stack>
+      {/* Always rendered, so the button's aria-controls has a target; closed,
+          it is display: none. */}
+      <Box
+        as="nav"
+        id={menuId}
+        aria-label="Main"
+        borderT="normal"
+        borderColor="subtle"
+        display={open ? { base: "block", md: "hidden" } : "hidden"}
+      >
+        <Container maxW="6xl" px={{ base: "6", lg: "8" }}>
+          <Stack direction="vertical" alignItems="stretch" gap="4" py="5">
+            {links.map((link) => (
+              <NavLink key={link.label} {...link} />
+            ))}
+            <Stack direction="vertical" alignItems="stretch" gap="2.5" pt="2">
+              <Button size="md" variant="surface" colorScheme="gray" fullWidth>
+                Sign in
+              </Button>
+              <Button size="md" fullWidth>
+                Get started
+              </Button>
             </Stack>
-          </Container>
-        </Box>
-      )}
+          </Stack>
+        </Container>
+      </Box>
     </Box>
   );
 }

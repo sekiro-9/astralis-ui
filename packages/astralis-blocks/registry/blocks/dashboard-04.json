@@ -1,0 +1,36 @@
+{
+  "id": "dashboard-04",
+  "category": "dashboard",
+  "name": "Orders table with status tabs",
+  "description": "A page's worth of dashboard content rather than a shell: a title with its actions, tabs that filter orders by status with a count on each, and a table of customer, date, status and amount. Tabs and Table carry the behaviour, so there is no client state.",
+  "tags": [
+    "table",
+    "tabs",
+    "server-safe",
+    "orders",
+    "status-filter"
+  ],
+  "files": [
+    "dashboard-04.tsx"
+  ],
+  "component": "Dashboard04",
+  "uses": [
+    "Avatar",
+    "Badge",
+    "Box",
+    "Button",
+    "Card",
+    "Flex",
+    "Heading",
+    "Stack",
+    "Table",
+    "Tabs",
+    "Text"
+  ],
+  "contents": [
+    {
+      "path": "dashboard-04.tsx",
+      "content": "import {\n  Avatar,\n  Badge,\n  Box,\n  Button,\n  Card,\n  Flex,\n  Heading,\n  Stack,\n  Table,\n  Tabs,\n  Text,\n} from \"astralis-ui\";\n\ntype Status = \"paid\" | \"pending\" | \"refunded\";\n\nconst orders: {\n  id: string;\n  customer: string;\n  email: string;\n  date: string;\n  status: Status;\n  amount: string;\n}[] = [\n  { id: \"#3210\", customer: \"Ada Lovelace\", email: \"ada@analytical.dev\", date: \"Sep 22\", status: \"paid\", amount: \"$1,240.00\" },\n  { id: \"#3209\", customer: \"Grace Hopper\", email: \"grace@cobol.io\", date: \"Sep 22\", status: \"pending\", amount: \"$89.00\" },\n  { id: \"#3208\", customer: \"Alan Turing\", email: \"alan@bombe.co.uk\", date: \"Sep 21\", status: \"paid\", amount: \"$460.50\" },\n  { id: \"#3207\", customer: \"Katherine Johnson\", email: \"kj@orbit.space\", date: \"Sep 21\", status: \"refunded\", amount: \"$120.00\" },\n  { id: \"#3206\", customer: \"Linus Pauling\", email: \"linus@bonds.org\", date: \"Sep 20\", status: \"paid\", amount: \"$2,015.00\" },\n  { id: \"#3205\", customer: \"Hedy Lamarr\", email: \"hedy@hopping.fm\", date: \"Sep 19\", status: \"pending\", amount: \"$312.75\" },\n];\n\nconst statuses: Record<Status, { label: string; scheme: \"success\" | \"warning\" | \"gray\" }> = {\n  paid: { label: \"Paid\", scheme: \"success\" },\n  pending: { label: \"Pending\", scheme: \"warning\" },\n  refunded: { label: \"Refunded\", scheme: \"gray\" },\n};\n\nconst views = [\n  { value: \"all\", label: \"All\", rows: orders },\n  ...(Object.keys(statuses) as Status[]).map((status) => ({\n    value: status,\n    label: statuses[status].label,\n    rows: orders.filter((order) => order.status === status),\n  })),\n];\n\nfunction OrdersTable({ rows }: { rows: typeof orders }) {\n  return (\n    // Scrolls sideways inside the card on narrow screens instead of widening the page.\n    <Box overflowX=\"auto\">\n      <Table size=\"sm\" interactive>\n        <Table.Header>\n          <Table.Row>\n            <Table.Head>Order</Table.Head>\n            <Table.Head>Customer</Table.Head>\n            <Table.Head>Date</Table.Head>\n            <Table.Head>Status</Table.Head>\n            <Table.Head style={{ textAlign: \"right\" }}>Amount</Table.Head>\n          </Table.Row>\n        </Table.Header>\n        <Table.Body>\n          {rows.map((order) => (\n            <Table.Row key={order.id}>\n              <Table.Cell>\n                <Text as=\"span\" size=\"sm\" weight=\"medium\">\n                  {order.id}\n                </Text>\n              </Table.Cell>\n              <Table.Cell>\n                <Flex alignItems=\"center\" gap=\"3\">\n                  <Avatar name={order.customer} size=\"sm\" />\n                  <Stack direction=\"vertical\">\n                    <Text as=\"span\" size=\"sm\" weight=\"medium\" lineHeight=\"tight\">\n                      {order.customer}\n                    </Text>\n                    <Text as=\"span\" size=\"xs\" color=\"muted\" lineHeight=\"tight\">\n                      {order.email}\n                    </Text>\n                  </Stack>\n                </Flex>\n              </Table.Cell>\n              <Table.Cell>\n                <Text as=\"span\" size=\"sm\" color=\"muted\">\n                  {order.date}\n                </Text>\n              </Table.Cell>\n              <Table.Cell>\n                <Badge variant=\"subtle\" colorScheme={statuses[order.status].scheme}>\n                  {statuses[order.status].label}\n                </Badge>\n              </Table.Cell>\n              <Table.Cell style={{ textAlign: \"right\" }}>\n                <Text as=\"span\" size=\"sm\" weight=\"medium\">\n                  {order.amount}\n                </Text>\n              </Table.Cell>\n            </Table.Row>\n          ))}\n        </Table.Body>\n      </Table>\n    </Box>\n  );\n}\n\n/**\n * Dashboard content, not a shell: drop it into the content region of any of\n * the dashboard shells. Tabs filter the orders by status, each trigger\n * carrying its count, and every panel is the same table over a different\n * slice of the data.\n *\n * Nothing here holds state. Tabs manages its own selection, so the block stays\n * a Server Component; swap `orders` for your own query.\n */\nexport function Dashboard04() {\n  return (\n    <Box as=\"section\" bg=\"subtle\" p={{ base: \"4\", lg: \"8\" }}>\n      <Stack direction=\"vertical\" alignItems=\"stretch\" gap=\"6\">\n        <Flex\n          direction={{ base: \"column\", sm: \"row\" }}\n          alignItems={{ base: \"start\", sm: \"end\" }}\n          justifyContent=\"between\"\n          gap=\"4\"\n        >\n          <Stack direction=\"vertical\" gap=\"1\">\n            <Heading as=\"h1\" size=\"2xl\" weight=\"semibold\" letterSpacing=\"tight\">\n              Orders\n            </Heading>\n            <Text size=\"sm\" color=\"muted\">\n              Every order from the last 7 days, newest first.\n            </Text>\n          </Stack>\n          <Flex alignItems=\"center\" gap=\"2\">\n            <Button size=\"sm\" variant=\"outline\" colorScheme=\"gray\">\n              Export CSV\n            </Button>\n            <Button size=\"sm\">New order</Button>\n          </Flex>\n        </Flex>\n\n        <Card variant=\"outline\">\n          <Tabs defaultValue=\"all\" variant=\"line\" size=\"sm\">\n            <Box px=\"4\" pt=\"2\">\n              <Tabs.List aria-label=\"Filter orders by status\">\n                {views.map((view) => (\n                  <Tabs.Trigger key={view.value} value={view.value}>\n                    <Flex as=\"span\" alignItems=\"center\" gap=\"2\">\n                      {view.label}\n                      <Badge size=\"xs\" variant=\"subtle\" colorScheme=\"gray\">\n                        {view.rows.length}\n                      </Badge>\n                    </Flex>\n                  </Tabs.Trigger>\n                ))}\n              </Tabs.List>\n            </Box>\n            {views.map((view) => (\n              <Tabs.Content key={view.value} value={view.value}>\n                <OrdersTable rows={view.rows} />\n              </Tabs.Content>\n            ))}\n          </Tabs>\n        </Card>\n      </Stack>\n    </Box>\n  );\n}\n"
+    }
+  ]
+}

@@ -206,6 +206,7 @@
         "Breadcrumb",
         "BreadcrumbItem",
         "BreadcrumbLink",
+        "Button",
         "Flex",
         "Grid",
         "Icon",
@@ -262,11 +263,42 @@
         "Avatar",
         "Badge",
         "Box",
+        "Button",
         "Flex",
         "Grid",
         "Icon",
         "Separator",
         "Stack",
+        "Text"
+      ]
+    },
+    {
+      "id": "dashboard-04",
+      "category": "dashboard",
+      "name": "Orders table with status tabs",
+      "description": "A page's worth of dashboard content rather than a shell: a title with its actions, tabs that filter orders by status with a count on each, and a table of customer, date, status and amount. Tabs and Table carry the behaviour, so there is no client state.",
+      "tags": [
+        "table",
+        "tabs",
+        "server-safe",
+        "orders",
+        "status-filter"
+      ],
+      "files": [
+        "dashboard-04.tsx"
+      ],
+      "component": "Dashboard04",
+      "uses": [
+        "Avatar",
+        "Badge",
+        "Box",
+        "Button",
+        "Card",
+        "Flex",
+        "Heading",
+        "Stack",
+        "Table",
+        "Tabs",
         "Text"
       ]
     },

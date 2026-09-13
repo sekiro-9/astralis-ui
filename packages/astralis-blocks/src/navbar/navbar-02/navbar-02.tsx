@@ -149,21 +149,16 @@ export function Navbar02() {
             <Button size="sm">Start free</Button>
           </Flex>
 
-          <Box
-            as="button"
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
-            display={{ base: "inline-flex", lg: "hidden" }}
-            cursor="pointer"
-            p="2"
-            rounded="md"
-            bg="transparent"
-            hover={{ bg: "subtle" }}
-            focusVisible={{ borderColor: "brand" }}
-          >
-            <MenuIcon open={open} />
+          <Box display={{ base: "inline-flex", lg: "hidden" }}>
+            <Button
+              variant="text"
+              colorScheme="gray"
+              size="sm"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              onClick={() => setOpen((o) => !o)}
+              leftIcon={<MenuIcon open={open} />}
+            />
           </Box>
         </Flex>
       </Container>

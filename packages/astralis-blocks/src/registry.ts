@@ -15,8 +15,8 @@
  * "marketing" told a reader nothing and forced a second level of nesting to
  * get to anything useful.
  *
- * Extend this list as new section types land; it exists to catch typos, and a
- * category with no blocks in it never renders.
+ * The registry build reads this list too, and fails on any folder under src/
+ * that is not in it. A category with no blocks in it never renders.
  */
 export const BLOCK_CATEGORIES = [
   "hero",
@@ -50,7 +50,7 @@ export type BlockCategory = (typeof BLOCK_CATEGORIES)[number];
  *     hero   ->  hero-01, hero-02, hero-03
  *     login  ->  login-01, login-02, …
  *
- * - `id`    what a consumer types (`astralis add hero-01`) and the key the docs
+ * - `id`    what a consumer types (`npx astralis-cli add hero-01`) and the key the docs
  *           and Studio look blocks up by. Always `{category}-{nn}`.
  * - `name`  the human label on the docs card. This is where a block gets to be
  *           descriptive — the id stays boring on purpose, so "which one is it"

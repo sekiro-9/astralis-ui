@@ -15,6 +15,7 @@ import { Cta03 } from "./cta/cta-03/cta-03";
 import { Dashboard01 } from "./dashboard/dashboard-01/dashboard-01";
 import { Dashboard02 } from "./dashboard/dashboard-02/dashboard-02";
 import { Dashboard03 } from "./dashboard/dashboard-03/dashboard-03";
+import { Dashboard04 } from "./dashboard/dashboard-04/dashboard-04";
 import { Features01 } from "./features/features-01/features-01";
 import { Features02 } from "./features/features-02/features-02";
 import { Features03 } from "./features/features-03/features-03";
@@ -51,6 +52,7 @@ import cta03Meta from "./cta/cta-03/meta";
 import dashboard01Meta from "./dashboard/dashboard-01/meta";
 import dashboard02Meta from "./dashboard/dashboard-02/meta";
 import dashboard03Meta from "./dashboard/dashboard-03/meta";
+import dashboard04Meta from "./dashboard/dashboard-04/meta";
 import features01Meta from "./features/features-01/meta";
 import features02Meta from "./features/features-02/meta";
 import features03Meta from "./features/features-03/meta";
@@ -144,7 +146,7 @@ export const blocks = {
       ...dashboard01Meta,
       files: ["dashboard-01.tsx"],
       component: "Dashboard01",
-      uses: ["Avatar","Badge","Box","Breadcrumb","BreadcrumbItem","BreadcrumbLink","Flex","Grid","Icon","Input","Kbd","Stack","Text"],
+      uses: ["Avatar","Badge","Box","Breadcrumb","BreadcrumbItem","BreadcrumbLink","Button","Flex","Grid","Icon","Input","Kbd","Stack","Text"],
     },
     component: Dashboard01,
   },
@@ -162,9 +164,18 @@ export const blocks = {
       ...dashboard03Meta,
       files: ["dashboard-03.tsx"],
       component: "Dashboard03",
-      uses: ["Avatar","Badge","Box","Flex","Grid","Icon","Separator","Stack","Text"],
+      uses: ["Avatar","Badge","Box","Button","Flex","Grid","Icon","Separator","Stack","Text"],
     },
     component: Dashboard03,
+  },
+  "dashboard-04": {
+    meta: {
+      ...dashboard04Meta,
+      files: ["dashboard-04.tsx"],
+      component: "Dashboard04",
+      uses: ["Avatar","Badge","Box","Button","Card","Flex","Heading","Stack","Table","Tabs","Text"],
+    },
+    component: Dashboard04,
   },
   "features-01": {
     meta: {

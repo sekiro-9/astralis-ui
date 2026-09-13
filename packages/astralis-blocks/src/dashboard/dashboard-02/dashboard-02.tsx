@@ -102,6 +102,8 @@ export function Dashboard02() {
               bg={item.active ? "brand-subtle" : undefined}
               color={item.active ? "brand" : "muted"}
               hover={item.active ? undefined : { bg: "subtle", color: "base" }}
+              border="normal"
+              borderColor="transparent"
               focusVisible={{ borderColor: "brand" }}
             >
               <RailIcon path={item.icon} />

@@ -25,13 +25,9 @@ interface BlockDetailProps {
 /**
  * A single block: what it is, a resizable live preview beside its source, and
  * how to pull it into a project.
- *
- * Server Component — hence the flat `ListItem` import rather than `List.Item`.
- * Namespace access on a client-reference stub resolves to undefined across the
- * RSC boundary.
  */
 export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
-  const command = `astralis add ${meta.id}`;
+  const command = `npx astralis-cli add ${meta.id}`;
 
   return (
     <VStack gap="8">

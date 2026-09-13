@@ -5,6 +5,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   BreadcrumbItem,
   BreadcrumbLink,
   Breadcrumb,
@@ -102,6 +103,8 @@ function NavRow({ item }: { item: NavItem }) {
       color={item.active ? "base" : "muted"}
       shadow={item.active ? "xs" : undefined}
       hover={item.active ? undefined : { bg: "base", color: "base" }}
+      border="normal"
+      borderColor="transparent"
       focusVisible={{ borderColor: "brand" }}
     >
       {/* `justifyContent="between"` pushes the badge to the trailing edge —
@@ -271,27 +274,19 @@ export function Dashboard01() {
           borderB="normal"
           borderColor="base"
         >
-          <Box
-            as="button"
-            type="button"
-            aria-label="Open menu"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-            display={{ base: "inline-flex", lg: "hidden" }}
-            cursor="pointer"
-            p="2"
-            rounded="md"
-            bg="transparent"
-            hover={{ bg: "subtle" }}
-            focusVisible={{ borderColor: "brand" }}
-          >
-            <NavIcon path={paths.menu} />
+          <Box display={{ base: "inline-flex", lg: "hidden" }}>
+            <Button
+              variant="text"
+              colorScheme="gray"
+              size="sm"
+              aria-label="Open menu"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+              leftIcon={<NavIcon path={paths.menu} />}
+            />
           </Box>
 
-          {/* The flat exports, not `Breadcrumb.Item` — a client-reference stub
-              carries no static properties, so dotted access resolves to
-              undefined once this block is copied into a Server Component tree.
-              The root draws the separators itself. */}
+          {/* The root draws the separators itself. */}
           <Breadcrumb>
             <BreadcrumbItem>
               <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
@@ -314,22 +309,13 @@ export function Dashboard01() {
             <Box display={{ base: "hidden", lg: "block" }}>
               <Kbd size="sm">⌘K</Kbd>
             </Box>
-            <Flex
-              as="button"
-              type="button"
+            <Button
+              variant="text"
+              colorScheme="gray"
+              size="sm"
               aria-label="Notifications"
-              alignItems="center"
-              justifyContent="center"
-              cursor="pointer"
-              p="2"
-              rounded="md"
-              bg="transparent"
-              hover={{ bg: "subtle" }}
-              focusVisible={{ borderColor: "brand" }}
-              color="muted"
-            >
-              <NavIcon path={paths.bell} />
-            </Flex>
+              leftIcon={<NavIcon path={paths.bell} />}
+            />
             <Avatar name="Ada Lovelace" size="sm" />
           </Flex>
         </Flex>

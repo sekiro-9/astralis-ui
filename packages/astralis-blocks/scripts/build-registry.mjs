@@ -5,16 +5,17 @@
    so the registry is a catalogue of text, not a bundle of components.
 
    This script walks src/{category}/{id}/ — e.g. hero/hero-01 — validates each
-   block against the authoring rules, and emits three artifacts:
+   block against the authoring rules, and emits four artifacts:
 
      registry/index.json          catalogue only (no source) — docs list, CLI --list
      registry/blocks/{id}.json    metadata + file contents  — CLI `add`
-     src/blocks.generated.ts      live component map        — docs previews, Studio
+     src/blocks.generated.ts      live component map        — docs previews
+     src/sources.generated.ts     verbatim block source     — docs code tab
 
    Everything derivable from source (file list, exported component, which
    library components a block composes) is derived here, so meta.ts can never
    drift from what the block actually does. Output is deterministic; run with
-   --check to fail when the committed artifacts are stale.
+   --check to fail when the committed artifacts are stale or orphaned.
    ========================================================================== */
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
@@ -27,27 +28,6 @@ const ROOT = join(__dirname, "..");
 const SRC = join(ROOT, "src");
 const REGISTRY = join(ROOT, "registry");
 const CHECK = process.argv.includes("--check");
-
-// Keep in step with BLOCK_CATEGORIES in src/registry.ts.
-const CATEGORIES = [
-  "hero",
-  "features",
-  "pricing",
-  "testimonials",
-  "faq",
-  "cta",
-  "stats",
-  "logos",
-  "team",
-  "contact",
-  "navbar",
-  "footer",
-  "login",
-  "signup",
-  "forgot-password",
-  "dashboard",
-  "content",
-];
 
 const errors = [];
 const fail = (id, message) => errors.push(`  ${id}: ${message}`);
@@ -71,8 +51,8 @@ const read = (file) => readFileSync(file, "utf8").replace(/\r\n/g, "\n");
 /* Source derivation                                                          */
 /* -------------------------------------------------------------------------- */
 
-/** Evaluates a `meta.ts` by stripping its types — it must have no value imports. */
-function loadMeta(file) {
+/** Evaluates a `.ts` module by stripping its types — it must have no value imports. */
+function loadModule(file) {
   const { code } = transformSync(read(file), {
     loader: "ts",
     format: "esm",
@@ -127,15 +107,6 @@ function validate(meta, { id, category, dir, entry, source, files }) {
     fail(id, "uses an `astralis:` prefixed class — blocks style via props, `style`, or plain className");
   }
 
-  // Compound namespace access (<Grid.Item>, <List.Item>, <Card.Body>) resolves
-  // to undefined across the RSC boundary — a client-reference stub carries no
-  // static properties. Blocks are copied into apps where Server Components are
-  // the default, so they must use the flat exports (GridItem, ListItem, …).
-  for (const [, tag] of source.matchAll(/<([A-Z]\w*\.\w+)/g)) {
-    const flat = tag.replace(".", "");
-    fail(id, `uses <${tag}> — compound access breaks in Server Components; import { ${flat} } instead`);
-  }
-
   // Blocks must stay framework-agnostic and dependency-free so a copy always compiles.
   for (const specifier of deriveImports(source)) {
     const allowed =
@@ -157,9 +128,20 @@ const dirsIn = (path) =>
     .map((entry) => entry.name)
     .sort();
 
+// The one category list, shared with the docs and the types through src/registry.ts.
+const { BLOCK_CATEGORIES } = await loadModule(join(SRC, "registry.ts"));
+
+// Every folder under src/ is a category; a typo'd or unlisted one would
+// otherwise vanish from the registry without a word.
+for (const folder of dirsIn(SRC)) {
+  if (!BLOCK_CATEGORIES.includes(folder)) {
+    fail(folder, `src/${folder}/ is not a category: add it to BLOCK_CATEGORIES in src/registry.ts`);
+  }
+}
+
 const blocks = [];
 
-for (const category of dirsIn(SRC).filter((name) => CATEGORIES.includes(name))) {
+for (const category of dirsIn(SRC).filter((name) => BLOCK_CATEGORIES.includes(name))) {
   for (const id of dirsIn(join(SRC, category))) {
     const dir = join(SRC, category, id);
     const entry = `${id}.tsx`;
@@ -176,7 +158,7 @@ for (const category of dirsIn(SRC).filter((name) => CATEGORIES.includes(name))) 
       .sort((a, b) => (a === entry ? -1 : b === entry ? 1 : a.localeCompare(b)));
 
     const source = existsSync(join(dir, entry)) ? read(join(dir, entry)) : "";
-    const meta = (await loadMeta(metaFile)).default;
+    const meta = (await loadModule(metaFile)).default;
 
     validate(meta, { id, category, dir, entry, source, files });
 
@@ -300,10 +282,21 @@ if (CHECK) {
   const stale = artifacts.filter(
     ([path, content]) => !existsSync(path) || read(path) !== content,
   );
-  if (stale.length) {
+  // A block removed from src/ leaves its JSON behind until the next build, and
+  // `add` would keep serving it.
+  const expected = new Set(artifacts.map(([path]) => path));
+  const orphans = existsSync(join(REGISTRY, "blocks"))
+    ? readdirSync(join(REGISTRY, "blocks"))
+        .map((name) => join(REGISTRY, "blocks", name))
+        .filter((path) => !expected.has(path))
+    : [];
+  if (stale.length || orphans.length) {
     console.error(
       `[astralis] block registry is stale — run \`pnpm --filter astralis-blocks build\`:\n` +
-        stale.map(([path]) => `  ${relative(ROOT, path)}`).join("\n"),
+        [
+          ...stale.map(([path]) => `  ${relative(ROOT, path)}`),
+          ...orphans.map((path) => `  ${relative(ROOT, path)} (no block has this id)`),
+        ].join("\n"),
     );
     process.exit(1);
   }
