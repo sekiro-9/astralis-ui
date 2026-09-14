@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
  * loading / for never-seen code, so callers fall back to plain text of the
  * CURRENT code instead of flashing a stale highlight.
  *
- * Used by the assistant's chat fences and the theme builder's token panel.
+ * Used by the playground's code view and the theme builder's token panel.
  */
 
 const cache = new Map<string, string>();
