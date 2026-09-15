@@ -44,7 +44,7 @@ describe("QrCode", () => {
   });
 
   it("downloads the rendered SVG", () => {
-    const createObjectURL = vi.fn((_blob: Blob) => "blob:qr");
+    const createObjectURL = vi.fn<(blob: Blob) => string>(() => "blob:qr");
     const revokeObjectURL = vi.fn();
     Object.assign(URL, { createObjectURL, revokeObjectURL });
     const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});

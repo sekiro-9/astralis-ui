@@ -4,10 +4,6 @@ import type { ButtonHTMLAttributes, CSSProperties, HTMLAttributes, ReactNode } f
 export type CodeBlockSize = "sm" | "md" | "lg";
 export type CodeBlockVariant = "subtle" | "solid" | "outline";
 
-/* ------------------------------------------------------------------ */
-/* CodeBlockRoot                                                        */
-/* ------------------------------------------------------------------ */
-
 export interface CodeBlockRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Visual style of the container */
   variant?: CodeBlockVariant;
@@ -23,19 +19,11 @@ export interface CodeBlockRootProps extends HTMLAttributes<HTMLDivElement>, Plac
   children?: ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/* CodeBlockHeader                                                      */
-/* ------------------------------------------------------------------ */
-
 export interface CodeBlockHeaderProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* CodeBlockTitle                                                       */
-/* ------------------------------------------------------------------ */
 
 export interface CodeBlockTitleProps extends HTMLAttributes<HTMLSpanElement> {
   className?: string;
@@ -43,19 +31,11 @@ export interface CodeBlockTitleProps extends HTMLAttributes<HTMLSpanElement> {
   children?: ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/* CodeBlockControl                                                     */
-/* ------------------------------------------------------------------ */
-
 export interface CodeBlockControlProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* CodeBlockCopyTrigger                                                 */
-/* ------------------------------------------------------------------ */
 
 export interface CodeBlockCopyTriggerProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
@@ -67,18 +47,10 @@ export interface CodeBlockCopyTriggerProps
   children?: ReactNode | ((copied: boolean) => ReactNode);
 }
 
-/* ------------------------------------------------------------------ */
-/* CodeBlockWindowControls                                              */
-/* ------------------------------------------------------------------ */
-
 export interface CodeBlockWindowControlsProps extends HTMLAttributes<HTMLSpanElement> {
   className?: string;
   style?: CSSProperties;
 }
-
-/* ------------------------------------------------------------------ */
-/* CodeBlockContent                                                     */
-/* ------------------------------------------------------------------ */
 
 export interface CodeBlockContentProps extends HTMLAttributes<HTMLPreElement> {
   className?: string;
@@ -87,10 +59,6 @@ export interface CodeBlockContentProps extends HTMLAttributes<HTMLPreElement> {
   /** Normally injected by the Root; forwarded into a bare `CodeBlock.Code`. */
   code?: string;
 }
-
-/* ------------------------------------------------------------------ */
-/* CodeBlockCode                                                        */
-/* ------------------------------------------------------------------ */
 
 export interface CodeBlockCodeProps extends HTMLAttributes<HTMLElement> {
   /**

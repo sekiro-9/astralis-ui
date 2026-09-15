@@ -102,7 +102,7 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Avatar", (p) => <Avatar {...p} name="A B" />],
   ["Accordion", (p) => <Accordion {...p} />],
   ["Carousel", (p) => <Carousel {...p}><span>a</span></Carousel>],
-  ["Pagination", (p) => <Pagination {...p} count={3} />],
+  ["Pagination", (p) => <Pagination {...p} count={3}>{null}</Pagination>],
   ["PinInput", (p) => <PinInput {...p} />],
   ["QrCode", (p) => <QrCode {...p} value="x" />],
   ["Slider", (p) => <Slider {...p} />],

@@ -52,11 +52,11 @@ const breakpoints = { ...BREAKPOINT_WIDTHS };
    Read from the built package so the spec can never drift from the engine. */
 const { CONTAINER_BREAKPOINT_WIDTHS } = await import(distUrl("const/channel.js"));
 
-/* Contrast contracts — the promised WCAG AA text pairings, verified against
+/* Contrast contracts — the promised WCAG pairings (text and non-text), verified against
    the shipped palette by scripts/check-contrast.mjs earlier in this same
    build. Emitted so agents and docs can see WHAT is promised; the ratios are
    facts about this exact version's palette. */
-const { contrastContracts, verifyContrast, parsePaletteFromCss } = await import(distUrl("theme/contrast.js"));
+const { verifyContrast, parsePaletteFromCss } = await import(distUrl("theme/contrast.js"));
 const shippedPalette = parsePaletteFromCss(readFileSync(join(PKG, "src", "theme", "tokens", "color.css"), "utf8"));
 const contrast = {};
 for (const mode of ["light", "dark"]) {

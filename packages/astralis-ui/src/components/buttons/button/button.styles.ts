@@ -1,10 +1,6 @@
 import { cva } from "class-variance-authority";
 import { COLOR_SCHEMES, type ColorScheme } from "../../../const/color-schemes";
 
-/* ------------------------------------------------------------------ */
-/* Variant + colorScheme taxonomy                                      */
-/* ------------------------------------------------------------------ */
-
 export const BUTTON_VARIANTS = ["solid", "subtle", "surface", "outline", "text", "link"] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
@@ -12,11 +8,8 @@ export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 export const BUTTON_COLOR_SCHEMES = COLOR_SCHEMES;
 export type ButtonColorScheme = ColorScheme;
 
-/* ------------------------------------------------------------------ */
-/* Structure — everything hue-independent (geometry + interaction).    */
-/* Colour is layered on separately via buttonColorClasses().           */
-/* ------------------------------------------------------------------ */
-
+/** Hue-independent structure: geometry and interaction. Colour is layered on
+ *  separately by buttonColorClasses(). */
 export const buttonVariants = cva(
   "astralis:inline-flex astralis:items-center astralis:justify-center astralis:font-medium astralis:cursor-pointer astralis:transition-all astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2",
   {
@@ -65,14 +58,8 @@ export const buttonVariants = cva(
   },
 );
 
-/* ------------------------------------------------------------------ */
-/* Colour — variant only.                                              */
-/*                                                                     */
-/* Every variant paints with the `accent-*` channel, so a single set   */
-/* of classes covers all hues. The chosen hue is applied separately as */
-/* an `astralis-accent-{scheme}` scope class (see accentClass).         */
-/* ------------------------------------------------------------------ */
-
+/** Every variant paints with the `accent-*` channel, so one set of classes
+ *  covers all hues; the hue itself is the `accentClass(scheme)` scope class. */
 const accentRecipe: Record<ButtonVariant, string> = {
   // Signature fill; readable foreground from the accent `contrast` role.
   solid: "astralis:bg-accent-solid astralis:text-accent-contrast astralis:hover:opacity-higher astralis:focus-visible:outline-accent-ring",

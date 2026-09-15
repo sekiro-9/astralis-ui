@@ -257,8 +257,8 @@ export const GLOBAL_SEMANTICS: Record<string, [string, string]> = {
    z-index, aspect ratios) and deliberately not themeable — changing those at
    runtime would desync the precompiled utility CSS.
 
-   This type is the contract shared by the provider, the CLI, and (later) the
-   docs theme builder and its AI generator.
+   This type is the contract shared by the provider, the CLI and the docs
+   theme builder.
    ========================================================================== */
 
 export type ThemeSeed = {

@@ -1,29 +1,16 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "react";
 
-/* ------------------------------------------------------------------ */
-/* Root                                                                */
-/* ------------------------------------------------------------------ */
-
 export interface BreadcrumbProps extends ComponentPropsWithoutRef<"nav">, PlacementProps {
   /** Glyph between items. @default chevron */
   separator?: ReactNode;
   children: ReactNode;
-  /** React 19: ref is a regular prop — no forwardRef needed. */
   ref?: Ref<HTMLElement>;
 }
-
-/* ------------------------------------------------------------------ */
-/* Item                                                                */
-/* ------------------------------------------------------------------ */
 
 export interface BreadcrumbItemProps extends ComponentPropsWithoutRef<"li"> {
   children: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* Link                                                                */
-/* ------------------------------------------------------------------ */
 
 export type BreadcrumbLinkProps<T extends ElementType = "a"> = {
   /** Render as a router link component (e.g. Next's `Link`). */

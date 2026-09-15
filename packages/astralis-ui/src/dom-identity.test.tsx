@@ -34,6 +34,8 @@ const NO_ROOT_ELEMENT = new Set([
   "Toaster",
   "Tooltip",
   "AstralisProvider",
+  // A pre-paint <script> for the document head, not an element anyone places.
+  "ThemeScript",
 ]);
 
 /** Parts that need a root, or a root and a sibling part, above them. */
