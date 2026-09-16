@@ -1,3 +1,5 @@
+import { collapsibleProps, collapsibleTriggerProps, collapsiblePartsProps } from "@/modules/demos/collapsible/collapsible-props";
+
 export const metadata = {
   title: "Collapsible",
   description: "A single disclosure that ships zero JavaScript — native details/summary, with exclusive grouping via name.",
@@ -43,17 +45,17 @@ Use `defaultOpen` for the initial state; if you need programmatic control,
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `defaultOpen` | `boolean` | `false` | Open on first render. |
-| `name` | `string` | — | Exclusive-group name: siblings sharing it form a native accordion. |
+<PropsTable rows={collapsibleProps} />
 
 ### Collapsible.Trigger
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `hideIndicator` | `boolean` | `false` | Hide the built-in chevron. |
+<PropsTable rows={collapsibleTriggerProps} />
 
-### Collapsible.Content
+### Parts
 
-Plain content wrapper — spacing and typography only.
+<PropsTable rows={collapsiblePartsProps} />
+
+## Keyboard
+
+The trigger is a native `<summary>`, so it is a tab stop that toggles with
+`Enter` or `Space`, with or without JavaScript.

@@ -1,3 +1,5 @@
+import { contextMenuProps, contextMenuPartsProps } from "@/modules/demos/context-menu/context-menu-props";
+
 export const metadata = {
   title: "Context Menu",
   description: "Menu opened by right-click, positioned at the pointer — same items, roving focus and dismissal as Menu.",
@@ -26,13 +28,27 @@ context-menu behavior.
 
 ## Props
 
-Same as [Menu](/docs/components/menu) minus `side`/`align` (the pointer is
-the anchor):
+[Menu](/docs/components/menu)'s props, minus `side` and `align`, because the
+pointer is the anchor:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
-| `closeOnSelect` | `boolean` | `true` | Close after an item activates. |
+<PropsTable rows={contextMenuProps} />
 
-Parts: `ContextMenu.Trigger` (wraps the right-clickable element),
-`.Content`, `.Item`, `.Label`, `.Separator`, `.Group` — identical to Menu's.
+### Parts
+
+<PropsTable rows={contextMenuPartsProps} />
+
+## Keyboard
+
+The menu opens from the browser's `contextmenu` event, which the keyboard
+fires too. For that to work the trigger element has to be focusable, as the
+area in the demo above is.
+
+| Key | Action |
+| --- | --- |
+| `Shift+F10` / `Menu` key | Open the menu from the focused trigger |
+| `↑` `↓` | Move focus between items (wraps) |
+| `Home` / `End` | First / last item |
+| *type characters* | Jump to the item starting with what you typed |
+| `Enter` / `Space` | Activate the focused item |
+| `Esc` | Close |
+| `Tab` | Close |

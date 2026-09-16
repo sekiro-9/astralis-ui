@@ -40,6 +40,17 @@ and `xl` keys — resolved to precompiled classes, no runtime style computation.
 <Box p={{ base: "4", md: "8", lg: "12" }} rounded={{ base: "md", md: "2xl" }} />
 ```
 
+To respond to the space a component actually has rather than the window, mark
+an ancestor with `container` and use the `@sm`–`@xl` keys, which measure that
+ancestor. [Container queries](/docs/responsive#container-queries) covers the
+details.
+
+```tsx
+<Box container>
+  <Flex direction={{ base: "column", "@md": "row" }} gap="4">…</Flex>
+</Box>
+```
+
 ## Polymorphism
 
 `as` swaps the rendered element — reach for it whenever the semantic element

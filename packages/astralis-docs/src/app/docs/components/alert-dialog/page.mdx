@@ -1,3 +1,5 @@
+import { alertDialogProps, alertDialogPartsProps } from "@/modules/demos/alert-dialog/alert-dialog-props";
+
 export const metadata = {
   title: "Alert Dialog",
   description: "A Modal that interrupts for a decision — alertdialog semantics, no overlay dismissal, resolution through explicit actions.",
@@ -28,14 +30,24 @@ applies here unchanged.
 
 ## Props
 
-Same as Modal, with different defaults:
+Modal's props, with overlay dismissal off by default:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
-| `size` | `"sm" \| "md" \| "lg" \| "xl" \| "full"` | `"md"` | Panel width. |
-| `closeOnOverlayClick` | `boolean` | **`false`** | Off by default — the forced-choice point. |
-| `closeOnEsc` | `boolean` | `true` | Esc cancels. |
+<PropsTable rows={alertDialogProps} />
 
-Parts: `AlertDialog.Trigger`, `.Content`, `.Header`, `.Body`, `.Footer`,
-`.Title`, `.Description`, `.Close` (no `.CloseButton` on purpose).
+### Parts
+
+There is deliberately no `AlertDialog.CloseButton`: the dialog resolves through
+the actions in its Footer.
+
+<PropsTable rows={alertDialogPartsProps} />
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Esc` | Cancel and close (opt out with `closeOnEsc={false}`) |
+| `Tab` / `Shift+Tab` | Cycle focus between the actions; it can't leave the dialog |
+| `Enter` / `Space` | Activate the focused action |
+
+On open, focus moves to the first focusable element inside the panel; on
+close it returns to the trigger.

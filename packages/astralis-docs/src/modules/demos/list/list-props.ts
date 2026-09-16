@@ -21,3 +21,17 @@ export const listProps: PropRow[] = [
     description: "Use `\"ol\"` for numbered lists.",
   },
 ];
+
+export const listItemProps: PropRow[] = [
+  {
+    prop: "icon",
+    type: "ReactNode",
+    description: "Leading icon. Replaces the native marker and aligns the content beside it.",
+  },
+  {
+    prop: "as",
+    type: "ElementType",
+    default: `"li"`,
+    description: "Element to render.",
+  },
+];

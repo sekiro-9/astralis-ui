@@ -26,6 +26,16 @@ from; Combobox is an input you search in. For multiple values, use
 [MultiSelect](/docs/components/multi-select). All three share the same
 option machinery, so `options` shapes are interchangeable.
 
+## Free-form values
+
+By default the options are a closed set: text that matches nothing reverts on
+blur. With `allowCustomValue` they become suggestions, and whatever the user
+typed commits as the value on Tab, on blur, or on Enter when no option is
+highlighted. Text that exactly matches an option's label commits that option,
+and Escape still reverts.
+
+<ComponentPreview name="combobox-custom-value" />
+
 ## Props
 
 <PropsTable rows={comboboxProps} />

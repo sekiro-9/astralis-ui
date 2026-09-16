@@ -1,4 +1,4 @@
-import { listProps } from "@/modules/demos/list/list-props";
+import { listProps, listItemProps } from "@/modules/demos/list/list-props";
 
 export const metadata = {
   title: "List",
@@ -40,7 +40,4 @@ Both parts extend [Box](/docs/components/box).
 
 ### List.Item
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `icon` | `ReactNode` | — | Leading icon; suppresses the native marker. |
-| `as` | `ElementType` | `"li"` | Rendered element. |
+<PropsTable rows={listItemProps} />

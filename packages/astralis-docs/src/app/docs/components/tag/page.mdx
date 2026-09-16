@@ -1,4 +1,4 @@
-import { tagProps } from "@/modules/demos/tag/tag-props";
+import { tagProps, checkableTagProps, checkableTagGroupProps } from "@/modules/demos/tag/tag-props";
 
 export const metadata = {
   title: "Tag",
@@ -38,13 +38,27 @@ for exclusive choices.
 
 <PropsTable rows={tagProps} />
 
+### Tag.Checkable
+
+Takes Tag's props except `variant`, `closable` and `onClose`, plus:
+
+<PropsTable rows={checkableTagProps} />
+
 ### Tag.Group
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `options` | `{ label, value }[]` or primitives | — | The chips to render. |
-| `value` / `onChange` | `(string \| number)[]` / `(value) => void` | `[]` | Controlled selection. |
-| `multiple` | `boolean` | `false` | Multi-select vs exclusive. |
+<PropsTable rows={checkableTagGroupProps} />
+
+## Keyboard
+
+Every checkable tag is its own tab stop.
+
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift+Tab` | Move to the next / previous tag |
+| `Enter` / `Space` | Toggle the focused tag |
+
+On a closable tag, the remove button is a separate tab stop and activates
+with `Enter` or `Space`.
 
 ## Accessibility
 

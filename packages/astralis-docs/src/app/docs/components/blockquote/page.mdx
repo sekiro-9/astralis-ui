@@ -1,3 +1,5 @@
+import { blockquoteProps } from "@/modules/demos/blockquote/blockquote-props";
+
 export const metadata = {
   title: "Blockquote",
   description: "A quotation block with an accent rule and optional attribution.",
@@ -35,10 +37,6 @@ recolors via the `borderColor` Box prop.
 
 ## Props
 
-Blockquote extends [Box](/docs/components/box).
+Blockquote extends [Box](/docs/components/box):
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"plain" \| "subtle"` | `"plain"` | Rule only, or rule plus tinted panel. |
-| `cite` | `ReactNode` | — | Visible attribution line below the quote. |
-| `citeUrl` | `string` | — | The blockquote element's native `cite` attribute. |
+<PropsTable rows={blockquoteProps} />

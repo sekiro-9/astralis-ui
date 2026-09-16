@@ -44,3 +44,42 @@ export const avatarProps: PropRow[] = [
     description: "Border ring (automatic inside a Group).",
   },
 ];
+
+export const avatarGroupProps: PropRow[] = [
+  {
+    prop: "max",
+    type: "number",
+    description: "How many avatars to show; the rest collapse into a +N chip.",
+  },
+  {
+    prop: "size",
+    type: `"xs" | "sm" | "md" | "lg" | "xl" | "2xl"`,
+    default: `"md"`,
+    description: "Applied to every avatar in the group.",
+  },
+  {
+    prop: "spacing",
+    type: "number",
+    default: "-8",
+    description: "Overlap between avatars, in pixels. Negative values overlap.",
+  },
+];
+
+export const avatarBadgeProps: PropRow[] = [
+  {
+    prop: "status",
+    type: `"online" | "away" | "busy" | "offline"`,
+    default: `"online"`,
+    description: "Preset dot color.",
+  },
+  {
+    prop: "color",
+    type: "string",
+    description: "Custom dot color, overriding status.",
+  },
+  {
+    prop: "size",
+    type: `"xs" | "sm" | "md" | "lg" | "xl" | "2xl"`,
+    description: "Dot size. Taken from the avatar it sits in.",
+  },
+];

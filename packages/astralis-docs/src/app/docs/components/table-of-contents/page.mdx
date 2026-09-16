@@ -1,3 +1,5 @@
+import { tableOfContentsProps } from "@/modules/demos/table-of-contents/table-of-contents-props";
+
 export const metadata = {
   title: "Table of Contents",
   description: "On-this-page navigation with IntersectionObserver scroll-spy — plain anchor links, enhanced highlight.",
@@ -37,9 +39,9 @@ Point `items` at heading ids that exist in the page:
 
 Extends `nav` props:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `items` | `{ id, title, depth? }[]` | — | Entries; `id` targets a heading element's id. Required. |
-| `label` | `string` | `"On this page"` | Accessible name; also the visible heading. |
-| `showLabel` | `boolean` | `true` | Show the heading above the list. |
-| `offset` | `number` | `80` | Sticky-header inset subtracted from the spy zone, px. |
+<PropsTable rows={tableOfContentsProps} />
+
+## Keyboard
+
+The entries are plain links: `Tab` moves through them and `Enter` jumps to the
+heading. The highlight follows the scroll position, not focus.

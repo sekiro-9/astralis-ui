@@ -1,3 +1,5 @@
+import { popoutContentProps, popoutPartsProps } from "@/modules/demos/popout/popout-props";
+
 export const metadata = {
   title: "Popout",
   description: "An anchored disclosure panel that ships zero JavaScript — native popover plus CSS anchor positioning.",
@@ -44,14 +46,20 @@ falls back to the browser's centered top-layer placement.
 
 ## Props
 
-### Popout.Trigger
+The root takes only its two parts; the panel is configured on `Popout.Content`:
 
-Renders a `<button popovertarget>`; accepts every button prop.
+<PropsTable rows={popoutContentProps} />
 
-### Popout.Content
+### Parts
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `side` | `"top" \| "bottom" \| "left" \| "right"` | `"bottom"` | Which side of the trigger the panel opens on. |
-| `align` | `"start" \| "center" \| "end"` | `"start"` | Alignment along that side. |
-| `sideOffset` | `number` | `8` | Gap between trigger and panel, px. |
+<PropsTable rows={popoutPartsProps} />
+
+## Keyboard
+
+All of it is the browser's popover behavior:
+
+| Key | Action |
+| --- | --- |
+| `Enter` / `Space` on the trigger | Open or close the panel |
+| `Esc` | Close the panel and return focus to the trigger |
+| `Tab` | Move through the panel's content, then on through the page |

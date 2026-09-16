@@ -1,4 +1,4 @@
-import { radioProps } from "@/modules/demos/radio/radio-props";
+import { radioProps, radioGroupProps } from "@/modules/demos/radio/radio-props";
 
 export const metadata = {
   title: "Radio",
@@ -34,12 +34,7 @@ one auto-generated `name` so the browser treats them as a set, and fires
 
 ### Radio.Group
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` / `defaultValue` / `onChange` | `string` / `string` / `(value: string) => void` | — / `""` / — | The selected value. |
-| `name` | `string` | auto | HTML name shared by the set. |
-| `orientation` | `"horizontal" \| "vertical"` | `"vertical"` | Layout. |
-| `colorScheme` / `disabled` | — | — | Shared defaults for every child. |
+<PropsTable rows={radioGroupProps} />
 
 ## Keyboard
 

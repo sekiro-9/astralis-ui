@@ -6,6 +6,7 @@ export const breadcrumbProps: PropRow[] = [
     prop: "separator",
     type: `ReactNode`,
     default: `chevron`,
-    description: "Glyph between items (rendered `aria-hidden`).",
+    description: "Glyph between items (rendered `aria-hidden`). A string such as \"/\" works too.",
+    control: { kind: "chips", options: ["/", "›", "·", "→"] },
   },
 ];

@@ -1,3 +1,5 @@
+import { radioCardProps } from "@/modules/demos/radio-card/radio-card-props";
+
 export const metadata = {
   title: "Radio Card",
   description: "A card-shaped radio — a whole clickable surface for rich single-select choices, grouped by Radio.Group.",
@@ -18,18 +20,28 @@ title, description and leading addon. It joins
 import { RadioCard, Radio } from "astralis-ui";
 ```
 
+## Usage
+
+Put the cards inside a [Radio.Group](/docs/components/radio) and give each a
+`value`. The group owns the selection and the shared `name`, so the choice
+submits with a native form and the arrow keys move between cards like any
+radio set. Reach for Radio Card over plain radios when each option needs a
+description, such as a pricing plan or a delivery method.
+
+<ComponentPreview name="radio-card-addon" />
+
 ## Props
 
 Extends the native radio input's props, plus:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `children` | `ReactNode` | — | Card title. |
-| `description` | `ReactNode` | — | Secondary line under the title. |
-| `addon` | `ReactNode` | — | Leading slot (icon, avatar, …). |
-| `indicator` | `boolean` | `true` | Corner tick while selected. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding and text scale. |
-| `colorScheme` | `ColorScheme` | `"brand"` | Selected hue via the accent channel. |
-| `invalid` | `boolean` | `false` | Error styling + `aria-invalid`. |
+<PropsTable rows={radioCardProps} />
 
-Multi-select version: [Checkbox Card](/docs/components/checkbox-card).
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Into the group: one tab stop, on the selected card |
+| `←` `↑` / `→` `↓` | Select the previous / next card |
+| `Space` | Select the focused card, when none is selected yet |
+
+For multiple selection, use [Checkbox Card](/docs/components/checkbox-card).

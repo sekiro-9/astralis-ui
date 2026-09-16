@@ -1,3 +1,5 @@
+import { floatProps } from "@/modules/demos/float/float-props";
+
 export const metadata = {
   title: "Float",
   description: "Anchors content to an edge or corner of its positioned parent — badges, dots, close buttons.",
@@ -32,6 +34,4 @@ Nine anchors: three per row across `top`, `middle` and `bottom`.
 
 Float extends [Box](/docs/components/box) and adds one prop:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `placement` | `"top-start" \| "top-center" \| "top-end" \| "middle-start" \| "middle-center" \| "middle-end" \| "bottom-start" \| "bottom-center" \| "bottom-end"` | `"top-end"` | Which edge/corner of the positioned parent to anchor to. |
+<PropsTable rows={floatProps} />

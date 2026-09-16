@@ -1,0 +1,47 @@
+import { portalProps } from "@/modules/demos/portal/portal-props";
+
+export const metadata = {
+  title: "Portal",
+  description: "Renders its children into document.body, so overlays escape clipping and stacking from the component that owns them.",
+};
+
+# Portal
+
+Renders its children into `document.body` (or a container you choose)
+instead of where the component sits in the tree. Content in a portal escapes
+the `overflow: hidden` and stacking context of its ancestors, which is why
+[Modal](/docs/components/modal), [Drawer](/docs/components/drawer),
+[Menu](/docs/components/menu), [Popover](/docs/components/popover) and the
+[Toaster](/docs/components/toast) all render through it. Reach for it
+directly when you build a custom overlay.
+
+<ComponentPreview name="portal-demo" />
+
+## Import
+
+```tsx
+import { Portal } from "astralis-ui";
+```
+
+## Usage
+
+Portalled content keeps its React context: events bubble to React parents and
+the theme still applies, because Portal wraps its children in the library's
+scoping class. The wrapper uses `display: contents`, so it never affects the
+position of what you render.
+
+Portal renders nothing on the server, and its children appear in the first
+client render, in the same commit as the component that opened them. That
+lets a positioned panel be measured as soon as it mounts.
+
+```tsx
+<Portal container={document.getElementById("overlay-root") ?? undefined}>
+  <Backdrop />
+</Portal>
+```
+
+## Props
+
+<PropsTable rows={portalProps} />
+
+Portal has no playground: it has no appearance of its own to configure.

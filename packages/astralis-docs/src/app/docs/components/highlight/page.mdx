@@ -1,3 +1,5 @@
+import { highlightProps } from "@/modules/demos/highlight/highlight-props";
+
 export const metadata = {
   title: "Highlight",
   description: "Wraps matches of a query in styled <mark> elements — search-result emphasis in prose.",
@@ -25,10 +27,4 @@ announce. Matching is case-insensitive by default.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `children` | `string` | required | The plain text to scan. |
-| `query` | `string \| string[]` | required | Substring(s) to mark. |
-| `ignoreCase` | `boolean` | `true` | Case-insensitive matching. |
-| `variant` | `"subtle" \| "solid"` | `"subtle"` | Tinted or fully filled marks. |
-| `markClassName` | `string` | — | Extra class for each `<mark>`. |
+<PropsTable rows={highlightProps} />

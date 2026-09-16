@@ -1,3 +1,5 @@
+import { hoverCardProps, hoverCardPartsProps } from "@/modules/demos/hover-card/hover-card-props";
+
 export const metadata = {
   title: "Hover Card",
   description: "A rich interactive preview on hover intent — the profile-card-on-a-mention pattern, with a pointer grace period.",
@@ -28,12 +30,20 @@ import { HoverCard } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `open` / `defaultOpen` / `onOpenChange` | `boolean` / `boolean` / `(open) => void` | — | Controlled / uncontrolled API. |
-| `side` / `align` | `Side` / `Align` | `"bottom"` / `"center"` | Preferred placement (flips on collision). |
-| `sideOffset` | `number` | `8` | Gap from the trigger, px. |
-| `openDelay` | `number` | `400` | Hover intent delay before opening, ms. |
-| `closeDelay` | `number` | `200` | Grace period to reach the card, ms. |
+<PropsTable rows={hoverCardProps} />
 
-Parts: `HoverCard.Trigger` (wraps a single element), `HoverCard.Content`.
+### Parts
+
+<PropsTable rows={hoverCardPartsProps} />
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Tab` onto the trigger | Open the card at once, with no delay |
+| `Tab` off the trigger | Close the card |
+| `Esc` | Close the card |
+
+Because moving focus off the trigger closes the card, controls inside it
+can't be reached from the keyboard. Keep everything in the card available
+elsewhere, typically on the page the trigger links to.

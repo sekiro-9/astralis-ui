@@ -131,9 +131,12 @@ import { TagDemo } from "./tag/tag-demo";
 import { TagCheckable } from "./tag/tag-checkable";
 import { AlertDemo } from "./alert/alert-demo";
 import { ComboboxDemo } from "./combobox/combobox-demo";
+import { ComboboxCustomValue } from "./combobox/combobox-custom-value";
 import { TextareaDemo } from "./textarea/textarea-demo";
+import { TextareaAutoGrow } from "./textarea/textarea-auto-grow";
 import { NumberInputDemo } from "./number-input/number-input-demo";
 import { LinkDemo } from "./link/link-demo";
+import { LinkLineClamp } from "./link/link-line-clamp";
 import { MenuDemo } from "./menu/menu-demo";
 import { MenuPlacement } from "./menu/menu-placement";
 import { ToastDemo } from "./toast/toast-demo";
@@ -183,16 +186,21 @@ import { EmptyStateSizes } from "./empty-state/empty-state-sizes";
 import { NativeSelectDemo } from "./native-select/native-select-demo";
 import { NativeSelectVariants } from "./native-select/native-select-variants";
 import { CheckboxCardDemo } from "./checkbox-card/checkbox-card-demo";
+import { CheckboxCardAddon } from "./checkbox-card/checkbox-card-addon";
 import { RadioCardDemo } from "./radio-card/radio-card-demo";
+import { RadioCardAddon } from "./radio-card/radio-card-addon";
 import { CopyButtonDemo } from "./copy-button/copy-button-demo";
+import { CopyButtonLabels } from "./copy-button/copy-button-labels";
 import { AlertDialogDemo } from "./alert-dialog/alert-dialog-demo";
 import { BackdropDemo } from "./backdrop/backdrop-demo";
+import { PortalDemo } from "./portal/portal-demo";
 import { VisuallyHiddenDemo } from "./visually-hidden/visually-hidden-demo";
 import { ContextMenuDemo } from "./context-menu/context-menu-demo";
 import { HoverCardDemo } from "./hover-card/hover-card-demo";
 import { ToolbarDemo } from "./toolbar/toolbar-demo";
 import { ScrollAreaDemo } from "./scroll-area/scroll-area-demo";
 import { EditableDemo } from "./editable/editable-demo";
+import { EditableControlled } from "./editable/editable-controlled";
 import { FileUploadDemo } from "./file-upload/file-upload-demo";
 import { FileUploadTrigger } from "./file-upload/file-upload-trigger";
 import { SplitterDemo } from "./splitter/splitter-demo";
@@ -337,9 +345,12 @@ export const demos = {
   "tag-checkable": { component: TagCheckable, file: "tag/tag-checkable.tsx" },
   "alert-demo": { component: AlertDemo, file: "alert/alert-demo.tsx" },
   "combobox-demo": { component: ComboboxDemo, file: "combobox/combobox-demo.tsx" },
+  "combobox-custom-value": { component: ComboboxCustomValue, file: "combobox/combobox-custom-value.tsx" },
   "textarea-demo": { component: TextareaDemo, file: "textarea/textarea-demo.tsx" },
+  "textarea-auto-grow": { component: TextareaAutoGrow, file: "textarea/textarea-auto-grow.tsx" },
   "number-input-demo": { component: NumberInputDemo, file: "number-input/number-input-demo.tsx" },
   "link-demo": { component: LinkDemo, file: "link/link-demo.tsx" },
+  "link-line-clamp": { component: LinkLineClamp, file: "link/link-line-clamp.tsx" },
   "menu-demo": { component: MenuDemo, file: "menu/menu-demo.tsx" },
   "menu-placement": { component: MenuPlacement, file: "menu/menu-placement.tsx" },
   "toast-demo": { component: ToastDemo, file: "toast/toast-demo.tsx" },
@@ -389,16 +400,21 @@ export const demos = {
   "native-select-demo": { component: NativeSelectDemo, file: "native-select/native-select-demo.tsx" },
   "native-select-variants": { component: NativeSelectVariants, file: "native-select/native-select-variants.tsx" },
   "checkbox-card-demo": { component: CheckboxCardDemo, file: "checkbox-card/checkbox-card-demo.tsx" },
+  "checkbox-card-addon": { component: CheckboxCardAddon, file: "checkbox-card/checkbox-card-addon.tsx" },
   "radio-card-demo": { component: RadioCardDemo, file: "radio-card/radio-card-demo.tsx" },
+  "radio-card-addon": { component: RadioCardAddon, file: "radio-card/radio-card-addon.tsx" },
   "copy-button-demo": { component: CopyButtonDemo, file: "copy-button/copy-button-demo.tsx" },
+  "copy-button-labels": { component: CopyButtonLabels, file: "copy-button/copy-button-labels.tsx" },
   "alert-dialog-demo": { component: AlertDialogDemo, file: "alert-dialog/alert-dialog-demo.tsx" },
   "backdrop-demo": { component: BackdropDemo, file: "backdrop/backdrop-demo.tsx" },
+  "portal-demo": { component: PortalDemo, file: "portal/portal-demo.tsx" },
   "visually-hidden-demo": { component: VisuallyHiddenDemo, file: "visually-hidden/visually-hidden-demo.tsx" },
   "context-menu-demo": { component: ContextMenuDemo, file: "context-menu/context-menu-demo.tsx" },
   "hover-card-demo": { component: HoverCardDemo, file: "hover-card/hover-card-demo.tsx" },
   "toolbar-demo": { component: ToolbarDemo, file: "toolbar/toolbar-demo.tsx" },
   "scroll-area-demo": { component: ScrollAreaDemo, file: "scroll-area/scroll-area-demo.tsx" },
   "editable-demo": { component: EditableDemo, file: "editable/editable-demo.tsx" },
+  "editable-controlled": { component: EditableControlled, file: "editable/editable-controlled.tsx" },
   "file-upload-demo": { component: FileUploadDemo, file: "file-upload/file-upload-demo.tsx" },
   "file-upload-trigger": { component: FileUploadTrigger, file: "file-upload/file-upload-trigger.tsx" },
   "splitter-demo": { component: SplitterDemo, file: "splitter/splitter-demo.tsx" },

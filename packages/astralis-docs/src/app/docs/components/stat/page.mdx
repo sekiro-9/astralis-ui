@@ -1,3 +1,5 @@
+import { statProps, statPartsProps } from "@/modules/demos/stat/stat-props";
+
 export const metadata = {
   title: "Stat",
   description: "A single metric with label, value, help text and a trend indicator.",
@@ -35,8 +37,8 @@ marketing band.
 ```tsx
 {/* big on desktop, back in its box on a two-up mobile grid */}
 <Stat size={{ base: "lg", lg: "xl" }} align="center">
-  <StatValue>62</StatValue>
-  <StatLabel>Components</StatLabel>
+  <Stat.Value>99.9%</Stat.Value>
+  <Stat.Label>Uptime</Stat.Label>
 </Stat>
 ```
 
@@ -45,13 +47,11 @@ the value while a dashboard tile leads with the label.
 
 ## Props
 
-The parts take only `children` and `className`. The root takes:
+<PropsTable rows={statProps} />
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `size` | `"sm" \| "md" \| "lg" \| "xl"` | `"md"` | Scales all three lines together. Responsive. |
-| `align` | `"start" \| "center" \| "end"` | `"start"` | Cross-axis alignment of the lines. Responsive. |
-| `Stat.Indicator type` | `"increase" \| "decrease"` | `"increase"` | Arrow direction and color. |
+### Parts
+
+<PropsTable rows={statPartsProps} />
 
 Compose Stats in a [Grid](/docs/components/grid) or
 [HStack](/docs/components/stack) for dashboard rows, and inside a

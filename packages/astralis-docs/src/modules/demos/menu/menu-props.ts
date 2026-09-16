@@ -32,3 +32,39 @@ export const menuProps: PropRow[] = [
     description: "Close after an item activates.",
   },
 ];
+
+export const menuItemProps: PropRow[] = [
+  {
+    prop: "onSelect",
+    type: "() => void",
+    description: "Runs on click, Enter or Space.",
+  },
+  {
+    prop: "disabled",
+    type: "boolean",
+    default: "false",
+    description: "Skipped by arrow-key focus and can't be activated.",
+  },
+  {
+    prop: "danger",
+    type: "boolean",
+    default: "false",
+    description: "Destructive styling, for delete and remove.",
+  },
+  {
+    prop: "icon",
+    type: "ReactNode",
+    description: "Leading glyph.",
+  },
+  {
+    prop: "shortcut",
+    type: "ReactNode",
+    description: "Trailing hint, such as a Kbd shortcut.",
+  },
+  {
+    prop: "closeOnSelect",
+    type: "boolean",
+    default: "the menu's",
+    description: "Overrides the menu's closeOnSelect for this item.",
+  },
+];

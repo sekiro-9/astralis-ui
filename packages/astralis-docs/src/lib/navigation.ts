@@ -118,6 +118,7 @@ export const navigation: NavGroup[] = [
       { title: "Alert Dialog", href: "/docs/components/alert-dialog", since: "0.7.6" },
       { title: "Backdrop", href: "/docs/components/backdrop", since: "0.7.6" },
       { title: "Hover Card", href: "/docs/components/hover-card", since: "0.7.7" },
+      { title: "Portal", href: "/docs/components/portal" },
     ],
   },
   {

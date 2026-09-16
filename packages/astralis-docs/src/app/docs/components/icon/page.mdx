@@ -1,3 +1,5 @@
+import { iconProps } from "@/modules/demos/icon/icon-props";
+
 export const metadata = {
   title: "Icon",
   description: "A sizing and coloring wrapper for any icon set — Lucide, Heroicons, or your own SVGs.",
@@ -42,13 +44,7 @@ match their label.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `as` | `ElementType` | — | An icon component to render (e.g. from Lucide). |
-| `children` | `ReactNode` | — | …or a raw `<svg>`; it fills the sized wrapper. |
-| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl" \| number` | `"md"` | Token or pixel size. |
-| `color` | text-color tokens | inherit | Semantic color; omit to inherit `currentColor`. |
-| `strokeWidth` | `number` | — | Forwarded to stroke-based icon sets. |
+<PropsTable rows={iconProps} />
 
 ## Accessibility
 

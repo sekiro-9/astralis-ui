@@ -21,6 +21,13 @@ export const textareaProps: PropRow[] = [
     description: "Initial visible lines.",
   },
   {
+    prop: "autoGrow",
+    type: "boolean",
+    default: "false",
+    description:
+      "Grows with its content instead of scrolling, using CSS field-sizing with no JavaScript. rows becomes the minimum height.",
+  },
+  {
     prop: "showCount",
     type: `boolean`,
     default: `false`,

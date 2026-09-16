@@ -22,6 +22,11 @@ export const linkProps: PropRow[] = [
     description: "New tab + `rel=\"noopener noreferrer\"` + ↗ marker.",
   },
   {
+    prop: "lineClamp",
+    type: `"1" | "2" | "3" | "4" | "5" | "6"`,
+    description: "Truncates a long link to this many lines with an ellipsis. Responsive.",
+  },
+  {
     prop: "as",
     type: `ElementType`,
     default: `"a"`,

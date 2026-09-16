@@ -1,3 +1,5 @@
+import { splitterProps, splitterPartsProps } from "@/modules/demos/splitter/splitter-props";
+
 export const metadata = {
   title: "Splitter",
   description: "A two-panel resizable split — pointer-capture dragging plus the APG window-splitter keyboard contract.",
@@ -26,11 +28,25 @@ registration protocol. The second panel takes the rest.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Split axis (`horizontal` = side by side). |
-| `size` / `defaultSize` / `onResize` | `number` (percent) | `50` | Controlled / uncontrolled first-panel share. |
-| `minSize` / `maxSize` | `number` | `10` / `90` | Clamp, percent. |
+<PropsTable rows={splitterProps} />
 
-Parts: `Splitter.Panel` (×2), `Splitter.Handle` (the divider — give it an
-`aria-label`).
+### Parts
+
+<PropsTable rows={splitterPartsProps} />
+
+## Keyboard
+
+The handle is a single tab stop. With it focused:
+
+| Key | Action |
+| --- | --- |
+| `←` / `→` | Shrink / grow the first panel by 2% (horizontal) |
+| `↑` / `↓` | Shrink / grow the first panel by 2% (vertical) |
+| `Home` | Shrink the first panel to `minSize` |
+| `End` | Grow the first panel to `maxSize` |
+
+## Accessibility
+
+The handle renders `role="separator"` with `aria-valuenow`, `aria-valuemin`
+and `aria-valuemax`, so assistive technology announces the split as a
+percentage. Label it with `aria-label` ("Resize sidebar").

@@ -39,3 +39,29 @@ export const checkboxProps: PropRow[] = [
     description: "State flags — inherited from [Field](/docs/components/field).",
   },
 ];
+
+export const checkboxGroupProps: PropRow[] = [
+  {
+    prop: "value / defaultValue / onValueChange",
+    type: "string[] / string[] / (value: string[]) => void",
+    default: "— / [] / —",
+    description: "Controlled / uncontrolled selection. onChange still fires too, but is deprecated.",
+  },
+  {
+    prop: "orientation",
+    type: `"horizontal" | "vertical"`,
+    default: `"vertical"`,
+    description: "Lays the checkboxes out in a row or a column.",
+  },
+  {
+    prop: "colorScheme",
+    type: COLOR_SCHEME_TYPE,
+    description: "Hue of every checkbox in the group; each can still override it.",
+  },
+  {
+    prop: "disabled",
+    type: "boolean",
+    default: "false",
+    description: "Disables every checkbox in the group.",
+  },
+];

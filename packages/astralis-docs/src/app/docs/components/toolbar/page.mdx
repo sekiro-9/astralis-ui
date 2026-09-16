@@ -1,3 +1,5 @@
+import { toolbarProps, toolbarPartsProps } from "@/modules/demos/toolbar/toolbar-props";
+
 export const metadata = {
   title: "Toolbar",
   description: "A role=toolbar container with arrow-key focus movement — compose with Buttons, groups and separators.",
@@ -30,10 +32,22 @@ import { Toolbar } from "astralis-ui";
 
 Extends `div` props:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `label` | `string` | — | Accessible name (`aria-label`). |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` | Layout + arrow-key axis. |
+<PropsTable rows={toolbarProps} />
 
-Parts: `Toolbar.Group` (`role="group"` cluster), `Toolbar.Separator`
-(vertical rule between groups).
+### Parts
+
+<PropsTable rows={toolbarPartsProps} />
+
+## Keyboard
+
+With focus on a control in the toolbar:
+
+| Key | Action |
+| --- | --- |
+| `←` / `→` | Previous / next control (horizontal; wraps at the ends) |
+| `↑` / `↓` | Previous / next control (vertical; wraps at the ends) |
+| `Home` / `End` | First / last control |
+| `Tab` | Next control, or out of the toolbar after the last one |
+
+Disabled controls are skipped. Every control keeps its own tab stop, so `Tab`
+also walks through them one by one.

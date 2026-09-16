@@ -58,6 +58,12 @@ export const carouselProps: PropRow[] = [
     description: "Transition duration (ms) and CSS easing.",
   },
   {
+    prop: "disabled",
+    type: "boolean",
+    default: "false",
+    description: "Freezes the carousel: slide changes, gestures and autoplay all stop.",
+  },
+  {
     prop: "swipeable · draggable",
     type: "boolean",
     default: "true · false",

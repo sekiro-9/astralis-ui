@@ -1,3 +1,5 @@
+import { backdropProps } from "@/modules/demos/backdrop/backdrop-props";
+
 export const metadata = {
   title: "Backdrop",
   description: "The full-screen scrim behind Modal and Drawer, as a standalone primitive for blocking states and custom overlays.",
@@ -24,14 +26,16 @@ import { Backdrop } from "astralis-ui";
 
 The scrim is `position: fixed` (full screen) by design. To scope it to a
 frame — as the demo above does — put it in a `position: relative` container
-and pass `style={{ position: "absolute" }}`.
+and pass `style={{ position: "absolute" }}`. Going the other way, a full-screen
+scrim rendered deep inside a clipped or transformed container belongs in a
+[Portal](/docs/components/portal), so no ancestor can clip it.
 
 ## Props
 
 Extends `div` props:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `blur` | `boolean` | `true` | Frosts the content behind the scrim. |
-| `children` | `ReactNode` | — | Centered when present (a Spinner, a message). |
-| `style` | `CSSProperties` | — | `backgroundColor` overrides the default scrim colour. |
+<PropsTable rows={backdropProps} />
+
+Backdrop has no keyboard behavior of its own: it doesn't trap focus or close
+on Escape. If it blocks the page, move focus to what it's waiting on, or use
+[Modal](/docs/components/modal), which handles both.

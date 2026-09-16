@@ -1,3 +1,5 @@
+import { copyButtonProps } from "@/modules/demos/copy-button/copy-button-props";
+
 export const metadata = {
   title: "Copy Button",
   description: "A Button that writes a value to the clipboard and confirms with a transient copied state.",
@@ -18,16 +20,26 @@ passes straight through.
 import { CopyButton } from "astralis-ui";
 ```
 
+## Usage
+
+`value` is what lands on the clipboard; the label is separate, so a button
+can say "Copy link" while copying the full URL. After a successful copy the
+label swaps to `copiedLabel` for `timeout` milliseconds, and the button
+carries a `data-copied` attribute you can style against. If the browser
+refuses clipboard access, the label stays put rather than claiming a copy
+that didn't happen.
+
+<ComponentPreview name="copy-button-labels" />
+
 ## Props
 
-Extends [Button](/docs/components/button)'s props (minus `leftIcon`, which
-the copied state owns), plus:
+Takes every [Button](/docs/components/button) prop except `leftIcon`, which
+the copied state owns. The ones that matter most:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` | `string` | — | Text written to the clipboard. Required. |
-| `children` | `ReactNode` | `"Copy"` | Idle label. |
-| `copiedLabel` | `ReactNode` | `"Copied"` | Label during the copied state. |
-| `timeout` | `number` | `1600` | How long the copied state lasts (ms). |
+<PropsTable rows={copyButtonProps} />
 
-While copied, the button carries `data-copied` for custom styling.
+## Accessibility
+
+The copied state changes the button's label, but it isn't a live region, so a
+screen reader reports it only when the button is read again. Keep
+`copiedLabel` meaningful on its own ("Link copied" rather than "Done").

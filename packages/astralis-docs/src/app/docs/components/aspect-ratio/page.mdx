@@ -1,3 +1,5 @@
+import { aspectRatioProps } from "@/modules/demos/aspect-ratio/aspect-ratio-props";
+
 export const metadata = {
   title: "Aspect Ratio",
   description: "Locks its child to a fixed aspect ratio — for media, embeds and placeholders.",
@@ -33,6 +35,4 @@ Named ratios instead of magic numbers: `square` (1:1), `landscape` (4:3),
 
 Aspect Ratio extends [Box](/docs/components/box) and adds one prop:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ratio` | `"auto" \| "square" \| "landscape" \| "portrait" \| "wide" \| "ultrawide" \| "golden"` | `"wide"` | The frame's width-to-height ratio. |
+<PropsTable rows={aspectRatioProps} />

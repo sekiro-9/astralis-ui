@@ -1,3 +1,5 @@
+import { toasterProps, toastOptionsProps } from "@/modules/demos/toast/toast-props";
+
 export const metadata = {
   title: "Toast",
   description: "Ephemeral notifications fired imperatively from anywhere — no context, no wiring.",
@@ -33,27 +35,32 @@ store is module-level, so it works outside React trees too.
 
 ### Options
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `title` | `ReactNode` | — | Required headline. |
-| `description` | `ReactNode` | — | Supporting copy. |
-| `status` | `"info" \| "success" \| "warning" \| "error"` | `"info"` | Icon, hue, ARIA role. |
-| `colorScheme` | all 15 schemes | from `status` | Hue override. |
-| `duration` | `number \| null` | `5000` | Auto-dismiss ms; `null` keeps it until dismissed. Hovering pauses the timer. |
-| `closable` | `boolean` | `true` | Show the ✕ button. |
-| `action` | `{ label, onClick }` | — | Action button after the text. |
+<PropsTable rows={toastOptionsProps} />
 
 ### `<Toaster />` props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `placement` | `"top-start" \| "top-center" \| "top-end" \| "bottom-start" \| "bottom-center" \| "bottom-end"` | `"bottom-end"` | Screen edge the stack grows from. |
-| `max` | `number` | `5` | Newest-first cap on visible toasts. |
+<PropsTable rows={toasterProps} />
+
+## Keyboard
+
+Toasts never take focus when they appear, so they don't interrupt typing.
+They sit in a "Notifications" region you can `Tab` into.
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Move to a toast's action and dismiss buttons |
+| `Enter` / `Space` | Activate the focused button |
+| `Esc` | Dismiss the focused toast and return focus to where it was |
+
+`Esc` only dismisses a closable toast, and it doesn't also close a Modal or
+Popover open behind it.
 
 ## Accessibility
 
-- Each toast renders `role="alert"` (error/warning — assertive) or
-  `role="status"` (info/success — polite), inside a labelled
-  `role="region"` outlet.
-- Hover pauses the auto-dismiss timer and resumes with the **remaining**
-  time, so slow readers aren't raced.
+- Toasts are announced through two live regions the Toaster mounts empty:
+  polite for `info` and `success`, assertive for `warning` and `error`.
+  Regions that exist before their text arrives are announced reliably across
+  screen readers, unlike one inserted already filled.
+- The toasts themselves sit in a `role="region"` labelled "Notifications".
+- Hovering a toast, or moving focus into it, pauses the auto-dismiss timer,
+  which resumes with the **remaining** time, so slow readers aren't raced.

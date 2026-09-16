@@ -18,6 +18,15 @@ import { Textarea } from "astralis-ui";
 // also available as Input.TextArea
 ```
 
+## Auto-grow
+
+`autoGrow` lets the field grow with its content instead of scrolling. It uses
+the CSS `field-sizing` property, so there is no resize listener; `rows` sets
+the starting height. Browsers without `field-sizing` keep a normal scrolling
+textarea.
+
+<ComponentPreview name="textarea-auto-grow" />
+
 ## Props
 
 <PropsTable rows={textareaProps} />

@@ -16,6 +16,7 @@ The form-field wrapper — label wiring, help text, error messages, and state th
 ```tsx
 import { Field } from "astralis-ui";
 // Field.Label, Field.HelpText, Field.ErrorText
+// useFieldContext, for your own controls
 ```
 
 ## Usage
@@ -38,6 +39,44 @@ border, and your swap from `HelpText` to `ErrorText`.
 
 `Field.Label`, `Field.HelpText` and `Field.ErrorText` accept their native
 element attributes.
+
+## Custom controls
+
+`useFieldContext()` gives a control of your own the same wiring the built-in
+inputs get. It returns `null` outside a Field, so the control still works on
+its own.
+
+```tsx
+import { Field, useFieldContext } from "astralis-ui";
+
+function ColorInput(props: React.ComponentProps<"input">) {
+  const field = useFieldContext();
+  return (
+    <input
+      type="color"
+      id={field?.id}
+      aria-describedby={field?.describedBy}
+      aria-invalid={field?.invalid || undefined}
+      disabled={field?.disabled}
+      required={field?.required}
+      {...props}
+    />
+  );
+}
+
+<Field required>
+  <Field.Label>Brand color</Field.Label>
+  <ColorInput />
+  <Field.HelpText>Used for buttons and links.</Field.HelpText>
+</Field>
+```
+
+| Value | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | The id `Field.Label` points at. Put it on the focusable element. |
+| `describedBy` | `string \| undefined` | Ids of the help and error text currently shown, for `aria-describedby`. |
+| `labelledBy` | `string \| undefined` | Id of the rendered label, for controls a `<label for>` can't name, such as a radio group. |
+| `invalid` · `disabled` · `required` · `readOnly` | `boolean \| undefined` | The Field's state flags. |
 
 ## Accessibility
 

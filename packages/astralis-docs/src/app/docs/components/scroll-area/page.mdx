@@ -1,3 +1,5 @@
+import { scrollAreaProps } from "@/modules/demos/scroll-area/scroll-area-props";
+
 export const metadata = {
   title: "Scroll Area",
   description: "A scroll container with themed scrollbars — the platform's own, restyled with CSS. Zero client JavaScript.",
@@ -21,14 +23,11 @@ import { ScrollArea } from "astralis-ui";
 
 ## Sizing
 
-Give it a height (or `max-height`) via `className` or `style` — without one
-there is nothing to scroll.
+Give it a `height` or `maxHeight` through `style`. Without one the area grows
+with its content and there is nothing to scroll.
 
 ## Props
 
 Extends `div` props:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `direction` | `"vertical" \| "horizontal" \| "both"` | `"vertical"` | Which axis scrolls. |
-| `hideScrollbar` | `boolean` | `false` | Hide the bar entirely (content still scrolls). |
+<PropsTable rows={scrollAreaProps} />

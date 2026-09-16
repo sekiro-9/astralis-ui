@@ -1,3 +1,5 @@
+import { ratingProps } from "@/modules/demos/rating/rating-props";
+
 export const metadata = {
   title: "Rating",
   description: "Star rating input built on native radios, with a static display mode that renders half-stars for fractional values.",
@@ -31,12 +33,16 @@ fractional averages belong:
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `max` | `number` | `5` | Number of stars. |
-| `value` / `defaultValue` / `onChange` | `number` / `number` / `(value) => void` | — | Controlled / uncontrolled API. Fractions render only in `readOnly`. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Star size. |
-| `colorScheme` | `ColorScheme` | `"yellow"` | Fill hue via the accent channel. |
-| `readOnly` | `boolean` | `false` | Static display with `role="img"`. |
-| `disabled` | `boolean` | `false` | Disables interaction. |
-| `label` | `string` | `"Rating"` | Accessible name for the radiogroup. |
+<PropsTable rows={ratingProps} />
+
+## Keyboard
+
+The stars are native radios, so the keys are the browser's own:
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Into the rating: one tab stop, on the selected star |
+| `←` `↑` / `→` `↓` | Select one star fewer / more |
+| `Space` | Select the focused star, when none is selected yet |
+
+A `readOnly` rating is an image, not a control, so it takes no focus.

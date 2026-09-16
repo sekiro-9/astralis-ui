@@ -1,3 +1,5 @@
+import { codeBlockProps, codeBlockPartsProps } from "@/modules/demos/code-block/code-block-props";
+
 export const metadata = {
   title: "Code Block",
   description: "A compound multi-line code container with header, copy button and editor chrome.",
@@ -73,19 +75,10 @@ unhighlighted source.
 
 `CodeBlock.Root`:
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `variant` | `"subtle" \| "solid" \| "outline"` | `"subtle"` | Container style; all variants track the active theme. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Font size and padding step for `Content`. |
-| `code` | `string` | — | The source string; rendered by `Code` and copied by `CopyTrigger`. |
+<PropsTable rows={codeBlockProps} />
 
-`CodeBlock.Code`:
+### Parts
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `highlightedHtml` | `string` | — | Pre-tokenized HTML from your highlighter; replaces children and the inherited `code`. |
+Every part also takes its element's native attributes and `className`.
 
-`CodeBlock.CopyTrigger` additionally takes `code: string` to override what is
-copied, and its children may be a `(copied: boolean) => ReactNode` render
-function to replace the default copy/check glyphs. Every part accepts its
-native HTML attributes and `className`.
+<PropsTable rows={codeBlockPartsProps} />

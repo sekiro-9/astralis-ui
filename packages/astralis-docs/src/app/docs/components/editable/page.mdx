@@ -1,3 +1,5 @@
+import { editableProps, editablePartsProps } from "@/modules/demos/editable/editable-props";
+
 export const metadata = {
   title: "Editable",
   description: "Click-to-edit text: a preview that swaps for an input, committing on Enter/blur and cancelling on Escape.",
@@ -18,18 +20,31 @@ its text selected, commits on **Enter** or blur, and cancels on **Escape**.
 import { Editable } from "astralis-ui";
 ```
 
+## Usage
+
+Render both parts; whichever matches the current mode shows itself. The
+preview is a button until you activate it, then the input takes focus with
+its text selected, so typing replaces the value straight away.
+
+To keep the value in your own state, pass `value` and `onChange`. `onChange`
+fires on every keystroke, so pair it with `onSubmit` to know when an edit is
+final and `onCancel` to roll back:
+
+<ComponentPreview name="editable-controlled" />
+
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` / `defaultValue` / `onChange` | `string` / `string` / `(value) => void` | — | Controlled / uncontrolled API. |
-| `onSubmit` | `(value) => void` | — | Fires when an edit commits (Enter / blur). |
-| `onCancel` | `() => void` | — | Fires when an edit cancels (Escape). |
-| `placeholder` | `string` | `"Click to edit"` | Preview text while the value is empty. |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Text scale shared by preview and input. |
-| `submitOnBlur` | `boolean` | `true` | Blur commits (otherwise it cancels). |
-| `startWithEditView` | `boolean` | `false` | Mount already editing. |
-| `disabled` | `boolean` | `false` | Locks editing. |
+<PropsTable rows={editableProps} />
 
-Parts: `Editable.Preview`, `Editable.Input` — render both; the active one
-shows itself.
+### Parts
+
+<PropsTable rows={editablePartsProps} />
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Enter` / `Space` on the preview | Start editing |
+| `Enter` in the input | Commit the edit |
+| `Esc` in the input | Cancel and restore the previous value |
+| `Tab` out of the input | Commit, or cancel when `submitOnBlur` is off |

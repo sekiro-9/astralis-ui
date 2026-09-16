@@ -1,3 +1,5 @@
+import { fileUploadProps, fileUploadPartsProps } from "@/modules/demos/file-upload/file-upload-props";
+
 export const metadata = {
   title: "File Upload",
   description: "File picking + drag-and-drop on a hidden native input — validation rejects loudly, never truncates silently.",
@@ -27,16 +29,19 @@ the picker:
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `accept` | `string` | — | Native accept filter (`"image/*,.pdf"`). |
-| `multiple` | `boolean` | `false` | Allow more than one file. |
-| `maxFiles` | `number` | — | Cap on kept files; overflow is rejected. |
-| `maxSize` | `number` | — | Per-file byte cap; oversized picks are rejected. |
-| `onFilesChange` | `(files: File[]) => void` | — | Full kept list after every add/remove. |
-| `onReject` | `(rejections) => void` | — | `{ file, reason: "size" \| "count" }[]`. |
-| `disabled` | `boolean` | `false` | Locks picking and dropping. |
+<PropsTable rows={fileUploadProps} />
 
-Parts: `FileUpload.Dropzone` (drop target + click/keyboard picker),
-`FileUpload.Trigger` (wraps your own element), `FileUpload.ItemGroup`
-(kept files with name, human-readable size and a remove control).
+### Parts
+
+<PropsTable rows={fileUploadPartsProps} />
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Move to the dropzone, then to each file's remove button |
+| `Enter` / `Space` on the dropzone | Open the file picker |
+| `Enter` / `Space` on a remove button | Remove that file |
+
+Dragging files is pointer-only; the picker is the keyboard path to the same
+result.

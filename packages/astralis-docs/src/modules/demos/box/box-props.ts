@@ -39,7 +39,7 @@ export const boxProps: PropRow[] = [
       "Border width, style and color tokens. Per-side widths mirror rounded — borderB is a header rule, borderT a footer one.",
   },
   {
-    prop: "rounded (+ roundedT/R/B/L, corner variants)",
+    prop: "rounded (+ roundedT/R/B/L, roundedTl/Tr/Br/Bl)",
     type: `"none" | "2xs"–"4xl" | "full"`,
     description: "Corner radius — all corners, per side, or per corner.",
   },
@@ -68,6 +68,13 @@ export const boxProps: PropRow[] = [
     type: `sizing scale · "1" | "auto" | "initial" | "none" · boolean | "0" | "1" · "1"–"12" · "auto" | "start" | "center" | "end" | "stretch" | "baseline"`,
     description:
       "How the element behaves as a child of a flex or grid parent. On Box, so any primitive can size itself without a Flex.Item wrapper.",
+  },
+  {
+    prop: "container",
+    type: "boolean",
+    default: "false",
+    description:
+      "Makes this element the query container that descendants' @sm–@xl responsive keys measure against, instead of the viewport.",
   },
   {
     prop: "as",

@@ -1,4 +1,4 @@
-import { menuProps } from "@/modules/demos/menu/menu-props";
+import { menuProps, menuItemProps } from "@/modules/demos/menu/menu-props";
 
 export const metadata = {
   title: "Menu",
@@ -29,13 +29,7 @@ import { Menu } from "astralis-ui";
 
 ### `<Menu.Item>`
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `onSelect` | `() => void` | — | Runs on click / Enter / Space. |
-| `disabled` | `boolean` | `false` | Skipped by roving focus. |
-| `danger` | `boolean` | `false` | Destructive styling. |
-| `icon` / `shortcut` | `ReactNode` | — | Leading glyph / trailing hint (pairs well with [Kbd](/docs/components/kbd)). |
-| `closeOnSelect` | `boolean` | inherits | Per-item override. |
+<PropsTable rows={menuItemProps} />
 
 ### Parts
 

@@ -13,9 +13,10 @@ export function ContextMenuDemo() {
           borderStyle="dashed"
           borderColor="base"
           style={{ userSelect: "none" }}
+          tabIndex={0}
         >
           <Text size="sm" color="muted">
-            Right-click anywhere in this area
+            Right-click this area, or focus it and press Shift+F10
           </Text>
         </Center>
       </ContextMenu.Trigger>

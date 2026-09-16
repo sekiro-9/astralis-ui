@@ -1,3 +1,5 @@
+import { imageProps, imageGroupProps } from "@/modules/demos/image/image-props";
+
 export const metadata = {
   title: "Image",
   description: "Images with aspect ratios, captions, error fallbacks, and a built-in lightbox.",
@@ -29,25 +31,11 @@ and keyboard dismissal, with arrow-key navigation inside an `Image.Group`.
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `src` / `alt` | `string` | required | Source and alt text. |
-| `aspectRatio` | `"square" \| "video" \| "portrait" \| "wide"` or CSS ratio | — | Locks the frame. |
-| `objectFit` | `"cover" \| "contain" \| "fill" \| "none" \| "scale-down"` | `"cover"` | Fit inside the frame. |
-| `rounded` | `"none"` – `"3xl"` \| `"full"` | `"none"` | Corner radius. |
-| `loading` | `"lazy" \| "eager"` | `"lazy"` | Native lazy loading. |
-| `placeholder` | `"blur" \| "empty"` or URL | `"empty"` | Shimmer or blurred stand-in while loading. |
-| `fallback` | `ReactNode` | icon | Rendered on load error. |
-| `caption` | `ReactNode` | — | Wraps in `figure` + `figcaption`. |
-| `preview` | `boolean` | `false` | Click-to-zoom lightbox. |
+<PropsTable rows={imageProps} />
 
 ### Image.Group
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `items` | `{ src, alt, caption? }[]` | required | The gallery images. |
-| `columns` | `2 \| 3 \| 4` | `3` | Grid columns. |
-| `gap` | `"sm" \| "md" \| "lg"` | `"md"` | Grid gap. |
+<PropsTable rows={imageGroupProps} />
 
 ## Keyboard
 

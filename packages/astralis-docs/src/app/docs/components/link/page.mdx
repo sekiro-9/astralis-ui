@@ -20,6 +20,14 @@ import { Link } from "astralis-ui";
 For client-side routing, pass your router's component:
 `<Link as={NextLink} href="/docs">`.
 
+## Line clamp
+
+`lineClamp` cuts a long link off after that many lines with an ellipsis, which
+keeps card titles and list rows even. The full text stays in the DOM, so screen
+readers and search still get all of it.
+
+<ComponentPreview name="link-line-clamp" />
+
 ## Props
 
 <PropsTable rows={linkProps} />

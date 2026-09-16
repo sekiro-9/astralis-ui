@@ -1,4 +1,4 @@
-import { checkboxProps } from "@/modules/demos/checkbox/checkbox-props";
+import { checkboxProps, checkboxGroupProps } from "@/modules/demos/checkbox/checkbox-props";
 
 export const metadata = {
   title: "Checkbox",
@@ -38,11 +38,7 @@ signal for select-all rows.
 
 ### Checkbox.Group
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `value` / `defaultValue` / `onChange` | `string[]` / `string[]` / `(values: string[]) => void` | — / `[]` / — | The selected values. |
-| `orientation` | `"horizontal" \| "vertical"` | `"vertical"` | Layout. |
-| `colorScheme` / `disabled` | — | — | Shared defaults for every child. |
+<PropsTable rows={checkboxGroupProps} />
 
 ## Keyboard
 

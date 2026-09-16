@@ -1,3 +1,5 @@
+import { emptyStateProps, emptyStatePartsProps } from "@/modules/demos/empty-state/empty-state-props";
+
 export const metadata = {
   title: "Empty State",
   description: "A blank-slate placeholder for no-results and nothing-here-yet moments — pure composition, zero client JavaScript.",
@@ -24,15 +26,8 @@ import { EmptyState } from "astralis-ui";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Scales indicator, title and description together. |
+<PropsTable rows={emptyStateProps} />
 
 ### Parts
 
-| Part | Renders | Notes |
-| --- | --- | --- |
-| `EmptyState.Indicator` | muted icon circle | `aria-hidden` — the icon is decorative. |
-| `EmptyState.Title` | heading line | — |
-| `EmptyState.Description` | supporting copy | Max-width capped for line length. |
-| `EmptyState.Actions` | CTA row | Wraps; typically one or two Buttons. |
+<PropsTable rows={emptyStatePartsProps} />

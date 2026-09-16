@@ -1,4 +1,4 @@
-import { avatarProps } from "@/modules/demos/avatar/avatar-props";
+import { avatarProps, avatarGroupProps, avatarBadgeProps } from "@/modules/demos/avatar/avatar-props";
 
 export const metadata = {
   title: "Avatar",
@@ -38,15 +38,9 @@ the same color) → silhouette icon. `Avatar.Badge` anchors a status dot.
 
 ### Avatar.Group
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `max` | `number` | — | Visible cap; the rest collapse into a "+N" chip. |
-| `spacing` | `number` | `-8` | Overlap in pixels. |
-| `size` | Avatar sizes | `"md"` | Applied to every child. |
+<PropsTable rows={avatarGroupProps} />
 
 ### Avatar.Badge
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `status` | `"online" \| "away" \| "busy" \| "offline"` | `"online"` | Preset dot colors. |
-| `color` | `string` | — | Custom color, overriding status. |
+<PropsTable rows={avatarBadgeProps} />
+
