@@ -17,6 +17,8 @@ import { generateThemeTokens } from "./theme-math";
 import { SPACING_SCALE, RADIUS_SCALE, FONT_SIZE_SCALE, DURATION_SCALE } from "./token-spec";
 import type { ThemeSeed } from "./token-spec";
 
+export type { ThemeSeed };
+
 /* ==========================================================================
    SERIALIZE
    ========================================================================== */

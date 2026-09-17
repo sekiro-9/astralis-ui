@@ -34,35 +34,32 @@
       "import": "./dist/index.js"
     },
     "./theme-math": {
-      "types": "./theme-math.d.ts",
+      "types": "./dist/types/theme/theme-math.d.ts",
       "import": "./dist/theme/theme-math.js"
     },
     "./color-math": {
-      "types": "./theme-math.d.ts",
+      "types": "./dist/types/theme/theme-math.d.ts",
       "import": "./dist/theme/theme-math.js"
     },
     "./serialize": {
-      "types": "./serialize.d.ts",
+      "types": "./dist/types/theme/serialize.d.ts",
       "import": "./dist/theme/serialize.js"
     },
     "./color-schemes": {
-      "types": "./color-schemes.d.ts",
+      "types": "./dist/types/const/color-schemes.d.ts",
       "import": "./dist/const/color-schemes.js"
     },
     "./contrast": {
-      "types": "./contrast.d.ts",
+      "types": "./dist/types/theme/contrast.d.ts",
       "import": "./dist/theme/contrast.js"
     },
     "./styles.css": "./dist/styles.css",
-    "./system-spec.json": "./dist/system-spec.json"
+    "./system-spec.json": "./dist/system-spec.json",
+    "./package.json": "./package.json"
   },
   "files": [
     "CHANGELOG.md",
-    "dist",
-    "theme-math.d.ts",
-    "serialize.d.ts",
-    "color-schemes.d.ts",
-    "contrast.d.ts"
+    "dist"
   ],
   "sideEffects": [
     "**/*.css"
@@ -76,7 +73,7 @@
     "gen:tokens": "node scripts/gen-tokens.mjs",
     "check:tokens": "node scripts/check-token-sync.mjs",
     "dev:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./dist/styles.css",
-    "build": "pnpm run check:types && vite build && node scripts/check-server-safe.mjs && pnpm run build:css",
+    "build": "pnpm run clean && pnpm run check:types && vite build && pnpm run build:subpath-types && node scripts/check-server-safe.mjs && pnpm run build:css && node scripts/check-exports.mjs",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs && node scripts/check-contrast.mjs && node scripts/gen-system-spec.mjs",
     "gen:spec": "node scripts/gen-system-spec.mjs",
@@ -88,8 +85,14 @@
     "storybook:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./src/index.css",
     "build-storybook": "pnpm run build-storybook:css && storybook build",
     "build-storybook:css": "pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./src/index.css",
-    "prepublishOnly": "pnpm run build",
-    "check:types": "tsc -p tsconfig.build.json --noEmit"
+    "prepublishOnly": "pnpm run build && pnpm run test",
+    "check:types": "tsc -p tsconfig.build.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build:subpath-types": "tsc -p tsconfig.subpaths.json",
+    "check:types:all": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20.9"
   },
   "peerDependencies": {
     "react": "^19.1.1",

@@ -25,6 +25,9 @@ chakra-app/
 packages/astralis-docs/public/block-thumbs/
 packages/astralis-docs/public/r/
 
+# Compiled from src/tailwind-entry.css before Storybook starts or builds
+packages/astralis-ui/src/index.css
+
 # Production builds
 dist/
 **/dist/

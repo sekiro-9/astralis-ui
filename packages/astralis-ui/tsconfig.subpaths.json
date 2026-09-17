@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "./dist/types",
+    "rootDir": "./src",
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "include": [],
+  "files": [
+    "src/theme/theme-math.ts",
+    "src/theme/serialize.ts",
+    "src/theme/contrast.ts",
+    "src/const/color-schemes.ts"
+  ]
+}

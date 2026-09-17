@@ -20,6 +20,8 @@ import {
 } from "./token-spec";
 import type { Hue, Mode, RoleTarget, ScaleGroup, ThemeSeed } from "./token-spec";
 
+export type { ThemeSeed };
+
 /** Converts shorthand or full hex color entries into raw RGB components. */
 export function hexToRgb(hex: string) {
   const cleanHex = hex.replace("#", "");

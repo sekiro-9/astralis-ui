@@ -70,6 +70,19 @@ export const PLACEMENT_PROP_NAMES = [
 
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 
+/**
+ * Every exported component that takes placement props. The system spec
+ * advertises exactly this list, and placement-props.test.tsx must cover it.
+ */
+export const PLACEMENT_ADOPTERS = [
+  "Accordion", "Alert", "Avatar", "Badge", "Breadcrumb", "Button", "ButtonGroup",
+  "Calendar", "Card", "Carousel", "Checkbox", "CodeBlock", "Combobox", "DataList",
+  "Field", "Heading", "Highlight", "Icon", "Image", "Input", "Kbd", "Link", "Marquee",
+  "MultiSelect", "NumberInput", "Pagination", "PinInput", "Progress", "QrCode", "Radio",
+  "ScrollArea", "Skeleton", "Slider", "Spinner", "Splitter", "Steps", "Switch", "Table",
+  "TableOfContents", "Tabs", "Tag", "Text", "Timeline", "Toolbar",
+] as const;
+
 const PLACEMENT_SET = new Set<string>(PLACEMENT_PROP_NAMES);
 
 /** Placement props, each accepting a scalar token or a responsive map. The

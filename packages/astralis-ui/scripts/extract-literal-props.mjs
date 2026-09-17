@@ -59,15 +59,24 @@ export function extractLiteralProps(dtsPath) {
   return extractComponentTypes(dtsPath).literal;
 }
 
+/** Own props too generic to describe a component. */
+const GENERIC_PROPS = new Set(["className", "style", "id", "children"]);
+
 /**
- * Both readings of the props types in one pass: the closed vocabularies, and
- * the props a component cannot render without. A builder that places a
+ * Three readings of the props types in one pass: the closed vocabularies; the
+ * scalar props the library itself declares (booleans like Collapsible's
+ * defaultOpen, open strings like its name, numbers), which inherited DOM
+ * attributes are not; and the props a component cannot render without. A builder that places a
  * component with nothing set needs the second list to know what it must
  * supply (Image's src and alt) and which components it cannot place at all
  * (TableOfContents wants an items array no prop editor can type).
  *
  * @param {string} dtsPath absolute path to dist/index.d.ts
- * @returns {{ literal: Map<string, Record<string, string[]>>, required: Map<string, Record<string, string>> }}
+ * @returns {{
+ *   literal: Map<string, Record<string, string[]>>,
+ *   scalar: Map<string, Record<string, "boolean" | "string" | "number">>,
+ *   required: Map<string, Record<string, string>>,
+ * }}
  */
 export function extractComponentTypes(dtsPath) {
   const program = ts.createProgram([dtsPath], {
@@ -82,6 +91,7 @@ export function extractComponentTypes(dtsPath) {
   if (!moduleSymbol) throw new Error(`${dtsPath} has no module symbol — not a module?`);
 
   const result = new Map();
+  const scalar = new Map();
   const required = new Map();
   for (const symbol of checker.getExportsOfModule(moduleSymbol)) {
     const name = symbol.getName();
@@ -96,6 +106,7 @@ export function extractComponentTypes(dtsPath) {
     const paramType = checker.getTypeOfSymbolAtLocation(param, source);
 
     const props = {};
+    const scalars = {};
     const needed = {};
     for (const propSymbol of paramType.getProperties()) {
       const propName = propSymbol.getName();
@@ -104,19 +115,25 @@ export function extractComponentTypes(dtsPath) {
       }
       // aria-* / data-* / event handlers: other tiers own these.
       if (propName.startsWith("aria-") || propName.startsWith("data-") || /^on[A-Z]/.test(propName)) continue;
-      // Standard HTML attribute enums inherited from React's DOM types: real
-      // unions, but not design-system vocabulary — TypeScript already guards
-      // them, and repeating them on ~150 components triples the spec for no
-      // validator win.
-      if (DOM_ENUM_PROPS.has(propName)) continue;
       const propType = checker.getTypeOfSymbolAtLocation(propSymbol, source);
       const values = literalUnionValues(propType);
-      if (values) props[propName] = values;
+      if (values) {
+        // Standard HTML attribute enums inherited from React's DOM types: real
+        // unions, but not design-system vocabulary — TypeScript already guards
+        // them, and repeating them on ~150 components triples the spec for no
+        // validator win.
+        if (!DOM_ENUM_PROPS.has(propName)) props[propName] = values;
+        continue;
+      }
+      const ownDeclaration = propSymbol.declarations?.some((d) => d.getSourceFile() === source);
+      const kind = kindOf(propType);
+      if (ownDeclaration && kind !== "other" && !GENERIC_PROPS.has(propName)) scalars[propName] = kind;
     }
     if (Object.keys(props).length) result.set(name, props);
+    if (Object.keys(scalars).length) scalar.set(name, scalars);
     if (Object.keys(needed).length) required.set(name, needed);
   }
-  return { literal: result, required };
+  return { literal: result, scalar, required };
 }
 
 /** What a value for the prop looks like: a builder can type a string or a

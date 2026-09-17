@@ -16,10 +16,10 @@
      silently does nothing, which is precisely what a validator must catch;
    - declared CSS variables from the token stylesheets.
 
-   The two authored tables (PRIMITIVE_GROUPS, PLACEMENT_ADOPTERS) are
-   transcriptions of tested behaviour (placement-props.test.tsx's adopter
-   table) and are drift-checked against the real export list — an entry that
-   stops existing fails this script, not the consumer.
+   Two lists are authored: PRIMITIVE_GROUPS here, and PLACEMENT_ADOPTERS in
+   utils/placement.ts, which placement-props.test.tsx covers. Both are
+   drift-checked against the real export list — an entry that stops existing
+   fails this script, not the consumer.
 
    Runs at the end of build:css, after the coverage gate has proven the CSS
    is total, so the spec can only ever describe a verified build.
@@ -31,6 +31,7 @@ import { dirname, join } from "node:path";
 import { buildGraph, classifyClient, exportsOf } from "./module-graph.mjs";
 import { extractComponentTypes } from "./extract-literal-props.mjs";
 import { measureContent } from "./measure-content.mjs";
+import { loadTs } from "./load-ts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -70,6 +71,8 @@ for (const mode of ["light", "dark"]) {
 const { CHANNEL_PROPS, UNITLESS_CHANNEL_SLUGS } = await import(distUrl("const/channel.js"));
 const { STATE_VARIANTS, STATE_STYLE_MAPS } = await import(distUrl("utils/interaction-state.js"));
 const { PLACEMENT_PROP_NAMES } = await import(distUrl("utils/placement.js"));
+// Not reachable from the entry, so tree-shaken out of dist; read the source.
+const [{ PLACEMENT_ADOPTERS }] = await loadTs("utils/placement.ts");
 const { PROP_ALIASES, LONG_NAMES } = await import(distUrl("const/prop-aliases.js"));
 
 /* ---- prop groups: the vocabularies the engine actually resolves against -- */
@@ -179,10 +182,9 @@ const componentNames = Object.keys(rootExports)
   })
   .sort();
 
-/* Style-prop surfaces per component. Two authored tables, both transcribed
-   from tested behaviour and drift-checked against the export list above.
-   Components in neither table get [] — meaning "props manifest pending",
-   NOT "accepts nothing"; the react-docgen manifest is the planned upgrade. */
+/* Style-prop surfaces per component. Components in neither table get []:
+   they take no style-prop group. Their own props are listed under `props`
+   (closed vocabularies) and `scalarProps` (booleans, open strings, numbers). */
 const PRIMITIVE_GROUPS = {
   Box: ["box"],
   Flex: ["box", "flex"],
@@ -201,15 +203,6 @@ const PRIMITIVE_GROUPS = {
   Link: ["text", "placement"],
 };
 
-// Transcribed from placement-props.test.tsx (the 39-adopter table + Card).
-const PLACEMENT_ADOPTERS = [
-  "Accordion", "Alert", "Avatar", "Badge", "Breadcrumb", "Button",
-  "ButtonGroup", "Calendar", "Card", "Carousel", "Checkbox", "CodeBlock",
-  "Combobox", "DataList", "Field", "Highlight", "Icon", "Image", "Input",
-  "Kbd", "Marquee", "MultiSelect", "NumberInput", "Pagination", "PinInput",
-  "Progress", "QrCode", "Radio", "Skeleton", "Slider", "Spinner", "Steps",
-  "Switch", "Table", "Tabs", "Tag", "Timeline",
-];
 
 const exportSet = new Set(componentNames);
 for (const name of [...Object.keys(PRIMITIVE_GROUPS), ...PLACEMENT_ADOPTERS]) {
@@ -235,7 +228,11 @@ const clientTiers = classifyClient(distGraph, join(PKG, "dist"));
 /* Recipe-prop vocabularies (Button variant, Alert status, …), read from the
    rolled-up d.ts — the one place the build states them as closed literal
    unions. See extract-literal-props.mjs for the selection rule. */
-const { literal: literalProps, required: requiredProps } = extractComponentTypes(join(PKG, "dist", "index.d.ts"));
+const {
+  literal: literalProps,
+  scalar: scalarProps,
+  required: requiredProps,
+} = extractComponentTypes(join(PKG, "dist", "index.d.ts"));
 
 /* Category, read off the module that DEFINES each export: the source tree is
    already grouped (components/data-entry/input/...), so the directory is the
@@ -261,6 +258,8 @@ const components = Object.fromEntries(
     if (category) entry.category = category;
     const props = literalProps.get(name);
     if (props) entry.props = props;
+    const scalars = scalarProps.get(name);
+    if (scalars) entry.scalarProps = scalars;
     // Props the types make mandatory, by the kind of value each takes. A
     // builder fills the string ones and cannot place a component that
     // demands anything else.
@@ -428,10 +427,12 @@ if (problems.length) {
 const spec = {
   name: pkg.name,
   version: pkg.version,
-  specVersion: 1,
+  // 2: components carry scalarProps; generatedAt is opt-in.
+  specVersion: 2,
   // What this version can and cannot answer; consumers should branch on it.
   propsManifest: "style-props-v1",
-  generatedAt: new Date().toISOString(),
+  // Off by default so two builds of one commit emit identical bytes.
+  ...(process.env.ASTRALIS_SPEC_TIMESTAMP ? { generatedAt: new Date().toISOString() } : {}),
   breakpoints,
   containerBreakpoints: CONTAINER_BREAKPOINT_WIDTHS,
   contrast,
