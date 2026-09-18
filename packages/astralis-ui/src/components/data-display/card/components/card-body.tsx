@@ -10,11 +10,11 @@ export function CardBody({
   ref,
   ...rest
 }: CardBodyProps & { ref?: Ref<HTMLDivElement> }) {
-    return (
-      <div ref={ref} className={astralisMerge(cardPadding, "astralis:text-label-base", className)} style={style} {...rest}>
-        {children}
-      </div>
-    );
+  return (
+    <div ref={ref} className={astralisMerge(cardPadding, "astralis:text-label-base", className)} style={style} {...rest}>
+      {children}
+    </div>
+  );
 }
 
 CardBody.displayName = "Card.Body";

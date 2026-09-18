@@ -3,9 +3,8 @@
  * Server Component: the root's wrapper div stamps `data-table-size` plus
  * boolean `data-table-striped` / `data-table-interactive` /
  * `data-table-sticky` attributes, and the parts carry parent-keyed variants
- * on them. The md styles are the unprefixed defaults — a part rendered
- * outside a root gets md, quietly, the same contract Card has always had
- * (the old context threw instead; see the 0.7.2 changelog).
+ * on them. The md styles are the unprefixed defaults, so a part rendered
+ * outside a root gets md.
  */
 
 /** Cell padding + text size, shared by Head and Cell. md is the default. */

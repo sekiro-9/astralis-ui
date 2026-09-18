@@ -8,3 +8,5 @@ export function TableFooter({ children, className = "", ...rest }: TableSectionP
     </tfoot>
   );
 }
+
+TableFooter.displayName = "Table.Footer";

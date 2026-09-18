@@ -9,3 +9,5 @@ export function DataListItem({ children, className = "", style, ...rest }: DataL
     </div>
   );
 }
+
+DataListItem.displayName = "DataList.Item";

@@ -8,3 +8,5 @@ export function TableBody({ children, className = "", ...rest }: TableSectionPro
     </tbody>
   );
 }
+
+TableBody.displayName = "Table.Body";

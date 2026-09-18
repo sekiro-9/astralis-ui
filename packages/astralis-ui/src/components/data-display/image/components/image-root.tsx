@@ -1,7 +1,8 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import { useState, type Ref, type RefCallback } from "react";
+import { useState, type KeyboardEvent, type Ref, type RefCallback } from "react";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ImageLightbox } from "./image-lightbox";
 import {
   ASPECT_RATIO_MAP,
@@ -80,6 +81,29 @@ export function ImageRoot({
     const outer = caption ? "figure" : aspectRatio ? "box" : "img";
     const domProps = (target: typeof outer) => (target === outer ? domRest : {});
 
+    // The previewable element is a keyboard-operable button that opens the
+    // lightbox dialog; the ratio box when there is one, else the image.
+    const canPreview = preview && !hasError;
+    const openPreview = () => setIsOpen(true);
+    const previewProps = (target: "box" | "img") =>
+      canPreview && target === (aspectRatio ? "box" : "img")
+        ? {
+            role: "button",
+            tabIndex: 0,
+            "aria-haspopup": "dialog" as const,
+            onClick: openPreview,
+            onKeyDown: (e: KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openPreview();
+              }
+            },
+          }
+        : {};
+    const previewClasses = canPreview
+      ? "astralis:cursor-zoom-in astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring"
+      : "";
+
     const imageElement = hasError ? (
       fallback ? (
         <>{fallback}</>
@@ -119,23 +143,17 @@ export function ImageRoot({
         sizes={sizes}
         onLoad={handleLoad}
         onError={handleError}
-        onClick={preview ? () => setIsOpen(true) : undefined}
-        className={[
+        {...previewProps("img")}
+        className={astralisMerge(
           "astralis:transition-opacity astralis:duration-200",
           fitClass,
           roundedClass,
-          isLoading
-            ? "astralis:animate-pulse astralis:bg-surface-muted"
-            : "",
-          placeholder === "blur" && isLoading ? "astralis:blur-sm" : "",
-          preview ? "astralis:cursor-zoom-in" : "",
-          aspectRatio
-            ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full"
-            : placementClass,
+          isLoading && "astralis:animate-pulse astralis:bg-surface-muted",
+          placeholder === "blur" && isLoading && "astralis:blur-sm",
+          !aspectRatio && previewClasses,
+          aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,
           className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        )}
         style={aspectRatio ? {} : { ...placementStyle, width, height, ...style }}
       />
     );
@@ -149,7 +167,8 @@ export function ImageRoot({
     const wrapped = aspectRatio ? (
       <div
         {...domProps("box")}
-        className={placementClass}
+        {...previewProps("box")}
+        className={astralisMerge(placementClass, previewClasses, roundedClass)}
         style={{ ...placementStyle, ...ratioStyle, width, ...style }}
       >
         {imageElement}
@@ -170,7 +189,7 @@ export function ImageRoot({
         ) : (
           wrapped
         )}
-        {preview && isOpen && !hasError && (
+        {canPreview && isOpen && (
           <ImageLightbox src={src} alt={alt} onClose={() => setIsOpen(false)} />
         )}
       </>

@@ -18,3 +18,5 @@ export function DataListLabel({ children, className = "", style, ...rest }: Data
     </dt>
   );
 }
+
+DataListLabel.displayName = "DataList.Label";

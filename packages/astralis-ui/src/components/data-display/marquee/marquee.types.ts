@@ -3,10 +3,6 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export type MarqueeDirection = "left" | "right" | "up" | "down";
 
-/* ------------------------------------------------------------------ */
-/* MarqueeRoot                                                          */
-/* ------------------------------------------------------------------ */
-
 export interface MarqueeRootProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Scroll direction */
   direction?: MarqueeDirection;
@@ -32,10 +28,6 @@ export interface MarqueeRootProps extends HTMLAttributes<HTMLDivElement>, Placem
   style?: CSSProperties;
   children?: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* MarqueeItem                                                          */
-/* ------------------------------------------------------------------ */
 
 export interface MarqueeItemProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;

@@ -5,12 +5,8 @@ import type { ResponsiveProp } from "../../../utils/responsive";
 export type StatSize = "sm" | "md" | "lg" | "xl";
 export type StatAlign = "start" | "center" | "end";
 
-/**
- * The root owns the label/value/help stack; its parent owns how wide that
- * stack is and how it sits in a row — hence the placement props. It also
- * extends the div's own attributes, which it previously did not: an id or an
- * aria-label passed by a caller was silently dropped.
- */
+/** The root owns the label/value/help stack; its parent owns how wide that
+ *  stack is and how it sits in a row — hence the placement props. */
 export interface StatProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /**
    * Scales label, value and help text together. `md` is the dashboard KPI

@@ -2,18 +2,19 @@ import { Children, isValidElement, type ReactElement, type ReactNode } from "rea
 import type { TimelineItemProps } from "../timeline.types";
 import { timelineColumnWidth, timelineConnectorClasses } from "../timeline.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { TimelineIndicator } from "./timeline-indicator";
 
 /**
  * Lays out one entry: an indicator column with the connecting line drawn beneath
  * it (hidden on the last item via CSS :last-child — no context), and the content
  * beside it. Splits its children into the Indicator and everything else by
- * displayName.
+ * component identity.
  */
 export function TimelineItem({ children, className = "", ...rest }: TimelineItemProps) {
   let indicator: ReactElement | null = null;
   const others: ReactNode[] = [];
   Children.forEach(children, (child) => {
-    if (isValidElement(child) && (child.type as { displayName?: string })?.displayName === "Timeline.Indicator") {
+    if (isValidElement(child) && child.type === TimelineIndicator) {
       indicator = child;
     } else {
       others.push(child);
@@ -30,3 +31,5 @@ export function TimelineItem({ children, className = "", ...rest }: TimelineItem
     </div>
   );
 }
+
+TimelineItem.displayName = "Timeline.Item";

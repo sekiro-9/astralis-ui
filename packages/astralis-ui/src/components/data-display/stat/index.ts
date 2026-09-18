@@ -4,7 +4,6 @@ import { StatValue } from "./components/stat-value";
 import { StatHelpText } from "./components/stat-help-text";
 import { StatIndicator } from "./components/stat-indicator";
 
-/* 1️⃣ Compound API */
 export const Stat = Object.assign(StatRoot, {
   Label: StatLabel,
   Value: StatValue,
@@ -12,7 +11,6 @@ export const Stat = Object.assign(StatRoot, {
   Indicator: StatIndicator,
 });
 
-/* 2️⃣ Flat exports for tree-shaking (sub-parts only — the root is `Stat` itself) */
 export {
   StatLabel,
   StatValue,
@@ -20,7 +18,6 @@ export {
   StatIndicator,
 };
 
-/* 3️⃣ Types */
 export type {
   StatProps,
   StatSize,

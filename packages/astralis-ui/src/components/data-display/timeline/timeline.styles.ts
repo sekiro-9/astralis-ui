@@ -5,8 +5,7 @@
  * inherit through the accent CSS variables), each item stamps
  * `data-timeline-item` so the connector can hide itself on the last entry,
  * and the parts carry parent-keyed variants. md/solid are the unprefixed
- * defaults — a part outside a root renders md/solid quietly (the context
- * threw; see the 0.7.2 changelog).
+ * defaults, so a part outside a root renders md/solid.
  */
 
 /** The circular indicator. Colour comes from the accent channel. */

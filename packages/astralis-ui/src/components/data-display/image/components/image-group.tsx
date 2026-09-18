@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { FIT_MAP, ROUNDED_MAP } from "./image.constants";
 import { ImageLightbox } from "./image-lightbox";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 import type { ImageGroupProps } from "../image.types";
 
 const GAP_MAP = {
@@ -28,69 +29,45 @@ export function ImageGroup({
   ...rest
 }: ImageGroupProps) {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
-
-  const handleKey = useCallback(
-    (event: KeyboardEvent) => {
-      if (previewIndex === null) return;
-      if (event.key === "Escape") setPreviewIndex(null);
-      if (event.key === "ArrowLeft") {
-        setPreviewIndex((value) => (value! > 0 ? value! - 1 : value));
-      }
-      if (event.key === "ArrowRight") {
-        setPreviewIndex((value) =>
-          value! < items.length - 1 ? value! + 1 : value,
-        );
-      }
-    },
-    [previewIndex, items.length],
-  );
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [handleKey]);
+  const current = previewIndex !== null ? items[previewIndex] : undefined;
 
   return (
     <>
-      <div
-        className={["astralis:grid", COL_MAP[columns], GAP_MAP[gap], className]
-          .filter(Boolean)
-          .join(" ")}
-        style={style}
-        {...rest}
-      >
+      <div className={astralisMerge("astralis:grid", COL_MAP[columns], GAP_MAP[gap], className)} style={style} {...rest}>
         {items.map((item, index) => (
-          <div
+          <button
             key={index}
-            className={[
-              "astralis:overflow-hidden astralis:cursor-zoom-in astralis:aspect-square",
-              ROUNDED_MAP[rounded],
-            ].join(" ")}
+            type="button"
+            aria-haspopup="dialog"
             onClick={() => setPreviewIndex(index)}
+            className={astralisMerge(
+              "astralis:block astralis:w-full astralis:overflow-hidden astralis:cursor-zoom-in astralis:aspect-square astralis:outline-none",
+              "astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
+              ROUNDED_MAP[rounded],
+            )}
           >
             <img
               src={item.src}
               alt={item.alt}
-              className={[
+              className={astralisMerge(
                 "astralis:h-full astralis:w-full astralis:transition-transform astralis:duration-200 astralis:hover:scale-105",
                 FIT_MAP[objectFit],
-              ].join(" ")}
+              )}
             />
-          </div>
+          </button>
         ))}
       </div>
 
-      {previewIndex !== null && (
+      {previewIndex !== null && current && (
         <ImageLightbox
-          src={items[previewIndex].src}
-          alt={items[previewIndex].alt}
+          src={current.src}
+          alt={current.alt}
+          position={items.length > 1 ? `Image ${previewIndex + 1} of ${items.length}` : undefined}
           onClose={() => setPreviewIndex(null)}
           hasPrev={previewIndex > 0}
           hasNext={previewIndex < items.length - 1}
-          onPrev={() => setPreviewIndex((value) => Math.max(0, value! - 1))}
-          onNext={() =>
-            setPreviewIndex((value) => Math.min(items.length - 1, value! + 1))
-          }
+          onPrev={() => setPreviewIndex((i) => Math.max(0, (i ?? 0) - 1))}
+          onNext={() => setPreviewIndex((i) => Math.min(items.length - 1, (i ?? 0) + 1))}
         />
       )}
     </>

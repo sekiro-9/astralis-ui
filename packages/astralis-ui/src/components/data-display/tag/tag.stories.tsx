@@ -76,8 +76,8 @@ export const Checkable: Story = {
       const [single, setSingle] = useState<(string | number)[]>(["Small"]);
       return (
         <VStack gap="5" alignItems="start">
-          <Tag.Group multiple value={multi} onChange={setMulti} options={["React", "Vue", "Svelte", "Solid"]} />
-          <Tag.Group value={single} onChange={setSingle} colorScheme="green" options={["Small", "Medium", "Large"]} />
+          <Tag.Group multiple value={multi} onValueChange={setMulti} options={["React", "Vue", "Svelte", "Solid"]} />
+          <Tag.Group value={single} onValueChange={setSingle} colorScheme="green" options={["Small", "Medium", "Large"]} />
         </VStack>
       );
     }

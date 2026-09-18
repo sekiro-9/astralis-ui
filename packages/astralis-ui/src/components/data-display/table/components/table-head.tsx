@@ -13,3 +13,5 @@ export function TableHead({ children, className = "", scope = "col", ...rest }: 
     </th>
   );
 }
+
+TableHead.displayName = "Table.Head";

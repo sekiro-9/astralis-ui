@@ -4,7 +4,10 @@ import { splitPlacement } from "../../../../utils/placement";
 import { useEffect, useId, useRef, useState, type Ref } from "react";
 import type { MarqueeRootProps } from "../marquee.types";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 
+// TODO(LIB-H4): these keyframes belong in theme/tokens/animation.css; injecting
+// a <style> at runtime is blocked by a strict style-src CSP.
 let injected = false;
 
 function injectKeyframes() {
@@ -49,132 +52,130 @@ export function MarqueeRoot({
   ref,
   ...rest
 }: MarqueeRootProps & { ref?: Ref<HTMLDivElement> }) {
-    // `style` rides through splitPlacement's fold (channel vars first, the
-    // caller's keys last); it's lifted back out here so the gradient mask can
-    // keep its place at the top of the pile.
-    const { placementClass, rest: domProps } = splitPlacement(rest);
-    const { style: foldedStyle, ...domRest } = domProps as typeof domProps & {
-      style?: React.CSSProperties;
-    };
+  // `style` rides through splitPlacement's fold (channel vars first, the
+  // caller's keys last); it's lifted back out here so the gradient mask can
+  // keep its place at the top of the pile.
+  const { placementClass, rest: domProps } = splitPlacement(rest);
+  const { style: foldedStyle, ...domRest } = domProps as typeof domProps & {
+    style?: React.CSSProperties;
+  };
 
-    const uid = useId();
-    const trackRef = useRef<HTMLDivElement>(null);
-    const [duration, setDuration] = useState(8);
-    const [paused, setPaused] = useState(false);
-    const [loops, setLoops] = useState(0);
-    // Continuous scroll is non-essential motion (WCAG 2.3.3) — hold still
-    // when the OS asks for reduced motion. Content remains fully visible.
-    const reducedMotion = usePrefersReducedMotion();
+  const uid = useId();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [duration, setDuration] = useState(8);
+  const [paused, setPaused] = useState(false);
+  const [loops, setLoops] = useState(0);
+  // Continuous scroll is non-essential motion (WCAG 2.3.3) — hold still
+  // when the OS asks for reduced motion. Content remains fully visible.
+  const reducedMotion = usePrefersReducedMotion();
 
-    const isVertical = direction === "up" || direction === "down";
-    const isReversed = reverse || direction === "right" || direction === "down";
-    const isDone = loopCount > 0 && loops >= loopCount;
+  const isVertical = direction === "up" || direction === "down";
+  const isReversed = reverse || direction === "right" || direction === "down";
+  const isDone = loopCount > 0 && loops >= loopCount;
 
-    injectKeyframes();
+  injectKeyframes();
 
-    useEffect(() => {
-      const element = trackRef.current;
-      if (!element) return;
+  useEffect(() => {
+    const element = trackRef.current;
+    if (!element) return;
 
-      const trackSize = isVertical
-        ? element.scrollHeight / 2
-        : element.scrollWidth / 2;
-      setDuration(trackSize / speed);
-    }, [speed, isVertical, children]);
+    const trackSize = isVertical
+      ? element.scrollHeight / 2
+      : element.scrollWidth / 2;
+    setDuration(trackSize / speed);
+  }, [speed, isVertical, children]);
 
-    const animName = isVertical
-      ? isReversed
-        ? "astralis-marquee-y-rev"
-        : "astralis-marquee-y"
-      : isReversed
-        ? "astralis-marquee-x-rev"
-        : "astralis-marquee-x";
+  const animName = isVertical
+    ? isReversed
+      ? "astralis-marquee-y-rev"
+      : "astralis-marquee-y"
+    : isReversed
+      ? "astralis-marquee-x-rev"
+      : "astralis-marquee-x";
 
-    const outerStyle: React.CSSProperties = {
-      position: "relative",
-      overflow: "hidden",
-      ...(isVertical ? { display: "flex", flexDirection: "column" } : {}),
-      ...foldedStyle,
-    };
+  const outerStyle: React.CSSProperties = {
+    position: "relative",
+    overflow: "hidden",
+    ...(isVertical ? { display: "flex", flexDirection: "column" } : {}),
+    ...foldedStyle,
+  };
 
-    const trackStyle: React.CSSProperties = {
-      display: "flex",
-      flexDirection: isVertical ? "column" : "row",
-      gap,
-      // Longhands only — mixing the `animation` shorthand with
-      // `animationPlayState` makes React warn on rerender and can drop styles.
-      animationName: isDone ? "none" : animName,
-      animationDuration: `${duration}s`,
-      animationTimingFunction: "linear",
-      animationIterationCount: loopCount > 0 ? String(loopCount) : "infinite",
-      animationPlayState: paused || reducedMotion ? "paused" : "running",
-      willChange: "transform",
-    };
+  const trackStyle: React.CSSProperties = {
+    display: "flex",
+    flexDirection: isVertical ? "column" : "row",
+    gap,
+    // Longhands only — mixing the `animation` shorthand with
+    // `animationPlayState` makes React warn on rerender and can drop styles.
+    animationName: isDone ? "none" : animName,
+    animationDuration: `${duration}s`,
+    animationTimingFunction: "linear",
+    animationIterationCount: loopCount > 0 ? String(loopCount) : "infinite",
+    animationPlayState: paused || reducedMotion ? "paused" : "running",
+    willChange: "transform",
+  };
 
-    // NOTE: the custom property name must use dashes — a colon here silently
-    // made the #fff fallback win in every theme.
-    const gradColor = gradientColor ?? "var(--astralis-color-surface-base, #fff)";
-    const gradientMaskStyle: React.CSSProperties = gradient
-      ? {
-          maskImage: isVertical
-            ? `linear-gradient(to bottom, transparent, ${gradColor} ${gradientWidth}, ${gradColor} calc(100% - ${gradientWidth}), transparent)`
-            : `linear-gradient(to right, transparent, ${gradColor} ${gradientWidth}, ${gradColor} calc(100% - ${gradientWidth}), transparent)`,
-          WebkitMaskImage: isVertical
-            ? `linear-gradient(to bottom, transparent, black ${gradientWidth}, black calc(100% - ${gradientWidth}), transparent)`
-            : `linear-gradient(to right, transparent, black ${gradientWidth}, black calc(100% - ${gradientWidth}), transparent)`,
-        }
-      : {};
-
-    const handleAnimationIteration = () => {
-      if (loopCount > 0) {
-        setLoops((value) => value + 1);
+  // NOTE: the custom property name must use dashes — a colon here silently
+  // made the #fff fallback win in every theme.
+  const gradColor = gradientColor ?? "var(--astralis-color-surface-base, #fff)";
+  const gradientMaskStyle: React.CSSProperties = gradient
+    ? {
+        maskImage: isVertical
+          ? `linear-gradient(to bottom, transparent, ${gradColor} ${gradientWidth}, ${gradColor} calc(100% - ${gradientWidth}), transparent)`
+          : `linear-gradient(to right, transparent, ${gradColor} ${gradientWidth}, ${gradColor} calc(100% - ${gradientWidth}), transparent)`,
+        WebkitMaskImage: isVertical
+          ? `linear-gradient(to bottom, transparent, black ${gradientWidth}, black calc(100% - ${gradientWidth}), transparent)`
+          : `linear-gradient(to right, transparent, black ${gradientWidth}, black calc(100% - ${gradientWidth}), transparent)`,
       }
-    };
+    : {};
 
-    return (
+  const handleAnimationIteration = () => {
+    if (loopCount > 0) {
+      setLoops((value) => value + 1);
+    }
+  };
+
+  return (
+    <div
+      ref={ref}
+      id={`astralis-marquee-${uid}`}
+      className={astralisMerge("astralis:overflow-hidden astralis:w-full", placementClass, className)}
+      style={{ ...outerStyle, ...gradientMaskStyle }}
+      onMouseEnter={() => pauseOnHover && setPaused(true)}
+      onMouseLeave={() => pauseOnHover && setPaused(false)}
+      onFocus={() => pauseOnFocus && setPaused(true)}
+      onBlur={() => pauseOnFocus && setPaused(false)}
+      {...domRest}
+    >
       <div
-        ref={ref}
-        id={`astralis-marquee-${uid}`}
-        className={["astralis:overflow-hidden astralis:w-full", placementClass, className]
-          .filter(Boolean)
-          .join(" ")}
-        style={{ ...outerStyle, ...gradientMaskStyle }}
-        onMouseEnter={() => pauseOnHover && setPaused(true)}
-        onMouseLeave={() => pauseOnHover && setPaused(false)}
-        onFocus={() => pauseOnFocus && setPaused(true)}
-        onBlur={() => pauseOnFocus && setPaused(false)}
-        {...domRest}
+        ref={trackRef}
+        style={trackStyle}
+        onAnimationIteration={handleAnimationIteration}
+        aria-hidden={isDone}
       >
         <div
-          ref={trackRef}
-          style={trackStyle}
-          onAnimationIteration={handleAnimationIteration}
-          aria-hidden={isDone}
+          style={{
+            display: "flex",
+            flexDirection: isVertical ? "column" : "row",
+            gap,
+            flexShrink: 0,
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: isVertical ? "column" : "row",
-              gap,
-              flexShrink: 0,
-            }}
-          >
-            {children}
-          </div>
-          <div
-            aria-hidden
-            style={{
-              display: "flex",
-              flexDirection: isVertical ? "column" : "row",
-              gap,
-              flexShrink: 0,
-            }}
-          >
-            {children}
-          </div>
+          {children}
+        </div>
+        <div
+          aria-hidden
+          style={{
+            display: "flex",
+            flexDirection: isVertical ? "column" : "row",
+            gap,
+            flexShrink: 0,
+          }}
+        >
+          {children}
         </div>
       </div>
-    );
+    </div>
+  );
 }
 
-MarqueeRoot.displayName = "Marquee.Root";
+MarqueeRoot.displayName = "Marquee";

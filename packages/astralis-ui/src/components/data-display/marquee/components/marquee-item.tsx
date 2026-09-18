@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import type { MarqueeItemProps } from "../marquee.types";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 
 export function MarqueeItem({
   className = "",
@@ -11,12 +12,7 @@ export function MarqueeItem({
   return (
     <div
       ref={ref}
-      className={[
-        "astralis:inline-flex astralis:shrink-0 astralis:items-center",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={astralisMerge("astralis:inline-flex astralis:shrink-0 astralis:items-center", className)}
       style={style}
       {...rest}
     >

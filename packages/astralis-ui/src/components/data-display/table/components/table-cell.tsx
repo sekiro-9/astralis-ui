@@ -9,3 +9,5 @@ export function TableCell({ children, className = "", ...rest }: TableCellProps)
     </td>
   );
 }
+
+TableCell.displayName = "Table.Cell";

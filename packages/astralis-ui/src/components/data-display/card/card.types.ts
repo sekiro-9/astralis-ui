@@ -4,10 +4,6 @@ import type { PlacementProps } from "../../../utils/placement";
 export type CardSize = "sm" | "md" | "lg";
 export type CardVariant = "elevated" | "outline" | "filled" | "unstyled";
 
-/* ------------------------------------------------------------------ */
-/* CardRoot                                                             */
-/* ------------------------------------------------------------------ */
-
 /**
  * Card owns how it LOOKS — variant, size, hoverable — and its parent owns
  * WHERE IT SITS. So it takes its own recipe props plus the placement set
@@ -31,10 +27,6 @@ export interface CardRootProps extends HTMLAttributes<HTMLDivElement>, Placement
   children?: ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/* CardHeader                                                           */
-/* ------------------------------------------------------------------ */
-
 export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   /** Content rendered in the trailing slot (e.g. a button or link) */
   extra?: ReactNode;
@@ -43,19 +35,11 @@ export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/* CardTitle                                                            */
-/* ------------------------------------------------------------------ */
-
 export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* CardDescription                                                      */
-/* ------------------------------------------------------------------ */
 
 export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
   className?: string;
@@ -63,19 +47,11 @@ export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElemen
   children?: ReactNode;
 }
 
-/* ------------------------------------------------------------------ */
-/* CardBody                                                             */
-/* ------------------------------------------------------------------ */
-
 export interface CardBodyProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
-
-/* ------------------------------------------------------------------ */
-/* CardFooter                                                           */
-/* ------------------------------------------------------------------ */
 
 export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;

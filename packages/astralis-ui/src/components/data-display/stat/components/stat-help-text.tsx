@@ -21,3 +21,5 @@ export function StatHelpText({ children, className = "", size = "md", ...rest }:
     </span>
   );
 }
+
+StatHelpText.displayName = "Stat.HelpText";

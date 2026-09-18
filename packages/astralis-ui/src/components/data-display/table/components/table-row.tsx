@@ -9,3 +9,5 @@ export function TableRow({ children, className = "", ...rest }: TableRowProps) {
     </tr>
   );
 }
+
+TableRow.displayName = "Table.Row";

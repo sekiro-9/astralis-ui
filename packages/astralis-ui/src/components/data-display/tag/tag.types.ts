@@ -26,17 +26,25 @@ export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, "color">
   startElement?: ReactNode;
   /** Element after the label (icon…). */
   endElement?: ReactNode;
-  /** Show a remove button that calls `onClose`. */
+  /** Show a remove button that calls `onClose`. A Server Component can render
+   *  it, but `onClose` itself has to come from a client parent. */
   closable?: boolean;
   onClose?: () => void;
+  /** Accessible name of the remove button. @default "Remove {children}" for text children, else "Remove" */
+  closeLabel?: string;
   className?: string;
   style?: CSSProperties;
 }
 
 export interface CheckableTagProps
-  extends Omit<TagProps, "variant" | "colorScheme" | "closable" | "onClose" | "onChange"> {
-  /** Selected state. */
+  extends Omit<TagProps, "variant" | "colorScheme" | "closable" | "onClose" | "closeLabel" | "onChange"> {
+  /** Selected state (controlled). */
   checked?: boolean;
+  /** Initial selected state when uncontrolled. @default false */
+  defaultChecked?: boolean;
+  /** Fires with the new selected state. */
+  onCheckedChange?: (checked: boolean) => void;
+  /** @deprecated Use `onCheckedChange`. Still fires, with the same value. */
   onChange?: (checked: boolean) => void;
   /** Hue used when checked. @default "brand" */
   colorScheme?: ColorScheme;
@@ -49,7 +57,13 @@ export interface TagOption {
 
 export interface CheckableTagGroupProps
   extends Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue"> {
+  /** Selected option values (controlled). */
   value?: (string | number)[];
+  /** Initially selected option values when uncontrolled. @default [] */
+  defaultValue?: (string | number)[];
+  /** Fires with the selected option values. */
+  onValueChange?: (value: (string | number)[]) => void;
+  /** @deprecated Use `onValueChange`. Still fires, with the same value. */
   onChange?: (value: (string | number)[]) => void;
   options: TagOption[] | (string | number)[];
   multiple?: boolean;

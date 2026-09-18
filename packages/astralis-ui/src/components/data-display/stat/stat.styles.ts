@@ -2,13 +2,8 @@ import { cva } from "class-variance-authority";
 import { alignItemsTypes } from "../../../const/layout-mappings";
 
 /**
- * One scale, three parts. The value used to be pinned at `text-3xl`, which
- * made Stat unusable in a marketing band (numbers too small) and cramped in a
- * dense table (too big) — the only escape was a `className` override, which is
- * exactly the leak the style-prop system exists to prevent.
- *
- * Label and help text move with the value so a resized Stat stays in
- * proportion rather than growing one line and leaving the others behind.
+ * One scale, three parts: label and help text move with the value so a
+ * resized Stat stays in proportion.
  *
  * Each map is exported as `*Map` and lives in a `.styles.ts` file because
  * that's what the safelist generator scans — without both, `size={{ base:

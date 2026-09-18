@@ -24,3 +24,5 @@ export function StatIndicator({ type = "increase", children, className = "", siz
     </span>
   );
 }
+
+StatIndicator.displayName = "Stat.Indicator";

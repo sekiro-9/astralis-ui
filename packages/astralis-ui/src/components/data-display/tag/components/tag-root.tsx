@@ -1,11 +1,10 @@
-import { splitPlacement } from "../../../../utils/placement";
 import type { Ref } from "react";
+import { splitPlacement } from "../../../../utils/placement";
 import type { TagProps } from "../tag.types";
-import { tagVariants, closeIconSize } from "../tag.styles";
+import { tagVariants } from "../tag.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
-import Icon from "../../../icon/icon";
-import { XIcon } from "../../../icon/internal-icons";
+import { TagCloseButton } from "./tag-close-button";
 
 export function TagRoot({
   children,
@@ -16,6 +15,7 @@ export function TagRoot({
   endElement,
   closable,
   onClose,
+  closeLabel,
   className = "",
   ref,
   ...rest
@@ -24,27 +24,24 @@ export function TagRoot({
   // keys last) and arrives via the domProps spread.
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
-    return (
-      <span
-        ref={ref}
-        className={astralisMerge(tagVariants({ size, variant }), accentClass(colorScheme), placementClass, className)}
-        {...domProps}
-      >
-        {startElement && <span className="astralis:shrink-0 astralis:inline-flex">{startElement}</span>}
-        <span className="astralis:truncate">{children}</span>
-        {endElement && !closable && <span className="astralis:shrink-0 astralis:inline-flex">{endElement}</span>}
-        {closable && (
-          <button
-            type="button"
-            aria-label="Remove"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClose?.(); }}
-            className="astralis:shrink-0 astralis:inline-flex astralis:rounded-sm astralis:opacity-70 astralis:cursor-pointer astralis:transition-opacity astralis:hover:opacity-100 astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-1 astralis:focus-visible:outline-accent-ring"
-          >
-            <Icon size={closeIconSize[size]}><XIcon /></Icon>
-          </button>
-        )}
-      </span>
-    );
+  return (
+    <span
+      ref={ref}
+      className={astralisMerge(tagVariants({ size, variant }), accentClass(colorScheme), placementClass, className)}
+      {...domProps}
+    >
+      {startElement && <span className="astralis:shrink-0 astralis:inline-flex">{startElement}</span>}
+      <span className="astralis:truncate">{children}</span>
+      {endElement && !closable && <span className="astralis:shrink-0 astralis:inline-flex">{endElement}</span>}
+      {closable && (
+        <TagCloseButton
+          size={size}
+          onClose={onClose}
+          label={closeLabel ?? (typeof children === "string" || typeof children === "number" ? `Remove ${children}` : "Remove")}
+        />
+      )}
+    </span>
+  );
 }
 
 TagRoot.displayName = "Tag";

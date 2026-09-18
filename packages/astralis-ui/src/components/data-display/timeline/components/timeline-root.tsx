@@ -22,3 +22,5 @@ export function TimelineRoot({ children, size = "md", variant = "solid", colorSc
     </div>
   );
 }
+
+TimelineRoot.displayName = "Timeline";

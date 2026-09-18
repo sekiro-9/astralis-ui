@@ -17,3 +17,5 @@ export function StatValue({ children, className = "", size = "md", ...rest }: St
     </span>
   );
 }
+
+StatValue.displayName = "Stat.Value";

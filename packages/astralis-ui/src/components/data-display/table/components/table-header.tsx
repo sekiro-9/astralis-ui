@@ -16,3 +16,5 @@ export function TableHeader({ children, className = "", ...rest }: TableSectionP
     </thead>
   );
 }
+
+TableHeader.displayName = "Table.Header";

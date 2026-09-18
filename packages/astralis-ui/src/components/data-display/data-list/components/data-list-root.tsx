@@ -18,3 +18,5 @@ export function DataListRoot({ children, orientation = "horizontal", size = "md"
     >{children}</dl>
   );
 }
+
+DataListRoot.displayName = "DataList";

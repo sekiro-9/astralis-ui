@@ -13,3 +13,5 @@ export function DataListValue({ children, className = "", style, ...rest }: Data
     </dd>
   );
 }
+
+DataListValue.displayName = "DataList.Value";

@@ -10,20 +10,20 @@ export function CardFooter({
   ref,
   ...rest
 }: CardFooterProps & { ref?: Ref<HTMLDivElement> }) {
-    return (
-      <div
-        ref={ref}
-        className={astralisMerge(
-          "astralis:flex astralis:items-center astralis:gap-3 astralis:border-t astralis:border-stroke-subtle",
-          cardPadding,
-          className,
-        )}
-        style={style}
-        {...rest}
-      >
-        {children}
-      </div>
-    );
+  return (
+    <div
+      ref={ref}
+      className={astralisMerge(
+        "astralis:flex astralis:items-center astralis:gap-3 astralis:border-t astralis:border-stroke-subtle",
+        cardPadding,
+        className,
+      )}
+      style={style}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
 }
 
 CardFooter.displayName = "Card.Footer";

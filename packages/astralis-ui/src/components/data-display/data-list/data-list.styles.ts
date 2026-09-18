@@ -2,9 +2,8 @@
  * DataList styling travels by CSS instead of context: the root <dl> stamps
  * `data-datalist-size` and `data-datalist-orientation`, and the parts carry
  * parent-keyed variants on them, keeping the whole compound a Server
- * Component. The md / horizontal styles are the unprefixed defaults — a part
- * outside a root renders md-horizontal quietly (the context threw; see the
- * 0.7.2 changelog).
+ * Component. The md / horizontal styles are the unprefixed defaults, so a
+ * part outside a root renders md-horizontal.
  */
 
 /** Label/value text size. md default, sm/lg keyed off the root. */

@@ -36,3 +36,5 @@ export function TableRoot({
     </div>
   );
 }
+
+TableRoot.displayName = "Table";

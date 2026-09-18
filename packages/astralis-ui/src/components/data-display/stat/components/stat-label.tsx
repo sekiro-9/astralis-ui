@@ -17,3 +17,5 @@ export function StatLabel({ children, className = "", size = "md", ...rest }: St
     </span>
   );
 }
+
+StatLabel.displayName = "Stat.Label";

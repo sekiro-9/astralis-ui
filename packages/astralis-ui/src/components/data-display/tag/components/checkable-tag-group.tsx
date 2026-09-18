@@ -1,10 +1,15 @@
+"use client";
+
 import { CheckableTag } from "./checkable-tag";
 import type { CheckableTagGroupProps } from "../tag.types";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 /** Renders a set of CheckableTags with single- or multi-select behaviour. */
 export function CheckableTagGroup({
-  value = [],
+  value,
+  defaultValue = [],
+  onValueChange,
   onChange,
   options,
   multiple = false,
@@ -14,12 +19,20 @@ export function CheckableTagGroup({
   style,
   ...rest
 }: CheckableTagGroupProps) {
+  const [selected, setSelected] = useControllableState<(string | number)[]>({
+    value,
+    defaultValue,
+    onChange: (next) => {
+      onValueChange?.(next);
+      onChange?.(next);
+    },
+  });
+
   const toggle = (optionValue: string | number, isChecked: boolean) => {
-    if (!onChange) return;
     if (multiple) {
-      onChange(isChecked ? [...value, optionValue] : value.filter((v) => v !== optionValue));
+      setSelected(isChecked ? [...selected, optionValue] : selected.filter((v) => v !== optionValue));
     } else {
-      onChange(isChecked ? [optionValue] : []);
+      setSelected(isChecked ? [optionValue] : []);
     }
   };
 
@@ -29,14 +42,13 @@ export function CheckableTagGroup({
         const isObject = typeof option === "object" && option !== null;
         const optionValue = isObject ? option.value : option;
         const optionLabel = isObject ? option.label : option;
-        const checked = value.includes(optionValue);
         return (
           <CheckableTag
             key={String(optionValue)}
             size={size}
             colorScheme={colorScheme}
-            checked={checked}
-            onChange={(next) => toggle(optionValue, next)}
+            checked={selected.includes(optionValue)}
+            onCheckedChange={(next) => toggle(optionValue, next)}
           >
             {optionLabel}
           </CheckableTag>

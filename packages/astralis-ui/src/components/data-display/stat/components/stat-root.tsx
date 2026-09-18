@@ -48,4 +48,4 @@ export function StatRoot({
   );
 }
 
-StatRoot.displayName = "Stat.Root";
+StatRoot.displayName = "Stat";

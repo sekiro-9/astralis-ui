@@ -211,3 +211,7 @@ export function SliderFrame({
     </div>
   );
 }
+
+SliderThumb.displayName = "SliderThumb";
+
+SliderFrame.displayName = "SliderFrame";
