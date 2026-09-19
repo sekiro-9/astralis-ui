@@ -27,3 +27,5 @@ export function CarouselAutoPlayTrigger({ className = "", children, onClick, ...
     </button>
   );
 }
+
+CarouselAutoPlayTrigger.displayName = "Carousel.AutoPlayTrigger";

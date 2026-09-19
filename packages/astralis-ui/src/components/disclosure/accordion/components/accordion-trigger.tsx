@@ -65,3 +65,5 @@ export function AccordionTrigger({
     </Heading>
   );
 }
+
+AccordionTrigger.displayName = "Accordion.Trigger";

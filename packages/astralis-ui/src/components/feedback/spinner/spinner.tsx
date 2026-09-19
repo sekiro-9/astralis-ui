@@ -21,17 +21,17 @@ export function Spinner({
 }: SpinnerProps & { ref?: Ref<HTMLSpanElement> }) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
-    return (
-      <span
-        ref={ref}
-        role="status"
-        className={astralisMerge(spinnerVariants({ size }), accentClass(colorScheme), placementClass, className)}
-        {...domProps}
-      >
-        <SpinnerIcon className="astralis:size-full astralis:animate-spin" />
-        {label ? <span className="astralis:sr-only">{label}</span> : null}
-      </span>
-    );
+  return (
+    <span
+      ref={ref}
+      role="status"
+      className={astralisMerge(spinnerVariants({ size }), accentClass(colorScheme), placementClass, className)}
+      {...domProps}
+    >
+      <SpinnerIcon className="astralis:size-full astralis:animate-spin" />
+      {label ? <span className="astralis:sr-only">{label}</span> : null}
+    </span>
+  );
 }
 
 Spinner.displayName = "Spinner";

@@ -30,3 +30,17 @@ describe("Collapsible", () => {
     expect(cls).not.toContain("astralis:flex");
   });
 });
+
+describe("Collapsible placement", () => {
+  it("takes placement props on the details element", () => {
+    const { container } = render(
+      <Collapsible mt="4" w="full">
+        <Collapsible.Trigger>Q</Collapsible.Trigger>
+      </Collapsible>,
+    );
+    const details = container.querySelector("details")!;
+    expect(details.classList).toContain("astralis-mt");
+    expect(details.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
+    expect(details.hasAttribute("mt")).toBe(false);
+  });
+});

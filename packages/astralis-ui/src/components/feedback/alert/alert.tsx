@@ -20,33 +20,33 @@ function AlertRoot({
 }: AlertProps & { ref?: Ref<HTMLDivElement> }) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
-    const StatusIcon = STATUS_ICON[status];
+  const StatusIcon = STATUS_ICON[status];
 
-    return (
-      <div
-        ref={ref}
-        role={statusRole(status)}
-        data-status={status}
-        className={astralisMerge(
-          alertVariants({ variant }),
-          accentClass(colorScheme ?? STATUS_SCHEME[status]),
-          placementClass, className,
-        )}
-        {...domProps}
-      >
-        {icon !== false && (
-          <span aria-hidden="true" className={alertIconClasses}>
-            {icon ?? <StatusIcon className="astralis:size-full" />}
-          </span>
-        )}
-        <div className="astralis:flex-1 astralis:min-w-0">{children}</div>
-        {onClose && (
-          <button type="button" aria-label="Dismiss" onClick={onClose} className={alertCloseClasses}>
-            <XIcon className="astralis:h-4 astralis:w-4" />
-          </button>
-        )}
-      </div>
-    );
+  return (
+    <div
+      ref={ref}
+      role={statusRole(status)}
+      data-status={status}
+      className={astralisMerge(
+        alertVariants({ variant }),
+        accentClass(colorScheme ?? STATUS_SCHEME[status]),
+        placementClass, className,
+      )}
+      {...domProps}
+    >
+      {icon !== false && (
+        <span aria-hidden="true" className={alertIconClasses}>
+          {icon ?? <StatusIcon className="astralis:size-full" />}
+        </span>
+      )}
+      <div className="astralis:flex-1 astralis:min-w-0">{children}</div>
+      {onClose && (
+        <button type="button" aria-label="Dismiss" onClick={onClose} className={alertCloseClasses}>
+          <XIcon className="astralis:h-4 astralis:w-4" />
+        </button>
+      )}
+    </div>
+  );
 }
 
 AlertRoot.displayName = "Alert";

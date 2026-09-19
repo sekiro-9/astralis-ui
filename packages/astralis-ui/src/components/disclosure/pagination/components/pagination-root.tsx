@@ -1,7 +1,8 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { PaginationContext } from "../pagination.context";
 import type { PaginationProps } from "../pagination.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
@@ -28,17 +29,17 @@ export function PaginationRoot({
   // Pages come from `totalPages`, or are derived from `count` + `pageSize`.
   const resolvedTotal = Math.max(1, totalPages ?? Math.ceil((count ?? 0) / pageSize));
 
-  const [uncontrolledPage, setUncontrolledPage] = useState(defaultPage);
-  const page = controlledPage ?? uncontrolledPage;
+  const [storedPage, setStoredPage] = useControllableState({ value: controlledPage, defaultValue: defaultPage, onChange: onPageChange });
+  // Clamped on read, so a shrinking `totalPages` never shows "page 10 of 3".
+  const page = Math.min(Math.max(1, storedPage), resolvedTotal);
 
   const setPage = useCallback(
     (next: number) => {
       if (disabled) return;
       const clamped = Math.min(Math.max(1, next), resolvedTotal);
-      if (controlledPage === undefined) setUncontrolledPage(clamped);
-      onPageChange?.(clamped);
+      if (clamped !== storedPage) setStoredPage(clamped);
     },
-    [controlledPage, resolvedTotal, onPageChange, disabled],
+    [storedPage, resolvedTotal, setStoredPage, disabled],
   );
 
   const ctx = useMemo(
@@ -58,3 +59,5 @@ export function PaginationRoot({
     </PaginationContext.Provider>
   );
 }
+
+PaginationRoot.displayName = "Pagination";

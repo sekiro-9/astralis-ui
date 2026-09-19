@@ -25,3 +25,5 @@ export function PaginationItem({ page, children, className = "", ...rest }: Pagi
     </li>
   );
 }
+
+PaginationItem.displayName = "Pagination.Item";

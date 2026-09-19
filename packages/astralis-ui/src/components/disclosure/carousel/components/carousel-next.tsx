@@ -29,3 +29,5 @@ export function CarouselNext({ icon, className = "", onClick, ...rest }: Carouse
     </button>
   );
 }
+
+CarouselNext.displayName = "Carousel.Next";

@@ -1,6 +1,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
+import type { PlacementProps } from "../../../utils/placement";
 
-export interface CollapsibleProps extends HTMLAttributes<HTMLDetailsElement> {
+export interface CollapsibleProps extends HTMLAttributes<HTMLDetailsElement>, PlacementProps {
   /** Open on first render. Uncontrolled by design — the OPEN STATE lives in
    *  the browser (`<details>`), which is what makes this component zero-JS. */
   defaultOpen?: boolean;

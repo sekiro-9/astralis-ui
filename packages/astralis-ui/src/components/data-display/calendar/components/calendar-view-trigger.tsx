@@ -3,7 +3,9 @@
 import type { Ref } from "react";
 import type { CalendarTriggerProps } from "../calendar.types";
 import { useCalendarContext } from "../calendar.context";
+import { astralisMerge } from "../../../../utils/astralis-merge";
 
+/** The month title. Live, so paging months is announced. */
 export function CalendarViewTrigger({
   className,
   children,
@@ -16,12 +18,11 @@ export function CalendarViewTrigger({
     <button
       ref={ref}
       type="button"
-      className={[
+      aria-live="polite"
+      className={astralisMerge(
         "astralis:flex-1 astralis:rounded-md astralis:px-2 astralis:py-1 astralis:text-center astralis:font-semibold astralis:text-label-base",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
       {...props}
     >
       {children ?? monthLabel}

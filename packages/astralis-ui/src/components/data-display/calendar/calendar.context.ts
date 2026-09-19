@@ -11,6 +11,8 @@ export interface CalendarContextValue {
   visibleMonth: Date;
   setVisibleMonth: (date: Date) => void;
   monthLabel: string;
+  /** The locale-formatted accessible name of a day. */
+  dayLabel: (date: Date) => string;
   selectionMode: CalendarSelectionMode;
   selectedValue: CalendarValue;
   selectDate: (date: Date) => void;
@@ -30,7 +32,7 @@ export function useCalendarContext() {
   const context = useContext(CalendarContext);
 
   if (!context) {
-    throw new Error("Calendar components must be used inside <Calendar.Root>");
+    throw new Error("Calendar components must be used inside <Calendar>");
   }
 
   return context;

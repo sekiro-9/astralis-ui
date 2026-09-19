@@ -18,3 +18,5 @@ export function CarouselControl({ children, className = "", ...rest }: CarouselC
     </div>
   );
 }
+
+CarouselControl.displayName = "Carousel.Control";

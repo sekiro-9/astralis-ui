@@ -51,3 +51,5 @@ export function PaginationPages({ siblings = 1, boundaryCount = 1 }: PaginationP
     </>
   );
 }
+
+PaginationPages.displayName = "Pagination.Pages";

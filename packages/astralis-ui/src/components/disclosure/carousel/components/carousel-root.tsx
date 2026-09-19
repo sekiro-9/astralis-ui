@@ -1,7 +1,9 @@
 "use client";
 
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEvent, MouseEvent } from "react";
 import { splitPlacement } from "../../../../utils/placement";
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
 import { CarouselContext } from "../carousel.context";
 import type { CarouselProps } from "../carousel.types";
@@ -38,72 +40,78 @@ export function CarouselRoot({
   ...rest
 }: CarouselProps) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
-  const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultIndex);
+  const [index, setIndex] = useControllableState({ value: controlledIndex, defaultValue: defaultIndex, onChange: onIndexChange });
   const [slideCount, setSlideCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   useEffect(() => { setIsPlaying(autoPlay); }, [autoPlay]);
 
-  const index = controlledIndex ?? uncontrolledIndex;
-  const isPausedRef = useRef(false);
+  // The hover pause is state, so leaving re-arms the timer instead of the
+  // tick that fired mid-hover ending autoplay for good.
+  const [hovered, setHovered] = useState(false);
+  const paused = pauseOnHover && hovered;
 
   // `fade` only ever shows one slide; otherwise the last page starts here.
   const perView = animation === "fade" ? 1 : slidesPerView;
   const lastIndex = Math.max(0, Math.ceil(slideCount - perView));
 
+  const afterTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
+  useEffect(() => {
+    const timers = afterTimers.current;
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
   const goTo = useCallback(
     (next: number) => {
       if (disabled) return;
-      const target = loop
-        ? next > lastIndex ? 0 : next < 0 ? lastIndex : next
-        : Math.min(Math.max(0, next), lastIndex);
+      // Past an edge, land on the edge page first; only a step from the edge
+      // itself wraps (with `loop`), so a partial last page is never skipped.
+      const clamped = Math.min(Math.max(0, next), lastIndex);
+      const target = loop && clamped === index && next !== index ? (next > index ? 0 : lastIndex) : clamped;
       if (target === index) return;
       beforeChange?.(index, target);
-      if (controlledIndex === undefined) setUncontrolledIndex(target);
-      onIndexChange?.(target);
-      if (afterChange) setTimeout(() => afterChange(target), speed);
+      setIndex(target);
+      if (afterChange) {
+        const timer = setTimeout(() => {
+          afterTimers.current.delete(timer);
+          afterChange(target);
+        }, speed);
+        afterTimers.current.add(timer);
+      }
     },
-    [disabled, loop, lastIndex, index, controlledIndex, onIndexChange, beforeChange, afterChange, speed],
+    [disabled, loop, lastIndex, index, setIndex, beforeChange, afterChange, speed],
   );
 
-  // Autoplay — a self-resetting timeout chain (re-armed whenever index changes).
-  // Held while the OS asks for reduced motion (WCAG 2.3.3): slides only move
-  // on explicit user input. Manual navigation stays fully functional.
+  // A self-resetting timeout chain, re-armed on every index change. Held while
+  // the OS asks for reduced motion (WCAG 2.3.3); manual navigation still works.
   const reducedMotion = usePrefersReducedMotion();
   useEffect(() => {
-    if (!isPlaying || disabled || reducedMotion || slideCount <= 1) return;
+    if (!isPlaying || paused || disabled || reducedMotion || slideCount <= 1) return;
     const timer = setTimeout(() => {
-      if (isPausedRef.current) return;
-      if (!loop && index >= lastIndex) { setIsPlaying(false); return; }
-      const next = index >= lastIndex ? 0 : index + slidesToScroll;
-      if (controlledIndex === undefined) setUncontrolledIndex(next);
-      onIndexChange?.(next);
+      if (!loop && index >= lastIndex) setIsPlaying(false);
+      else goTo(index + slidesToScroll);
     }, autoPlayInterval);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, disabled, reducedMotion, index, slideCount, lastIndex, loop, slidesToScroll, autoPlayInterval]);
+  }, [isPlaying, paused, disabled, reducedMotion, slideCount, loop, index, lastIndex, slidesToScroll, autoPlayInterval, goTo]);
 
   const toggleAutoPlay = useCallback(() => setIsPlaying((p) => !p), []);
 
-  const handleMouseEnter = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => { onMouseEnter?.(e); if (pauseOnHover) isPausedRef.current = true; },
-    [onMouseEnter, pauseOnHover],
-  );
-  const handleMouseLeave = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => { onMouseLeave?.(e); isPausedRef.current = false; },
-    [onMouseLeave],
-  );
+  const handleMouseEnter = (e: MouseEvent<HTMLDivElement>) => {
+    onMouseEnter?.(e);
+    setHovered(true);
+  };
+  const handleMouseLeave = (e: MouseEvent<HTMLDivElement>) => {
+    onMouseLeave?.(e);
+    setHovered(false);
+  };
 
   // Arrow keys move by a page; the orientation picks the axis.
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLDivElement>) => {
-      onKeyDown?.(e);
-      const prevKey = orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
-      const nextKey = orientation === "vertical" ? "ArrowDown" : "ArrowRight";
-      if (e.key === prevKey) { e.preventDefault(); goTo(index - slidesToScroll); }
-      else if (e.key === nextKey) { e.preventDefault(); goTo(index + slidesToScroll); }
-    },
-    [onKeyDown, orientation, goTo, index, slidesToScroll],
-  );
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(e);
+    const prevKey = orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
+    const nextKey = orientation === "vertical" ? "ArrowDown" : "ArrowRight";
+    if (e.key === prevKey) { e.preventDefault(); goTo(index - slidesToScroll); }
+    else if (e.key === nextKey) { e.preventDefault(); goTo(index + slidesToScroll); }
+  };
 
   const ctx = useMemo(
     () => ({
@@ -127,11 +135,18 @@ export function CarouselRoot({
       <div
         role="region"
         aria-roledescription="carousel"
+        aria-label="Carousel"
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={astralisMerge(layout, "astralis:outline-none", accentClass(colorScheme), placementClass, className)}
+        className={astralisMerge(
+          layout,
+          "astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
+          accentClass(colorScheme),
+          placementClass,
+          className,
+        )}
         {...domProps}
       >
         {children}
@@ -139,3 +154,5 @@ export function CarouselRoot({
     </CarouselContext.Provider>
   );
 }
+
+CarouselRoot.displayName = "Carousel";

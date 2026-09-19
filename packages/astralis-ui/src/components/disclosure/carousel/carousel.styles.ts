@@ -3,9 +3,7 @@ import { cva } from "class-variance-authority";
 const focusRing =
   "astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring";
 
-/* ------------------------------------------------------------------ */
-/* Prev / Next / AutoPlay — circular control buttons.                  */
-/* ------------------------------------------------------------------ */
+/* Prev / Next / AutoPlay — circular control buttons. */
 export const carouselControlVariants = cva(
   `astralis:inline-flex astralis:items-center astralis:justify-center astralis:shrink-0 astralis:rounded-full astralis:cursor-pointer astralis:bg-surface-base astralis:text-label-base astralis:border-normal astralis:border-stroke-base astralis:shadow-md astralis:transition-colors astralis:hover:bg-surface-subtle astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed ${focusRing}`,
   {
@@ -23,11 +21,8 @@ export const carouselControlVariants = cva(
 /** Icon size that pairs with each control size. */
 export const controlIconSize = { sm: "xs", md: "sm", lg: "md" } as const;
 
-/* ------------------------------------------------------------------ */
-/* Control — wraps Prev/Indicators/Next and arranges them by axis.     */
-/* Horizontal: a centered bar below the slides. Vertical: a column     */
-/* beside them with the controls pushed to the ends.                   */
-/* ------------------------------------------------------------------ */
+/* Control — arranges Prev/Indicators/Next by axis: a centred bar below the
+   slides when horizontal, a column beside them when vertical. */
 export const carouselControlGroupVariants = cva("astralis:flex astralis:gap-4", {
   variants: {
     orientation: {
@@ -38,9 +33,6 @@ export const carouselControlGroupVariants = cva("astralis:flex astralis:gap-4", 
   defaultVariants: { orientation: "horizontal" },
 });
 
-/* ------------------------------------------------------------------ */
-/* Indicators                                                          */
-/* ------------------------------------------------------------------ */
 export const carouselIndicatorsVariants = cva(
   "astralis:flex astralis:items-center astralis:justify-center astralis:gap-2",
   {

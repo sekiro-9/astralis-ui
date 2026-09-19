@@ -1,8 +1,6 @@
 import { cva } from "class-variance-authority";
 
-/* ------------------------------------------------------------------ */
-/* Root — outer container chrome per variant.                          */
-/* ------------------------------------------------------------------ */
+/* Root — outer container chrome per variant. */
 export const accordionRootVariants = cva("astralis:w-full", {
   variants: {
     variant: {
@@ -21,9 +19,7 @@ export const accordionRootVariants = cva("astralis:w-full", {
   defaultVariants: { variant: "enclosed" },
 });
 
-/* ------------------------------------------------------------------ */
-/* Item — per-row framing.                                             */
-/* ------------------------------------------------------------------ */
+/* Item — per-row framing. */
 export const accordionItemVariants = cva("astralis:transition-colors", {
   variants: {
     variant: {
@@ -42,10 +38,8 @@ export const accordionItemVariants = cva("astralis:transition-colors", {
   defaultVariants: { variant: "enclosed", disabled: false },
 });
 
-/* ------------------------------------------------------------------ */
-/* Trigger — the header button. `open` drives the subtle accent fill.  */
-/* Focus ring is inset (full-width control) and uses the accent hue.   */
-/* ------------------------------------------------------------------ */
+/* Trigger — the header button. `open` drives the subtle accent fill. Focus
+   ring is inset (full-width control) and uses the accent hue. */
 export const accordionTriggerVariants = cva(
   "astralis:w-full astralis:flex astralis:items-center astralis:gap-3 astralis:text-left astralis:font-medium astralis:text-label-base astralis:cursor-pointer astralis:transition-colors astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-[-2px] astralis:focus-visible:outline-accent-ring astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate",
   {
@@ -72,9 +66,7 @@ export const accordionTriggerVariants = cva(
   },
 );
 
-/* ------------------------------------------------------------------ */
-/* Content — padded body inside the collapsing region.                 */
-/* ------------------------------------------------------------------ */
+/* Content — padded body inside the collapsing region. */
 export const accordionContentVariants = cva("astralis:text-label-muted", {
   variants: {
     size: {
@@ -88,9 +80,7 @@ export const accordionContentVariants = cva("astralis:text-label-muted", {
   defaultVariants: { size: "md" },
 });
 
-/* ------------------------------------------------------------------ */
-/* Indicator — rotates a quarter-turn-plus on open.                    */
-/* ------------------------------------------------------------------ */
+/* Indicator — rotates a quarter-turn-plus on open. */
 export const accordionIndicatorVariants = cva(
   "astralis:shrink-0 astralis:text-label-muted astralis:transition-transform astralis:duration-moderate",
   {

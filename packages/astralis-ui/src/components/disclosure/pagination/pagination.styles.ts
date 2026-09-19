@@ -16,9 +16,7 @@ const focusRing =
 const disabledState =
   "astralis:disabled:opacity-moderate astralis:disabled:cursor-not-allowed astralis:disabled:pointer-events-none";
 
-/* ------------------------------------------------------------------ */
-/* Page item — variant × active colour comes from the accent channel.  */
-/* ------------------------------------------------------------------ */
+/* Page item — variant × active colour comes from the accent channel. */
 export const paginationItemVariants = cva(
   `astralis:inline-flex astralis:items-center astralis:justify-center astralis:font-medium astralis:cursor-pointer astralis:transition-colors ${focusRing} ${disabledState}`,
   {
@@ -47,9 +45,7 @@ export const paginationItemVariants = cva(
   },
 );
 
-/* ------------------------------------------------------------------ */
 /* Control buttons (Prev/Next/First/Last) — neutral, square, icon-only */
-/* ------------------------------------------------------------------ */
 export const paginationControlVariants = cva(
   `astralis:inline-flex astralis:items-center astralis:justify-center astralis:cursor-pointer astralis:text-label-muted astralis:transition-colors astralis:hover:bg-surface-subtle astralis:hover:text-label-base ${focusRing} ${disabledState}`,
   {
@@ -69,9 +65,7 @@ export const paginationControlVariants = cva(
 /** Icon size paired with each control size. */
 export const controlIconSize = { xs: "xs", sm: "xs", md: "sm", lg: "sm" } as const;
 
-/* ------------------------------------------------------------------ */
-/* Ellipsis — matches item footprint, non-interactive.                 */
-/* ------------------------------------------------------------------ */
+/* Ellipsis — matches item footprint, non-interactive. */
 export const paginationEllipsisVariants = cva(
   "astralis:inline-flex astralis:items-center astralis:justify-center astralis:text-label-muted astralis:select-none",
   {
@@ -87,9 +81,7 @@ export const paginationEllipsisVariants = cva(
   },
 );
 
-/* ------------------------------------------------------------------ */
-/* Jumper input.                                                       */
-/* ------------------------------------------------------------------ */
+/* Jumper input. */
 export const paginationJumperInputVariants = cva(
   `astralis:border-normal astralis:border-stroke-base astralis:bg-surface-base astralis:text-label-base astralis:text-center astralis:rounded-md astralis:transition-colors ${focusRing} ${disabledState}`,
   {

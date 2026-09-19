@@ -21,3 +21,5 @@ export function CarouselIndicator({ index, className = "", onClick, ...rest }: C
     />
   );
 }
+
+CarouselIndicator.displayName = "Carousel.Indicator";

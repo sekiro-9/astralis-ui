@@ -20,16 +20,16 @@ export function Skeleton({
 }: SkeletonProps & { ref?: Ref<HTMLDivElement> }) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
-    if (loaded) return <>{children}</>;
+  if (loaded) return <>{children}</>;
 
-    return (
-      <div
-        ref={ref}
-        aria-hidden="true"
-        className={astralisMerge(skeletonVariants({ variant, animated }), placementClass, className)}
-        {...domProps}
-      />
-    );
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className={astralisMerge(skeletonVariants({ variant, animated }), placementClass, className)}
+      {...domProps}
+    />
+  );
 }
 
 Skeleton.displayName = "Skeleton";

@@ -37,3 +37,5 @@ export function PaginationJumper({ className = "", label = "Go to", ...rest }: P
     </li>
   );
 }
+
+PaginationJumper.displayName = "Pagination.Jumper";

@@ -1,7 +1,8 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import { useState, useId, useMemo, useCallback, type KeyboardEvent } from "react";
+import { useMemo, useCallback, type KeyboardEvent } from "react";
+import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { AccordionContext } from "../accordion.context";
 import { accordionRootVariants } from "../accordion.styles";
 import type { AccordionProps } from "../accordion.types";
@@ -29,9 +30,11 @@ export function AccordionRoot({
   ...rest
 }: AccordionProps) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
-  const rootId = useId();
-  const [internalValue, setInternalValue] = useState<string | string[] | undefined>(defaultValue);
-  const currentValue = value ?? internalValue;
+  const [currentValue, setValue] = useControllableState<string | string[] | undefined>({
+    value,
+    defaultValue,
+    onChange: (next) => onValueChange?.(next as string | string[]),
+  });
 
   const isOpen = useCallback(
     (item: string) =>
@@ -50,10 +53,9 @@ export function AccordionRoot({
       } else {
         next = currentValue === item && collapsible ? "" : item;
       }
-      if (value === undefined) setInternalValue(next);
-      onValueChange?.(next);
+      setValue(next);
     },
-    [type, currentValue, collapsible, onValueChange, value],
+    [type, currentValue, collapsible, setValue],
   );
 
   // Roving focus across triggers (the accordion pattern's keyboard contract).
@@ -84,7 +86,6 @@ export function AccordionRoot({
     () => ({
       isOpen,
       toggle,
-      rootId,
       variant,
       size,
       disabled,
@@ -94,7 +95,7 @@ export function AccordionRoot({
       hideIndicator,
       headingLevel,
     }),
-    [isOpen, toggle, rootId, variant, size, disabled, keepMounted, indicator, indicatorPosition, hideIndicator, headingLevel],
+    [isOpen, toggle, variant, size, disabled, keepMounted, indicator, indicatorPosition, hideIndicator, headingLevel],
   );
 
   return (
@@ -109,3 +110,5 @@ export function AccordionRoot({
     </AccordionContext.Provider>
   );
 }
+
+AccordionRoot.displayName = "Accordion";

@@ -28,7 +28,7 @@ export function CarouselTrack({ children, className = "", style, ...rest }: Caro
     </CarouselItemContext.Provider>
   ));
 
-  /* --- pointer gestures: one swipe/drag = one page --- */
+  // pointer gestures: one swipe/drag = one page
   const startRef = useRef<number | null>(null);
   const axis = (e: { clientX: number; clientY: number }) => (isVertical ? e.clientY : e.clientX);
   const begin = (pos: number) => { startRef.current = pos; };
@@ -52,7 +52,7 @@ export function CarouselTrack({ children, className = "", style, ...rest }: Caro
   };
   const dragStyle: CSSProperties = draggable ? { cursor: "grab", userSelect: "none" } : {};
 
-  /* --- fade: slides stacked in one grid cell, opacity-driven (single view).
+  /* fade: slides stacked in one grid cell, opacity-driven (single view).
      Grid stacking auto-sizes to the tallest slide — no explicit height needed. */
   if (animation === "fade") {
     return (
@@ -68,7 +68,7 @@ export function CarouselTrack({ children, className = "", style, ...rest }: Caro
     );
   }
 
-  /* --- slide: flex track translated by whole pages ---
+  /* slide: flex track translated by whole pages
      Step per slide is (100% + gap) / slidesPerView; the scroll position is
      clamped to (slideCount - slidesPerView) so the final page sits flush. */
   const maxScroll = Math.max(0, slideCount - slidesPerView);
@@ -99,3 +99,5 @@ export function CarouselTrack({ children, className = "", style, ...rest }: Caro
     </div>
   );
 }
+
+CarouselTrack.displayName = "Carousel.Track";

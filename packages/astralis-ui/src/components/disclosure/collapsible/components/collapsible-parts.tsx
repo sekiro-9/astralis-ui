@@ -7,6 +7,7 @@ import {
   collapsibleContentClasses,
 } from "../collapsible.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { ChevronDownIcon } from "../../../icon/internal-icons";
 
 /**
  * The `<summary>`. Keeps native `display: list-item` (hiding the marker via
@@ -26,18 +27,10 @@ export function CollapsibleTrigger({
       <span className={collapsibleTriggerRowClasses}>
         <span className="astralis:min-w-0">{children}</span>
         {!hideIndicator && (
-          <svg
+          <ChevronDownIcon
             aria-hidden="true"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
             className={astralisMerge("astralis:h-4 astralis:w-4", collapsibleIndicatorClasses)}
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
+          />
         )}
       </span>
     </summary>

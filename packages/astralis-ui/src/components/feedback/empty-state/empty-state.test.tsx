@@ -27,3 +27,13 @@ describe("EmptyState", () => {
     expect(container.querySelector('[aria-hidden="true"]')?.textContent).toBe("icon");
   });
 });
+
+describe("EmptyState placement", () => {
+  it("takes placement props on the root", () => {
+    const { container } = render(<EmptyState mt="4" maxW="md" />);
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.classList).toContain("astralis-mt");
+    expect(root.hasAttribute("mt")).toBe(false);
+    expect(root.hasAttribute("maxW")).toBe(false);
+  });
+});

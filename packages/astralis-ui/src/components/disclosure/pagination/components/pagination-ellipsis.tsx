@@ -13,3 +13,5 @@ export function PaginationEllipsis({ className = "", ...rest }: PaginationEllips
     </li>
   );
 }
+
+PaginationEllipsis.displayName = "Pagination.Ellipsis";

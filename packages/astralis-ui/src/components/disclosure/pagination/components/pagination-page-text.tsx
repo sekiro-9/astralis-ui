@@ -17,3 +17,5 @@ export function PaginationPageText({ className = "", format, ...rest }: Paginati
     </li>
   );
 }
+
+PaginationPageText.displayName = "Pagination.PageText";

@@ -3,7 +3,9 @@
 import type { Ref } from "react";
 import type { CalendarTriggerProps } from "../calendar.types";
 import { useCalendarContext } from "../calendar.context";
-import { moveVisibleMonth } from "./calendar-root";
+import { addMonths } from "../calendar.utils";
+import { astralisMerge } from "../../../../utils/astralis-merge";
+import { ChevronLeftIcon } from "../../../icon/internal-icons";
 
 export function CalendarPrevTrigger({
   className,
@@ -19,19 +21,18 @@ export function CalendarPrevTrigger({
       ref={ref}
       type="button"
       aria-label="Previous month"
-      className={[
+      className={astralisMerge(
         "astralis:inline-flex astralis:h-8 astralis:w-8 astralis:items-center astralis:justify-center astralis:rounded-md astralis:text-label-muted astralis:hover:bg-surface-subtle astralis:hover:text-label-base",
+        "astralis:outline-none astralis:focus-visible:ring-2 astralis:focus-visible:ring-accent-ring",
         className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      )}
       onClick={(event) => {
-        setVisibleMonth(moveVisibleMonth(visibleMonth, -1));
+        setVisibleMonth(addMonths(visibleMonth, -1));
         onClick?.(event);
       }}
       {...props}
     >
-      {children ?? "<"}
+      {children ?? <ChevronLeftIcon aria-hidden="true" className="astralis:h-4 astralis:w-4" />}
     </button>
   );
 }

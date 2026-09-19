@@ -8,3 +8,5 @@ export function PaginationList({ children, className = "", ...rest }: Pagination
     </ul>
   );
 }
+
+PaginationList.displayName = "Pagination.List";

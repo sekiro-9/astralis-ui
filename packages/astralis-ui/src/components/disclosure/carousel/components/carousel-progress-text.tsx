@@ -19,3 +19,5 @@ export function CarouselProgressText({ className = "", format, ...rest }: Carous
     </div>
   );
 }
+
+CarouselProgressText.displayName = "Carousel.ProgressText";

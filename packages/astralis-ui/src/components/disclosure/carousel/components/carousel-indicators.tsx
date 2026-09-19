@@ -52,3 +52,5 @@ export function CarouselIndicators({ className = "", variant = "dot", ...rest }:
     </div>
   );
 }
+
+CarouselIndicators.displayName = "Carousel.Indicators";

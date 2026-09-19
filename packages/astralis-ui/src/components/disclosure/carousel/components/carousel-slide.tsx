@@ -9,7 +9,7 @@ export function CarouselSlide({ children, className = "", style: styleProp, ...r
   const i = useCarouselItemIndex();
   const isVertical = orientation === "vertical";
 
-  /* --- fade: every slide shares one grid cell; opacity reveals the active one --- */
+  // fade: every slide shares one grid cell; opacity reveals the active one
   if (animation === "fade") {
     const active = i === index;
     return (
@@ -36,7 +36,7 @@ export function CarouselSlide({ children, className = "", style: styleProp, ...r
     );
   }
 
-  /* --- slide: a flex item sized to show `slidesPerView` per view --- */
+  // slide: a flex item sized to show `slidesPerView` per view
   const scroll = Math.min(index, Math.max(0, slideCount - slidesPerView));
   const visible = i >= Math.floor(scroll) && i < scroll + slidesPerView;
   const basis = `calc((100% - ${slidesPerView - 1} * ${slideGap}px) / ${slidesPerView})`;
@@ -61,3 +61,5 @@ export function CarouselSlide({ children, className = "", style: styleProp, ...r
     </div>
   );
 }
+
+CarouselSlide.displayName = "Carousel.Slide";

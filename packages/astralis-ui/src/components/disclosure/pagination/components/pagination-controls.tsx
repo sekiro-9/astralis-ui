@@ -88,3 +88,9 @@ export function PaginationLast(props: PaginationControlProps) {
     />
   );
 }
+
+ControlButton.displayName = "Pagination.Control";
+PaginationPrev.displayName = "Pagination.Prev";
+PaginationNext.displayName = "Pagination.Next";
+PaginationFirst.displayName = "Pagination.First";
+PaginationLast.displayName = "Pagination.Last";

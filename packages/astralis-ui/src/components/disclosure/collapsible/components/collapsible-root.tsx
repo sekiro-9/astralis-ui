@@ -2,6 +2,7 @@ import type { Ref } from "react";
 import type { CollapsibleProps } from "../collapsible.types";
 import { collapsibleRootClasses } from "../collapsible.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 
 /**
  * A single disclosure that ships ZERO JavaScript: the open state is the
@@ -18,12 +19,13 @@ export function CollapsibleRoot({
   ref,
   ...rest
 }: CollapsibleProps & { ref?: Ref<HTMLDetailsElement> }) {
+  const { placementClass, rest: domProps } = splitPlacement(rest);
   return (
     <details
       ref={ref}
       open={defaultOpen}
-      className={astralisMerge(collapsibleRootClasses, className)}
-      {...rest}
+      className={astralisMerge(collapsibleRootClasses, placementClass, className)}
+      {...domProps}
     >
       {children}
     </details>

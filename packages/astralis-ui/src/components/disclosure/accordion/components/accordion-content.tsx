@@ -38,3 +38,5 @@ export function AccordionContent({ children, className = "", style, ...rest }: A
     </div>
   );
 }
+
+AccordionContent.displayName = "Accordion.Content";

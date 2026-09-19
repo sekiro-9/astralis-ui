@@ -29,3 +29,5 @@ export function CarouselPrev({ icon, className = "", onClick, ...rest }: Carouse
     </button>
   );
 }
+
+CarouselPrev.displayName = "Carousel.Prev";

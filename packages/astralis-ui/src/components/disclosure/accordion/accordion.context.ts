@@ -11,7 +11,6 @@ import type {
 export interface AccordionContextValue {
   isOpen: (value: string) => boolean;
   toggle: (value: string) => void;
-  rootId: string;
   variant: AccordionVariant;
   size: AccordionSize;
   disabled: boolean;

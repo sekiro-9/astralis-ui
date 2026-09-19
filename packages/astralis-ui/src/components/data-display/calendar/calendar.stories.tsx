@@ -141,3 +141,24 @@ export const DisabledDates: Story = {
     },
   },
 };
+
+export const ColorSchemeAndLocale: Story = {
+  render: () => (
+    <Calendar
+      colorScheme="green"
+      locale="fr-FR"
+      firstDayOfWeek={1}
+      selectionMode="range"
+      defaultMonth={new Date(2026, 2, 1)}
+      defaultValue={{ start: new Date(2026, 2, 9), end: new Date(2026, 2, 13) }}
+    />
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`colorScheme` paints the selection through the accent channel; `locale` drives the title, weekday names and each day's accessible name.",
+      },
+    },
+  },
+};
