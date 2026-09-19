@@ -1,4 +1,5 @@
-import type { HTMLAttributes, ReactNode, ReactElement } from "react";
+import type { HTMLAttributes, ReactNode, Ref } from "react";
+import type { SlotElement } from "../slot";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
 
 export interface TooltipProps {
@@ -17,7 +18,9 @@ export interface TooltipProps {
 
 /** Wraps a single element; attributes other than `children` are forwarded onto it. */
 export interface TooltipTriggerProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
-  children: ReactElement<any>;
+  children: SlotElement;
+  /** Merged with the wrapped element's own ref, never replacing it. */
+  ref?: Ref<HTMLElement>;
 }
 
 export interface TooltipContentProps {

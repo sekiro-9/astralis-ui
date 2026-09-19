@@ -61,7 +61,7 @@ export function useAnchorPosition({
     const vh = window.innerHeight;
     const vertical = side === "top" || side === "bottom";
 
-    // --- flip if the preferred side lacks room ---
+    // Flip when the preferred side lacks room and the opposite has more.
     let resolved = side;
     if (avoidCollisions) {
       const space = { top: a.top, bottom: vh - a.bottom, left: a.left, right: vw - a.right };
@@ -70,7 +70,6 @@ export function useAnchorPosition({
     }
     const resolvedVertical = resolved === "top" || resolved === "bottom";
 
-    // --- main-axis placement ---
     let x = 0;
     let y = 0;
     if (resolved === "bottom") y = a.bottom + sideOffset;
@@ -78,7 +77,6 @@ export function useAnchorPosition({
     else if (resolved === "right") x = a.right + sideOffset;
     else x = a.left - f.width - sideOffset;
 
-    // --- cross-axis alignment ---
     if (resolvedVertical) {
       x = align === "center" ? a.left + a.width / 2 - f.width / 2 : align === "start" ? a.left : a.right - f.width;
       x += alignOffset;
@@ -87,13 +85,12 @@ export function useAnchorPosition({
       y += alignOffset;
     }
 
-    // --- shift into the viewport ---
     if (avoidCollisions) {
       x = Math.min(Math.max(padding, x), Math.max(padding, vw - f.width - padding));
       y = Math.min(Math.max(padding, y), Math.max(padding, vh - f.height - padding));
     }
 
-    // --- arrow centred on the anchor, clamped to the floating box ---
+    // Arrow centred on the anchor, clamped to the floating box.
     const arrow: Position["arrow"] = {};
     if (resolvedVertical) {
       arrow.left = Math.min(Math.max(10, a.left + a.width / 2 - x), f.width - 10);

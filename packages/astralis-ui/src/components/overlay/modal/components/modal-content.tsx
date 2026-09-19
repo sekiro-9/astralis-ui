@@ -4,44 +4,41 @@ import { useModal } from "../modal.context";
 import type { ModalContentProps } from "../modal.types";
 import { modalViewportVariants, modalBackdropClasses, modalPanelVariants, SCRIM_COLOR } from "../modal.styles";
 import { Portal } from "../../portal";
-import { usePresence } from "../../../../hooks/use-presence";
-import { useOverlayBehavior } from "../../../../hooks/use-overlay-behavior";
+import { useDialogPanel } from "../../dialog/dialog-core";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { useMergedRefs } from "../../../../utils/merge-refs";
 
 const DURATION = 200;
 
-export function ModalContent({ children, className = "", ...rest }: ModalContentProps) {
-  const { open, setOpen, close, titleId, descriptionId, hasTitle, hasDescription, size, centered, closeOnOverlayClick, closeOnEsc, role } = useModal();
-  const { mounted, state } = usePresence(open, DURATION);
-  const { containerRef } = useOverlayBehavior(open, setOpen, { closeOnEsc });
+export function ModalContent({ children, className = "", style, ref, ...rest }: ModalContentProps) {
+  const ctx = useModal();
+  const { mounted, isOpen, containerRef, backdropProps, panelProps } = useDialogPanel(ctx, {
+    duration: DURATION,
+    role: ctx.role,
+  });
+  const panelRef = useMergedRefs(containerRef, ref);
 
   if (!mounted) return null;
-  const isOpen = state === "open";
 
   return (
     <Portal>
-      <div className={modalViewportVariants({ centered })}>
+      <div className={modalViewportVariants({ centered: ctx.centered })}>
         <div
-          aria-hidden
-          onClick={closeOnOverlayClick ? close : undefined}
+          {...backdropProps}
           className={`${modalBackdropClasses} astralis:transition-opacity ${isOpen ? "astralis:opacity-100" : "astralis:opacity-0"}`}
           style={{ backgroundColor: SCRIM_COLOR, transitionDuration: `${DURATION}ms` }}
         />
         <div
-          ref={containerRef}
-          role={role}
-          aria-modal="true"
-          aria-labelledby={hasTitle ? titleId : undefined}
-          aria-describedby={hasDescription ? descriptionId : undefined}
-          tabIndex={-1}
+          {...panelProps}
+          {...rest}
+          ref={panelRef}
           className={astralisMerge(
-            modalPanelVariants({ size }),
+            modalPanelVariants({ size: ctx.size }),
             "astralis:outline-none astralis:transition-all",
             isOpen ? "astralis:opacity-100 astralis:scale-100 astralis:translate-y-0" : "astralis:opacity-0 astralis:scale-95 astralis:translate-y-2",
             className,
           )}
-          style={{ transitionDuration: `${DURATION}ms` }}
-          {...rest}
+          style={{ transitionDuration: `${DURATION}ms`, ...style }}
         >
           {children}
         </div>
@@ -49,3 +46,4 @@ export function ModalContent({ children, className = "", ...rest }: ModalContent
     </Portal>
   );
 }
+ModalContent.displayName = "Modal.Content";

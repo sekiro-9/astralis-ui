@@ -17,6 +17,7 @@ export function PopoverTitle({ children, className = "" }: PopoverSectionProps) 
     </h3>
   );
 }
+PopoverTitle.displayName = "Popover.Title";
 
 export function PopoverDescription({ children, className = "" }: PopoverSectionProps) {
   const { descriptionId, setHasDescription } = usePopover();
@@ -30,3 +31,4 @@ export function PopoverDescription({ children, className = "" }: PopoverSectionP
     </p>
   );
 }
+PopoverDescription.displayName = "Popover.Description";

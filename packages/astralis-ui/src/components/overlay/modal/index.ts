@@ -34,5 +34,5 @@ export {
   ModalCloseButton,
 };
 
-export type { ModalProps, ModalContentProps, ModalSectionProps, ModalSlotProps } from "./modal.types";
+export type { ModalProps, ModalContentProps, ModalSectionProps, ModalSlotProps, ModalCloseButtonProps } from "./modal.types";
 export type { ModalSize } from "./modal.context";

@@ -1,24 +1,14 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import type { DialogCoreValue } from "../dialog/dialog-core";
 
 export type DrawerPlacement = "left" | "right" | "top" | "bottom";
 export type DrawerSize = "sm" | "md" | "lg" | "xl" | "full";
 
-export interface DrawerContextValue {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  close: () => void;
-  titleId: string;
-  descriptionId: string;
-  hasTitle: boolean;
-  setHasTitle: (v: boolean) => void;
-  hasDescription: boolean;
-  setHasDescription: (v: boolean) => void;
+export interface DrawerContextValue extends DialogCoreValue {
   placement: DrawerPlacement;
   size: DrawerSize;
-  closeOnOverlayClick: boolean;
-  closeOnEsc: boolean;
 }
 
 export const DrawerContext = createContext<DrawerContextValue | null>(null);

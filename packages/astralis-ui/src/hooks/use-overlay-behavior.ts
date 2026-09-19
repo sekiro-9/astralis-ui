@@ -1,16 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import {
+  isOverlayEventHandled,
   isTopOverlay,
   lockBodyScroll,
+  markOverlayEventHandled,
   popOverlay,
   pushOverlay,
   unlockBodyScroll,
 } from "../utils/overlay-stack";
 
-const FOCUSABLE =
-  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = [
+  "a[href]",
+  "area[href]",
+  "button:not([disabled])",
+  "input:not([disabled]):not([type=hidden])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "iframe",
+  "summary",
+  "[contenteditable]:not([contenteditable=false])",
+  "[tabindex]:not([disabled])",
+]
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .join(",");
+
+/**
+ * Focusable descendants a Tab can actually reach. A collapsed Accordion panel
+ * or an inactive Tabs panel is `hidden` or `inert`; trapping onto one of them
+ * would let the next Tab leave the dialog.
+ */
+export function getTabbable(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((el) => {
+    if (el.closest("[inert], [hidden]")) return false;
+    // Catches display:none and visibility:hidden; absent in jsdom.
+    return typeof el.checkVisibility === "function" ? el.checkVisibility({ visibilityProperty: true }) : true;
+  });
+}
 
 export interface UseOverlayBehaviorOptions {
   /** Whether pressing Escape closes the overlay. @default true */
@@ -18,76 +45,69 @@ export interface UseOverlayBehaviorOptions {
 }
 
 /**
- * Shared behavior hook for overlay components (Modal, Drawer).
- * Handles:
- * - Body scroll lock
- * - Initial focus placement
- * - Return focus to trigger element on close
- * - Focus trap (Tab / Shift+Tab cycling)
- * - Escape key to close
+ * Modal behaviour for Modal, Drawer and the image lightbox: body scroll lock,
+ * initial focus, focus return on close, a Tab trap and Escape to close, all
+ * coordinated with the shared overlay stack.
  *
- * @returns containerRef — attach to the dialog/drawer panel element
+ * @returns containerRef — attach to the dialog panel element
  */
 export function useOverlayBehavior(
   open: boolean,
   setOpen: (open: boolean) => void,
-  options: UseOverlayBehaviorOptions = {}
+  options: UseOverlayBehaviorOptions = {},
 ) {
   const { closeOnEsc = true } = options;
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // The effect below must run once per open: re-running it refocuses the first
+  // field, so an inline `onOpenChange` would steal focus on every keystroke.
+  const latest = useRef({ setOpen, closeOnEsc });
+  useLayoutEffect(() => {
+    latest.current = { setOpen, closeOnEsc };
+  });
+
   useEffect(() => {
     if (!open) return;
 
-    // ── Stack registration + refcounted scroll lock ────────────────
-    // Coordinates with other open overlays: only the topmost handles
-    // Esc/Tab, and page scroll stays locked until the LAST overlay closes.
-    const overlayId = pushOverlay();
+    const overlayId = pushOverlay({
+      contains: (node) => containerRef.current?.contains(node) ?? false,
+    });
     lockBodyScroll();
 
-    // ── Return focus target ────────────────────────────────────────
     const previousFocus = document.activeElement as HTMLElement | null;
 
-    // ── Initial focus (deferred so the portal has rendered) ────────
+    // Deferred so the portal has rendered.
     const focusTimer = setTimeout(() => {
       const container = containerRef.current;
       if (!container) return;
-      const focusables = Array.from(
-        container.querySelectorAll<HTMLElement>(FOCUSABLE)
-      );
-      (focusables[0] ?? container).focus();
+      (getTabbable(container)[0] ?? container).focus();
     }, 0);
 
-    // ── Keyboard: Escape + focus trap (topmost overlay only) ─────
     const onKeyDown = (e: KeyboardEvent) => {
-      if (!isTopOverlay(overlayId)) return;
-
       if (e.key === "Escape") {
-        if (closeOnEsc) setOpen(false);
+        if (isOverlayEventHandled(e) || !isTopOverlay(overlayId)) return;
+        markOverlayEventHandled(e);
+        if (latest.current.closeOnEsc) latest.current.setOpen(false);
         return;
       }
 
-      if (e.key === "Tab") {
+      if (e.key === "Tab" && isTopOverlay(overlayId, { ignoreTransient: true })) {
         const container = containerRef.current;
         if (!container) return;
-        const focusables = Array.from(
-          container.querySelectorAll<HTMLElement>(FOCUSABLE)
-        );
-        if (focusables.length === 0) return;
-
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
+        const tabbable = getTabbable(container);
+        if (tabbable.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = tabbable[0];
+        const last = tabbable[tabbable.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && (active === first || active === container)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
         }
       }
     };
@@ -101,7 +121,7 @@ export function useOverlayBehavior(
       clearTimeout(focusTimer);
       previousFocus?.focus();
     };
-  }, [open, setOpen, closeOnEsc]);
+  }, [open]);
 
   return { containerRef };
 }

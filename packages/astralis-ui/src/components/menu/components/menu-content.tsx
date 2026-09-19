@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { Portal } from "../../overlay/portal";
 import { useMenu } from "../menu.context";
 import type { MenuContentProps } from "../menu.types";
@@ -9,15 +9,16 @@ import { usePresence } from "../../../hooks/use-presence";
 import { useAnchorPosition } from "../../../hooks/use-anchor-position";
 import { useDismiss } from "../../../hooks/use-dismiss";
 import { useRovingFocus } from "../../../hooks/use-roving-focus";
+import { useMergedRefs } from "../../../utils/merge-refs";
 import { menuContentClasses, menuMotionClasses } from "../menu.styles";
 
 const DURATION = 160;
 
 export function MenuContent({ className = "", children, onKeyDown, ...rest }: MenuContentProps) {
-  const { open, close, triggerRef, contentRef, contentId, side, align, sideOffset } = useMenu();
+  const { open, close, triggerRef, contentRef, contentId, side, align, sideOffset, focusIntentRef, repositionRef } = useMenu();
   const { mounted, state } = usePresence(open, DURATION);
 
-  const { x, y, side: resolvedSide } = useAnchorPosition({
+  const { x, y, side: resolvedSide, update } = useAnchorPosition({
     open: mounted,
     anchorRef: triggerRef,
     floatingRef: contentRef,
@@ -26,36 +27,44 @@ export function MenuContent({ className = "", children, onKeyDown, ...rest }: Me
     sideOffset,
   });
 
-  // Escape + outside pointer, coordinated with the shared overlay stack.
-  const dismissRefs = useMemo(() => [triggerRef, contentRef], [triggerRef, contentRef]);
-  useDismiss(open, close, { refs: dismissRefs });
+  useLayoutEffect(() => {
+    repositionRef.current = update;
+    return () => {
+      repositionRef.current = null;
+    };
+  }, [repositionRef, update]);
+
+  useDismiss(open, close, { refs: [triggerRef, contentRef] });
 
   const roving = useRovingFocus<HTMLDivElement>({
     itemSelector: "[data-astralis-menu-item]",
     orientation: "vertical",
     typeahead: true,
   });
+  const { focusFirst, focusLast } = roving;
+  const panelRef = useMergedRefs(contentRef, roving.containerRef);
 
-  // Focus the first item on open; hand focus back to the trigger on close.
+  // Focus an item on open; hand focus back to the trigger on close.
   useEffect(() => {
     if (!open) return;
-    const timer = setTimeout(() => roving.focusFirst(), 0);
+    const trigger = triggerRef.current;
+    const timer = setTimeout(() => {
+      if (focusIntentRef.current === "last") focusLast();
+      else focusFirst();
+      focusIntentRef.current = "first";
+    }, 0);
     return () => {
       clearTimeout(timer);
-      triggerRef.current?.focus();
+      trigger?.focus();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, triggerRef, focusIntentRef, focusFirst, focusLast]);
 
   if (!mounted) return null;
 
   return (
     <Portal>
       <div
-        ref={(node) => {
-          contentRef.current = node;
-          roving.containerRef.current = node;
-        }}
+        ref={panelRef}
         id={contentId}
         role="menu"
         aria-orientation="vertical"

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, cloneElement, type FocusEvent, type MouseEvent } from "react";
-import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import { useMergedRefs } from "../../../../utils/merge-refs";
+import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { HoverCardContext, useHoverCard } from "../hover-card.context";
 import type { HoverCardProps, HoverCardTriggerProps } from "../hover-card.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -48,19 +49,19 @@ export function HoverCardRoot({
 
 HoverCardRoot.displayName = "HoverCard";
 
-export function HoverCardTrigger({ children, ...rest }: HoverCardTriggerProps) {
+export function HoverCardTrigger({ children, ref, ...rest }: HoverCardTriggerProps) {
   const { scheduleOpen, scheduleClose, showNow, hide, open, triggerRef, contentId } = useHoverCard();
-  const child = resolveServerChild(children) as HoverCardTriggerProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    ref: triggerRef,
-    onMouseEnter: (e: MouseEvent) => { (child.props.onMouseEnter as ((e: MouseEvent) => void) | undefined)?.(e); scheduleOpen(); },
-    onMouseLeave: (e: MouseEvent) => { (child.props.onMouseLeave as ((e: MouseEvent) => void) | undefined)?.(e); scheduleClose(); },
-    onFocus: (e: FocusEvent) => { (child.props.onFocus as ((e: FocusEvent) => void) | undefined)?.(e); showNow(); },
-    onBlur: (e: FocusEvent) => { (child.props.onBlur as ((e: FocusEvent) => void) | undefined)?.(e); hide(); },
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
+  return cloneSlot(child, rest, {
+    ref: mergedRef,
+    onMouseEnter: scheduleOpen,
+    onMouseLeave: scheduleClose,
+    onFocus: showNow,
+    onBlur: hide,
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
-  } as Record<string, unknown>);
+  });
 }
 
 HoverCardTrigger.displayName = "HoverCard.Trigger";

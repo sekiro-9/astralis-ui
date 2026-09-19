@@ -1,14 +1,14 @@
 "use client";
 
-import { useCallback, useId, useMemo, useState, cloneElement, type MouseEvent } from "react";
-import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { useMemo } from "react";
 import { DrawerContext, useDrawer } from "../drawer.context";
 import type { DrawerProps, DrawerSlotProps } from "../drawer.types";
-import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { useDialogCore } from "../../dialog/dialog-core";
+import { DialogClosePart, DialogTriggerPart } from "../../dialog/dialog-parts";
 
 export function DrawerRoot({
   children,
-  open: openProp,
+  open,
   defaultOpen = false,
   onOpenChange,
   placement = "right",
@@ -16,42 +16,20 @@ export function DrawerRoot({
   closeOnOverlayClick = true,
   closeOnEsc = true,
 }: DrawerProps) {
-  const [open, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
-  const id = useId();
-  const [hasTitle, setHasTitle] = useState(false);
-  const [hasDescription, setHasDescription] = useState(false);
-  const close = useCallback(() => setOpen(false), [setOpen]);
-
-  const ctx = useMemo(
-    () => ({
-      open, setOpen, close,
-      titleId: `${id}-title`,
-      descriptionId: `${id}-desc`,
-      hasTitle, setHasTitle, hasDescription, setHasDescription,
-      placement, size, closeOnOverlayClick, closeOnEsc,
-    }),
-    [open, setOpen, close, id, hasTitle, hasDescription, placement, size, closeOnOverlayClick, closeOnEsc],
-  );
-
+  const core = useDialogCore({ open, defaultOpen, onOpenChange, closeOnOverlayClick, closeOnEsc });
+  const ctx = useMemo(() => ({ ...core, placement, size }), [core, placement, size]);
   return <DrawerContext.Provider value={ctx}>{children}</DrawerContext.Provider>;
 }
+DrawerRoot.displayName = "Drawer";
 
-export function DrawerTrigger({ children, ...rest }: DrawerSlotProps) {
-  const { setOpen, open } = useDrawer();
-  const child = resolveServerChild(children) as DrawerSlotProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    onClick: (e: MouseEvent) => { child.props.onClick?.(e); setOpen(true); },
-    "aria-haspopup": "dialog",
-    "aria-expanded": open,
-  } as Record<string, unknown>);
+export function DrawerTrigger(props: DrawerSlotProps) {
+  const ctx = useDrawer();
+  return <DialogTriggerPart ctx={ctx} {...props} />;
 }
+DrawerTrigger.displayName = "Drawer.Trigger";
 
-export function DrawerClose({ children, ...rest }: DrawerSlotProps) {
-  const { close } = useDrawer();
-  const child = resolveServerChild(children) as DrawerSlotProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    onClick: (e: MouseEvent) => { child.props.onClick?.(e); close(); },
-  } as Record<string, unknown>);
+export function DrawerClose(props: DrawerSlotProps) {
+  const ctx = useDrawer();
+  return <DialogClosePart ctx={ctx} {...props} />;
 }
+DrawerClose.displayName = "Drawer.Close";

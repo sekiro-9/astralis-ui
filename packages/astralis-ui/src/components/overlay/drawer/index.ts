@@ -34,5 +34,5 @@ export {
   DrawerCloseButton,
 };
 
-export type { DrawerProps, DrawerContentProps, DrawerSectionProps, DrawerSlotProps } from "./drawer.types";
+export type { DrawerProps, DrawerContentProps, DrawerSectionProps, DrawerSlotProps, DrawerCloseButtonProps } from "./drawer.types";
 export type { DrawerPlacement, DrawerSize } from "./drawer.context";

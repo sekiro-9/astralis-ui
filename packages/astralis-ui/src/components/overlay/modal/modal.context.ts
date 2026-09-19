@@ -1,26 +1,16 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import type { DialogCoreValue } from "../dialog/dialog-core";
 
 export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
 export type ModalRole = "dialog" | "alertdialog";
 
-export interface ModalContextValue {
+export interface ModalContextValue extends DialogCoreValue {
   /** ARIA role the panel renders with — AlertDialog sets "alertdialog". */
   role: ModalRole;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  close: () => void;
-  titleId: string;
-  descriptionId: string;
-  hasTitle: boolean;
-  setHasTitle: (v: boolean) => void;
-  hasDescription: boolean;
-  setHasDescription: (v: boolean) => void;
   size: ModalSize;
   centered: boolean;
-  closeOnOverlayClick: boolean;
-  closeOnEsc: boolean;
 }
 
 export const ModalContext = createContext<ModalContextValue | null>(null);

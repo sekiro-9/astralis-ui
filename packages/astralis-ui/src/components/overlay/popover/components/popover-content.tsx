@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, type CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { usePopover } from "../popover.context";
 import type { PopoverContentProps } from "../popover.types";
 import { popoverContentClasses, popoverArrowClasses } from "../popover.styles";
@@ -24,16 +24,16 @@ export function PopoverContent({ children, className = "", withArrow = false, ..
     open, anchorRef: triggerRef, floatingRef: contentRef, side, align, sideOffset, alignOffset, avoidCollisions,
   });
 
-  const dismissRefs = useMemo(() => [triggerRef, contentRef], [triggerRef, contentRef]);
-  useDismiss(open, close, { refs: dismissRefs, closeOnEscape: closeOnEsc, closeOnOutsidePointer });
+  useDismiss(open, close, { refs: [triggerRef, contentRef], closeOnEscape: closeOnEsc, closeOnOutsidePointer });
 
   // Focus the panel on open; return focus to the trigger on close.
   useEffect(() => {
     if (!open) return;
+    const trigger = triggerRef.current;
     const t = setTimeout(() => contentRef.current?.focus(), 0);
     return () => {
       clearTimeout(t);
-      triggerRef.current?.focus();
+      trigger?.focus();
     };
   }, [open, contentRef, triggerRef]);
 
@@ -72,3 +72,4 @@ export function PopoverContent({ children, className = "", withArrow = false, ..
     </Portal>
   );
 }
+PopoverContent.displayName = "Popover.Content";

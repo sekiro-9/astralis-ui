@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  isInHigherOverlay,
+  isOverlayEventHandled,
   isTopOverlay,
+  markOverlayEventHandled,
   lockBodyScroll,
   popOverlay,
   pushOverlay,
@@ -50,6 +53,44 @@ describe("overlay stack ordering", () => {
     popOverlay(a);
     expect(isTopOverlay(b)).toBe(true);
     popOverlay(b);
+  });
+});
+
+describe("layer containment and transient layers", () => {
+  it("a node inside a higher layer is reported; a lower layer's node is not", () => {
+    const lowerNode = document.createElement("div");
+    const higherNode = document.createElement("div");
+    const lower = pushOverlay({ contains: (n) => lowerNode.contains(n) });
+    const higher = pushOverlay({ contains: (n) => higherNode.contains(n) });
+
+    expect(isInHigherOverlay(lower, higherNode)).toBe(true);
+    expect(isInHigherOverlay(higher, lowerNode)).toBe(false);
+    expect(isInHigherOverlay(lower, document.createElement("span"))).toBe(false);
+
+    popOverlay(higher);
+    popOverlay(lower);
+  });
+
+  it("ignoreTransient looks through tooltip-like layers, plain checks do not", () => {
+    const modal = pushOverlay();
+    const tooltip = pushOverlay({ transient: true });
+
+    expect(isTopOverlay(modal)).toBe(false);
+    expect(isTopOverlay(modal, { ignoreTransient: true })).toBe(true);
+
+    const popover = pushOverlay();
+    expect(isTopOverlay(modal, { ignoreTransient: true })).toBe(false);
+
+    popOverlay(popover);
+    popOverlay(tooltip);
+    popOverlay(modal);
+  });
+
+  it("remembers which events a layer already consumed", () => {
+    const event = new KeyboardEvent("keydown", { key: "Escape" });
+    expect(isOverlayEventHandled(event)).toBe(false);
+    markOverlayEventHandled(event);
+    expect(isOverlayEventHandled(event)).toBe(true);
   });
 });
 

@@ -23,3 +23,4 @@ export function Portal({ children, container }: { children: ReactNode; container
     container ?? document.body,
   );
 }
+Portal.displayName = "Portal";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, type KeyboardEvent, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type KeyboardEvent, type RefObject } from "react";
 
 interface UseRovingFocusOptions {
   /** Selector for the focusable items inside the container. */
@@ -14,10 +14,10 @@ interface UseRovingFocusOptions {
 }
 
 /**
- * Roving focus for composite widgets (Menu; the APG pattern Tabs/Accordion
- * also implement): arrows move focus between items, Home/End jump, an
- * optional typeahead matches by text. Item lookup is live DOM querying, so
- * items never need to self-register (StrictMode-safe, portals included).
+ * Roving focus for composite widgets (used by Menu and Toolbar): arrows move
+ * focus between items, Home/End jump, an optional typeahead matches by text.
+ * Item lookup is live DOM querying, so items never need to self-register
+ * (StrictMode-safe, portals included).
  */
 export function useRovingFocus<T extends HTMLElement = HTMLElement>({
   itemSelector,
@@ -33,6 +33,13 @@ export function useRovingFocus<T extends HTMLElement = HTMLElement>({
   const containerRef = useRef<T | null>(null);
   const bufferRef = useRef("");
   const bufferTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
+    },
+    [],
+  );
 
   const getItems = useCallback((): HTMLElement[] => {
     const container = containerRef.current;

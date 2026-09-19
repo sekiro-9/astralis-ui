@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import { ContextMenu } from "./index";
 
@@ -37,5 +37,35 @@ describe("ContextMenu", () => {
     fireEvent.click(getByText("Rename"));
     expect(onSelect).toHaveBeenCalled();
     await waitFor(() => expect(baseElement.querySelector('[role="menu"]')).toBeNull());
+  });
+});
+
+describe("ContextMenu repositioning", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("a second right-click moves the open menu without a global resize event", async () => {
+    // jsdom has no layout: the fixed-position anchor reports its own left/top.
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      const left = parseFloat(this.style.left) || 0;
+      const top = parseFloat(this.style.top) || 0;
+      const fixed = this.style.position === "fixed";
+      const width = fixed ? 1 : 0;
+      const height = fixed ? 1 : 0;
+      return { x: left, y: top, left, top, width, height, right: left + width, bottom: top + height, toJSON: () => ({}) } as DOMRect;
+    });
+    const onResize = vi.fn();
+    window.addEventListener("resize", onResize);
+
+    const { getByTestId, baseElement } = render(<Fixture />);
+    fireEvent.contextMenu(getByTestId("zone"), { clientX: 40, clientY: 50 });
+    const menu = await waitFor(() => baseElement.querySelector<HTMLElement>('[role="menu"]')!);
+    await waitFor(() => expect(menu.style.left).toBe("40px"));
+
+    fireEvent.contextMenu(getByTestId("zone"), { clientX: 300, clientY: 200 });
+    await waitFor(() => expect(menu.style.left).toBe("300px"));
+    expect(menu.style.top).toBe("203px"); // 200 + 1px anchor + sideOffset 2
+    expect(onResize).not.toHaveBeenCalled();
+
+    window.removeEventListener("resize", onResize);
   });
 });

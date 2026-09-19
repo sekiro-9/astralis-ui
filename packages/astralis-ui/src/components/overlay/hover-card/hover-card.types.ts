@@ -1,4 +1,5 @@
-import type { ComponentPropsWithoutRef, HTMLAttributes, ReactElement, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, Ref } from "react";
+import type { SlotElement } from "../slot";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
 
 export interface HoverCardProps {
@@ -21,7 +22,9 @@ export interface HoverCardProps {
 /** Attributes other than `children` are forwarded onto the wrapped element. */
 export interface HoverCardTriggerProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
   /** A single element (typically a Link); the card wires it up via props. */
-  children: ReactElement<Record<string, unknown>>;
+  children: SlotElement;
+  /** Merged with the wrapped element's own ref, never replacing it. */
+  ref?: Ref<HTMLElement>;
 }
 
 export interface HoverCardContentProps extends ComponentPropsWithoutRef<"div"> {

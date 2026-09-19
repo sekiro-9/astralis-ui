@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useId, useMemo, useRef, useState, cloneElement, type MouseEvent } from "react";
-import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useMergedRefs } from "../../../../utils/merge-refs";
+import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { PopoverContext, usePopover } from "../popover.context";
 import type { PopoverProps, PopoverSlotProps } from "../popover.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -44,24 +45,26 @@ export function PopoverRoot({
   return <PopoverContext.Provider value={ctx}>{children}</PopoverContext.Provider>;
 }
 
-export function PopoverTrigger({ children, ...rest }: PopoverSlotProps) {
+PopoverRoot.displayName = "Popover";
+
+export function PopoverTrigger({ children, ref, ...rest }: PopoverSlotProps) {
   const { toggle, open, triggerRef, contentId } = usePopover();
-  const child = resolveServerChild(children) as PopoverSlotProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    ref: triggerRef,
-    onClick: (e: MouseEvent) => { child.props.onClick?.(e); toggle(); },
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
+  return cloneSlot(child, rest, {
+    ref: mergedRef,
+    onClick: toggle,
     "aria-haspopup": "dialog",
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
-  } as Record<string, unknown>);
+  });
 }
+PopoverTrigger.displayName = "Popover.Trigger";
 
-export function PopoverClose({ children, ...rest }: PopoverSlotProps) {
+export function PopoverClose({ children, ref, ...rest }: PopoverSlotProps) {
   const { close } = usePopover();
-  const child = resolveServerChild(children) as PopoverSlotProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    onClick: (e: MouseEvent) => { child.props.onClick?.(e); close(); },
-  } as Record<string, unknown>);
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(ref, slotChildRef(child));
+  return cloneSlot(child, rest, { ref: mergedRef, onClick: close });
 }
+PopoverClose.displayName = "Popover.Close";

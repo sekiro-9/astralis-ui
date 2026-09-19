@@ -1,10 +1,11 @@
 "use client";
 
-import { cloneElement, type KeyboardEvent, type MouseEvent, type ReactElement } from "react";
+import type { KeyboardEvent } from "react";
 import { useMenu } from "../menu.context";
 import type { MenuItemProps, MenuSectionProps, MenuTriggerProps } from "../menu.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
-import { resolveServerChild } from "../../../utils/resolve-server-child";
+import { useMergedRefs } from "../../../utils/merge-refs";
+import { cloneSlot, resolveSlotChild, slotChildRef } from "../../overlay/slot";
 import {
   menuItemClasses,
   menuItemDangerClasses,
@@ -14,28 +15,27 @@ import {
   menuShortcutClasses,
 } from "../menu.styles";
 
-export function MenuTrigger({ children, ...rest }: MenuTriggerProps) {
-  const { toggle, open, triggerRef, contentId } = useMenu();
-  const child = resolveServerChild(children) as ReactElement<Record<string, unknown>>;
-  return cloneElement(child, {
-    ...rest,
-    ref: triggerRef,
-    onClick: (e: MouseEvent) => {
-      (child.props.onClick as ((e: MouseEvent) => void) | undefined)?.(e);
+export function MenuTrigger({ children, ref, ...rest }: MenuTriggerProps) {
+  const { toggle, open, setOpen, triggerRef, contentId, focusIntentRef } = useMenu();
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
+  return cloneSlot(child, rest, {
+    ref: mergedRef,
+    onClick: () => {
+      focusIntentRef.current = "first";
       toggle();
     },
-    // ArrowDown on a closed trigger opens the menu (APG menu-button pattern).
+    // APG menu button: ArrowDown opens on the first item, ArrowUp on the last.
     onKeyDown: (e: KeyboardEvent) => {
-      (child.props.onKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
-      if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
-        e.preventDefault();
-        toggle();
-      }
+      if (open || (e.key !== "ArrowDown" && e.key !== "ArrowUp")) return;
+      e.preventDefault();
+      focusIntentRef.current = e.key === "ArrowUp" ? "last" : "first";
+      setOpen(true);
     },
     "aria-haspopup": "menu",
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
-  } as Record<string, unknown>);
+  });
 }
 MenuTrigger.displayName = "Menu.Trigger";
 

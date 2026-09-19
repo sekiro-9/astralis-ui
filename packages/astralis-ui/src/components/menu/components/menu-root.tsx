@@ -19,6 +19,8 @@ export function MenuRoot({
   const id = useId();
   const triggerRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const focusIntentRef = useRef<"first" | "last">("first");
+  const repositionRef = useRef<(() => void) | null>(null);
 
   const close = useCallback(() => setOpen(false), [setOpen]);
   const toggle = useCallback(() => setOpen(!open), [setOpen, open]);
@@ -26,7 +28,7 @@ export function MenuRoot({
   const ctx = useMemo(
     () => ({
       open, setOpen, toggle, close,
-      triggerRef, contentRef,
+      triggerRef, contentRef, focusIntentRef, repositionRef,
       contentId: `${id}-menu`,
       side, align, sideOffset, closeOnSelect,
     }),
@@ -35,3 +37,4 @@ export function MenuRoot({
 
   return <MenuContext.Provider value={ctx}>{children}</MenuContext.Provider>;
 }
+MenuRoot.displayName = "Menu";

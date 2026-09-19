@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { useHoverCard } from "../hover-card.context";
 import type { HoverCardContentProps } from "../hover-card.types";
 import { hoverCardContentClasses } from "../hover-card.styles";
 import { Portal } from "../../portal";
 import { usePresence } from "../../../../hooks/use-presence";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
+import { useDismiss } from "../../../../hooks/use-dismiss";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 const DURATION = 160;
@@ -18,13 +18,8 @@ export function HoverCardContent({ children, className = "", onMouseEnter, onMou
     open: mounted, anchorRef: triggerRef, floatingRef: contentRef, side, align, sideOffset, avoidCollisions,
   });
 
-  // Escape dismisses.
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") hide(); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, hide]);
+  // Escape through the overlay stack, so a card over a Modal closes alone.
+  useDismiss(open, hide, { refs: [triggerRef, contentRef], closeOnOutsidePointer: false, transient: true });
 
   if (!mounted) return null;
   const isOpen = state === "open";

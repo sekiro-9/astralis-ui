@@ -1,4 +1,5 @@
-import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, ReactElement } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, Ref } from "react";
+import type { SlotElement } from "../slot";
 import type { ModalRole, ModalSize } from "./modal.context";
 
 export interface ModalProps {
@@ -19,15 +20,24 @@ export interface ModalProps {
 /** Trigger/Close wrap a single element and augment it (asChild-style);
  *  attributes other than `children` are forwarded onto it. */
 export interface ModalSlotProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
-  children: ReactElement<any>;
+  children: SlotElement;
+  /** Merged with the wrapped element's own ref, never replacing it. */
+  ref?: Ref<HTMLElement>;
 }
 
 export interface ModalContentProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
   className?: string;
+  ref?: Ref<HTMLDivElement>;
 }
 
-export interface ModalSectionProps {
-  children: ReactNode;
+/** Header, Body, Footer, Title and Description; DOM props reach the element. */
+export interface ModalSectionProps extends HTMLAttributes<HTMLElement> {
+  children?: ReactNode;
   className?: string;
+  ref?: Ref<HTMLElement>;
+}
+
+export interface ModalCloseButtonProps extends Omit<ComponentPropsWithoutRef<"button">, "children"> {
+  ref?: Ref<HTMLButtonElement>;
 }

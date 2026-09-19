@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { useTooltip } from "../tooltip.context";
 import type { TooltipContentProps } from "../tooltip.types";
 import { tooltipContentClasses, tooltipArrowClasses } from "../tooltip.styles";
 import { Portal } from "../../portal";
 import { usePresence } from "../../../../hooks/use-presence";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
+import { useDismiss } from "../../../../hooks/use-dismiss";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 
 const DURATION = 140;
@@ -18,13 +19,8 @@ export function TooltipContent({ children, className = "", withArrow = false }: 
     open, anchorRef: triggerRef, floatingRef: contentRef, side, align, sideOffset, avoidCollisions,
   });
 
-  // Escape dismisses the tooltip.
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") hide(); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, hide]);
+  // Escape through the overlay stack: a tooltip over a Modal closes alone.
+  useDismiss(open, hide, { refs: [triggerRef, contentRef], closeOnOutsidePointer: false, transient: true });
 
   if (!mounted) return null;
   const isOpen = state === "open";
@@ -56,3 +52,4 @@ export function TooltipContent({ children, className = "", withArrow = false }: 
     </Portal>
   );
 }
+TooltipContent.displayName = "Tooltip.Content";

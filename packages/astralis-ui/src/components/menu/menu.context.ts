@@ -15,6 +15,10 @@ export interface MenuContextValue {
   align: Align;
   sideOffset: number;
   closeOnSelect: boolean;
+  /** Which item gets focus when the menu opens (ArrowUp on the trigger picks the last). */
+  focusIntentRef: RefObject<"first" | "last">;
+  /** Re-measures the open panel against its anchor; set by Menu.Content. */
+  repositionRef: RefObject<(() => void) | null>;
 }
 
 export const MenuContext = createContext<MenuContextValue | null>(null);

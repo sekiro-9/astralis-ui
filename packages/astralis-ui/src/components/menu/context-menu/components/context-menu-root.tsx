@@ -1,10 +1,11 @@
 "use client";
 
-import { cloneElement, useLayoutEffect, useState, type MouseEvent } from "react";
+import { useLayoutEffect, useState, type MouseEvent } from "react";
 import { MenuRoot } from "../../components/menu-root";
 import { useMenu } from "../../menu.context";
 import type { ContextMenuProps, ContextMenuTriggerProps } from "../context-menu.types";
-import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { useMergedRefs } from "../../../../utils/merge-refs";
+import { cloneSlot, resolveSlotChild, slotChildRef } from "../../../overlay/slot";
 
 /**
  * Menu opened by right-click, positioned at the pointer. Everything else IS
@@ -21,24 +22,23 @@ export function ContextMenuRoot({ children, ...props }: ContextMenuProps) {
 
 ContextMenuRoot.displayName = "ContextMenu";
 
-export function ContextMenuTrigger({ children, ...rest }: ContextMenuTriggerProps) {
-  const { setOpen, triggerRef, open, contentId } = useMenu();
+export function ContextMenuTrigger({ children, ref, ...rest }: ContextMenuTriggerProps) {
+  const { setOpen, triggerRef, open, contentId, repositionRef } = useMenu();
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
-  const child = resolveServerChild(children) as ContextMenuTriggerProps["children"];
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(ref, slotChildRef(child));
 
-  // A right-click while already open moves the anchor under a mounted panel.
-  // The positioner only re-measures on open change / scroll / resize, so
-  // nudge it through the channel it already listens to.
+  // A right-click while already open moves the anchor under a mounted panel,
+  // and the positioner only measures on open, scroll and resize by itself.
   useLayoutEffect(() => {
-    if (open && point) window.dispatchEvent(new Event("resize"));
-  }, [open, point]);
+    if (open && point) repositionRef.current?.();
+  }, [open, point, repositionRef]);
 
   return (
     <>
-      {cloneElement(child, {
-        ...rest,
+      {cloneSlot(child, rest, {
+        ref: mergedRef,
         onContextMenu: (e: MouseEvent) => {
-          (child.props.onContextMenu as ((e: MouseEvent) => void) | undefined)?.(e);
           e.preventDefault();
           // An outside right-click first dismisses (pointerdown hits the
           // shared overlay stack), so this always opens fresh at the pointer.
@@ -48,7 +48,7 @@ export function ContextMenuTrigger({ children, ...rest }: ContextMenuTriggerProp
         "aria-haspopup": "menu",
         "aria-expanded": open,
         "aria-controls": open ? contentId : undefined,
-      } as Record<string, unknown>)}
+      })}
       {point && (
         // The virtual anchor: focusable (-1) so focus return on close lands
         // somewhere real, invisible, and exactly under the last right-click.

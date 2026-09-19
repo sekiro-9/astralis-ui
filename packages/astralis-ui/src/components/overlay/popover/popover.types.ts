@@ -1,4 +1,5 @@
-import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, ReactElement } from "react";
+import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, Ref } from "react";
+import type { SlotElement } from "../slot";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
 
 export interface PopoverProps {
@@ -20,7 +21,9 @@ export interface PopoverProps {
 
 /** Trigger/Close wrap a single element; attributes other than `children` are forwarded onto it. */
 export interface PopoverSlotProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {
-  children: ReactElement<any>;
+  children: SlotElement;
+  /** Merged with the wrapped element's own ref, never replacing it. */
+  ref?: Ref<HTMLElement>;
 }
 
 export interface PopoverContentProps extends ComponentPropsWithoutRef<"div"> {

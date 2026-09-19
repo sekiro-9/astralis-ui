@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { render, fireEvent, act } from "@testing-library/react";
 import { HoverCard } from "./index";
+import { Modal } from "../modal";
 
 function Fixture() {
   return (
@@ -46,5 +47,31 @@ describe("HoverCard", () => {
     fireEvent.blur(getByText("@paul"));
     act(() => vi.advanceTimersByTime(300));
     expect(baseElement.querySelector('[data-side].astralis\\:opacity-100')).toBeNull();
+  });
+});
+
+describe("HoverCard dismissal", () => {
+  it("Escape closes the card through the overlay stack, leaving the Modal under it open", () => {
+    const { baseElement } = render(
+      <Modal defaultOpen>
+        <Modal.Content>
+          <Modal.Title>Team</Modal.Title>
+          <HoverCard>
+            <HoverCard.Trigger>
+              <a href="#u">@paul</a>
+            </HoverCard.Trigger>
+            <HoverCard.Content>
+              <p>Paul Andrew — building Astralis.</p>
+            </HoverCard.Content>
+          </HoverCard>
+        </Modal.Content>
+      </Modal>,
+    );
+    fireEvent.focus(baseElement.querySelector("a")!);
+    expect(baseElement.textContent).toContain("building Astralis");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(baseElement.querySelector("a")).toHaveAttribute("aria-expanded", "false");
+    expect(baseElement.querySelector('[role="dialog"]')).not.toBeNull();
   });
 });

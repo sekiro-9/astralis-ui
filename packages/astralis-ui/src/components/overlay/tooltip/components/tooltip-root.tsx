@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useId, useMemo, useRef, cloneElement, type FocusEvent, type MouseEvent } from "react";
-import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import { useMergedRefs } from "../../../../utils/merge-refs";
+import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { TooltipContext, useTooltip } from "../tooltip.context";
 import type { TooltipProps, TooltipTriggerProps } from "../tooltip.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
@@ -28,6 +29,8 @@ export function TooltipRoot({
   const showNow = useCallback(() => { clear(); setOpen(true); }, [setOpen]);
   const hide = useCallback(() => { clear(); setOpen(false); }, [setOpen]);
 
+  useEffect(() => clear, []);
+
   const ctx = useMemo(
     () => ({ open, show, showNow, hide, triggerRef, contentRef, tooltipId: `${id}-tip`, side, align, sideOffset, avoidCollisions }),
     [open, show, showNow, hide, id, side, align, sideOffset, avoidCollisions],
@@ -35,17 +38,19 @@ export function TooltipRoot({
 
   return <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>;
 }
+TooltipRoot.displayName = "Tooltip";
 
-export function TooltipTrigger({ children, ...rest }: TooltipTriggerProps) {
+export function TooltipTrigger({ children, ref, ...rest }: TooltipTriggerProps) {
   const { show, showNow, hide, open, triggerRef, tooltipId } = useTooltip();
-  const child = resolveServerChild(children) as TooltipTriggerProps["children"];
-  return cloneElement(child, {
-    ...rest,
-    ref: triggerRef,
-    onMouseEnter: (e: MouseEvent) => { child.props.onMouseEnter?.(e); show(); },
-    onMouseLeave: (e: MouseEvent) => { child.props.onMouseLeave?.(e); hide(); },
-    onFocus: (e: FocusEvent) => { child.props.onFocus?.(e); showNow(); },
-    onBlur: (e: FocusEvent) => { child.props.onBlur?.(e); hide(); },
+  const child = resolveSlotChild(children);
+  const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
+  return cloneSlot(child, rest, {
+    ref: mergedRef,
+    onMouseEnter: show,
+    onMouseLeave: hide,
+    onFocus: showNow,
+    onBlur: hide,
     "aria-describedby": open ? tooltipId : undefined,
-  } as Record<string, unknown>);
+  });
 }
+TooltipTrigger.displayName = "Tooltip.Trigger";

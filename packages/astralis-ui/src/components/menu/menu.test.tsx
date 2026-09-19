@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { createRef } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Menu } from "./";
@@ -129,5 +130,31 @@ describe("Menu selection", () => {
     await waitFor(() => expect(menu()).toBeInTheDocument());
     const configure = screen.getByRole("menuitem", { name: "Configure" });
     expect(configure).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+describe("Menu trigger", () => {
+  it("ArrowUp on a closed trigger opens on the last enabled item", async () => {
+    const user = userEvent.setup();
+    render(<TestMenu />);
+
+    trigger().focus();
+    await user.keyboard("{ArrowUp}");
+    await waitFor(() => expect(items()[2]).toHaveFocus()); // Delete
+  });
+
+  it("keeps the wrapped element's own ref", async () => {
+    const ref = createRef<HTMLButtonElement>();
+    render(
+      <Menu>
+        <Menu.Trigger>
+          <button ref={ref}>More</button>
+        </Menu.Trigger>
+        <Menu.Content>
+          <Menu.Item>One</Menu.Item>
+        </Menu.Content>
+      </Menu>,
+    );
+    expect(ref.current).toBe(screen.getByRole("button", { name: "More" }));
   });
 });
