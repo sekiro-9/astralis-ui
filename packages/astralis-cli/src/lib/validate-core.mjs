@@ -2,7 +2,7 @@
    ASTRALIS — VALIDATOR CORE (Tier A: vocabulary)
    --------------------------------------------------------------------------
    Pure function: (TSX source, system spec) -> { errors, warnings }. Browser-
-   safe: it reaches no Node builtins (Studio runs it client-side).
+   safe: it reaches no Node builtins, so it also runs client-side.
 
    The system spec (dist/system-spec.json, emitted by the astralis-ui build)
    is the ground truth; nothing here is hand-listed twice. The checks target
@@ -18,6 +18,8 @@
    - a prop its component deliberately types away           (excluded-prop)
    - a bare number where CSS needs a unit                   (bare-number-value)
    - paint props on recipe components (doctrine, warn-only) (paint-on-recipe)
+   - a component left empty that its type requires children for (missing-children):
+     tsc catches it too, but agents and copied snippets produce code no one type-checks
 
    Dynamic expressions are skipped, not guessed at: this validator makes no
    claim it cannot decide statically. Components whose spec entry has no
@@ -28,6 +30,7 @@ import { parse } from "@babel/parser";
 import { classifyChannelValue } from "./css-value.mjs";
 import { ARIA_ATTRS, ROLES } from "./aria.mjs";
 import { suggest } from "./suggest.mjs";
+import { checkRequiredChildren } from "./children-rule.mjs";
 
 const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 const CSS_VAR_REF = /var\((--astralis-[^,()\s]+)\)/g; // no-fallback form only
@@ -70,7 +73,19 @@ export function prepareSpec(spec) {
     // them and older code must keep validating.
     bpKeys: new Set(["base", ...Object.keys(spec.breakpoints), ...Object.keys(spec.containerBreakpoints ?? {})]),
     stateProps: new Set(Object.keys(spec.states)),
+    // Every exported value and type (spec 3+). Null for older specs.
+    exportSet: spec.exports ? new Set(spec.exports) : null,
   };
+}
+
+/**
+ * Whether astralis-ui exports `name`. Specs before version 3 list only
+ * components, so constants (COLOR_SCHEMES) and props types (ButtonProps) are
+ * given the benefit of the doubt there rather than reported.
+ */
+function isExported(ctx, name) {
+  if (ctx.spec.components[name]) return true;
+  return ctx.exportSet ? ctx.exportSet.has(name) : /^[A-Z0-9_]+$|Props$/.test(name);
 }
 
 /* ---- AST helpers ------------------------------------------------------------ */
@@ -132,11 +147,11 @@ function collectImports(ctx, ast) {
   for (const node of ast.program.body) {
     if (node.type !== "ImportDeclaration" || node.source.value !== "astralis-ui") continue;
     for (const s of node.specifiers) {
-      if (s.type !== "ImportSpecifier") continue;
+      if (s.type !== "ImportSpecifier" || s.importKind === "type" || node.importKind === "type") continue;
       const name = s.imported.type === "Identifier" ? s.imported.name : s.imported.value;
       ctx.imported.set(s.local.name, name);
-      // Only component-shaped names are checkable; hooks/utils aren't in the spec (yet).
-      if (/^[A-Z]/.test(name) && !ctx.spec.components[name]) {
+      // Only capitalised names are checked: a lowercase hook or util typo is TypeScript's to catch.
+      if (/^[A-Z]/.test(name) && !isExported(ctx, name)) {
         ctx.error("unknown-import", s, `"${name}" is not exported by astralis-ui — check the spelling against the components list`);
       }
     }
@@ -297,12 +312,16 @@ function checkTabIndex(ctx, attr) {
 function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
   const name = identity.specName;
   if (comp.exclude?.includes(prop)) {
+    const short = allowed[prop]?.short;
     const hint =
       name === "Container" ? " — Container has no size scale; use maxW" :
-      prop === "direction" ? ` — the axis is fixed by the preset; use Stack for a switchable direction` : "";
-    ctx.error("excluded-prop", attr, `${name} deliberately has no "${prop}" prop${hint}`);
+      prop === "direction" ? ` — the axis is fixed by the preset; use Stack for a switchable direction` :
+      short && !comp.exclude.includes(short) ? ` — use ${short}` : "";
+    ctx.error("excluded-prop", attr, `${name} has no "${prop}" prop${hint}`);
     return;
   }
+  // The component's own attribute under a style prop's name (Image's width): not a style prop.
+  if (comp.overrides?.includes(prop)) return;
   if (ctx.stateProps.has(prop)) {
     // Only Box-composing primitives resolve states; elsewhere no claim.
     if (comp.groups.includes("box")) checkStateValue(ctx, name, prop, attr.value);
@@ -487,6 +506,7 @@ function traverse(ctx, node) {
     const opening = node.openingElement;
     const identity = analyzeOpening(ctx, opening);
     checkAnatomy(ctx, identity, opening);
+    checkRequiredChildren(ctx, identity, node);
     collectTabsValue(ctx, identity, opening);
     if (identity.specName === "Tabs") {
       openTabsScope(ctx, opening);

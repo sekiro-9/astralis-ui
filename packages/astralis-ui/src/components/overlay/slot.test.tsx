@@ -8,7 +8,7 @@ import { Tooltip } from "./tooltip";
 import { resolveSlotChild } from "./slot";
 
 // scripts/measure-content.mjs matches this phrase to record a slot part's
-// content as "element"; Studio inserts parts by that record.
+// content as "element" in the spec.
 const WANTS_ELEMENT = /must be a React element/;
 
 describe("slot parts", () => {

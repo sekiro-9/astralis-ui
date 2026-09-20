@@ -43,8 +43,18 @@ export const COMMANDS = [
     args: "",
     maxPositionals: 0,
     summary: "Wire astralis-ui into an existing Next.js or React + Vite project",
-    options: [{ name: "dry-run", type: "boolean", description: "Show the changes without writing anything." }],
-    examples: ["astralis init", "astralis init --dry-run"],
+    options: [
+      { name: "dry-run", type: "boolean", description: "Show the changes without writing anything." },
+      {
+        name: "ci",
+        type: "boolean",
+        description:
+          "Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow.",
+      },
+      { name: "force", type: "boolean", description: "With --ci, replace an existing astralis-validate.yml." },
+    ],
+    notes: ["init --ci is safe to re-run: it adds only what is missing and never replaces a workflow without --force."],
+    examples: ["astralis init", "astralis init --dry-run", "astralis init --ci"],
   },
   {
     name: "add",
@@ -111,7 +121,14 @@ export const COMMANDS = [
     maxPositionals: Infinity,
     summary: "Check TSX and JSX against the installed design system",
     options: [
-      { name: "json", type: "boolean", description: "Print one JSON report instead of text, for CI and tools." },
+      {
+        name: "format",
+        type: "string",
+        arg: "text|json|github",
+        description: "How to report: text for people, json for tools, github for inline pull-request annotations.",
+        default: "github inside GitHub Actions, text elsewhere",
+      },
+      { name: "json", type: "boolean", description: "Same as --format json." },
       {
         name: "spec",
         type: "string",
@@ -121,7 +138,10 @@ export const COMMANDS = [
       },
       { name: "strict-tokens", type: "boolean", description: "Also warn on raw colors that bypass the tokens." },
     ],
-    notes: ["With no paths it checks the current directory, skipping node_modules and build output."],
+    notes: [
+      "With no paths it checks the current directory, skipping node_modules and build output.",
+      "Exits 1 when there are errors; warnings are reported but never fail the run.",
+    ],
     examples: ["astralis validate", "astralis validate src/components --json", "astralis validate --strict-tokens"],
   },
   {

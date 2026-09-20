@@ -51,7 +51,7 @@ export type BlockCategory = (typeof BLOCK_CATEGORIES)[number];
  *     login  ->  login-01, login-02, …
  *
  * - `id`    what a consumer types (`npx astralis-cli add hero-01`) and the key the docs
- *           and Studio look blocks up by. Always `{category}-{nn}`.
+ *           look blocks up by. Always `{category}-{nn}`.
  * - `name`  the human label on the docs card. This is where a block gets to be
  *           descriptive — the id stays boring on purpose, so "which one is it"
  *           is answered by the card rather than encoded in the slug.

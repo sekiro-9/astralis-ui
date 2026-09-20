@@ -5,6 +5,7 @@ import { ok, warn, info, fail, bold, dim, cyan } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { runCommand } from "../lib/run.mjs";
+import { setUpCi } from "../lib/ci-setup.mjs";
 
 const PROVIDER_IMPORT = 'import { AstralisProvider } from "astralis-ui";';
 const STYLES_IMPORT = 'import "astralis-ui/styles.css";';
@@ -32,6 +33,8 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   const args = parseCommandArgs(commandNamed("init"), argv);
   if (!args) return;
   const dryRun = args.values["dry-run"];
+  const ci = args.values.ci;
+  if (args.values.force && !ci) fail("--force only applies with --ci (it replaces an existing workflow).");
   const cwd = process.cwd();
 
   const pkg = readPackageJson(cwd);
@@ -66,6 +69,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
    * a package-manager install still streams in order.
    */
   const steps = [];
+  const afterwards = [];
   let printing = false;
   let changed = false;
   const step = (fn) => (printing ? fn() : steps.push(fn));
@@ -74,6 +78,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     steps.length = 0;
     printing = true;
   };
+  const out = { step, flush, changed: () => (changed = true), after: (fn) => afterwards.push(fn) };
 
   step(() =>
     info(
@@ -100,8 +105,13 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   // 2. Entry file
   const entry = findEntryFile(cwd, framework);
   if (!entry) {
+    flush();
     warn(`Couldn't find your ${framework === "next" ? "root layout" : "src/main.tsx"} — wire the provider manually:`);
     console.log(MANUAL_SNIPPET);
+    if (ci) {
+      for (const note of setUpCi({ cwd, pkg, pm, dryRun, force: args.values.force, out })) warn(note);
+      for (const fn of afterwards) fn();
+    }
     return;
   }
 
@@ -149,12 +159,16 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     else writeFileSync(entry.path, source);
   }
 
+  // 4. CI
+  const wiringNotes = notes.length;
+  if (ci) notes.push(...setUpCi({ cwd, pkg, pm, dryRun, force: args.values.force, out }));
+
   /*
    * Nothing to do, and nothing that needed the reader's attention: say so in
    * one line instead of listing the steps that were already satisfied.
    */
   if (!changed && notes.length === 0) {
-    ok("astralis-ui is already present in this project");
+    ok(ci ? "astralis-ui and its CI check are already set up in this project" : "astralis-ui is already present in this project");
     if (nested) return;
     console.log(`Nothing to scaffold.\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
     return;
@@ -163,12 +177,13 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   flush();
 
   for (const note of notes) warn(note);
-  if (notes.length > 0) console.log(MANUAL_SNIPPET);
+  if (wiringNotes > 0) console.log(MANUAL_SNIPPET);
+  for (const fn of afterwards) fn();
 
-  if (nested) return;
+  if (nested || !changed) return;
 
   if (dryRun) {
-    console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan("astralis init")} to apply it.`);
+    console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan(ci ? "astralis init --ci" : "astralis init")} to apply it.`);
     return;
   }
   console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);

@@ -1,0 +1,148 @@
+export const metadata = {
+  title: "Validate in CI",
+  description: "Run astralis validate before code is committed and on every pull request, so a design-system mistake cannot be merged.",
+};
+
+# Validate in CI
+
+Run `astralis validate` before code is committed and on every pull request, so a
+design-system mistake cannot be merged.
+
+## Two gates
+
+A team's workflow puts checks in front of version control in two places:
+
+- **A pre-commit hook** runs on your machine, on the files you are committing,
+  and stops a bad commit before it is made. It is fast feedback, but it can be
+  skipped with `git commit --no-verify`.
+- **A required check on the pull request** runs in CI on every change. It
+  cannot be skipped: once branch protection marks it as required, nothing is
+  merged until it passes.
+
+Use the hook for speed and the CI check as the authority. Both run the same
+command, so they never disagree.
+
+The validator exits with status `1` only when it finds **errors**. Warnings,
+such as a raw colour under `--strict-tokens`, are reported without failing the
+run. It parses your code and never executes it.
+
+## Set up CI in one command
+
+From your project's root:
+
+```bash
+npx astralis-cli init --ci
+```
+
+On top of what [`init`](/docs/cli#init--add-astralis-to-an-existing-project)
+already does, `--ci`:
+
+1. installs `astralis-cli` as a devDependency, so CI and your hook run the
+   version you tested with, not whatever is newest;
+2. adds a `"validate": "astralis validate"` script to `package.json` (or
+   `"astralis:validate"`, if you already have a `validate` script that does
+   something else);
+3. writes `.github/workflows/astralis-validate.yml` for your package manager —
+   npm, pnpm, yarn or bun, read from your lockfile.
+
+Running it again changes nothing. A workflow you have edited is never replaced
+unless you pass `--force`.
+
+### The workflow
+
+For an npm project it writes exactly this. The pnpm, yarn and bun versions add
+their own setup step and install command.
+
+```yaml
+# Checks every pull request against the astralis-ui design system; written by
+# `astralis init --ci`. Make "Astralis validate" a required status check so a
+# failing run blocks the merge: GitHub → Settings → Rules (or Branches).
+name: Astralis validate
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Astralis validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+```
+
+Inside GitHub Actions the validator reports in GitHub's annotation format, so
+each finding appears on the changed line of the pull request, with its rule
+code. If your project sits in a subfolder of the repository, `init --ci` puts
+the workflow at the repository root and runs it in your folder, and annotations
+still point at the right file.
+
+### Make the check required
+
+The workflow reports; branch protection is what blocks. Push the workflow once
+so GitHub has seen the check, then:
+
+1. Open the repository's **Settings → Rules → Rulesets** (or **Settings →
+   Branches** for a classic branch protection rule).
+2. Target your default branch.
+3. Turn on **Require status checks to pass** and add **Astralis validate**.
+
+From then on a pull request with a validator error cannot be merged.
+
+## Add a pre-commit hook
+
+The hook validates only the files being committed, using
+[husky](https://typicode.github.io/husky/) to install the hook and
+[lint-staged](https://github.com/lint-staged/lint-staged) to pass it the staged
+files. It needs `astralis-cli` in your devDependencies; `init --ci` adds it, or
+run `npm install -D astralis-cli`.
+
+```bash
+npm install -D husky lint-staged
+npx husky init
+```
+
+Replace the contents of `.husky/pre-commit` with:
+
+```bash
+npx lint-staged
+```
+
+And add to `package.json`:
+
+```json
+{
+  "lint-staged": {
+    "*.{tsx,jsx}": "astralis validate"
+  }
+}
+```
+
+Now a commit that stages a `.tsx` or `.jsx` file with an error is refused, with
+the finding printed in the terminal. A commit that stages no `.tsx` or `.jsx`
+files skips the check entirely, and warnings never block a commit.
+
+## Other CI systems
+
+Any CI system can run the same command. It needs Node `^22.18` or `>=24.11`, and
+it fails the job through the exit code:
+
+```bash
+npx astralis-cli validate
+```
+
+With `astralis-cli` in your devDependencies, `npx` runs that pinned copy;
+without it, `npx` downloads the latest release on every run. For a
+machine-readable result — to post a comment, or to fail on warnings as well —
+use `--json`, which prints a single report in [this
+shape](/docs/cli#json-output).

@@ -403,3 +403,62 @@ test("`container` prop is spec-legal as a bare attribute", () => {
   const r = validate(`<Box container><Card>x</Card></Box>`);
   assert.deepEqual(r.errors, []);
 });
+
+test("every real export imports cleanly: constants and props types, however they are imported", () => {
+  const source = `import { Box, BOX_STYLE_TOKENS, COLOR_SCHEMES, ButtonProps } from "astralis-ui";
+import type { StackProps } from "astralis-ui";
+import { type CardProps, Button } from "astralis-ui";
+export const X = () => <Box><Button /></Box>;
+`;
+  const r = validateSource(source, prepared, "test.tsx");
+  assert.deepEqual(codes(r.errors), []);
+});
+
+test("a misspelt export is still an error, constant or component", () => {
+  const r = validateSource(`import { BOX_STYLE_TOKEN, Buton } from "astralis-ui";\n`, prepared, "test.tsx");
+  assert.deepEqual(codes(r.errors), ["unknown-import", "unknown-import"]);
+});
+
+test("a spec without an export list judges components only", () => {
+  const { exports: _, ...older } = spec;
+  const r = validateSource(`import { COLOR_SCHEMES, ButtonProps, Buton } from "astralis-ui";\n`, prepareSpec(older), "test.tsx");
+  assert.deepEqual(r.errors.map((e) => e.message.slice(0, 7)), ['"Buton"']);
+});
+
+test("Image's width and height are img attributes, not style props", () => {
+  const r = validate(`<Image src="/a.png" alt="A" width={140} height="90" />`, "Image");
+  assert.deepEqual(r.errors, []);
+  assert.deepEqual(r.warnings, []);
+});
+
+test("a group prop the component's type omits is excluded, with the short name when there is one", () => {
+  const heading = validate(`<Heading paragraph>Title</Heading>`, "Heading");
+  assert.deepEqual(codes(heading.errors), ["excluded-prop"]);
+  const item = validate(`<Grid><GridItem columnSpan="2">x</GridItem></Grid>`, "Grid, GridItem");
+  assert.deepEqual(codes(item.errors), ["excluded-prop"]);
+  assert.match(item.errors[0].message, /GridItem has no "columnSpan" prop — use colSpan/);
+  assert.deepEqual(validate(`<Grid><GridItem colSpan="2">x</GridItem></Grid>`, "Grid, GridItem").errors, []);
+});
+
+test("a component whose type requires children is an error when left empty", () => {
+  const r = validate(`<Stack><Tabs defaultValue="a" /><Modal></Modal><Tooltip>
+  </Tooltip></Stack>`, "Stack, Tabs, Modal, Tooltip");
+  assert.deepEqual(codes(r.errors), ["missing-children", "missing-children", "missing-children"]);
+  assert.match(r.errors[0].message, /Tabs requires children.*compose its parts \(List, Trigger, Content\)/);
+});
+
+test("children given any way satisfy the rule, and a spread makes no claim", () => {
+  const r = validate(`<Stack>
+    <Tabs defaultValue="a"><Tabs.List><Tabs.Trigger value="a">A</Tabs.Trigger></Tabs.List><Tabs.Content value="a">x</Tabs.Content></Tabs>
+    <Tooltip content="hi">{trigger}</Tooltip>
+    <Modal children={body} />
+    <Modal {...props} />
+    <Link href="/"> </Link>
+  </Stack>`, "Stack, Tabs, Tooltip, Modal, Link");
+  assert.deepEqual(codes(r.errors), []);
+});
+
+test("a comment is not a child", () => {
+  const r = validate(`<Link href="/">{/* later */}</Link>`, "Link");
+  assert.deepEqual(codes(r.errors), ["missing-children"]);
+});

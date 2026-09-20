@@ -7,6 +7,19 @@ their history lives in the git log.
 
 ### Spec
 
+`specVersion` is now 3. The style-prop groups are still assigned by table, so
+the spec now reconciles them with each component's real type:
+
+- **`exports`** — every name the entry point exports, values and types. The
+  validator judged imports against components only, so importing
+  `COLOR_SCHEMES` or `ButtonProps` was reported as an error.
+- **`exclude`** now also lists every group prop a component's type omits
+  (Heading's `paragraph`, GridItem's `columnSpan` long forms), not only the
+  hand-listed ones.
+- **`overrides`** — group props a component redefines as its own attribute.
+  Image's `width` and `height` are the img element's intrinsic size, not
+  placement style props, so `width={140}` no longer draws a bare-number warning.
+
 The system spec now says what a component needs and what it does with
 children, both derived, none of it authored twice:
 

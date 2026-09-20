@@ -86,3 +86,63 @@ test("no .tsx files, or a path that doesn't exist, is an error", async () => {
     project.cleanup();
   }
 });
+
+test("--format github prints one annotation per finding, placed by path from the repository root", async () => {
+  const project = tempProject({ "web/src/b.tsx": BROKEN });
+  try {
+    const cwd = `${project.dir}/web`;
+    const result = await runCli(["validate", "src", "--format", "github", "--spec", SPEC], {
+      cwd,
+      env: { GITHUB_WORKSPACE: project.dir },
+    });
+    assert.equal(result.code, 1);
+    const lines = result.stdout.split("\n").filter((line) => line.startsWith("::"));
+    assert.equal(lines.length, 2);
+    for (const line of lines) assert.match(line, /^::error file=web\/src\/b\.tsx,line=\d+,col=\d+,title=astralis [a-z-]+::/);
+    assert.match(result.stderr, /1 file\(s\) against .* 2 error\(s\)/);
+  } finally {
+    project.cleanup();
+  }
+});
+
+test("inside GitHub Actions annotations are the default, and --format text still wins", async () => {
+  const project = tempProject({ "b.tsx": BROKEN });
+  try {
+    const env = { GITHUB_ACTIONS: "true", GITHUB_WORKSPACE: project.dir };
+    const auto = await runCli(["validate", "--spec", SPEC], { cwd: project.dir, env });
+    assert.match(auto.stdout, /^::error file=b\.tsx,/m);
+    const text = await runCli(["validate", "--format", "text", "--spec", SPEC], { cwd: project.dir, env });
+    assert.doesNotMatch(text.stdout, /^::/m);
+    assert.match(text.stdout, /invalid-recipe-value/);
+  } finally {
+    project.cleanup();
+  }
+});
+
+test("warnings become ::warning annotations and do not fail the run", async () => {
+  const source = `import { Box } from "astralis-ui";\nexport const C = () => <Box bg="#ff0000" />;\n`;
+  const project = tempProject({ "c.tsx": source });
+  try {
+    const result = await runCli(["validate", "--format", "github", "--strict-tokens", "--spec", SPEC], { cwd: project.dir });
+    assert.equal(result.code, 0, result.output);
+    assert.match(result.stdout, /^::warning file=c\.tsx,.*title=astralis off-token-color::/m);
+  } finally {
+    project.cleanup();
+  }
+});
+
+test("an unknown --format, or --json against another format, is refused", async () => {
+  const project = tempProject({ "a.tsx": CLEAN });
+  try {
+    const unknown = await runCli(["validate", "--format", "xml", "--spec", SPEC], { cwd: project.dir });
+    assert.equal(unknown.code, 1);
+    assert.match(unknown.stderr, /--format must be one of text, json, github/);
+    const clash = await runCli(["validate", "--json", "--format", "github", "--spec", SPEC], { cwd: project.dir });
+    assert.equal(clash.code, 1);
+    assert.match(clash.stderr, /--json and --format github disagree/);
+    const same = await runCli(["validate", "--json", "--format", "json", "--spec", SPEC], { cwd: project.dir });
+    assert.equal(same.code, 0, same.output);
+  } finally {
+    project.cleanup();
+  }
+});

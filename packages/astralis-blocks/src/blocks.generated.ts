@@ -1,7 +1,7 @@
 /* ==========================================================================
    AUTO-GENERATED — DO NOT EDIT BY HAND
    Source: scripts/build-registry.mjs
-   The live component behind every registry id, for docs previews and Studio.
+   The live component behind every registry id, for the docs previews.
    ========================================================================== */
 
 import type { JSX } from "react";

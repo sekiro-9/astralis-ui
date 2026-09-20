@@ -16,4 +16,10 @@ describe("docs as markdown", () => {
     expect(md).not.toMatch(/<PropsTable\b/);
     expect(md).not.toMatch(/^export const metadata/m);
   });
+
+  it("keeps the import lines inside code examples, and drops the MDX's own", () => {
+    const md = docAsMarkdown("button") ?? "";
+    expect(md).toMatch(/```tsx\nimport \{ Button \} from "astralis-ui";\n```/);
+    expect(md).not.toMatch(/^import .* from "@\//m);
+  });
 });

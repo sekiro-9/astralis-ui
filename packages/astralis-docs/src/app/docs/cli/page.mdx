@@ -66,11 +66,18 @@ npx astralis-cli init
 | Option | |
 | --- | --- |
 | `--dry-run` | Show the changes without writing anything. |
+| `--ci` | Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow. |
+| `--force` | With --ci, replace an existing astralis-validate.yml. |
 
 It reads your entry file rather than pattern-matching it, so an import that is
 already there (however it's quoted or wrapped) isn't added twice, and it never
 writes a file that no longer parses. If your entry file is a shape it can't
 edit safely, it prints the manual steps instead. Running it twice is safe.
+
+With `--ci` it also sets up a check on every pull request: it pins
+`astralis-cli` as a devDependency, adds a `validate` script and writes a GitHub
+Actions workflow. [Validate in CI](/docs/validate-in-ci) covers that, and a
+pre-commit hook.
 
 ## `add` — copy a block into your project
 
@@ -161,7 +168,8 @@ npx astralis-cli validate --json       # one JSON report, for CI and tools
 
 | Option | |
 | --- | --- |
-| `--json` | Print one JSON report instead of text, for CI and tools. |
+| `--format <text\|json\|github>` | How to report: text for people, json for tools, github for inline pull-request annotations. Default: github inside GitHub Actions, text elsewhere. |
+| `--json` | Same as --format json. |
 | `--spec <path>` | Validate against this system-spec.json. Default: the installed astralis-ui's. |
 | `--strict-tokens` | Also warn on raw colors that bypass the tokens. |
 
@@ -183,7 +191,7 @@ every finding has the same five fields.
 
 ```json
 {
-  "spec": { "name": "astralis-ui", "version": "0.7.8", "specVersion": 1 },
+  "spec": { "name": "astralis-ui", "version": "0.7.8", "specVersion": 2 },
   "files": 12,
   "errors": 1,
   "warnings": 0,
@@ -211,6 +219,9 @@ Arbitrary values are a feature — `bg="#ff0000"` is valid CSS and renders. But
 a raw colour won't follow the theme or dark mode. `--strict-tokens` adds an
 `off-token-color` warning for each one, as a drift check, without failing the
 run.
+
+To run it on every pull request and before each commit, see [Validate in
+CI](/docs/validate-in-ci).
 
 The same validator runs inside the [MCP server](/docs/ai-agents) as the
 `validate_code` tool, so an AI agent checks its own output against the rules

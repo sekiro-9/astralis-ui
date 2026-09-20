@@ -13,6 +13,21 @@ import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
 import { findInstalledSpec } from "../lib/spec-resolve.mjs";
+import { annotation } from "../lib/github-annotations.mjs";
+
+const FORMATS = ["text", "json", "github"];
+
+/** --format wins; --json means json; inside GitHub Actions the default is annotations. */
+function chooseFormat(values, env = process.env) {
+  if (values.format !== undefined && !FORMATS.includes(values.format)) {
+    fail(`--format must be one of ${FORMATS.join(", ")} (got "${values.format}").`);
+  }
+  if (values.json && values.format !== undefined && values.format !== "json") {
+    fail(`--json and --format ${values.format} disagree; pass one of them.`);
+  }
+  if (values.json) return "json";
+  return values.format ?? (env.GITHUB_ACTIONS === "true" ? "github" : "text");
+}
 
 const SKIP_DIRS = new Set(["node_modules", ".git", ".next", "dist", "build", "out", ".astralis"]);
 
@@ -61,6 +76,7 @@ export async function run(argv) {
   if (!args) return;
   const paths = args.positionals.length > 0 ? args.positionals : ["."];
   const strictTokens = args.values["strict-tokens"];
+  const format = chooseFormat(args.values);
 
   const spec = loadSpec(args.values.spec);
   const prepared = prepareSpec(spec);
@@ -79,7 +95,7 @@ export async function run(argv) {
     if (errors.length || warnings.length) results.push({ file: rel, errors, warnings });
   }
 
-  if (args.values.json) {
+  if (format === "json") {
     console.log(JSON.stringify({
       spec: { name: spec.name, version: spec.version, specVersion: spec.specVersion },
       files: files.length,
@@ -91,7 +107,14 @@ export async function run(argv) {
     return;
   }
 
-  for (const r of results) {
+  if (format === "github") {
+    for (const r of results) {
+      for (const e of r.errors) console.log(annotation("error", e));
+      for (const w of r.warnings) console.log(annotation("warning", w));
+    }
+  }
+
+  for (const r of format === "text" ? results : []) {
     console.log(`\n${bold(r.file)}`);
     const all = [...r.errors.map((e) => ({ ...e, kind: "error" })), ...r.warnings.map((w) => ({ ...w, kind: "warn" }))]
       .sort((a, b) => a.line - b.line || a.column - b.column);

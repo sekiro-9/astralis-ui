@@ -58,7 +58,7 @@ export function docAsMarkdown(slug: string): string | null {
 }
 
 function mdxToMarkdown(mdxPath: string): string {
-  let md = readFileSync(mdxPath, "utf8");
+  let md = readFileSync(mdxPath, "utf8").replaceAll("\r\n", "\n");
 
   // Map imported identifiers to their module paths BEFORE stripping imports,
   // so <PropsTable rows={buttonProps}/> can find its data file.
@@ -67,15 +67,19 @@ function mdxToMarkdown(mdxPath: string): string {
     for (const name of m[1].split(",")) importPaths.set(name.trim(), m[2]);
   }
 
-  // Strip the metadata export and every top-level import line.
+  // Strip the metadata export and the MDX's own import lines. Code fences are
+  // split out first: their import lines are the examples the reader copies.
   md = md.replace(/^export const metadata = \{[\s\S]*?\};\s*/m, "");
-  md = md.replace(/^import\s.*$\n?/gm, "");
+  md = md
+    .split(/(^```[\s\S]*?^```)/m)
+    .map((part) => (part.startsWith("```") ? part : part.replace(/^import\s.*$\n?/gm, "")))
+    .join("");
 
   // Inline each preview's demo source as a fenced tsx block.
   md = md.replace(/<ComponentPreview\s+name="([a-z0-9-]+)"[^/]*\/>/g, (_, name: string) => {
     const demoPath = findDemoFile(name);
     if (!demoPath) return `*(interactive demo: ${name})*`;
-    const source = readFileSync(demoPath, "utf8").trim();
+    const source = readFileSync(demoPath, "utf8").replaceAll("\r\n", "\n").trim();
     return "```tsx\n" + source + "\n```";
   });
 

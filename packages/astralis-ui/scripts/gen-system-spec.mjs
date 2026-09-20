@@ -209,6 +209,9 @@ for (const name of [...Object.keys(PRIMITIVE_GROUPS), ...PLACEMENT_ADOPTERS]) {
   if (!exportSet.has(name)) fail(`authored table names "${name}", which is not exported`);
 }
 
+/* The primitive whose own props define each group. */
+const GROUP_OWNERS = { box: "Box", flex: "Flex", flexItem: "FlexItem", grid: "Grid", gridItem: "GridItem", stack: "Stack", text: "Text" };
+
 /* Props deliberately typed away on specific components — the validator turns
    these into targeted errors instead of "unknown prop" shrugs. */
 const EXCLUDED_PROPS = {
@@ -232,6 +235,10 @@ const {
   literal: literalProps,
   scalar: scalarProps,
   required: requiredProps,
+  propNames,
+  redefined,
+  needsChildren,
+  exports: entryExports,
 } = extractComponentTypes(join(PKG, "dist", "index.d.ts"));
 
 /* Category, read off the module that DEFINES each export: the source tree is
@@ -265,7 +272,23 @@ const components = Object.fromEntries(
     // demands anything else.
     const needed = requiredProps.get(name);
     if (needed) entry.required = needed;
-    if (EXCLUDED_PROPS[name]) entry.exclude = EXCLUDED_PROPS[name];
+    // Kept out of `required`, which lists the props a builder can fill in:
+    // children are composed, not typed into a field.
+    if (needsChildren.has(name)) entry.requiresChildren = true;
+    // The groups are assigned by table, so reconcile them with the component's
+    // real type: a group prop the type omits (Heading's paragraph) is excluded,
+    // and one the component redefines (Image's intrinsic width) is its own.
+    const groupProps = new Set(groups.flatMap((group) => Object.keys(propGroups[group])));
+    const accepted = propNames.get(name);
+    const omitted = accepted ? [...groupProps].filter((prop) => !accepted.has(prop)) : [];
+    const exclude = [...new Set([...(EXCLUDED_PROPS[name] ?? []), ...omitted])];
+    if (exclude.length) entry.exclude = exclude;
+    // A group's defining primitive (Box for box) declares that group's props itself.
+    const inherited = new Set(
+      groups.filter((group) => GROUP_OWNERS[group] !== name).flatMap((group) => Object.keys(propGroups[group])),
+    );
+    const overrides = (redefined.get(name) ?? []).filter((prop) => inherited.has(prop) && !exclude.includes(prop));
+    if (overrides.length) entry.overrides = overrides;
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what
     // actually exists at runtime. Some compounds also have flat exports
@@ -428,7 +451,10 @@ const spec = {
   name: pkg.name,
   version: pkg.version,
   // 2: components carry scalarProps; generatedAt is opt-in.
-  specVersion: 2,
+  // 3: exports lists every name the entry point exports; components carry
+  //    overrides and requiresChildren, and exclude covers every group prop
+  //    their type omits.
+  specVersion: 3,
   // What this version can and cannot answer; consumers should branch on it.
   propsManifest: "style-props-v1",
   // Off by default so two builds of one commit emit identical bytes.
@@ -441,6 +467,7 @@ const spec = {
   channelProps: CHANNEL_PROPS,
   propGroups,
   components,
+  exports: entryExports,
   classes,
   cssVariables,
 };

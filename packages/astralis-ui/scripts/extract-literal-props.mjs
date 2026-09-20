@@ -71,11 +71,22 @@ const GENERIC_PROPS = new Set(["className", "style", "id", "children"]);
  * supply (Image's src and alt) and which components it cannot place at all
  * (TableOfContents wants an items array no prop editor can type).
  *
+ * Two more readings serve the style-prop groups the spec assigns by table:
+ * `propNames`, every prop the component's type accepts, and `redefined`, the
+ * props a component declares itself with a non-responsive type (Image's
+ * intrinsic `width`), which therefore are not the group's style prop of the
+ * same name. `needsChildren` names the components whose children are not
+ * optional; `exports` is every name the entry point exports, values and types.
+ *
  * @param {string} dtsPath absolute path to dist/index.d.ts
  * @returns {{
  *   literal: Map<string, Record<string, string[]>>,
  *   scalar: Map<string, Record<string, "boolean" | "string" | "number">>,
  *   required: Map<string, Record<string, string>>,
+ *   propNames: Map<string, Set<string>>,
+ *   redefined: Map<string, string[]>,
+ *   needsChildren: Set<string>,
+ *   exports: string[],
  * }}
  */
 export function extractComponentTypes(dtsPath) {
@@ -93,7 +104,11 @@ export function extractComponentTypes(dtsPath) {
   const result = new Map();
   const scalar = new Map();
   const required = new Map();
-  for (const symbol of checker.getExportsOfModule(moduleSymbol)) {
+  const propNames = new Map();
+  const redefined = new Map();
+  const needsChildren = new Set();
+  const moduleExports = checker.getExportsOfModule(moduleSymbol);
+  for (const symbol of moduleExports) {
     const name = symbol.getName();
     if (!/^[A-Z]/.test(name) || /^[A-Z0-9_]+$/.test(name)) continue; // components only
 
@@ -108,8 +123,12 @@ export function extractComponentTypes(dtsPath) {
     const props = {};
     const scalars = {};
     const needed = {};
+    const own = [];
+    propNames.set(name, new Set(paramType.getProperties().map((p) => p.getName())));
     for (const propSymbol of paramType.getProperties()) {
       const propName = propSymbol.getName();
+      if (isRedefinedHere(propSymbol, name)) own.push(propName);
+      if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName === "children") needsChildren.add(name);
       if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName !== "children") {
         needed[propName] = kindOf(checker.getTypeOfSymbolAtLocation(propSymbol, source));
       }
@@ -132,8 +151,28 @@ export function extractComponentTypes(dtsPath) {
     if (Object.keys(props).length) result.set(name, props);
     if (Object.keys(scalars).length) scalar.set(name, scalars);
     if (Object.keys(needed).length) required.set(name, needed);
+    if (own.length) redefined.set(name, own);
   }
-  return { literal: result, scalar, required };
+  const exports = moduleExports.map((s) => s.getName()).sort();
+  return { literal: result, scalar, required, propNames, redefined, needsChildren, exports };
+}
+
+/**
+ * Declared in the component's own props type (ImageProps, LinkProps…) with a
+ * type that takes no responsive map. A style prop always does, so a prop like
+ * that is the component's own attribute that happens to share a style prop's name.
+ */
+function isRedefinedHere(propSymbol, componentName) {
+  return (propSymbol.declarations ?? []).some((declaration) => {
+    if (!ts.isPropertySignature(declaration) || !declaration.type) return false;
+    const owner = declaration.parent;
+    const ownerName = ts.isInterfaceDeclaration(owner)
+      ? owner.name.text
+      : ts.isTypeLiteralNode(owner) && ts.isTypeAliasDeclaration(owner.parent)
+        ? owner.parent.name.text
+        : null;
+    return ownerName?.startsWith(componentName) === true && !/\bResponsive/.test(declaration.type.getText());
+  });
 }
 
 /** What a value for the prop looks like: a builder can type a string or a

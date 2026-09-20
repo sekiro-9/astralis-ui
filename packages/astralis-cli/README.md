@@ -39,10 +39,15 @@ Wire astralis-ui into an existing Next.js or React + Vite project.
 | Option | |
 | --- | --- |
 | `--dry-run` | Show the changes without writing anything. |
+| `--ci` | Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow. |
+| `--force` | With --ci, replace an existing astralis-validate.yml. |
+
+init --ci is safe to re-run: it adds only what is missing and never replaces a workflow without --force.
 
 ```bash
 astralis init
 astralis init --dry-run
+astralis init --ci
 ```
 
 ### `astralis add <block...>`
@@ -100,11 +105,14 @@ Check TSX and JSX against the installed design system.
 
 | Option | |
 | --- | --- |
-| `--json` | Print one JSON report instead of text, for CI and tools. |
+| `--format <text\|json\|github>` | How to report: text for people, json for tools, github for inline pull-request annotations. Default: github inside GitHub Actions, text elsewhere. |
+| `--json` | Same as --format json. |
 | `--spec <path>` | Validate against this system-spec.json. Default: the installed astralis-ui's. |
 | `--strict-tokens` | Also warn on raw colors that bypass the tokens. |
 
 With no paths it checks the current directory, skipping node_modules and build output.
+
+Exits 1 when there are errors; warnings are reported but never fail the run.
 
 ```bash
 astralis validate

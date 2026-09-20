@@ -25,7 +25,15 @@ export function runCli(args, { cwd, input = "", env = {} } = {}) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, [CLI, ...args], {
       cwd,
-      env: { ...process.env, NO_COLOR: "1", ASTRALIS_REGISTRY: "", npm_config_user_agent: "", ...env },
+      env: {
+        ...process.env,
+        NO_COLOR: "1",
+        ASTRALIS_REGISTRY: "",
+        npm_config_user_agent: "",
+        GITHUB_ACTIONS: "",
+        GITHUB_WORKSPACE: "",
+        ...env,
+      },
     });
     let stdout = "";
     let stderr = "";
