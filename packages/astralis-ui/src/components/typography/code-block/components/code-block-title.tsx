@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { codeBlockTitleClasses } from "../code-block.styles";
 import type { CodeBlockTitleProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockTitle({
+export const CodeBlockTitle = identify("CodeBlock.Title", function CodeBlockTitle({
   className = "",
   style,
   children,
@@ -15,6 +16,4 @@ export function CodeBlockTitle({
       {children}
     </span>
   );
-}
-
-CodeBlockTitle.displayName = "CodeBlock.Title";
+});

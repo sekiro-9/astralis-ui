@@ -9,6 +9,7 @@ import {
   breadcrumbVariants,
 } from "../breadcrumb.styles";
 import type { BreadcrumbProps } from "../breadcrumb.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Breadcrumb — the trail wrapper. It interleaves separators between its children
@@ -18,7 +19,7 @@ import type { BreadcrumbProps } from "../breadcrumb.types";
  * Separators are `aria-hidden` and live outside the items: assistive tech reads
  * the list, not the punctuation between it.
  */
-export function BreadcrumbRoot({
+export const BreadcrumbRoot = identify("Breadcrumb", function BreadcrumbRoot({
   separator,
   className = "",
   children,
@@ -51,6 +52,4 @@ export function BreadcrumbRoot({
       </ol>
     </nav>
   );
-}
-
-BreadcrumbRoot.displayName = "Breadcrumb";
+});

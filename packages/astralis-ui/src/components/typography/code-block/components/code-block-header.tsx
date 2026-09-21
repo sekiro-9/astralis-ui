@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { codeBlockHeaderClasses } from "../code-block.styles";
 import type { CodeBlockHeaderProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockHeader({
+export const CodeBlockHeader = identify("CodeBlock.Header", function CodeBlockHeader({
   className = "",
   style,
   children,
@@ -15,6 +16,4 @@ export function CodeBlockHeader({
       {children}
     </div>
   );
-}
-
-CodeBlockHeader.displayName = "CodeBlock.Header";
+});

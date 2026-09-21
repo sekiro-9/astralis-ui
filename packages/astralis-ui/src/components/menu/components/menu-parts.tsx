@@ -14,8 +14,9 @@ import {
   menuIconSlotClasses,
   menuShortcutClasses,
 } from "../menu.styles";
+import { identify } from "../../../utils/dev-identity";
 
-export function MenuTrigger({ children, ref, ...rest }: MenuTriggerProps) {
+export const MenuTrigger = identify("Menu.Trigger", function MenuTrigger({ children, ref, ...rest }: MenuTriggerProps) {
   const { toggle, open, setOpen, triggerRef, contentId, focusIntentRef } = useMenu();
   const child = resolveSlotChild(children);
   const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
@@ -36,10 +37,9 @@ export function MenuTrigger({ children, ref, ...rest }: MenuTriggerProps) {
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
   });
-}
-MenuTrigger.displayName = "Menu.Trigger";
+});
 
-export function MenuItem({
+export const MenuItem = identify("Menu.Item", function MenuItem({
   onSelect,
   disabled = false,
   danger = false,
@@ -88,28 +88,24 @@ export function MenuItem({
       {shortcut && <span className={menuShortcutClasses}>{shortcut}</span>}
     </div>
   );
-}
-MenuItem.displayName = "Menu.Item";
+});
 
-export function MenuLabel({ className = "", children, ...rest }: MenuSectionProps) {
+export const MenuLabel = identify("Menu.Label", function MenuLabel({ className = "", children, ...rest }: MenuSectionProps) {
   return (
     <div className={astralisMerge(menuLabelClasses, className)} {...rest}>
       {children}
     </div>
   );
-}
-MenuLabel.displayName = "Menu.Label";
+});
 
-export function MenuSeparator({ className = "", ...rest }: MenuSectionProps) {
+export const MenuSeparator = identify("Menu.Separator", function MenuSeparator({ className = "", ...rest }: MenuSectionProps) {
   return <div role="separator" aria-orientation="horizontal" className={astralisMerge(menuSeparatorClasses, className)} {...rest} />;
-}
-MenuSeparator.displayName = "Menu.Separator";
+});
 
-export function MenuGroup({ className = "", children, ...rest }: MenuSectionProps) {
+export const MenuGroup = identify("Menu.Group", function MenuGroup({ className = "", children, ...rest }: MenuSectionProps) {
   return (
     <div role="group" className={className || undefined} {...rest}>
       {children}
     </div>
   );
-}
-MenuGroup.displayName = "Menu.Group";
+});

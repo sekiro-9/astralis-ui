@@ -6,10 +6,11 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { flexVariants, flexVariantMap } from "./flex.style";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(flexVariantMap);
 
-function FlexRoot<T extends ElementType = "div">({
+const FlexRoot = identify("Flex", function FlexRoot<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -36,7 +37,6 @@ function FlexRoot<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-FlexRoot.displayName = "Flex";
 export default FlexRoot;

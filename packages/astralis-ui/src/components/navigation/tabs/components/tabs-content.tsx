@@ -4,12 +4,13 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { tabsPartId, useTabsContext } from "../tabs.context";
 import { tabsContentVariants } from "../tabs.styles";
 import type { TabsContentProps } from "../tabs.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Tabs.Content — the panel for one tab. Unmounted when inactive, unless the Root
  * sets `keepMounted` (then it stays mounted but `hidden`, preserving its state).
  */
-export function TabsContent({ value, className, children, ...rest }: TabsContentProps) {
+export const TabsContent = identify("Tabs.Content", function TabsContent({ value, className, children, ...rest }: TabsContentProps) {
   const { value: active, keepMounted, baseId } = useTabsContext();
   const isActive = value === active;
 
@@ -29,6 +30,4 @@ export function TabsContent({ value, className, children, ...rest }: TabsContent
       {children}
     </div>
   );
-}
-
-TabsContent.displayName = "Tabs.Content";
+});

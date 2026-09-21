@@ -6,10 +6,11 @@ import { codeBlockCopyTriggerClasses } from "../code-block.styles";
 import type { CodeBlockCopyTriggerProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { CheckIcon, CopyIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 const iconClasses = "astralis:size-3.5 astralis:shrink-0";
 
-export function CodeBlockCopyTrigger({
+export const CodeBlockCopyTrigger = identify("CodeBlock.CopyTrigger", function CodeBlockCopyTrigger({
   code,
   className = "",
   style,
@@ -61,6 +62,4 @@ export function CodeBlockCopyTrigger({
         : (children ?? (copied ? <CheckIcon className={iconClasses} /> : <CopyIcon className={iconClasses} />))}
     </button>
   );
-}
-
-CodeBlockCopyTrigger.displayName = "CodeBlock.CopyTrigger";
+});

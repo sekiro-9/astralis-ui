@@ -4,9 +4,10 @@ import type { CarouselIndicatorProps } from "../carousel.types";
 import { useCarousel } from "../carousel.context";
 import { carouselDotVariants } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** A single dot bound to one slide index — for hand-composed indicator rows. */
-export function CarouselIndicator({ index, className = "", onClick, ...rest }: CarouselIndicatorProps) {
+export const CarouselIndicator = identify("Carousel.Indicator", function CarouselIndicator({ index, className = "", onClick, ...rest }: CarouselIndicatorProps) {
   const { index: activeIndex, setIndex, slideCount, size } = useCarousel();
   const active = index === activeIndex;
   return (
@@ -20,6 +21,4 @@ export function CarouselIndicator({ index, className = "", onClick, ...rest }: C
       {...rest}
     />
   );
-}
-
-CarouselIndicator.displayName = "Carousel.Indicator";
+});

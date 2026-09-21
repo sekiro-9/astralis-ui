@@ -1,8 +1,9 @@
 import type { Ref } from "react";
 import type { CardDescriptionProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardDescription({
+export const CardDescription = identify("Card.Description", function CardDescription({
   className = "",
   style,
   children,
@@ -19,6 +20,4 @@ export function CardDescription({
       {children}
     </p>
   );
-}
-
-CardDescription.displayName = "Card.Description";
+});

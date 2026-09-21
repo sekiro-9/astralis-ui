@@ -15,10 +15,11 @@ import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SearchIcon, SpinnerIcon } from "../../../icon/internal-icons";
 import type { SelectOptionItem, SelectProps } from "../select.types";
+import { identify } from "../../../../utils/dev-identity";
 
 type Value = string | number | null;
 
-export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
+export const SelectBase = identify("Select", forwardRef<HTMLButtonElement, SelectProps>(
   (
     {
       options = [],
@@ -341,6 +342,4 @@ export const SelectBase = forwardRef<HTMLButtonElement, SelectProps>(
       </div>
     );
   },
-);
-
-SelectBase.displayName = "Select";
+));

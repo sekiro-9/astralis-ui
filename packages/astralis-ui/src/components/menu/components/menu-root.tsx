@@ -4,8 +4,9 @@ import { useCallback, useId, useMemo, useRef } from "react";
 import { MenuContext } from "../menu.context";
 import type { MenuProps } from "../menu.types";
 import { useControllableState } from "../../../hooks/use-controllable-state";
+import { identify } from "../../../utils/dev-identity";
 
-export function MenuRoot({
+export const MenuRoot = identify("Menu", function MenuRoot({
   children,
   open: openProp,
   defaultOpen = false,
@@ -36,5 +37,4 @@ export function MenuRoot({
   );
 
   return <MenuContext.Provider value={ctx}>{children}</MenuContext.Provider>;
-}
-MenuRoot.displayName = "Menu";
+});

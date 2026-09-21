@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { codeBlockControlClasses } from "../code-block.styles";
 import type { CodeBlockControlProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockControl({
+export const CodeBlockControl = identify("CodeBlock.Control", function CodeBlockControl({
   className = "",
   style,
   children,
@@ -15,6 +16,4 @@ export function CodeBlockControl({
       {children}
     </div>
   );
-}
-
-CodeBlockControl.displayName = "CodeBlock.Control";
+});

@@ -8,6 +8,7 @@ import {
 } from "../collapsible.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ChevronDownIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * The `<summary>`. Keeps native `display: list-item` (hiding the marker via
@@ -15,7 +16,7 @@ import { ChevronDownIcon } from "../../../icon/internal-icons";
  * state — restyling summary to flex is the documented way to lose it. The
  * flex row lives on an inner span for that reason.
  */
-export function CollapsibleTrigger({
+export const CollapsibleTrigger = identify("Collapsible.Trigger", function CollapsibleTrigger({
   hideIndicator = false,
   className = "",
   children,
@@ -35,11 +36,9 @@ export function CollapsibleTrigger({
       </span>
     </summary>
   );
-}
+});
 
-CollapsibleTrigger.displayName = "Collapsible.Trigger";
-
-export function CollapsibleContent({
+export const CollapsibleContent = identify("Collapsible.Content", function CollapsibleContent({
   className = "",
   children,
   ref,
@@ -50,6 +49,4 @@ export function CollapsibleContent({
       {children}
     </div>
   );
-}
-
-CollapsibleContent.displayName = "Collapsible.Content";
+});

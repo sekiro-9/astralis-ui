@@ -8,6 +8,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { accentClass, type ColorScheme } from "../../../../const/color-schemes";
 import { AvatarBadge } from "./avatar-badge";
+import { identify } from "../../../../utils/dev-identity";
 
 const PALETTE: ColorScheme[] = ["blue", "purple", "green", "teal", "orange", "pink", "red", "cyan"];
 
@@ -17,7 +18,7 @@ function hueFromName(name: string): ColorScheme {
   return PALETTE[Math.abs(hash) % PALETTE.length];
 }
 
-export function AvatarRoot({
+export const AvatarRoot = identify("Avatar", function AvatarRoot({
   src, alt, name, icon, size, shape, colorScheme, ring, children, className = "",
   ...rest
 }: AvatarProps) {
@@ -73,6 +74,4 @@ export function AvatarRoot({
       {inheritProps(children, new Map([[AvatarBadge, { size: resolvedSize }]]))}
     </div>
   );
-}
-
-AvatarRoot.displayName = "Avatar";
+});

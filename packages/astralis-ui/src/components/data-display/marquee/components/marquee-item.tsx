@@ -1,8 +1,9 @@
 import type { Ref } from "react";
 import type { MarqueeItemProps } from "../marquee.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function MarqueeItem({
+export const MarqueeItem = identify("Marquee.Item", function MarqueeItem({
   className = "",
   style,
   children,
@@ -19,6 +20,4 @@ export function MarqueeItem({
       {children}
     </div>
   );
-}
-
-MarqueeItem.displayName = "Marquee.Item";
+});

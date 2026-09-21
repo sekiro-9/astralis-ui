@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { identify } from "../../utils/dev-identity";
 
 /**
  * Renders children into `document.body`. Guarded for SSR (no document on the
@@ -10,7 +11,7 @@ import { createPortal } from "react-dom";
  * layout effect. (Portal children are never server-rendered or hydrated, so
  * rendering the portal during the client render is safe.)
  */
-export function Portal({ children, container }: { children: ReactNode; container?: HTMLElement }) {
+export const Portal = identify("Portal", function Portal({ children, container }: { children: ReactNode; container?: HTMLElement }) {
   if (typeof document === "undefined") return null;
   // Portalled content escapes the provider's `.astralis` wrapper, so re-apply
   // the class here — it's what carries the scoped Preflight reset and the token
@@ -22,5 +23,4 @@ export function Portal({ children, container }: { children: ReactNode; container
     </div>,
     container ?? document.body,
   );
-}
-Portal.displayName = "Portal";
+});

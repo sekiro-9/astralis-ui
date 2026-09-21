@@ -6,8 +6,9 @@ import type { CheckboxGroupProps } from "../checkbox.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useFieldContext } from "../../field/field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CheckboxGroup({
+export const CheckboxGroup = identify("Checkbox.Group", function CheckboxGroup({
   value,
   defaultValue = [],
   onValueChange,
@@ -59,6 +60,4 @@ export function CheckboxGroup({
       </div>
     </CheckboxGroupContext.Provider>
   );
-}
-
-CheckboxGroup.displayName = "Checkbox.Group";
+});

@@ -6,6 +6,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { StepsContext } from "../steps.context";
 import type { StepsProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Steps.Root — owns the step state machine and shares it via context so the
@@ -13,7 +14,7 @@ import type { StepsProps } from "../steps.types";
  * (`defaultStep`) usage. The context value is memoized so static parts (titles,
  * descriptions) don't re-render unless something they read actually changes.
  */
-export function StepsRoot({
+export const StepsRoot = identify("Steps", function StepsRoot({
   step: stepProp,
   defaultStep = 0,
   onStepChange,
@@ -87,6 +88,4 @@ export function StepsRoot({
       </div>
     </StepsContext.Provider>
   );
-}
-
-StepsRoot.displayName = "Steps.Root";
+});

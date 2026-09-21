@@ -4,8 +4,9 @@ import type { CodeBlockContentProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { CodeBlockCode } from "./code-block-code";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockContent({
+export const CodeBlockContent = identify("CodeBlock.Content", function CodeBlockContent({
   className = "",
   style,
   children,
@@ -20,6 +21,4 @@ export function CodeBlockContent({
       {code === undefined ? children : inheritProps(children, new Map([[CodeBlockCode, { code }]]))}
     </pre>
   );
-}
-
-CodeBlockContent.displayName = "CodeBlock.Content";
+});

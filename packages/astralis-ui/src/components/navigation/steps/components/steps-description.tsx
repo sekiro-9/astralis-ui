@@ -4,9 +4,10 @@ import { Text } from "../../../typography/text";
 import { useStepsContext } from "../steps.context";
 import { stepSizeClasses } from "../steps.styles";
 import type { StepsDescriptionProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Steps.Description — secondary text beneath the title. Always muted. */
-export function StepsDescription({ children, className, ...rest }: StepsDescriptionProps) {
+export const StepsDescription = identify("Steps.Description", function StepsDescription({ children, className, ...rest }: StepsDescriptionProps) {
   const { size } = useStepsContext();
 
   return (
@@ -14,6 +15,4 @@ export function StepsDescription({ children, className, ...rest }: StepsDescript
       {children}
     </Text>
   );
-}
-
-StepsDescription.displayName = "Steps.Description";
+});

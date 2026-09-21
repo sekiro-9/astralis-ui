@@ -4,10 +4,11 @@ import { useMemo, type Ref } from "react";
 import { useCalendarContext } from "../calendar.context";
 import type { CalendarWeekdaysProps } from "../calendar.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Visual column headings. Hidden from assistive tech: each day's accessible
  *  name in the grid already carries its weekday. */
-export function CalendarWeekdays({ className, ref, ...props }: CalendarWeekdaysProps & { ref?: Ref<HTMLDivElement> }) {
+export const CalendarWeekdays = identify("Calendar.Weekdays", function CalendarWeekdays({ className, ref, ...props }: CalendarWeekdaysProps & { ref?: Ref<HTMLDivElement> }) {
   const { locale, firstDayOfWeek } = useCalendarContext();
 
   const labels = useMemo(() => {
@@ -33,6 +34,4 @@ export function CalendarWeekdays({ className, ref, ...props }: CalendarWeekdaysP
       ))}
     </div>
   );
-}
-
-CalendarWeekdays.displayName = "Calendar.Weekdays";
+});

@@ -3,12 +3,13 @@ import { badgeVariants } from "./badge.styles";
 import type { BadgeProps } from "./badge.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * A small label chip for statuses, counts, and categories. `variant` picks the
  * fill treatment and `colorScheme` the hue (via the accent channel).
  */
-export function Badge({ children, variant = "subtle", colorScheme = "gray", size = "sm", className = "", ...rest }: BadgeProps) {
+export const Badge = identify("Badge", function Badge({ children, variant = "subtle", colorScheme = "gray", size = "sm", className = "", ...rest }: BadgeProps) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
   return (
@@ -16,6 +17,4 @@ export function Badge({ children, variant = "subtle", colorScheme = "gray", size
       {children}
     </span>
   );
-}
-
-Badge.displayName = "Badge";
+});

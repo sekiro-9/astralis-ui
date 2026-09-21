@@ -7,8 +7,9 @@ import { inputVariants } from "../input.styles";
 import type { InputProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function InputBase({
+export const InputBase = identify("Input", function InputBase({
   size = "md",
   variant = "outline",
   invalid: invalidProp,
@@ -51,6 +52,4 @@ export function InputBase({
       {...domProps}
     />
   );
-}
-
-InputBase.displayName = "Input";
+});

@@ -1,8 +1,9 @@
 import type { TableSectionProps } from "../table.types";
 import { tableStickyHeader } from "../table.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TableHeader({ children, className = "", ...rest }: TableSectionProps) {
+export const TableHeader = identify("Table.Header", function TableHeader({ children, className = "", ...rest }: TableSectionProps) {
   return (
     <thead
       className={astralisMerge(
@@ -15,6 +16,4 @@ export function TableHeader({ children, className = "", ...rest }: TableSectionP
       {children}
     </thead>
   );
-}
-
-TableHeader.displayName = "Table.Header";
+});

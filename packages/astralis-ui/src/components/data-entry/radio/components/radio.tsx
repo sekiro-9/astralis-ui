@@ -9,8 +9,9 @@ import type { RadioProps } from "../radio.types";
 import { radioSizes, radioControl, radioControlColor } from "../radio.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function RadioBase({
+export const RadioBase = identify("Radio", function RadioBase({
   children,
   size = "md",
   colorScheme,
@@ -104,6 +105,4 @@ export function RadioBase({
       )}
     </label>
   );
-}
-
-RadioBase.displayName = "Radio";
+});

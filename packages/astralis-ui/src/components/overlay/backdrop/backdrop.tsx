@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef } from "react";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { SCRIM_COLOR } from "../modal/modal.styles";
+import { identify } from "../../../utils/dev-identity";
 
 export interface BackdropProps extends ComponentPropsWithoutRef<"div"> {
   /** Frost the content behind the scrim. @default true */
@@ -13,7 +14,7 @@ export interface BackdropProps extends ComponentPropsWithoutRef<"div"> {
  * overlays. Purely presentational: render it to show it; mounting, transitions
  * and dismissal belong to the caller.
  */
-export function Backdrop({ blur = true, className = "", style, children, ...rest }: BackdropProps) {
+export const Backdrop = identify("Backdrop", function Backdrop({ blur = true, className = "", style, children, ...rest }: BackdropProps) {
   return (
     <div
       className={astralisMerge(
@@ -29,6 +30,4 @@ export function Backdrop({ blur = true, className = "", style, children, ...rest
       {children}
     </div>
   );
-}
-
-Backdrop.displayName = "Backdrop";
+});

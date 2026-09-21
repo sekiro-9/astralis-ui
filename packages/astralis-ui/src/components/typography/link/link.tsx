@@ -6,9 +6,10 @@ import { accentClass } from "../../../const/color-schemes";
 import { textVariantMap } from "../text/text.styles";
 import { linkAccentColor, linkHoverColor, linkTypographyVariants, linkVariants } from "./link.styles";
 import type { LinkProps } from "./link.types";
+import { identify } from "../../../utils/dev-identity";
 
 /** An inline text link: Text's typography, plus accent colouring and external handling. */
-export function Link<C extends ElementType = "a">({
+export const Link = identify("Link", function Link<C extends ElementType = "a">({
   as,
   variant,
   colorScheme = "brand",
@@ -86,6 +87,4 @@ export function Link<C extends ElementType = "a">({
       )}
     </Element>
   );
-}
-
-Link.displayName = "Link";
+});

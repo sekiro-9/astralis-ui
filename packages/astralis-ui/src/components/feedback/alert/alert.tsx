@@ -6,8 +6,9 @@ import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
 import { XIcon } from "../../icon/internal-icons";
 import { STATUS_ICON, STATUS_SCHEME, statusRole } from "../status";
+import { identify } from "../../../utils/dev-identity";
 
-function AlertRoot({
+const AlertRoot = identify("Alert", function AlertRoot({
   status = "info",
   variant = "subtle",
   colorScheme,
@@ -47,27 +48,23 @@ function AlertRoot({
       )}
     </div>
   );
-}
+});
 
-AlertRoot.displayName = "Alert";
-
-function AlertTitle({ className = "", children, ...rest }: AlertSectionProps) {
+const AlertTitle = identify("Alert.Title", function AlertTitle({ className = "", children, ...rest }: AlertSectionProps) {
   return (
     <div className={astralisMerge(alertTitleClasses, className)} {...rest}>
       {children}
     </div>
   );
-}
-AlertTitle.displayName = "Alert.Title";
+});
 
-function AlertDescription({ className = "", children, ...rest }: AlertSectionProps) {
+const AlertDescription = identify("Alert.Description", function AlertDescription({ className = "", children, ...rest }: AlertSectionProps) {
   return (
     <div className={astralisMerge(alertDescriptionClasses, className)} {...rest}>
       {children}
     </div>
   );
-}
-AlertDescription.displayName = "Alert.Description";
+});
 
 export const Alert = Object.assign(AlertRoot, {
   Title: AlertTitle,

@@ -7,8 +7,9 @@ import { PaginationContext } from "../pagination.context";
 import type { PaginationProps } from "../pagination.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function PaginationRoot({
+export const PaginationRoot = identify("Pagination", function PaginationRoot({
   page: controlledPage,
   defaultPage = 1,
   totalPages,
@@ -58,6 +59,4 @@ export function PaginationRoot({
       </nav>
     </PaginationContext.Provider>
   );
-}
-
-PaginationRoot.displayName = "Pagination";
+});

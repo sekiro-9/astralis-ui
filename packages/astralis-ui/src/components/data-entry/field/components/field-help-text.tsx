@@ -4,8 +4,9 @@ import { useEffect, type Ref } from "react";
 import type { FieldHelpTextProps } from "../field.types";
 import { useFieldContext } from "../field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function FieldHelpText({
+export const FieldHelpText = identify("Field.HelpText", function FieldHelpText({
   children,
   className = "",
   ref,
@@ -30,6 +31,4 @@ export function FieldHelpText({
       {children}
     </p>
   );
-}
-
-FieldHelpText.displayName = "Field.HelpText";
+});

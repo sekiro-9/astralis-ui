@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPoi
 import { Button } from "../button/button";
 import { floatingButtonVariants, floatingButtonWrapper } from "./floating-button.styles";
 import type { FloatingButtonPosition, FloatingButtonProps } from "./floating-button.types";
+import { identify } from "../../../utils/dev-identity";
 
 /** Arrow-key step, and the finer step when Shift is held. */
 const KEY_STEP = 8;
@@ -37,7 +38,7 @@ function clampToViewport(
  * button and doing nothing. Arrow keys reposition it too, which keeps the
  * feature reachable without a pointer.
  */
-export function FloatingButton({
+export const FloatingButton = identify("FloatingButton", function FloatingButton({
   placement = "bottom-right",
   offset = "md",
   draggable = true,
@@ -243,6 +244,4 @@ export function FloatingButton({
       />
     </div>
   );
-}
-
-FloatingButton.displayName = "FloatingButton";
+});

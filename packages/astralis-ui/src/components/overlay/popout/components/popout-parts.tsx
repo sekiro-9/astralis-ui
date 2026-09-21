@@ -2,6 +2,7 @@ import type { Ref } from "react";
 import type { PopoutTriggerProps } from "../popout.types";
 import { popoutTriggerClasses } from "../popout.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * The invoker: a real `<button popovertarget>`. Declarative invocation is
@@ -9,7 +10,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * panel positions against. Supporting browsers expose the expanded state to
  * assistive tech from the popovertarget relation itself.
  */
-export function PopoutTrigger({
+export const PopoutTrigger = identify("Popout.Trigger", function PopoutTrigger({
   popoutId,
   className = "",
   children,
@@ -27,6 +28,4 @@ export function PopoutTrigger({
       {children}
     </button>
   );
-}
-
-PopoutTrigger.displayName = "Popout.Trigger";
+});

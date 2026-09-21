@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState, type Ref } from "react";
 import type { MarqueeRootProps } from "../marquee.types";
 import { usePrefersReducedMotion } from "../../../../hooks/use-prefers-reduced-motion";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 // TODO(LIB-H4): these keyframes belong in theme/tokens/animation.css; injecting
 // a <style> at runtime is blocked by a strict style-src CSP.
@@ -36,7 +37,7 @@ function injectKeyframes() {
   document.head.appendChild(style);
 }
 
-export function MarqueeRoot({
+export const MarqueeRoot = identify("Marquee", function MarqueeRoot({
   direction = "left",
   speed = 50,
   gap = "1rem",
@@ -176,6 +177,4 @@ export function MarqueeRoot({
       </div>
     </div>
   );
-}
-
-MarqueeRoot.displayName = "Marquee";
+});

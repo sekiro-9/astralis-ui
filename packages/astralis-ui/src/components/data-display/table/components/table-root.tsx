@@ -1,8 +1,9 @@
 import { splitPlacement } from "../../../../utils/placement";
 import type { TableProps } from "../table.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TableRoot({
+export const TableRoot = identify("Table", function TableRoot({
   children,
   variant = "line",
   size = "md",
@@ -35,6 +36,4 @@ export function TableRoot({
       </table>
     </div>
   );
-}
-
-TableRoot.displayName = "Table";
+});

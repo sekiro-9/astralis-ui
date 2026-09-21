@@ -1,7 +1,8 @@
 import type { Ref } from "react";
 import type { CodeBlockCodeProps } from "../code-block.types";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockCode({
+export const CodeBlockCode = identify("CodeBlock.Code", function CodeBlockCode({
   highlightedHtml,
   children,
   code,
@@ -17,6 +18,4 @@ export function CodeBlockCode({
       {children ?? code}
     </code>
   );
-}
-
-CodeBlockCode.displayName = "CodeBlock.Code";
+});

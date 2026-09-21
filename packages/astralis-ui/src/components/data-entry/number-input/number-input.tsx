@@ -10,6 +10,7 @@ import { decimals } from "../slider/slider.utils";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
 import { ChevronDownIcon, ChevronUpIcon } from "../../icon/internal-icons";
+import { identify } from "../../../utils/dev-identity";
 
 const stepperClasses =
   "astralis:flex astralis:flex-1 astralis:items-center astralis:justify-center astralis:cursor-pointer " +
@@ -27,7 +28,7 @@ function addExact(base: number, delta: number): number {
  * Typing is free-form; the value parses, clamps and rounds on commit
  * (blur / Enter / steppers).
  */
-export function NumberInput({
+export const NumberInput = identify("NumberInput", function NumberInput({
   value: valueProp,
   defaultValue = null,
   onValueChange,
@@ -162,6 +163,4 @@ export function NumberInput({
       )}
     </div>
   );
-}
-
-NumberInput.displayName = "NumberInput";
+});

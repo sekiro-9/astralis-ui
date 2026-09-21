@@ -9,13 +9,14 @@ import type { SegmentedControlProps } from "../segmented-control.types";
 import { segmentedControlTrack } from "../segmented-control.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A single-choice control styled as connected segments — the "view switcher"
  * pattern. Built on native radios (sr-only), so arrow-key movement, form
  * participation and radio semantics come from the platform.
  */
-export function SegmentedControl({
+export const SegmentedControl = identify("SegmentedControl", function SegmentedControl({
   value,
   defaultValue = "",
   onValueChange,
@@ -75,6 +76,4 @@ export function SegmentedControl({
       </div>
     </SegmentedControlContext.Provider>
   );
-}
-
-SegmentedControl.displayName = "SegmentedControl";
+});

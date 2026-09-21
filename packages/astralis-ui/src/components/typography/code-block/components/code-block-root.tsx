@@ -5,8 +5,9 @@ import type { CodeBlockRootProps } from "../code-block.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { CodeBlockContent } from "./code-block-content";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CodeBlockRoot({
+export const CodeBlockRoot = identify("CodeBlock", function CodeBlockRoot({
   variant = "subtle",
   size = "md",
   code,
@@ -37,6 +38,4 @@ export function CodeBlockRoot({
       {code === undefined ? children : inheritProps(children, new Map([[CodeBlockContent, { code }]]))}
     </div>
   );
-}
-
-CodeBlockRoot.displayName = "CodeBlock.Root";
+});

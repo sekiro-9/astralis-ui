@@ -9,12 +9,13 @@ import { buildMarks, clamp, snapToStep, valueForKey } from "../slider.utils";
 import { SliderFrame, SliderThumb } from "./slider-core";
 import { useSliderPointer } from "../use-slider-pointer";
 import type { RangeSliderProps, SliderProps } from "../slider.types";
+import { identify } from "../../../../utils/dev-identity";
 
 function joinIds(...ids: Array<string | undefined>): string | undefined {
   return ids.filter(Boolean).join(" ") || undefined;
 }
 
-export function SliderBase({
+export const SliderBase = identify("Slider", function SliderBase({
   min = 0,
   max = 100,
   step = 1,
@@ -122,11 +123,9 @@ export function SliderBase({
       />
     </SliderFrame>
   );
-}
+});
 
-SliderBase.displayName = "Slider";
-
-export function RangeSliderBase({
+export const RangeSliderBase = identify("RangeSlider", function RangeSliderBase({
   min = 0,
   max = 100,
   step = 1,
@@ -255,6 +254,4 @@ export function RangeSliderBase({
       {thumb(1)}
     </SliderFrame>
   );
-}
-
-RangeSliderBase.displayName = "RangeSlider";
+});

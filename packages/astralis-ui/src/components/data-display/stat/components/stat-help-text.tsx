@@ -4,8 +4,9 @@ import { resolveStyleProps } from "../../../../utils/responsive";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { statHelpSizeMap, statHelpVariants } from "../stat.styles";
 import { StatIndicator } from "./stat-indicator";
+import { identify } from "../../../../utils/dev-identity";
 
-export function StatHelpText({ children, className = "", size = "md", ...rest }: StatHelpTextProps) {
+export const StatHelpText = identify("Stat.HelpText", function StatHelpText({ children, className = "", size = "md", ...rest }: StatHelpTextProps) {
   return (
     <span
       className={astralisMerge(
@@ -20,6 +21,4 @@ export function StatHelpText({ children, className = "", size = "md", ...rest }:
       {inheritProps(children, new Map([[StatIndicator, { size }]]))}
     </span>
   );
-}
-
-StatHelpText.displayName = "Stat.HelpText";
+});

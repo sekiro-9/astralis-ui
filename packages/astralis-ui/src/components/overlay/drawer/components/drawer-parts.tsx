@@ -7,8 +7,9 @@ import { DialogDescriptionPart, DialogTitlePart } from "../../dialog/dialog-part
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { XIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function DrawerHeader({ className = "", ref, ...rest }: DrawerSectionProps) {
+export const DrawerHeader = identify("Drawer.Header", function DrawerHeader({ className = "", ref, ...rest }: DrawerSectionProps) {
   return (
     <div
       {...rest}
@@ -19,10 +20,9 @@ export function DrawerHeader({ className = "", ref, ...rest }: DrawerSectionProp
       )}
     />
   );
-}
-DrawerHeader.displayName = "Drawer.Header";
+});
 
-export function DrawerBody({ className = "", ref, ...rest }: DrawerSectionProps) {
+export const DrawerBody = identify("Drawer.Body", function DrawerBody({ className = "", ref, ...rest }: DrawerSectionProps) {
   return (
     <div
       {...rest}
@@ -30,10 +30,9 @@ export function DrawerBody({ className = "", ref, ...rest }: DrawerSectionProps)
       className={astralisMerge("astralis:flex-1 astralis:overflow-y-auto astralis:px-6 astralis:py-4 astralis:text-label-muted", className)}
     />
   );
-}
-DrawerBody.displayName = "Drawer.Body";
+});
 
-export function DrawerFooter({ className = "", ref, ...rest }: DrawerSectionProps) {
+export const DrawerFooter = identify("Drawer.Footer", function DrawerFooter({ className = "", ref, ...rest }: DrawerSectionProps) {
   return (
     <div
       {...rest}
@@ -44,22 +43,19 @@ export function DrawerFooter({ className = "", ref, ...rest }: DrawerSectionProp
       )}
     />
   );
-}
-DrawerFooter.displayName = "Drawer.Footer";
+});
 
-export function DrawerTitle(props: DrawerSectionProps) {
+export const DrawerTitle = identify("Drawer.Title", function DrawerTitle(props: DrawerSectionProps) {
   const ctx = useDrawer();
   return <DialogTitlePart ctx={ctx} {...props} />;
-}
-DrawerTitle.displayName = "Drawer.Title";
+});
 
-export function DrawerDescription(props: DrawerSectionProps) {
+export const DrawerDescription = identify("Drawer.Description", function DrawerDescription(props: DrawerSectionProps) {
   const ctx = useDrawer();
   return <DialogDescriptionPart ctx={ctx} {...props} />;
-}
-DrawerDescription.displayName = "Drawer.Description";
+});
 
-export function DrawerCloseButton({ className = "", onClick, ...rest }: DrawerCloseButtonProps) {
+export const DrawerCloseButton = identify("Drawer.CloseButton", function DrawerCloseButton({ className = "", onClick, ...rest }: DrawerCloseButtonProps) {
   const { close } = useDrawer();
   return (
     <button
@@ -80,5 +76,4 @@ export function DrawerCloseButton({ className = "", onClick, ...rest }: DrawerCl
       </Icon>
     </button>
   );
-}
-DrawerCloseButton.displayName = "Drawer.CloseButton";
+});

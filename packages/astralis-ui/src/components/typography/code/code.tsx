@@ -6,11 +6,12 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { codeVariants, codeVariantMap } from "./code.styles";
 import { boxVariants, boxVariantMap } from "../../layout/box/box.styles";
 import { BOX_VARIANT_KEYS } from "../../layout/box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(codeVariantMap);
 
 /** Inline code — a monospace `<code>` chip for snippets inside prose. */
-function Code<T extends ElementType = "code">({
+const Code = identify("Code", function Code<T extends ElementType = "code">({
   as,
   className,
   children,
@@ -34,7 +35,6 @@ function Code<T extends ElementType = "code">({
       {children}
     </Element>
   );
-}
+});
 
-Code.displayName = "Code";
 export default Code;

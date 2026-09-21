@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { cardPadding } from "../card.styles";
 import type { CardFooterProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardFooter({
+export const CardFooter = identify("Card.Footer", function CardFooter({
   className = "",
   style,
   children,
@@ -24,6 +25,4 @@ export function CardFooter({
       {children}
     </div>
   );
-}
-
-CardFooter.displayName = "Card.Footer";
+});

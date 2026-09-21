@@ -1,9 +1,10 @@
 import { avatarBadgeSize, avatarStatusColor } from "../avatar.styles";
 import type { AvatarBadgeProps } from "../avatar.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** A status dot pinned to the avatar's bottom-right corner. */
-export function AvatarBadge({ status = "online", color, size, className = "", style, ...rest }: AvatarBadgeProps) {
+export const AvatarBadge = identify("Avatar.Badge", function AvatarBadge({ status = "online", color, size, className = "", style, ...rest }: AvatarBadgeProps) {
   // The surrounding Avatar clones its size into this prop; explicit wins.
   const resolvedSize = size ?? "md";
 
@@ -19,6 +20,4 @@ export function AvatarBadge({ status = "online", color, size, className = "", st
       {...rest}
     />
   );
-}
-
-AvatarBadge.displayName = "Avatar.Badge";
+});

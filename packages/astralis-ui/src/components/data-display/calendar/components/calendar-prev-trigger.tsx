@@ -6,8 +6,9 @@ import { useCalendarContext } from "../calendar.context";
 import { addMonths } from "../calendar.utils";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ChevronLeftIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CalendarPrevTrigger({
+export const CalendarPrevTrigger = identify("Calendar.PrevTrigger", function CalendarPrevTrigger({
   className,
   onClick,
   children,
@@ -35,6 +36,4 @@ export function CalendarPrevTrigger({
       {children ?? <ChevronLeftIcon aria-hidden="true" className="astralis:h-4 astralis:w-4" />}
     </button>
   );
-}
-
-CalendarPrevTrigger.displayName = "Calendar.PrevTrigger";
+});

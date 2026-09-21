@@ -2,9 +2,10 @@ import { splitPlacement } from "../../../utils/placement";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { kbdVariants } from "./kbd.styles";
 import type { KbdProps } from "./kbd.types";
+import { identify } from "../../../utils/dev-identity";
 
 /** A keyboard-key cap: `<Kbd>⌘</Kbd> <Kbd>K</Kbd>`. Renders a semantic `<kbd>`. */
-export function Kbd({ size, className = "", children, ref, ...rest }: KbdProps) {
+export const Kbd = identify("Kbd", function Kbd({ size, className = "", children, ref, ...rest }: KbdProps) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
 
   return (
@@ -12,6 +13,4 @@ export function Kbd({ size, className = "", children, ref, ...rest }: KbdProps) 
       {children}
     </kbd>
   );
-}
-
-Kbd.displayName = "Kbd";
+});

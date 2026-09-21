@@ -11,8 +11,9 @@ import {
   ROUNDED_MAP,
 } from "./image.constants";
 import type { ImageProps } from "../image.types";
+import { identify } from "../../../../utils/dev-identity";
 
-export function ImageRoot({
+export const ImageRoot = identify("Image", function ImageRoot({
   src,
   alt,
   className = "",
@@ -194,6 +195,4 @@ export function ImageRoot({
         )}
       </>
     );
-}
-
-ImageRoot.displayName = "Image";
+});

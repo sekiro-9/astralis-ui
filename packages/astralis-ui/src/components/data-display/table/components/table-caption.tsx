@@ -1,8 +1,9 @@
 import type { Ref } from "react";
 import type { TableCaptionProps } from "../table.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TableCaption({
+export const TableCaption = identify("Table.Caption", function TableCaption({
   className = "",
   placement = "bottom",
   ref,
@@ -19,6 +20,4 @@ export function TableCaption({
       {...rest}
     />
   );
-}
-
-TableCaption.displayName = "Table.Caption";
+});

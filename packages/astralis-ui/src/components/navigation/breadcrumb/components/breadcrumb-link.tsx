@@ -2,6 +2,7 @@ import type { ElementType } from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { breadcrumbCurrentVariants, breadcrumbLinkVariants } from "../breadcrumb.styles";
 import type { BreadcrumbLinkProps } from "../breadcrumb.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Breadcrumb.Link — a navigable crumb, or the current page when `isCurrent`.
@@ -13,7 +14,7 @@ import type { BreadcrumbLinkProps } from "../breadcrumb.types";
  * `as` takes a router link (Next's `Link`, a framework `NavLink`) so the trail
  * navigates client-side without this component knowing about any router.
  */
-export function BreadcrumbLink<T extends ElementType = "a">({
+export const BreadcrumbLink = identify("Breadcrumb.Link", function BreadcrumbLink<T extends ElementType = "a">({
   as,
   isCurrent = false,
   className = "",
@@ -35,6 +36,4 @@ export function BreadcrumbLink<T extends ElementType = "a">({
       {children}
     </Element>
   );
-}
-
-BreadcrumbLink.displayName = "Breadcrumb.Link";
+});

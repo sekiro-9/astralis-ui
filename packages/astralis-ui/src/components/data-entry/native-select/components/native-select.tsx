@@ -8,13 +8,14 @@ import { nativeSelectField, nativeSelectChevron, nativeSelectChevronGutter } fro
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A styled native `<select>` — the platform's own dropdown, keyboard handling
  * and mobile pickers, wearing Input's chrome. Reach for `Select` when options
  * need custom rendering; reach for this when they don't.
  */
-export function NativeSelect({
+export const NativeSelect = identify("NativeSelect", function NativeSelect({
   size = "md",
   variant = "outline",
   colorScheme,
@@ -73,6 +74,4 @@ export function NativeSelect({
       />
     </span>
   );
-}
-
-NativeSelect.displayName = "NativeSelect";
+});

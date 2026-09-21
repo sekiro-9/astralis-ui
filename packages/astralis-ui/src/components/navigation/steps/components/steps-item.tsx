@@ -12,6 +12,7 @@ import {
 import { stepSizeClasses, stepConnectorVariants, stepTriggerVariants } from "../steps.styles";
 import type { StepsItemProps } from "../steps.types";
 import { StepsIndicator } from "./steps-indicator";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Pull the single <Steps.Indicator> out of the children; everything else is label content. */
 function splitChildren(children: ReactNode) {
@@ -30,7 +31,7 @@ function splitChildren(children: ReactNode) {
  * the item context, and lays out the indicator + label + connector for all three
  * modes (horizontal inline, labelPlacement="bottom", vertical).
  */
-export function StepsItem({
+export const StepsItem = identify("Steps.Item", function StepsItem({
   children,
   index = 0,
   disabled: disabledProp = false,
@@ -190,6 +191,4 @@ export function StepsItem({
       </li>
     </StepItemContext.Provider>
   );
-}
-
-StepsItem.displayName = "Steps.Item";
+});

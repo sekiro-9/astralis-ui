@@ -9,6 +9,7 @@ import { pinCell } from "../pin-input.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import type { PinInputProps, PinInputType } from "../pin-input.types";
+import { identify } from "../../../../utils/dev-identity";
 
 function splitToChars(value: string, length: number): string[] {
   return Array.from({ length }, (_, i) => value[i] ?? "");
@@ -20,7 +21,7 @@ function keepAllowed(raw: string, type: PinInputType): string {
   return raw.replace(/\s/g, "");
 }
 
-export function PinInputBase({
+export const PinInputBase = identify("PinInput", function PinInputBase({
   length = 4,
   value,
   defaultValue = "",
@@ -197,6 +198,4 @@ export function PinInputBase({
       ))}
     </div>
   );
-}
-
-PinInputBase.displayName = "PinInput";
+});

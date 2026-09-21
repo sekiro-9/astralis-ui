@@ -2,6 +2,7 @@ import type { ElementType } from "react";
 import type { StackDirection, StackProps } from "./stack.types";
 import type { ResponsiveKey, ResponsiveProp } from "../../../utils/responsive";
 import Flex, { type FlexProps } from "../flex";
+import { identify } from "../../../utils/dev-identity";
 
 /** Stack speaks in axes; Flex speaks in CSS. This is the only translation. */
 const FLEX_DIRECTION = { vertical: "column", horizontal: "row" } as const;
@@ -21,12 +22,10 @@ function toFlexDirection(direction: ResponsiveProp<StackDirection>): ResponsiveP
   return resolved;
 }
 
-function Stack<T extends ElementType = "div">({ direction = "vertical", ...props }: StackProps<T>) {
+const Stack = identify("Stack", function Stack<T extends ElementType = "div">({ direction = "vertical", ...props }: StackProps<T>) {
   // `as` travels inside the spread, so the element type is still the caller's.
   return <Flex {...(props as FlexProps)} direction={toFlexDirection(direction)} />;
-}
-
-Stack.displayName = "Stack";
+});
 
 /** Props for the HStack/VStack presets — `direction` is fixed. */
 type StackPresetProps<T extends ElementType> = Omit<StackProps<T>, "direction">;
@@ -34,16 +33,12 @@ type StackPresetProps<T extends ElementType> = Omit<StackProps<T>, "direction">;
 // HStack centres on the cross axis — a preset, overridable because the spread
 // comes after it. VStack sets nothing, so its children stretch as raw CSS
 // would. `direction` is forced last so it always wins over any spread prop.
-export function HStack<T extends ElementType = "div">(props: StackPresetProps<T>) {
+export const HStack = identify("HStack", function HStack<T extends ElementType = "div">(props: StackPresetProps<T>) {
   return <Stack alignItems="center" {...(props as StackPresetProps<"div">)} direction="horizontal" />;
-}
+});
 
-HStack.displayName = "HStack";
-
-export function VStack<T extends ElementType = "div">(props: StackPresetProps<T>) {
+export const VStack = identify("VStack", function VStack<T extends ElementType = "div">(props: StackPresetProps<T>) {
   return <Stack {...(props as StackPresetProps<"div">)} direction="vertical" />;
-}
-
-VStack.displayName = "VStack";
+});
 
 export default Stack;

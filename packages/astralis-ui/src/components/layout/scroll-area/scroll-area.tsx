@@ -2,6 +2,7 @@ import type { ScrollAreaProps } from "./scroll-area.types";
 import { scrollAreaDirections, scrollAreaBar, scrollAreaHidden, scrollAreaFocus } from "./scroll-area.styles";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { splitPlacement } from "../../../utils/placement";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * A scroll container with themed scrollbars. The scrollbars are the
@@ -9,7 +10,7 @@ import { splitPlacement } from "../../../utils/placement";
  * stay native, and the component ships zero client JavaScript. Give it a
  * height (or max-height); without one there is nothing to scroll.
  */
-export function ScrollArea({
+export const ScrollArea = identify("ScrollArea", function ScrollArea({
   direction = "vertical",
   hideScrollbar,
   className = "",
@@ -36,6 +37,4 @@ export function ScrollArea({
       {children}
     </div>
   );
-}
-
-ScrollArea.displayName = "ScrollArea";
+});

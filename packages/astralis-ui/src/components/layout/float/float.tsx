@@ -6,6 +6,7 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { floatVariants, floatVariantMap } from "./float.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(floatVariantMap);
 
@@ -14,7 +15,7 @@ const VARIANT_KEYS = Object.keys(floatVariantMap);
  * ancestor — wrap it in a `position="relative"` Box. Ideal for badges, dots,
  * and close buttons overlaid on a container.
  */
-function Float<T extends ElementType = "div">({
+const Float = identify("Float", function Float<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -38,7 +39,6 @@ function Float<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-Float.displayName = "Float";
 export default Float;

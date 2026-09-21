@@ -4,8 +4,9 @@ import { useEffect, type Ref } from "react";
 import { useFieldContext } from "../field.context";
 import type { FieldLabelProps } from "../field.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function FieldLabel({
+export const FieldLabel = identify("Field.Label", function FieldLabel({
   children,
   className = "",
   id: idProp,
@@ -44,6 +45,4 @@ export function FieldLabel({
       )}
     </label>
   );
-}
-
-FieldLabel.displayName = "Field.Label";
+});

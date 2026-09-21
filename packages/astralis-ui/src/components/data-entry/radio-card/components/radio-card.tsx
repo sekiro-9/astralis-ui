@@ -17,13 +17,14 @@ import {
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { CheckIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A card-shaped radio — a whole clickable surface for rich single-select
  * choices (plans, tiers, shipping options). Joins `Radio.Group` the same way
  * `Radio` does: give it a `value` inside a group.
  */
-export function RadioCard({
+export const RadioCard = identify("RadioCard", function RadioCard({
   children,
   description,
   addon,
@@ -106,6 +107,4 @@ export function RadioCard({
       </span>
     </label>
   );
-}
-
-RadioCard.displayName = "RadioCard";
+});

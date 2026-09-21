@@ -4,8 +4,9 @@ import { useEffect } from "react";
 import { usePopover } from "../popover.context";
 import type { PopoverSectionProps } from "../popover.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function PopoverTitle({ children, className = "" }: PopoverSectionProps) {
+export const PopoverTitle = identify("Popover.Title", function PopoverTitle({ children, className = "" }: PopoverSectionProps) {
   const { titleId, setHasTitle } = usePopover();
   useEffect(() => {
     setHasTitle(true);
@@ -16,10 +17,9 @@ export function PopoverTitle({ children, className = "" }: PopoverSectionProps) 
       {children}
     </h3>
   );
-}
-PopoverTitle.displayName = "Popover.Title";
+});
 
-export function PopoverDescription({ children, className = "" }: PopoverSectionProps) {
+export const PopoverDescription = identify("Popover.Description", function PopoverDescription({ children, className = "" }: PopoverSectionProps) {
   const { descriptionId, setHasDescription } = usePopover();
   useEffect(() => {
     setHasDescription(true);
@@ -30,5 +30,4 @@ export function PopoverDescription({ children, className = "" }: PopoverSectionP
       {children}
     </p>
   );
-}
-PopoverDescription.displayName = "Popover.Description";
+});

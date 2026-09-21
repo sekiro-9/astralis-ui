@@ -6,23 +6,22 @@ import { useMenu } from "../../menu.context";
 import type { ContextMenuProps, ContextMenuTriggerProps } from "../context-menu.types";
 import { useMergedRefs } from "../../../../utils/merge-refs";
 import { cloneSlot, resolveSlotChild, slotChildRef } from "../../../overlay/slot";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Menu opened by right-click, positioned at the pointer. Everything else IS
  * Menu — same context, content, items, roving focus and dismissal — anchored
  * to a 1px point placed where the pointer was instead of to a trigger button.
  */
-export function ContextMenuRoot({ children, ...props }: ContextMenuProps) {
+export const ContextMenuRoot = identify("ContextMenu", function ContextMenuRoot({ children, ...props }: ContextMenuProps) {
   return (
     <MenuRoot side="bottom" align="start" sideOffset={2} {...props}>
       {children}
     </MenuRoot>
   );
-}
+});
 
-ContextMenuRoot.displayName = "ContextMenu";
-
-export function ContextMenuTrigger({ children, ref, ...rest }: ContextMenuTriggerProps) {
+export const ContextMenuTrigger = identify("ContextMenu.Trigger", function ContextMenuTrigger({ children, ref, ...rest }: ContextMenuTriggerProps) {
   const { setOpen, triggerRef, open, contentId, repositionRef } = useMenu();
   const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
   const child = resolveSlotChild(children);
@@ -63,6 +62,4 @@ export function ContextMenuTrigger({ children, ref, ...rest }: ContextMenuTrigge
       )}
     </>
   );
-}
-
-ContextMenuTrigger.displayName = "ContextMenu.Trigger";
+});

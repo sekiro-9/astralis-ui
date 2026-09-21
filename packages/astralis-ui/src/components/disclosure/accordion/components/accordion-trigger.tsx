@@ -7,10 +7,11 @@ import type { AccordionTriggerProps } from "../accordion.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { ChevronDownIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 const iconSizeFor = { sm: "xs", md: "sm", lg: "md" } as const;
 
-export function AccordionTrigger({
+export const AccordionTrigger = identify("Accordion.Trigger", function AccordionTrigger({
   children,
   indicator: indicatorProp,
   hideIndicator: hideIndicatorProp,
@@ -64,6 +65,4 @@ export function AccordionTrigger({
       </button>
     </Heading>
   );
-}
-
-AccordionTrigger.displayName = "Accordion.Trigger";
+});

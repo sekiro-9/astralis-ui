@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { cardPadding } from "../card.styles";
 import type { CardBodyProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardBody({
+export const CardBody = identify("Card.Body", function CardBody({
   className = "",
   style,
   children,
@@ -15,6 +16,4 @@ export function CardBody({
       {children}
     </div>
   );
-}
-
-CardBody.displayName = "Card.Body";
+});

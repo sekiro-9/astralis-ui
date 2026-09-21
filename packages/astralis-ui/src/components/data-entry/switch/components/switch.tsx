@@ -8,8 +8,9 @@ import type { SwitchProps } from "../switch.types";
 import { switchSizes, switchTrack, switchTrackColor } from "../switch.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function SwitchBase({
+export const SwitchBase = identify("Switch", function SwitchBase({
   size = "md",
   children,
   colorScheme = "brand",
@@ -100,6 +101,4 @@ export function SwitchBase({
       )}
     </label>
   );
-}
-
-SwitchBase.displayName = "Switch";
+});

@@ -6,10 +6,11 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { gridVariants, gridVariantMap } from "./grid.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(gridVariantMap);
 
-function GridRoot<T extends ElementType = "div">({
+const GridRoot = identify("Grid", function GridRoot<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -45,7 +46,6 @@ function GridRoot<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-GridRoot.displayName = "Grid";
 export default GridRoot;

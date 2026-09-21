@@ -18,6 +18,7 @@ import {
 } from "../tabs.styles";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../icon/internal-icons";
 import type { TabsListProps } from "../tabs.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /** How far one press of a scroll button travels: most of a screenful. */
 const SCROLL_STEP_RATIO = 0.8;
@@ -36,7 +37,7 @@ const SCROLL_STEP_RATIO = 0.8;
  *    long-running complaint about that is you cannot tell hidden tabs exist.
  *    Arrows keep it discoverable, and touch devices still get native swipe.
  */
-export function TabsList({
+export const TabsList = identify("Tabs.List", function TabsList({
   children,
   className,
   "aria-label": ariaLabel,
@@ -189,6 +190,4 @@ export function TabsList({
       )}
     </div>
   );
-}
-
-TabsList.displayName = "Tabs.List";
+});

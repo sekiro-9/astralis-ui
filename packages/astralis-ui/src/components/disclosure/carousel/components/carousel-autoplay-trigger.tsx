@@ -6,8 +6,9 @@ import { carouselControlVariants, controlIconSize } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { PlayIcon, PauseIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselAutoPlayTrigger({ className = "", children, onClick, ...rest }: CarouselAutoPlayTriggerProps) {
+export const CarouselAutoPlayTrigger = identify("Carousel.AutoPlayTrigger", function CarouselAutoPlayTrigger({ className = "", children, onClick, ...rest }: CarouselAutoPlayTriggerProps) {
   const { isPlaying, toggleAutoPlay, disabled, size } = useCarousel();
   return (
     <button
@@ -26,6 +27,4 @@ export function CarouselAutoPlayTrigger({ className = "", children, onClick, ...
       )}
     </button>
   );
-}
-
-CarouselAutoPlayTrigger.displayName = "Carousel.AutoPlayTrigger";
+});

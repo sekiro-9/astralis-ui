@@ -5,9 +5,10 @@ import { resolveStyleProps } from "../../../utils/responsive";
 import { splitVariantProps } from "../../../utils/split-variant-props";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 /** Centers its children on both axes (flex + items/justify center). Carries all Box props. */
-function Center<T extends ElementType = "div">({
+const Center = identify("Center", function Center<T extends ElementType = "div">({
   as,
   className,
   children,
@@ -33,7 +34,6 @@ function Center<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-Center.displayName = "Center";
 export default Center;

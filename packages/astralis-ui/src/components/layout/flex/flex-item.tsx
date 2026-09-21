@@ -6,10 +6,11 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { flexItemVariants, flexItemVariantMap } from "./flex.style";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const ITEM_VARIANT_KEYS = Object.keys(flexItemVariantMap);
 
-function FlexItem<T extends ElementType = "div">({
+const FlexItem = identify("Flex.Item", function FlexItem<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -33,7 +34,6 @@ function FlexItem<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-FlexItem.displayName = "Flex.Item";
 export default FlexItem;

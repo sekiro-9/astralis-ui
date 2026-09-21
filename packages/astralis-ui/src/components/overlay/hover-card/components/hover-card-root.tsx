@@ -6,6 +6,7 @@ import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { HoverCardContext, useHoverCard } from "../hover-card.context";
 import type { HoverCardProps, HoverCardTriggerProps } from "../hover-card.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A rich preview that opens on hover intent — the "profile card on a
@@ -13,7 +14,7 @@ import { useControllableState } from "../../../../hooks/use-controllable-state";
  * timer gives the pointer a grace period to travel into the card, and
  * entering it cancels the close.
  */
-export function HoverCardRoot({
+export const HoverCardRoot = identify("HoverCard", function HoverCardRoot({
   children,
   open: openProp,
   defaultOpen = false,
@@ -45,11 +46,9 @@ export function HoverCardRoot({
   );
 
   return <HoverCardContext.Provider value={ctx}>{children}</HoverCardContext.Provider>;
-}
+});
 
-HoverCardRoot.displayName = "HoverCard";
-
-export function HoverCardTrigger({ children, ref, ...rest }: HoverCardTriggerProps) {
+export const HoverCardTrigger = identify("HoverCard.Trigger", function HoverCardTrigger({ children, ref, ...rest }: HoverCardTriggerProps) {
   const { scheduleOpen, scheduleClose, showNow, hide, open, triggerRef, contentId } = useHoverCard();
   const child = resolveSlotChild(children);
   const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
@@ -62,6 +61,4 @@ export function HoverCardTrigger({ children, ref, ...rest }: HoverCardTriggerPro
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
   });
-}
-
-HoverCardTrigger.displayName = "HoverCard.Trigger";
+});

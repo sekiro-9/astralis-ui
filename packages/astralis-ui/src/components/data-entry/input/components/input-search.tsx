@@ -9,8 +9,9 @@ import type { InputSearchProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { SearchIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function InputSearch({
+export const InputSearch = identify("Input.Search", function InputSearch({
   onSearch,
   showSearchButton = false,
   colorScheme,
@@ -65,6 +66,4 @@ export function InputSearch({
       )}
     </div>
   );
-}
-
-InputSearch.displayName = "Input.Search";
+});

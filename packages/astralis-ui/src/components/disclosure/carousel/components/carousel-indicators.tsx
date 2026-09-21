@@ -9,8 +9,9 @@ import {
   carouselProgressVariants,
 } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselIndicators({ className = "", variant = "dot", ...rest }: CarouselIndicatorsProps) {
+export const CarouselIndicators = identify("Carousel.Indicators", function CarouselIndicators({ className = "", variant = "dot", ...rest }: CarouselIndicatorsProps) {
   const { slideCount, index, setIndex, lastIndex, slidesToScroll, orientation, size } = useCarousel();
   if (slideCount <= 1) return null;
 
@@ -51,6 +52,4 @@ export function CarouselIndicators({ className = "", variant = "dot", ...rest }:
       })}
     </div>
   );
-}
-
-CarouselIndicators.displayName = "Carousel.Indicators";
+});

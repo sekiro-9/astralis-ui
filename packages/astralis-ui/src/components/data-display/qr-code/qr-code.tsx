@@ -5,6 +5,7 @@ import { splitPlacement } from "../../../utils/placement";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { encodeQr, qrPath } from "./qr-encoder";
 import type { QrCodeRootProps, QrCodeSize } from "./qr-code.types";
+import { identify } from "../../../utils/dev-identity";
 
 const SIZE_PX: Record<QrCodeSize, number> = {
   sm: 96,
@@ -35,7 +36,7 @@ function Spinner({ size }: { size: number }) {
   );
 }
 
-export function QrCodeRoot({
+export const QrCodeRoot = identify("QrCode", function QrCodeRoot({
   value,
   size = "md",
   pixelSize,
@@ -225,6 +226,4 @@ export function QrCodeRoot({
       )}
     </div>
   );
-}
-
-QrCodeRoot.displayName = "QrCode.Root";
+});

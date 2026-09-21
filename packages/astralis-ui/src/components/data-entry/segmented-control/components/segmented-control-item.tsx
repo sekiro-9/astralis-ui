@@ -5,8 +5,9 @@ import { useSegmentedControlContext } from "../segmented-control.context";
 import type { SegmentedControlItemProps } from "../segmented-control.types";
 import { segmentedControlSizes, segmentedControlItem, segmentedControlItemColor } from "../segmented-control.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function SegmentedControlItem({
+export const SegmentedControlItem = identify("SegmentedControl.Item", function SegmentedControlItem({
   value,
   children,
   disabled: disabledProp,
@@ -52,6 +53,4 @@ export function SegmentedControlItem({
       </span>
     </label>
   );
-}
-
-SegmentedControlItem.displayName = "SegmentedControl.Item";
+});

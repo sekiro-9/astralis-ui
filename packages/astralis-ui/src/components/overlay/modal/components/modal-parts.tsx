@@ -7,8 +7,9 @@ import { DialogDescriptionPart, DialogTitlePart } from "../../dialog/dialog-part
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { XIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function ModalHeader({ className = "", ref, ...rest }: ModalSectionProps) {
+export const ModalHeader = identify("Modal.Header", function ModalHeader({ className = "", ref, ...rest }: ModalSectionProps) {
   return (
     <div
       {...rest}
@@ -16,10 +17,9 @@ export function ModalHeader({ className = "", ref, ...rest }: ModalSectionProps)
       className={astralisMerge("astralis:flex astralis:flex-col astralis:gap-1 astralis:px-6 astralis:pt-6 astralis:pb-2", className)}
     />
   );
-}
-ModalHeader.displayName = "Modal.Header";
+});
 
-export function ModalBody({ className = "", ref, ...rest }: ModalSectionProps) {
+export const ModalBody = identify("Modal.Body", function ModalBody({ className = "", ref, ...rest }: ModalSectionProps) {
   return (
     <div
       {...rest}
@@ -27,10 +27,9 @@ export function ModalBody({ className = "", ref, ...rest }: ModalSectionProps) {
       className={astralisMerge("astralis:px-6 astralis:py-4 astralis:text-label-muted", className)}
     />
   );
-}
-ModalBody.displayName = "Modal.Body";
+});
 
-export function ModalFooter({ className = "", ref, ...rest }: ModalSectionProps) {
+export const ModalFooter = identify("Modal.Footer", function ModalFooter({ className = "", ref, ...rest }: ModalSectionProps) {
   return (
     <div
       {...rest}
@@ -41,23 +40,20 @@ export function ModalFooter({ className = "", ref, ...rest }: ModalSectionProps)
       )}
     />
   );
-}
-ModalFooter.displayName = "Modal.Footer";
+});
 
-export function ModalTitle(props: ModalSectionProps) {
+export const ModalTitle = identify("Modal.Title", function ModalTitle(props: ModalSectionProps) {
   const ctx = useModal();
   return <DialogTitlePart ctx={ctx} {...props} />;
-}
-ModalTitle.displayName = "Modal.Title";
+});
 
-export function ModalDescription(props: ModalSectionProps) {
+export const ModalDescription = identify("Modal.Description", function ModalDescription(props: ModalSectionProps) {
   const ctx = useModal();
   return <DialogDescriptionPart ctx={ctx} {...props} />;
-}
-ModalDescription.displayName = "Modal.Description";
+});
 
 /** The corner ✕ button — place inside a Header. */
-export function ModalCloseButton({ className = "", onClick, ...rest }: ModalCloseButtonProps) {
+export const ModalCloseButton = identify("Modal.CloseButton", function ModalCloseButton({ className = "", onClick, ...rest }: ModalCloseButtonProps) {
   const { close } = useModal();
   return (
     <button
@@ -78,5 +74,4 @@ export function ModalCloseButton({ className = "", onClick, ...rest }: ModalClos
       </Icon>
     </button>
   );
-}
-ModalCloseButton.displayName = "Modal.CloseButton";
+});

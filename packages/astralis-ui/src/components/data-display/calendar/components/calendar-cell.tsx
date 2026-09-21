@@ -5,6 +5,7 @@ import { useCalendarContext } from "../calendar.context";
 import type { CalendarCellProps } from "../calendar.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { isToday } from "../calendar.utils";
+import { identify } from "../../../../utils/dev-identity";
 
 const SIZE_MAP = {
   sm: "astralis:h-8 astralis:w-8",
@@ -12,7 +13,7 @@ const SIZE_MAP = {
   lg: "astralis:h-10 astralis:w-10",
 } as const;
 
-export function CalendarCell({
+export const CalendarCell = identify("Calendar.Cell", function CalendarCell({
   date,
   className,
   children,
@@ -65,6 +66,4 @@ export function CalendarCell({
       {children ?? date.getDate()}
     </button>
   );
-}
-
-CalendarCell.displayName = "Calendar.Cell";
+});

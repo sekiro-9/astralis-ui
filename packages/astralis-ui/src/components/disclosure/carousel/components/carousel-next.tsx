@@ -6,8 +6,9 @@ import { carouselControlVariants, controlIconSize } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import Icon from "../../../icon/icon";
 import { ChevronRightIcon, ChevronDownIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselNext({ icon, className = "", onClick, ...rest }: CarouselControlProps) {
+export const CarouselNext = identify("Carousel.Next", function CarouselNext({ icon, className = "", onClick, ...rest }: CarouselControlProps) {
   const { index, setIndex, slidesToScroll, lastIndex, orientation, disabled, loop, size } = useCarousel();
   const isVertical = orientation === "vertical";
   const isDisabled = !loop && (disabled || index >= lastIndex);
@@ -28,6 +29,4 @@ export function CarouselNext({ icon, className = "", onClick, ...rest }: Carouse
       )}
     </button>
   );
-}
-
-CarouselNext.displayName = "Carousel.Next";
+});

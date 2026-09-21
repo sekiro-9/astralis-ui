@@ -5,6 +5,7 @@ import { FIT_MAP, ROUNDED_MAP } from "./image.constants";
 import { ImageLightbox } from "./image-lightbox";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import type { ImageGroupProps } from "../image.types";
+import { identify } from "../../../../utils/dev-identity";
 
 const GAP_MAP = {
   sm: "astralis:gap-2",
@@ -18,7 +19,7 @@ const COL_MAP: Record<number, string> = {
   4: "astralis:grid-cols-4",
 };
 
-export function ImageGroup({
+export const ImageGroup = identify("ImageGroup", function ImageGroup({
   items,
   columns = 3,
   gap = "md",
@@ -72,6 +73,4 @@ export function ImageGroup({
       )}
     </>
   );
-}
-
-ImageGroup.displayName = "ImageGroup";
+});

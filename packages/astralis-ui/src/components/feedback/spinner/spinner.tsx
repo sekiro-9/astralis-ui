@@ -5,13 +5,14 @@ import { spinnerVariants } from "./spinner.styles";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
 import { SpinnerIcon } from "../../icon/internal-icons";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * An indeterminate loading indicator. Announces itself as a live status
  * region with a visually-hidden label; the arc stays animated under
  * prefers-reduced-motion because it conveys state, not decoration.
  */
-export function Spinner({
+export const Spinner = identify("Spinner", function Spinner({
   size = "md",
   colorScheme = "brand",
   label = "Loading…",
@@ -32,6 +33,4 @@ export function Spinner({
       {label ? <span className="astralis:sr-only">{label}</span> : null}
     </span>
   );
-}
-
-Spinner.displayName = "Spinner";
+});

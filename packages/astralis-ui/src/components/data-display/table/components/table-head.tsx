@@ -1,8 +1,9 @@
 import type { TableHeadProps } from "../table.types";
 import { tableCellSize } from "../table.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TableHead({ children, className = "", scope = "col", ...rest }: TableHeadProps) {
+export const TableHead = identify("Table.Head", function TableHead({ children, className = "", scope = "col", ...rest }: TableHeadProps) {
   return (
     <th
       scope={scope}
@@ -12,6 +13,4 @@ export function TableHead({ children, className = "", scope = "col", ...rest }: 
       {children}
     </th>
   );
-}
-
-TableHead.displayName = "Table.Head";
+});

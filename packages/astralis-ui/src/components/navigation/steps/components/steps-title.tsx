@@ -4,9 +4,10 @@ import { Text } from "../../../typography/text";
 import { useStepItemContext, useStepsContext } from "../steps.context";
 import { stepSizeClasses } from "../steps.styles";
 import type { StepsTitleProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Steps.Title — the step's heading. Composes our Text primitive; colour tracks status. */
-export function StepsTitle({ children, className, ...rest }: StepsTitleProps) {
+export const StepsTitle = identify("Steps.Title", function StepsTitle({ children, className, ...rest }: StepsTitleProps) {
   const { size } = useStepsContext();
   const { status } = useStepItemContext();
 
@@ -17,6 +18,4 @@ export function StepsTitle({ children, className, ...rest }: StepsTitleProps) {
       {children}
     </Text>
   );
-}
-
-StepsTitle.displayName = "Steps.Title";
+});

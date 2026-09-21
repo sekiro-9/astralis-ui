@@ -5,6 +5,7 @@ import type { TableOfContentsProps } from "../table-of-contents.types";
 import { tocLabel, tocList, tocLink, tocLinkActive } from "../table-of-contents.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { splitPlacement } from "../../../../utils/placement";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * "On this page" navigation with scroll-spy: the entry whose heading is
@@ -12,7 +13,7 @@ import { splitPlacement } from "../../../../utils/placement";
  * handler). Entries are plain anchor links, so navigation works before
  * hydration and with JavaScript disabled; only the highlight is enhanced.
  */
-export function TableOfContents({
+export const TableOfContents = identify("TableOfContents", function TableOfContents({
   items,
   label = "On this page",
   showLabel = true,
@@ -67,6 +68,4 @@ export function TableOfContents({
       </ul>
     </nav>
   );
-}
-
-TableOfContents.displayName = "TableOfContents";
+});

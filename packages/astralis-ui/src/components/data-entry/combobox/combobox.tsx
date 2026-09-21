@@ -15,6 +15,7 @@ import { useControllableState } from "../../../hooks/use-controllable-state";
 import { accentClass } from "../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../icon/internal-icons";
 import type { ComboboxOptionItem, ComboboxProps } from "./combobox.types";
+import { identify } from "../../../utils/dev-identity";
 
 type Value = string | number | null;
 
@@ -23,7 +24,7 @@ type Value = string | number | null;
  * filter, arrows to move the active option, Enter to commit, Escape to
  * revert. Built from the same shared option machinery as Select/MultiSelect.
  */
-export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
+export const Combobox = identify("Combobox", forwardRef<HTMLInputElement, ComboboxProps>(
   (
     {
       options = [],
@@ -289,6 +290,4 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       </div>
     );
   },
-);
-
-Combobox.displayName = "Combobox";
+));

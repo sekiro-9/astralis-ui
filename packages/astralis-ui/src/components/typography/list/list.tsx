@@ -6,11 +6,12 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { listVariants, listVariantMap } from "./list.styles";
 import { boxVariants, boxVariantMap } from "../../layout/box/box.styles";
 import { BOX_VARIANT_KEYS } from "../../layout/box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(listVariantMap);
 
 /** Root of the List compound — renders a `<ul>` (or `<ol>` via `as`). */
-function ListRoot<T extends ElementType = "ul">({
+const ListRoot = identify("List", function ListRoot<T extends ElementType = "ul">({
   as,
   className,
   children,
@@ -34,7 +35,6 @@ function ListRoot<T extends ElementType = "ul">({
       {children}
     </Element>
   );
-}
+});
 
-ListRoot.displayName = "List";
 export default ListRoot;

@@ -6,11 +6,12 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { blockquoteVariants, blockquoteVariantMap } from "./blockquote.styles";
 import { boxVariants, boxVariantMap } from "../../layout/box/box.styles";
 import { BOX_VARIANT_KEYS } from "../../layout/box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(blockquoteVariantMap);
 
 /** A quotation block with a leading accent rule and optional `<cite>` attribution. */
-function Blockquote<T extends ElementType = "blockquote">({
+const Blockquote = identify("Blockquote", function Blockquote<T extends ElementType = "blockquote">({
   as,
   className,
   children,
@@ -42,7 +43,6 @@ function Blockquote<T extends ElementType = "blockquote">({
       )}
     </Element>
   );
-}
+});
 
-Blockquote.displayName = "Blockquote";
 export default Blockquote;

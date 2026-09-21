@@ -3,6 +3,7 @@ import type { TimelineItemProps } from "../timeline.types";
 import { timelineColumnWidth, timelineConnectorClasses } from "../timeline.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { TimelineIndicator } from "./timeline-indicator";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Lays out one entry: an indicator column with the connecting line drawn beneath
@@ -10,7 +11,7 @@ import { TimelineIndicator } from "./timeline-indicator";
  * beside it. Splits its children into the Indicator and everything else by
  * component identity.
  */
-export function TimelineItem({ children, className = "", ...rest }: TimelineItemProps) {
+export const TimelineItem = identify("Timeline.Item", function TimelineItem({ children, className = "", ...rest }: TimelineItemProps) {
   let indicator: ReactElement | null = null;
   const others: ReactNode[] = [];
   Children.forEach(children, (child) => {
@@ -30,6 +31,4 @@ export function TimelineItem({ children, className = "", ...rest }: TimelineItem
       <div className="astralis:flex-1 astralis:min-w-0 astralis:pb-6">{others}</div>
     </div>
   );
-}
-
-TimelineItem.displayName = "Timeline.Item";
+});

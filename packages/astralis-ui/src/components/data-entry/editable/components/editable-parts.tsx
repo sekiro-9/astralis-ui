@@ -6,10 +6,11 @@ import type { EditablePreviewProps, EditableInputProps } from "../editable.types
 import { editablePreview, editablePreviewEmpty, editableInput, editableInputInvalid } from "../editable.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useFieldContext } from "../../field/field.context";
+import { identify } from "../../../../utils/dev-identity";
 
 /** The resting state: shows the value (or placeholder) and enters edit mode
  *  on click or Enter/Space — it is a real button in the accessibility tree. */
-export function EditablePreview({ className = "", onClick, ...rest }: EditablePreviewProps) {
+export const EditablePreview = identify("Editable.Preview", function EditablePreview({ className = "", onClick, ...rest }: EditablePreviewProps) {
   const { value, editing, disabled, placeholder, start } = useEditableContext();
   if (editing) return null;
 
@@ -38,13 +39,11 @@ export function EditablePreview({ className = "", onClick, ...rest }: EditablePr
       {value || placeholder}
     </span>
   );
-}
-
-EditablePreview.displayName = "Editable.Preview";
+});
 
 /** The editing state: auto-focused and text-selected on entry; Enter commits,
  *  Escape cancels, blur follows `submitOnBlur`. */
-export function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: EditableInputProps) {
+export const EditableInput = identify("Editable.Input", function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: EditableInputProps) {
   const { draft, editing, invalid, submitOnBlur, commit, cancel, setDraft } = useEditableContext();
   const field = useFieldContext();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -82,6 +81,4 @@ export function EditableInput({ className = "", onKeyDown, onBlur, ...rest }: Ed
       {...rest}
     />
   );
-}
-
-EditableInput.displayName = "Editable.Input";
+});

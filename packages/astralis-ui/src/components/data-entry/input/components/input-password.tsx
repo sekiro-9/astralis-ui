@@ -5,8 +5,9 @@ import { InputBase } from "./input";
 import type { InputPasswordProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { EyeIcon, EyeOffIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function InputPassword({
+export const InputPassword = identify("Input.Password", function InputPassword({
   className = "",
   disabled,
   ref,
@@ -40,6 +41,4 @@ export function InputPassword({
       </button>
     </div>
   );
-}
-
-InputPassword.displayName = "Input.Password";
+});

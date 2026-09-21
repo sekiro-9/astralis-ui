@@ -2,8 +2,9 @@ import { splitPlacement } from "../../../../utils/placement";
 import type { TimelineProps } from "../timeline.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TimelineRoot({ children, size = "md", variant = "solid", colorScheme = "brand", className = "", ...rest }: TimelineProps) {
+export const TimelineRoot = identify("Timeline", function TimelineRoot({ children, size = "md", variant = "solid", colorScheme = "brand", className = "", ...rest }: TimelineProps) {
   const { placementClass, rest: domRest } = splitPlacement(rest);
 
   return (
@@ -21,6 +22,4 @@ export function TimelineRoot({ children, size = "md", variant = "solid", colorSc
       {children}
     </div>
   );
-}
-
-TimelineRoot.displayName = "Timeline";
+});

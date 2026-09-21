@@ -1,7 +1,8 @@
 import type { HeadingElement, HeadingProps } from "./heading.types";
 import Text from "../text";
+import { identify } from "../../../utils/dev-identity";
 
-function Heading<T extends HeadingElement = "h2">({ as, ...props }: HeadingProps<T>) {
+const Heading = identify("Heading", function Heading<T extends HeadingElement = "h2">({ as, ...props }: HeadingProps<T>) {
   const element: HeadingElement = as ?? "h2";
   return (
     <Text
@@ -12,7 +13,6 @@ function Heading<T extends HeadingElement = "h2">({ as, ...props }: HeadingProps
       {...(props as HeadingProps<HeadingElement>)}
     />
   );
-}
+});
 
-Heading.displayName = "Heading";
 export default Heading;

@@ -4,8 +4,9 @@ import type { AvatarGroupProps } from "../avatar.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { AvatarRoot } from "./avatar-root";
+import { identify } from "../../../../utils/dev-identity";
 
-export function AvatarGroup({ children, max, spacing = -8, size = "md", className = "", style, ...rest }: AvatarGroupProps) {
+export const AvatarGroup = identify("Avatar.Group", function AvatarGroup({ children, max, spacing = -8, size = "md", className = "", style, ...rest }: AvatarGroupProps) {
   const all = Children.toArray(children).filter(isValidElement);
   const visible = max !== undefined ? all.slice(0, max) : all;
   const overflow = max !== undefined ? all.length - max : 0;
@@ -33,6 +34,4 @@ export function AvatarGroup({ children, max, spacing = -8, size = "md", classNam
       )}
     </div>
   );
-}
-
-AvatarGroup.displayName = "Avatar.Group";
+});

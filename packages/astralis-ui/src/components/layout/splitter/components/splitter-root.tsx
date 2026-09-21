@@ -7,13 +7,14 @@ import { splitterRoot, splitterRootVertical } from "../splitter.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { splitPlacement } from "../../../../utils/placement";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A two-panel split with a draggable, keyboard-resizable divider. The first
  * panel's share rides a CSS variable; panels are addressed by DOM order, so
  * the composition is just Panel / Handle / Panel.
  */
-export function SplitterRoot({
+export const SplitterRoot = identify("Splitter", function SplitterRoot({
   orientation = "horizontal",
   size: sizeProp,
   defaultSize = 50,
@@ -53,6 +54,4 @@ export function SplitterRoot({
       </div>
     </SplitterContext.Provider>
   );
-}
-
-SplitterRoot.displayName = "Splitter";
+});

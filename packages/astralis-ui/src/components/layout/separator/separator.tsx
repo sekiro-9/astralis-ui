@@ -6,10 +6,11 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { separatorVariants, separatorVariantMap } from "./separator.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(separatorVariantMap);
 
-function Separator<T extends ElementType = "div">({
+const Separator = identify("Separator", function Separator<T extends ElementType = "div">({
   as,
   className,
   style,
@@ -36,7 +37,6 @@ function Separator<T extends ElementType = "div">({
       {...htmlProps}
     />
   );
-}
+});
 
-Separator.displayName = "Separator";
 export default Separator;

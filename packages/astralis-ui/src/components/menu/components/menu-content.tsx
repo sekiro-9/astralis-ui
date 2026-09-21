@@ -11,10 +11,11 @@ import { useDismiss } from "../../../hooks/use-dismiss";
 import { useRovingFocus } from "../../../hooks/use-roving-focus";
 import { useMergedRefs } from "../../../utils/merge-refs";
 import { menuContentClasses, menuMotionClasses } from "../menu.styles";
+import { identify } from "../../../utils/dev-identity";
 
 const DURATION = 160;
 
-export function MenuContent({ className = "", children, onKeyDown, ...rest }: MenuContentProps) {
+export const MenuContent = identify("Menu.Content", function MenuContent({ className = "", children, onKeyDown, ...rest }: MenuContentProps) {
   const { open, close, triggerRef, contentRef, contentId, side, align, sideOffset, focusIntentRef, repositionRef } = useMenu();
   const { mounted, state } = usePresence(open, DURATION);
 
@@ -87,5 +88,4 @@ export function MenuContent({ className = "", children, onKeyDown, ...rest }: Me
       </div>
     </Portal>
   );
-}
-MenuContent.displayName = "Menu.Content";
+});

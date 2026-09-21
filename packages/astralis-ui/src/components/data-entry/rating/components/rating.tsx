@@ -10,6 +10,7 @@ import { ratingSizes, ratingRoot, ratingStar, ratingStarColor } from "../rating.
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { StarIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Star rating. Interactive mode is a radiogroup of native radios (sr-only), so
@@ -17,7 +18,7 @@ import { StarIcon } from "../../../icon/internal-icons";
  * selection is whole stars. `readOnly` renders a static display where
  * fractional values (4.5) show as half-filled stars.
  */
-export function Rating({
+export const Rating = identify("Rating", function Rating({
   max = 5,
   value: valueProp,
   defaultValue = 0,
@@ -138,6 +139,4 @@ export function Rating({
       })}
     </div>
   );
-}
-
-Rating.displayName = "Rating";
+});

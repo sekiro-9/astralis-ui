@@ -4,9 +4,10 @@ import type { Ref } from "react";
 import type { CalendarTriggerProps } from "../calendar.types";
 import { useCalendarContext } from "../calendar.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** The month title. Live, so paging months is announced. */
-export function CalendarViewTrigger({
+export const CalendarViewTrigger = identify("Calendar.ViewTrigger", function CalendarViewTrigger({
   className,
   children,
   ref,
@@ -28,6 +29,4 @@ export function CalendarViewTrigger({
       {children ?? monthLabel}
     </button>
   );
-}
-
-CalendarViewTrigger.displayName = "Calendar.ViewTrigger";
+});

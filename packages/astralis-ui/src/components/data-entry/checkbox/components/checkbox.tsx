@@ -12,8 +12,9 @@ import { checkboxSizes, checkboxControl, checkboxControlColor } from "../checkbo
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { CheckIcon, MinusIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CheckboxBase({
+export const CheckboxBase = identify("Checkbox", function CheckboxBase({
   children,
   size = "md",
   colorScheme,
@@ -115,6 +116,4 @@ export function CheckboxBase({
       )}
     </label>
   );
-}
-
-CheckboxBase.displayName = "Checkbox";
+});

@@ -4,6 +4,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useStepItemContext, useStepsContext } from "../steps.context";
 import { stepIndicatorVariants, stepDotVariants } from "../steps.styles";
 import type { StepsIndicatorProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Sized in em so it tracks the indicator's text size. */
 const CHECK_SIZE = { width: "1.1em", height: "1.1em" };
@@ -18,7 +19,7 @@ const CheckIcon = () => (
  * Steps.Indicator — the circle (solid/subtle) or dot. Defaults to the step number,
  * a check when completed, or "!" on error; override by passing children.
  */
-export function StepsIndicator({ children, className, ...rest }: StepsIndicatorProps) {
+export const StepsIndicator = identify("Steps.Indicator", function StepsIndicator({ children, className, ...rest }: StepsIndicatorProps) {
   const { variant, size } = useStepsContext();
   const { index, status } = useStepItemContext();
 
@@ -45,6 +46,4 @@ export function StepsIndicator({ children, className, ...rest }: StepsIndicatorP
       {content}
     </span>
   );
-}
-
-StepsIndicator.displayName = "Steps.Indicator";
+});

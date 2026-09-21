@@ -6,6 +6,7 @@ import type { FileUploadProps, FileUploadRejection } from "../file-upload.types"
 import { useFieldContext } from "../../field/field.context";
 import { splitPlacement } from "../../../../utils/placement";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * File picking + drag-and-drop. The root owns the kept list and a hidden
@@ -13,7 +14,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * mobile integrations stay the platform's. `maxSize`/`maxFiles` violations
  * are rejected (reported via `onReject`), never silently truncated.
  */
-export function FileUploadRoot({
+export const FileUploadRoot = identify("FileUpload", function FileUploadRoot({
   accept,
   multiple = false,
   maxFiles,
@@ -104,6 +105,4 @@ export function FileUploadRoot({
       </div>
     </FileUploadContext.Provider>
   );
-}
-
-FileUploadRoot.displayName = "FileUpload";
+});

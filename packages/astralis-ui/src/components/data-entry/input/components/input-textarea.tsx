@@ -6,8 +6,9 @@ import { textareaVariants } from "../input.styles";
 import type { InputTextareaProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function InputTextarea({
+export const InputTextarea = identify("Input.TextArea", function InputTextarea({
   size = "md",
   variant = "outline",
   invalid: invalidProp,
@@ -73,6 +74,4 @@ export function InputTextarea({
       )}
     </div>
   );
-}
-
-InputTextarea.displayName = "Input.TextArea";
+});

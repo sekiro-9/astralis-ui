@@ -3,8 +3,9 @@
 import type { CSSProperties } from "react";
 import type { CarouselSlideProps } from "../carousel.types";
 import { useCarousel, useCarouselItemIndex } from "../carousel.context";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselSlide({ children, className = "", style: styleProp, ...rest }: CarouselSlideProps) {
+export const CarouselSlide = identify("Carousel.Slide", function CarouselSlide({ children, className = "", style: styleProp, ...rest }: CarouselSlideProps) {
   const { index, slideCount, slidesPerView, slideGap, orientation, animation, speed, easing } = useCarousel();
   const i = useCarouselItemIndex();
   const isVertical = orientation === "vertical";
@@ -60,6 +61,4 @@ export function CarouselSlide({ children, className = "", style: styleProp, ...r
       {children}
     </div>
   );
-}
-
-CarouselSlide.displayName = "Carousel.Slide";
+});

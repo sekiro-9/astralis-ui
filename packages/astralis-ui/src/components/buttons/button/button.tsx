@@ -4,6 +4,7 @@ import { buttonVariants, buttonColorClasses } from "./button.styles";
 import type { ButtonProps } from "./button.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
+import { identify } from "../../../utils/dev-identity";
 
 type ButtonComponent = (<T extends ElementType = "button">(props: ButtonProps<T>) => ReactNode) & {
   displayName?: string;
@@ -131,5 +132,4 @@ function ButtonImpl<T extends ElementType = "button">({
   );
 }
 
-export const Button = ButtonImpl as ButtonComponent;
-Button.displayName = "Button";
+export const Button = identify("Button", ButtonImpl as ButtonComponent);

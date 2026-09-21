@@ -6,10 +6,11 @@ import { splitVariantProps } from "../../../utils/split-variant-props";
 import { aspectRatioVariants, aspectRatioVariantMap } from "./aspect-ratio.styles";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 const VARIANT_KEYS = Object.keys(aspectRatioVariantMap);
 
-function AspectRatio<T extends ElementType = "div">({
+const AspectRatio = identify("AspectRatio", function AspectRatio<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -33,7 +34,6 @@ function AspectRatio<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-AspectRatio.displayName = "AspectRatio";
 export default AspectRatio;

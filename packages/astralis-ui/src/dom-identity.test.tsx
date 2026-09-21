@@ -1,6 +1,6 @@
 import { createElement, type ComponentType, type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 import * as Astralis from "./index";
 import { AstralisProvider } from "./index";
@@ -187,8 +187,8 @@ const HOST_PROPS: Readonly<Record<string, Record<string, Record<string, unknown>
 
 type Renderable = Record<string, unknown>;
 
-function resolve(name: string): ComponentType<Record<string, unknown>> | null {
-  let current: unknown = Astralis as Renderable;
+function resolve(name: string, library: Renderable = Astralis): ComponentType<Record<string, unknown>> | null {
+  let current: unknown = library;
   for (const segment of name.split(".")) {
     if (typeof current !== "object" && typeof current !== "function") return null;
     if (current === null) return null;
@@ -199,10 +199,10 @@ function resolve(name: string): ComponentType<Record<string, unknown>> | null {
     : null;
 }
 
-function wrap(name: string, inner: ReactNode): ReactNode {
+function wrap(name: string, inner: ReactNode, library: Renderable): ReactNode {
   const hosts = NESTING[name] ?? [];
   return hosts.reduceRight<ReactNode>((child, host) => {
-    const Host = resolve(host);
+    const Host = resolve(host, library);
     const props = { ...(REQUIRED[host] ?? {}), ...(HOST_PROPS[name]?.[host] ?? {}) };
     return Host ? createElement(Host, props, child) : child;
   }, inner);
@@ -235,35 +235,97 @@ const cases = roots
   })
   .filter((name) => !INSIDE_OVERLAY.test(name) && !NEEDS_STATE.has(name));
 
-describe("a DOM attribute reaches the root element", () => {
-  for (const name of cases) {
-    const bare = name.split(".").pop() ?? name;
-    if (NO_ROOT_ELEMENT.has(name) || NO_REACHABLE_ELEMENT.has(name) || bare === "Root") continue;
+/** The case rendered to HTML with the probe on it, through `library`'s own exports. */
+function renderCase(name: string, library: Renderable = Astralis): string {
+  const Component = resolve(name, library);
+  const Provider = library.AstralisProvider as typeof AstralisProvider;
+  expect(Component).not.toBeNull();
+  if (!Component) return "";
 
-    it(name, () => {
-      const Component = resolve(name);
-      expect(Component).not.toBeNull();
-      if (!Component) return;
-
-      const props = { [PROBE]: "here", ...(REQUIRED[name] ?? {}) };
-      const child = /Trigger$|Close$/.test(name) ? createElement("button", null, "x") : "x";
-      const original = console.error;
-      console.error = () => {};
-      let html = "";
+  const props = { [PROBE]: "here", ...(REQUIRED[name] ?? {}) };
+  const child = /Trigger$|Close$/.test(name) ? createElement("button", null, "x") : "x";
+  const original = console.error;
+  console.error = () => {};
+  try {
+    // A void element rejects children; try without them before giving up.
+    for (const element of [createElement(Component, props, child), createElement(Component, props)]) {
       try {
-        // A void element rejects children; try without them before giving up.
-        for (const element of [createElement(Component, props, child), createElement(Component, props)]) {
-          try {
-            html = renderToString(createElement(AstralisProvider, null, wrap(name, element)));
-            break;
-          } catch {
-            html = "";
-          }
-        }
-      } finally {
-        console.error = original;
+        return renderToString(createElement(Provider, null, wrap(name, element, library)));
+      } catch {
+        // next shape
       }
-      expect(html, `${name} dropped ${PROBE}`).toContain(`${PROBE}="here"`);
+    }
+    return "";
+  } finally {
+    console.error = original;
+  }
+}
+
+const reachable = cases.filter((name) => {
+  const bare = name.split(".").pop() ?? name;
+  return !NO_ROOT_ELEMENT.has(name) && !NO_REACHABLE_ELEMENT.has(name) && bare !== "Root";
+});
+
+describe("a DOM attribute reaches the root element", () => {
+  for (const name of reachable) {
+    it(name, () => {
+      expect(renderCase(name), `${name} dropped ${PROBE}`).toContain(`${PROBE}="here"`);
+    });
+  }
+});
+
+/*
+ * Development builds name each component on that same root (utils/dev-identity).
+ * The first name in the chain is the component that was placed, and it must
+ * lead back, through the public exports, to that very component: that is what
+ * lets the DevTools look it up in the spec and link its documentation.
+ */
+describe("development builds name the component on its root element", () => {
+  for (const name of reachable) {
+    it(name, () => {
+      const host = document.createElement("div");
+      host.innerHTML = renderCase(name);
+      const root = host.querySelector(`[${PROBE}]`);
+      const chain = root?.getAttribute("data-astralis")?.split(" ") ?? [];
+      expect(chain.length, `${name} has no data-astralis`).toBeGreaterThan(0);
+      expect(resolve(chain[0]), `"${chain[0]}" does not lead back to ${name}`).toBe(resolve(name));
+
+      const described: unknown = JSON.parse(root?.getAttribute("data-astralis-props") ?? "null");
+      expect(Array.isArray(described) && described.length === chain.length).toBe(true);
+    });
+  }
+});
+
+/** The identity attributes, as renderToString escapes them. Components have
+ *  data-astralis-* attributes of their own (a Splitter's panels); those stay. */
+const IDENTITY_ATTRIBUTES = / data-astralis(-props)?="[^"]*"/g;
+
+/*
+ * In production `identify` returns the component itself, so the HTML must be
+ * exactly what it would be without identity: the development render with the
+ * attributes removed, byte for byte.
+ */
+describe("production builds render no identity and nothing else changes", () => {
+  let production: Renderable = {};
+  beforeAll(async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.resetModules();
+    production = (await import("./index")) as Renderable;
+    vi.unstubAllEnvs();
+  });
+  afterAll(() => vi.resetModules());
+
+  it("loaded a separate copy of the library", () => {
+    expect(production.Card).toBeDefined();
+    expect(production.Card).not.toBe(Astralis.Card);
+  });
+
+  for (const name of reachable) {
+    it(name, () => {
+      const html = renderCase(name, production);
+      expect(html).toContain(`${PROBE}="here"`);
+      expect(html.match(IDENTITY_ATTRIBUTES)).toBeNull();
+      expect(renderCase(name).replace(IDENTITY_ATTRIBUTES, "")).toBe(html);
     });
   }
 });

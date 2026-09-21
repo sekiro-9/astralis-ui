@@ -6,13 +6,14 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { TabsContext } from "../tabs.context";
 import type { TabsProps } from "../tabs.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Tabs.Root — owns the active-value state (controlled or uncontrolled) and shares
  * it + config via a memoized context. Renders a flex container that stacks the
  * list and panels (column for horizontal tabs, row for vertical).
  */
-export function TabsRoot({
+export const TabsRoot = identify("Tabs", function TabsRoot({
   value: valueProp,
   defaultValue,
   onValueChange,
@@ -73,6 +74,4 @@ export function TabsRoot({
       </div>
     </TabsContext.Provider>
   );
-}
-
-TabsRoot.displayName = "Tabs.Root";
+});

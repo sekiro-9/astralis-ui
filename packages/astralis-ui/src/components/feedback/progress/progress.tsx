@@ -9,6 +9,7 @@ import {
 } from "./progress.styles";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
+import { identify } from "../../../utils/dev-identity";
 
 const INDETERMINATE_ANIMATION: CSSProperties = {
   // Longhands only — mixing the `animation` shorthand with other animation-*
@@ -23,7 +24,7 @@ const INDETERMINATE_ANIMATION: CSSProperties = {
  * Determinate or indeterminate progress, as a linear bar or a circular ring.
  * Omitting `value` switches to the indeterminate animation.
  */
-export function Progress({
+export const Progress = identify("Progress", function Progress({
   value,
   max = 100,
   shape = "line",
@@ -123,6 +124,4 @@ export function Progress({
       )}
     </div>
   );
-}
-
-Progress.displayName = "Progress";
+});

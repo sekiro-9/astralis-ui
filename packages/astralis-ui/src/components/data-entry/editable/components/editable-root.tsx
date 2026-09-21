@@ -9,13 +9,14 @@ import { splitPlacement } from "../../../../utils/placement";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { editableSizes } from "../editable.styles";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Click-to-edit text: a preview span that swaps for an input on click,
  * committing on Enter/blur and cancelling on Escape. For titles, names and
  * inline fields where a permanent input would be visual noise.
  */
-export function EditableRoot({
+export const EditableRoot = identify("Editable", function EditableRoot({
   value: valueProp,
   defaultValue = "",
   onValueChange,
@@ -83,6 +84,4 @@ export function EditableRoot({
       </div>
     </EditableContext.Provider>
   );
-}
-
-EditableRoot.displayName = "Editable";
+});

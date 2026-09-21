@@ -3,6 +3,7 @@ import { Fragment, type Ref } from "react";
 import type { HighlightProps } from "./highlight.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { highlightMarkVariants } from "./highlight.styles";
+import { identify } from "../../../utils/dev-identity";
 
 /** Escape regex metacharacters so query terms match literally. */
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -11,7 +12,7 @@ const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\
  * Highlight wraps every occurrence of `query` within its text in a styled `<mark>`.
  * It renders inline, so it can live inside a `<Text>` or any prose.
  */
-function Highlight({
+const Highlight = identify("Highlight", function Highlight({
   children,
   query,
   ignoreCase = true,
@@ -54,7 +55,6 @@ function Highlight({
         {nodes}
       </span>
     );
-}
+});
 
-Highlight.displayName = "Highlight";
 export default Highlight;

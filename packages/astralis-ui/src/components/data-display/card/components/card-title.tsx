@@ -1,8 +1,9 @@
 import type { Ref } from "react";
 import type { CardTitleProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardTitle({
+export const CardTitle = identify("Card.Title", function CardTitle({
   className = "",
   style,
   children,
@@ -19,6 +20,4 @@ export function CardTitle({
       {children}
     </h3>
   );
-}
-
-CardTitle.displayName = "Card.Title";
+});

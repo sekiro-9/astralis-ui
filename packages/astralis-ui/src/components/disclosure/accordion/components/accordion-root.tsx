@@ -8,8 +8,9 @@ import { accordionRootVariants } from "../accordion.styles";
 import type { AccordionProps } from "../accordion.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function AccordionRoot({
+export const AccordionRoot = identify("Accordion", function AccordionRoot({
   children,
   type = "single",
   variant = "enclosed",
@@ -109,6 +110,4 @@ export function AccordionRoot({
       </div>
     </AccordionContext.Provider>
   );
-}
-
-AccordionRoot.displayName = "Accordion";
+});

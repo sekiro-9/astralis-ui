@@ -5,9 +5,10 @@ import type { CheckableTagProps } from "../tag.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { TagRoot } from "./tag-root";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** A selectable tag — solid/brand when checked, subtle/gray when not. */
-export function CheckableTag({
+export const CheckableTag = identify("Tag.Checkable", function CheckableTag({
   children,
   checked: checkedProp,
   defaultChecked = false,
@@ -57,6 +58,4 @@ export function CheckableTag({
       {children}
     </TagRoot>
   );
-}
-
-CheckableTag.displayName = "Tag.Checkable";
+});

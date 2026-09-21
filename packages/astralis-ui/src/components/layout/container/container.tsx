@@ -5,6 +5,7 @@ import { resolveStyleProps } from "../../../utils/responsive";
 import { splitVariantProps } from "../../../utils/split-variant-props";
 import { boxVariants, boxVariantMap } from "../box/box.styles";
 import { BOX_VARIANT_KEYS } from "../box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * Container centers its content horizontally (`margin-inline: auto`) up to a max
@@ -12,7 +13,7 @@ import { BOX_VARIANT_KEYS } from "../box/box.keys";
  * defaults — override them like any style prop. `centerContent` stacks children
  * in a centered column.
  */
-function Container<T extends ElementType = "div">({
+const Container = identify("Container", function Container<T extends ElementType = "div">({
   as,
   className,
   children,
@@ -47,7 +48,6 @@ function Container<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-Container.displayName = "Container";
 export default Container;

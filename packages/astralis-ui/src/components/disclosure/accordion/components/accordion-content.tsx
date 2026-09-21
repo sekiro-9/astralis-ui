@@ -5,6 +5,7 @@ import { useAccordion, useAccordionItem } from "../accordion.context";
 import { accordionContentVariants } from "../accordion.styles";
 import type { AccordionContentProps } from "../accordion.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Smoothly collapsing region. The outer grid animates `grid-template-rows`
@@ -12,7 +13,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * wrapper clips the overflow. Content mounts lazily on first open (unless
  * `keepMounted`) and stays mounted afterwards so the collapse still animates.
  */
-export function AccordionContent({ children, className = "", style, ...rest }: AccordionContentProps) {
+export const AccordionContent = identify("Accordion.Content", function AccordionContent({ children, className = "", style, ...rest }: AccordionContentProps) {
   const { size, keepMounted } = useAccordion();
   const { open, triggerId, contentId } = useAccordionItem();
 
@@ -37,6 +38,4 @@ export function AccordionContent({ children, className = "", style, ...rest }: A
       </div>
     </div>
   );
-}
-
-AccordionContent.displayName = "Accordion.Content";
+});

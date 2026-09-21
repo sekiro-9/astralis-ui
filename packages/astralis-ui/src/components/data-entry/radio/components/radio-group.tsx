@@ -6,8 +6,9 @@ import type { RadioGroupProps } from "../radio.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { useFieldContext } from "../../field/field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function RadioGroup({
+export const RadioGroup = identify("Radio.Group", function RadioGroup({
   value,
   defaultValue = "",
   onValueChange,
@@ -59,6 +60,4 @@ export function RadioGroup({
       </div>
     </RadioGroupContext.Provider>
   );
-}
-
-RadioGroup.displayName = "Radio.Group";
+});

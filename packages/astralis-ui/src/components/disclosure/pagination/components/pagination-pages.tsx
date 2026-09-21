@@ -4,12 +4,13 @@ import { usePagination } from "../pagination.context";
 import { PaginationItem } from "./pagination-item";
 import { PaginationEllipsis } from "./pagination-ellipsis";
 import type { PaginationPagesProps } from "../pagination.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Renders the page-number buttons with ellipses — `boundaryCount` pages pinned
  * at each end and `siblings` pages on each side of the current page (the MUI model).
  */
-export function PaginationPages({ siblings = 1, boundaryCount = 1 }: PaginationPagesProps) {
+export const PaginationPages = identify("Pagination.Pages", function PaginationPages({ siblings = 1, boundaryCount = 1 }: PaginationPagesProps) {
   const { page, totalPages } = usePagination();
 
   const startBoundary = Array.from({ length: Math.min(boundaryCount, totalPages) }, (_, i) => i + 1);
@@ -50,6 +51,4 @@ export function PaginationPages({ siblings = 1, boundaryCount = 1 }: PaginationP
       {renderItems(endBoundary)}
     </>
   );
-}
-
-PaginationPages.displayName = "Pagination.Pages";
+});

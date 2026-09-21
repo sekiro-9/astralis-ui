@@ -5,12 +5,13 @@ import { useId, useMemo, useState } from "react";
 import FieldContext from "../field.context";
 import type { FieldRootProps } from "../field.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Groups a control with its label, help text, and error text — sharing state
  * (id, invalid, disabled, required, readOnly) with descendants via context.
  */
-export function FieldRoot({
+export const FieldRoot = identify("Field", function FieldRoot({
   children,
   invalid,
   disabled,
@@ -58,6 +59,4 @@ export function FieldRoot({
       </div>
     </FieldContext.Provider>
   );
-}
-
-FieldRoot.displayName = "Field";
+});

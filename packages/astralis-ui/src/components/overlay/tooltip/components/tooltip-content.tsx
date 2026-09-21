@@ -9,10 +9,11 @@ import { usePresence } from "../../../../hooks/use-presence";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
 import { useDismiss } from "../../../../hooks/use-dismiss";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 140;
 
-export function TooltipContent({ children, className = "", withArrow = false }: TooltipContentProps) {
+export const TooltipContent = identify("Tooltip.Content", function TooltipContent({ children, className = "", withArrow = false }: TooltipContentProps) {
   const { open, hide, triggerRef, contentRef, tooltipId, side, align, sideOffset, avoidCollisions } = useTooltip();
   const { mounted, state } = usePresence(open, DURATION);
   const { x, y, side: resolvedSide, arrow } = useAnchorPosition({
@@ -51,5 +52,4 @@ export function TooltipContent({ children, className = "", withArrow = false }: 
       </div>
     </Portal>
   );
-}
-TooltipContent.displayName = "Tooltip.Content";
+});

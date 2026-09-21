@@ -14,6 +14,7 @@ import { CalendarNextTrigger } from "./calendar-next-trigger";
 import { CalendarPrevTrigger } from "./calendar-prev-trigger";
 import { CalendarViewTrigger } from "./calendar-view-trigger";
 import { CalendarWeekdays } from "./calendar-weekdays";
+import { identify } from "../../../../utils/dev-identity";
 
 const SIZE_MAP = {
   sm: "astralis:text-xs",
@@ -41,7 +42,7 @@ function normalizeValue(value: CalendarValue, selectionMode: CalendarRootProps["
   return { start: null, end: null };
 }
 
-export function CalendarRoot({
+export const CalendarRoot = identify("Calendar", function CalendarRoot({
   selectionMode = "single",
   value,
   defaultValue,
@@ -181,6 +182,4 @@ export function CalendarRoot({
       </div>
     </CalendarContext.Provider>
   );
-}
-
-CalendarRoot.displayName = "Calendar";
+});

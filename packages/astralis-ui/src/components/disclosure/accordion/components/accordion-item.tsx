@@ -5,8 +5,9 @@ import { useAccordion, AccordionItemContext } from "../accordion.context";
 import { accordionItemVariants } from "../accordion.styles";
 import type { AccordionItemProps } from "../accordion.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function AccordionItem({ children, value, disabled = false, className = "", ...rest }: AccordionItemProps) {
+export const AccordionItem = identify("Accordion.Item", function AccordionItem({ children, value, disabled = false, className = "", ...rest }: AccordionItemProps) {
   const { variant, isOpen, disabled: rootDisabled } = useAccordion();
   // Generated, never built from `value`: a value with a space or quote would
   // break aria-controls and aria-labelledby.
@@ -38,6 +39,4 @@ export function AccordionItem({ children, value, disabled = false, className = "
       </div>
     </AccordionItemContext.Provider>
   );
-}
-
-AccordionItem.displayName = "Accordion.Item";
+});

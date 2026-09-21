@@ -14,18 +14,17 @@ import {
   splitterHandleLineActive,
 } from "../splitter.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 const KEY_STEP = 2;
 
-export function SplitterPanel({ className = "", ...rest }: SplitterPanelProps) {
+export const SplitterPanel = identify("Splitter.Panel", function SplitterPanel({ className = "", ...rest }: SplitterPanelProps) {
   return <div data-astralis-splitter-panel="" className={astralisMerge(splitterPanel, className)} {...rest} />;
-}
-
-SplitterPanel.displayName = "Splitter.Panel";
+});
 
 /** The divider: `role="separator"` with the APG window-splitter keyboard
  *  contract (arrows step, Home/End jump) and pointer-capture dragging. */
-export function SplitterHandle({ className = "", ...rest }: SplitterHandleProps) {
+export const SplitterHandle = identify("Splitter.Handle", function SplitterHandle({ className = "", ...rest }: SplitterHandleProps) {
   const { orientation, size, setSize, minSize, maxSize, containerRef } = useSplitterContext();
   const [resizing, setResizing] = useState(false);
   const horizontal = orientation === "horizontal";
@@ -94,6 +93,4 @@ export function SplitterHandle({ className = "", ...rest }: SplitterHandleProps)
       />
     </div>
   );
-}
-
-SplitterHandle.displayName = "Splitter.Handle";
+});

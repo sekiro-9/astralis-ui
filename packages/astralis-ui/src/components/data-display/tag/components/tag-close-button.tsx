@@ -4,10 +4,11 @@ import type { TagSize } from "../tag.types";
 import { closeIconSize } from "../tag.styles";
 import Icon from "../../../icon/icon";
 import { XIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /** The remove control, split out as a client leaf so a server-rendered Tag
  *  never puts an event handler on a host element. */
-export function TagCloseButton({ label, size, onClose }: { label: string; size: TagSize; onClose?: () => void }) {
+export const TagCloseButton = identify("Tag.CloseButton", function TagCloseButton({ label, size, onClose }: { label: string; size: TagSize; onClose?: () => void }) {
   return (
     <button
       type="button"
@@ -24,6 +25,4 @@ export function TagCloseButton({ label, size, onClose }: { label: string; size: 
       </Icon>
     </button>
   );
-}
-
-TagCloseButton.displayName = "Tag.CloseButton";
+});

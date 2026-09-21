@@ -5,8 +5,9 @@ import { tagVariants } from "../tag.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { TagCloseButton } from "./tag-close-button";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TagRoot({
+export const TagRoot = identify("Tag", function TagRoot({
   children,
   size = "md",
   variant = "subtle",
@@ -42,6 +43,4 @@ export function TagRoot({
       )}
     </span>
   );
-}
-
-TagRoot.displayName = "Tag";
+});

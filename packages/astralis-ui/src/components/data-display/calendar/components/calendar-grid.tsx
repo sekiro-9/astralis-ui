@@ -7,13 +7,14 @@ import { useMergedRefs } from "../../../../utils/merge-refs";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { addDays, addMonthsClamped, dateKey, isSameDay, isToday, nearestEnabled, startOfMonth } from "../calendar.utils";
 import { CalendarCell } from "./calendar-cell";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * The month as an ARIA grid: six rows of seven gridcells, one roving tab stop,
  * and the APG date-grid keys — arrows ±1/±7 days, Home/End to the week's
  * bounds, PageUp/PageDown ±1 month. Disabled days are stepped over.
  */
-export function CalendarGrid({ className, ref, ...props }: CalendarGridProps & { ref?: Ref<HTMLDivElement> }) {
+export const CalendarGrid = identify("Calendar.Grid", function CalendarGrid({ className, ref, ...props }: CalendarGridProps & { ref?: Ref<HTMLDivElement> }) {
   const {
     visibleMonth,
     setVisibleMonth,
@@ -107,6 +108,4 @@ export function CalendarGrid({ className, ref, ...props }: CalendarGridProps & {
       ))}
     </div>
   );
-}
-
-CalendarGrid.displayName = "Calendar.Grid";
+});

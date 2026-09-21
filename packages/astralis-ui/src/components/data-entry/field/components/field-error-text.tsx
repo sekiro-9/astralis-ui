@@ -5,8 +5,9 @@ import type { FieldErrorTextProps } from "../field.types";
 import { useFieldContext } from "../field.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { CircleAlertIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
-export function FieldErrorText({
+export const FieldErrorText = identify("Field.ErrorText", function FieldErrorText({
   children,
   className = "",
   ref,
@@ -37,6 +38,4 @@ export function FieldErrorText({
       {children}
     </p>
   );
-}
-
-FieldErrorText.displayName = "Field.ErrorText";
+});

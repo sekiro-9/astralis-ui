@@ -9,10 +9,11 @@ import { usePresence } from "../../../../hooks/use-presence";
 import { useDismiss } from "../../../../hooks/use-dismiss";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 160;
 
-export function PopoverContent({ children, className = "", withArrow = false, ...rest }: PopoverContentProps) {
+export const PopoverContent = identify("Popover.Content", function PopoverContent({ children, className = "", withArrow = false, ...rest }: PopoverContentProps) {
   const {
     open, close, triggerRef, contentRef, arrowRef, contentId, titleId, descriptionId,
     hasTitle, hasDescription, side, align, sideOffset, alignOffset, avoidCollisions,
@@ -71,5 +72,4 @@ export function PopoverContent({ children, className = "", withArrow = false, ..
       </div>
     </Portal>
   );
-}
-PopoverContent.displayName = "Popover.Content";
+});

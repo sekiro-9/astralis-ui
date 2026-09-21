@@ -2,6 +2,7 @@ import type { CSSProperties, Ref } from "react";
 import type { PopoutContentProps } from "../popout.types";
 import { popoutContentClasses, positionArea, positionFallbacks } from "../popout.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * The panel: `popover="auto"` (light dismiss + Esc + top layer, from the
@@ -10,7 +11,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * In browsers without anchor positioning the panel still opens and closes
  * correctly and falls back to the UA's centered top-layer placement.
  */
-export function PopoutContent({
+export const PopoutContent = identify("Popout.Content", function PopoutContent({
   popoutId,
   side = "bottom",
   align = "start",
@@ -39,6 +40,4 @@ export function PopoutContent({
       {children}
     </div>
   );
-}
-
-PopoutContent.displayName = "Popout.Content";
+});

@@ -8,6 +8,7 @@ import { accentClass, type ColorScheme } from "../../../../const/color-schemes";
 import { toPercent } from "../slider.utils";
 import type { SliderTrackHandlers } from "../use-slider-pointer";
 import type { SliderMark, SliderSize } from "../slider.types";
+import { identify } from "../../../../utils/dev-identity";
 
 function ValueTooltip({ children }: { children: ReactNode }) {
   return (
@@ -46,7 +47,7 @@ export interface SliderThumbProps extends Pick<HTMLAttributes<HTMLDivElement>, "
   ariaMax: number;
 }
 
-export function SliderThumb({
+export const SliderThumb = identify("Slider.Thumb", function SliderThumb({
   index,
   value,
   min,
@@ -102,7 +103,7 @@ export function SliderThumb({
       {showTooltip && (hovering || dragging) && <ValueTooltip>{valueText ?? value}</ValueTooltip>}
     </div>
   );
-}
+});
 
 interface SliderFrameProps extends HTMLAttributes<HTMLDivElement> {
   rootRef?: Ref<HTMLDivElement>;
@@ -124,7 +125,7 @@ interface SliderFrameProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** Root, track, fill and marks; the thumbs arrive as children. */
-export function SliderFrame({
+export const SliderFrame = identify("Slider.Frame", function SliderFrame({
   rootRef,
   trackRef,
   trackHandlers,
@@ -210,8 +211,4 @@ export function SliderFrame({
       ))}
     </div>
   );
-}
-
-SliderThumb.displayName = "SliderThumb";
-
-SliderFrame.displayName = "SliderFrame";
+});

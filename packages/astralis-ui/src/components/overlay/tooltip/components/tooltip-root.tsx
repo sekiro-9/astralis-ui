@@ -6,8 +6,9 @@ import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { TooltipContext, useTooltip } from "../tooltip.context";
 import type { TooltipProps, TooltipTriggerProps } from "../tooltip.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { identify } from "../../../../utils/dev-identity";
 
-export function TooltipRoot({
+export const TooltipRoot = identify("Tooltip", function TooltipRoot({
   children,
   open: openProp,
   defaultOpen = false,
@@ -37,10 +38,9 @@ export function TooltipRoot({
   );
 
   return <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>;
-}
-TooltipRoot.displayName = "Tooltip";
+});
 
-export function TooltipTrigger({ children, ref, ...rest }: TooltipTriggerProps) {
+export const TooltipTrigger = identify("Tooltip.Trigger", function TooltipTrigger({ children, ref, ...rest }: TooltipTriggerProps) {
   const { show, showNow, hide, open, triggerRef, tooltipId } = useTooltip();
   const child = resolveSlotChild(children);
   const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
@@ -52,5 +52,4 @@ export function TooltipTrigger({ children, ref, ...rest }: TooltipTriggerProps) 
     onBlur: hide,
     "aria-describedby": open ? tooltipId : undefined,
   });
-}
-TooltipTrigger.displayName = "Tooltip.Trigger";
+});

@@ -4,8 +4,9 @@ import type { PaginationItemProps } from "../pagination.types";
 import { usePagination } from "../pagination.context";
 import { paginationItemVariants } from "../pagination.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function PaginationItem({ page, children, className = "", ...rest }: PaginationItemProps) {
+export const PaginationItem = identify("Pagination.Item", function PaginationItem({ page, children, className = "", ...rest }: PaginationItemProps) {
   const { page: activePage, setPage, variant, size, rounded, disabled } = usePagination();
   const active = page === activePage;
 
@@ -24,6 +25,4 @@ export function PaginationItem({ page, children, className = "", ...rest }: Pagi
       </button>
     </li>
   );
-}
-
-PaginationItem.displayName = "Pagination.Item";
+});

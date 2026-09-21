@@ -4,6 +4,7 @@ import { astralisMerge } from "../../utils/astralis-merge";
 import { textColors } from "../../const/color-mappings";
 import { iconVariants } from "./icon.styles";
 import type { IconProps } from "./icon.types";
+import { identify } from "../../utils/dev-identity";
 
 /**
  * Icon — a bring-your-own-icon wrapper. It standardizes size (our sizing tokens),
@@ -13,7 +14,7 @@ import type { IconProps } from "./icon.types";
  *
  * Decorative by default (`aria-hidden`); pass `aria-label` to expose it to AT.
  */
-function Icon({
+const Icon = identify("Icon", function Icon({
   as: As,
   children,
   size = "md",
@@ -79,7 +80,6 @@ function Icon({
     }
 
     return null;
-}
+});
 
-Icon.displayName = "Icon";
 export default Icon;

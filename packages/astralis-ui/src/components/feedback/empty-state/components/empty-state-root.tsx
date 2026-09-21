@@ -2,13 +2,14 @@ import type { EmptyStateProps } from "../empty-state.types";
 import { emptyStateRoot } from "../empty-state.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { splitPlacement } from "../../../../utils/placement";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A blank-slate placeholder for "no results", "nothing here yet" and error
  * moments. Pure composition — the compound ships zero client JavaScript. Size
  * travels to the parts via `data-empty-state-size`, not context.
  */
-export function EmptyStateRoot({ size = "md", className = "", children, ...rest }: EmptyStateProps) {
+export const EmptyStateRoot = identify("EmptyState", function EmptyStateRoot({ size = "md", className = "", children, ...rest }: EmptyStateProps) {
   const { placementClass, rest: domProps } = splitPlacement(rest);
   return (
     <div
@@ -20,6 +21,4 @@ export function EmptyStateRoot({ size = "md", className = "", children, ...rest 
       {children}
     </div>
   );
-}
-
-EmptyStateRoot.displayName = "EmptyState";
+});

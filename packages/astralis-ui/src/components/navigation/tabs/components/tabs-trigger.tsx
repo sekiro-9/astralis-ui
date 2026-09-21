@@ -5,6 +5,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { tabsPartId, useTabsContext } from "../tabs.context";
 import { tabsTriggerVariants } from "../tabs.styles";
 import type { TabsTriggerProps } from "../tabs.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Tabs.Trigger — a single tab button. Implements the ARIA tabs keyboard pattern:
@@ -12,7 +13,7 @@ import type { TabsTriggerProps } from "../tabs.types";
  * focus along the orientation, Home/End jump to ends, and `activationMode`
  * decides whether arrowing also selects (automatic) or just moves focus (manual).
  */
-export function TabsTrigger({ value, disabled = false, className, children, onClick, onKeyDown, ...rest }: TabsTriggerProps) {
+export const TabsTrigger = identify("Tabs.Trigger", function TabsTrigger({ value, disabled = false, className, children, onClick, onKeyDown, ...rest }: TabsTriggerProps) {
   const { value: active, setValue, orientation, variant, size, fitted, rounded, activationMode, loop, baseId, register } = useTabsContext();
   const isActive = value === active;
 
@@ -78,6 +79,4 @@ export function TabsTrigger({ value, disabled = false, className, children, onCl
       {children}
     </button>
   );
-}
-
-TabsTrigger.displayName = "Tabs.Trigger";
+});

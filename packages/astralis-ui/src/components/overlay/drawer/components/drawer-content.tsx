@@ -7,10 +7,11 @@ import { Portal } from "../../portal";
 import { useDialogPanel } from "../../dialog/dialog-core";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useMergedRefs } from "../../../../utils/merge-refs";
+import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 250;
 
-export function DrawerContent({ children, className = "", style, ref, ...rest }: DrawerContentProps) {
+export const DrawerContent = identify("Drawer.Content", function DrawerContent({ children, className = "", style, ref, ...rest }: DrawerContentProps) {
   const ctx = useDrawer();
   const { placement, size } = ctx;
   const { mounted, isOpen, containerRef, backdropProps, panelProps } = useDialogPanel(ctx, { duration: DURATION });
@@ -41,5 +42,4 @@ export function DrawerContent({ children, className = "", style, ref, ...rest }:
       </div>
     </Portal>
   );
-}
-DrawerContent.displayName = "Drawer.Content";
+});

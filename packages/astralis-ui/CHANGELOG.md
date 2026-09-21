@@ -5,6 +5,23 @@ their history lives in the git log.
 
 ## Unreleased
 
+### Development builds name each component
+
+Outside production, every component's root element carries
+`data-astralis="Card.Body"` and `data-astralis-props`, a JSON array of the
+props it was configured with (variant, size, style props; never children,
+text, links, sources or handlers). When one component renders through another
+onto the same element the names chain, outermost first:
+`data-astralis="Modal.Trigger Button"`. Server Components are named too, since
+the attributes are part of the server-rendered HTML. The Astralis DevTools read
+them to find components on a page.
+
+In production each component is exactly the function it was before, so the
+HTML is unchanged. A test renders every component both ways and requires the
+production HTML to equal the development HTML with these two attributes
+removed. `QrCode`, `Steps`, `Tabs`, `Card` and `CodeBlock` now have their public
+names as `displayName` (it was `Tabs.Root` and so on).
+
 ### Spec
 
 `specVersion` is now 3. The style-prop groups are still assigned by table, so

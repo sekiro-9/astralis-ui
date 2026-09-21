@@ -5,8 +5,9 @@ import { resolveStyleProps } from "../../../utils/responsive";
 import { splitVariantProps } from "../../../utils/split-variant-props";
 import { boxVariants, boxVariantMap } from "./box.styles";
 import { BOX_VARIANT_KEYS } from "./box.keys";
+import { identify } from "../../../utils/dev-identity";
 
-function Box<T extends ElementType = "div">({
+const Box = identify("Box", function Box<T extends ElementType = "div">({
   children,
   as,
   className,
@@ -29,7 +30,6 @@ function Box<T extends ElementType = "div">({
       {children}
     </Element>
   );
-}
+});
 
-Box.displayName = "Box";
 export default Box;

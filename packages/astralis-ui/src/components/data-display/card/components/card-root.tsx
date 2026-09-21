@@ -3,8 +3,9 @@ import { cardRootVariants } from "../card.styles";
 import type { CardRootProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { splitPlacement } from "../../../../utils/placement";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardRoot({
+export const CardRoot = identify("Card", function CardRoot({
   variant = "elevated",
   size = "md",
   hoverable = false,
@@ -36,6 +37,4 @@ export function CardRoot({
       {children}
     </div>
   );
-}
-
-CardRoot.displayName = "Card.Root";
+});

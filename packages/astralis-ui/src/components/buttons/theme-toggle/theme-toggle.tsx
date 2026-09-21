@@ -6,13 +6,14 @@ import type { ThemeToggleProps } from "./theme-toggle.types";
 import { useTheme } from "../../../theme/theme-context";
 import Icon from "../../icon/icon";
 import { SunIcon, MoonIcon } from "../../icon/internal-icons";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * ThemeToggle — a ready-made light/dark switch built on Button, so it inherits
  * every variant, size, and `colorScheme`. The sun and moon are stacked and
  * cross-fade with a quarter-turn rotation as the resolved theme changes.
  */
-export function ThemeToggle({
+export const ThemeToggle = identify("ThemeToggle", function ThemeToggle({
   variant = "outline",
   size = "md",
   showLabel = false,
@@ -64,6 +65,4 @@ export function ThemeToggle({
         {showLabel ? labelText : undefined}
       </Button>
     );
-}
-
-ThemeToggle.displayName = "ThemeToggle";
+});

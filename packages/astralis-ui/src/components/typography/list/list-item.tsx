@@ -5,9 +5,10 @@ import { resolveStyleProps } from "../../../utils/responsive";
 import { splitVariantProps } from "../../../utils/split-variant-props";
 import { boxVariants, boxVariantMap } from "../../layout/box/box.styles";
 import { BOX_VARIANT_KEYS } from "../../layout/box/box.keys";
+import { identify } from "../../../utils/dev-identity";
 
 /** A single `<li>`. With `icon`, it suppresses the native marker and renders the icon inline. */
-function ListItem<T extends ElementType = "li">({
+const ListItem = identify("List.Item", function ListItem<T extends ElementType = "li">({
   as,
   className,
   children,
@@ -39,7 +40,6 @@ function ListItem<T extends ElementType = "li">({
       {icon != null ? <span>{children}</span> : children}
     </Element>
   );
-}
+});
 
-ListItem.displayName = "List.Item";
 export default ListItem;

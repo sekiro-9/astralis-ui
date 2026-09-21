@@ -5,8 +5,9 @@ import type { CarouselTrackProps } from "../carousel.types";
 import { useCarousel, CarouselItemContext } from "../carousel.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselTrack({ children, className = "", style, ...rest }: CarouselTrackProps) {
+export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({ children, className = "", style, ...rest }: CarouselTrackProps) {
   const {
     index, setIndex, setSlideCount, slideCount,
     slidesPerView, slidesToScroll, slideGap,
@@ -98,6 +99,4 @@ export function CarouselTrack({ children, className = "", style, ...rest }: Caro
       </div>
     </div>
   );
-}
-
-CarouselTrack.displayName = "Carousel.Track";
+});

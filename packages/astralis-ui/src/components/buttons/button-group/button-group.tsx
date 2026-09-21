@@ -5,6 +5,7 @@ import type { ButtonGroupProps } from "./button-group.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { inheritProps } from "../../../utils/inherit-props";
 import { Button } from "../button/button";
+import { identify } from "../../../utils/dev-identity";
 
 /**
  * Groups related buttons and shares `size`/`variant`/`colorScheme`/`disabled`
@@ -13,7 +14,7 @@ import { Button } from "../button/button";
  * defaults). With `attached`, the buttons render as one segmented control
  * (collapsed inner radii, merged borders).
  */
-export function ButtonGroup({
+export const ButtonGroup = identify("ButtonGroup", function ButtonGroup({
   children,
   orientation = "horizontal",
   attached = false,
@@ -49,6 +50,4 @@ export function ButtonGroup({
         {inheritProps(children, new Map([[Button, shared]]))}
       </div>
     );
-}
-
-ButtonGroup.displayName = "ButtonGroup";
+});

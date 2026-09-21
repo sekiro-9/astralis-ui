@@ -3,9 +3,10 @@
 import { usePagination } from "../pagination.context";
 import type { PaginationPageTextProps } from "../pagination.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** A live text readout of the current page (Chakra's PageText / Ant's showTotal). */
-export function PaginationPageText({ className = "", format, ...rest }: PaginationPageTextProps) {
+export const PaginationPageText = identify("Pagination.PageText", function PaginationPageText({ className = "", format, ...rest }: PaginationPageTextProps) {
   const { page, totalPages, count, pageSize } = usePagination();
   return (
     <li
@@ -16,6 +17,4 @@ export function PaginationPageText({ className = "", format, ...rest }: Paginati
       {format ? format({ page, totalPages, count, pageSize }) : `Page ${page} of ${totalPages}`}
     </li>
   );
-}
-
-PaginationPageText.displayName = "Pagination.PageText";
+});

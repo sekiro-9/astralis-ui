@@ -1,8 +1,9 @@
 import type { DataListLabelProps } from "../data-list.types";
 import { dataListLabelLayout, dataListTextSize } from "../data-list.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function DataListLabel({ children, className = "", style, ...rest }: DataListLabelProps) {
+export const DataListLabel = identify("DataList.Label", function DataListLabel({ children, className = "", style, ...rest }: DataListLabelProps) {
   return (
     <dt
       className={astralisMerge(
@@ -17,6 +18,4 @@ export function DataListLabel({ children, className = "", style, ...rest }: Data
       {children}
     </dt>
   );
-}
-
-DataListLabel.displayName = "DataList.Label";
+});

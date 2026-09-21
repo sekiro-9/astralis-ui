@@ -1,5 +1,6 @@
 import type { InputGroupProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Wraps an Input with prefix/suffix slots. The wrapper stamps presence
@@ -7,7 +8,7 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
  * no context, so the group itself is a Server Component (the Input inside is
  * client either way; it owns focus/typing).
  */
-export function InputGroup({ prefix, suffix, children, className = "", ...rest }: InputGroupProps) {
+export const InputGroup = identify("InputGroup", function InputGroup({ prefix, suffix, children, className = "", ...rest }: InputGroupProps) {
   return (
     <div
       data-inputgroup-prefix={prefix ? "" : undefined}
@@ -30,6 +31,4 @@ export function InputGroup({ prefix, suffix, children, className = "", ...rest }
       )}
     </div>
   );
-}
-
-InputGroup.displayName = "InputGroup";
+});

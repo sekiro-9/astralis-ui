@@ -8,13 +8,14 @@ import { splitPlacement } from "../../../../utils/placement";
 import { useMergedRefs } from "../../../../utils/merge-refs";
 import { useRovingFocus } from "../../../../hooks/use-roving-focus";
 import { Separator } from "../../../layout/separator";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A `role="toolbar"` container for grouped controls: arrow keys move focus
  * between the focusable children (APG toolbar pattern), Home/End jump.
  * Compose with Button, SegmentedControl, CopyButton — anything focusable.
  */
-export function ToolbarRoot({
+export const ToolbarRoot = identify("Toolbar", function ToolbarRoot({
   orientation = "horizontal",
   label,
   children,
@@ -54,18 +55,14 @@ export function ToolbarRoot({
       {children}
     </div>
   );
-}
+});
 
-ToolbarRoot.displayName = "Toolbar";
-
-export function ToolbarGroup({ className = "", ...rest }: ToolbarGroupProps) {
+export const ToolbarGroup = identify("Toolbar.Group", function ToolbarGroup({ className = "", ...rest }: ToolbarGroupProps) {
   return <div role="group" className={astralisMerge(toolbarGroup, className)} {...rest} />;
-}
-
-ToolbarGroup.displayName = "Toolbar.Group";
+});
 
 /** A Separator preset matching the toolbar's cross axis. */
-export function ToolbarSeparator({ className = "", ...rest }: ToolbarSeparatorProps) {
+export const ToolbarSeparator = identify("Toolbar.Separator", function ToolbarSeparator({ className = "", ...rest }: ToolbarSeparatorProps) {
   return (
     <Separator
       orientation="vertical"
@@ -73,6 +70,4 @@ export function ToolbarSeparator({ className = "", ...rest }: ToolbarSeparatorPr
       {...rest}
     />
   );
-}
-
-ToolbarSeparator.displayName = "Toolbar.Separator";
+});

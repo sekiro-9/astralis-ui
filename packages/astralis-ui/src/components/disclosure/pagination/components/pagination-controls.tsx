@@ -12,6 +12,7 @@ import {
   ChevronsLeftIcon,
   ChevronsRightIcon,
 } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 interface ControlButtonProps extends PaginationControlProps {
   label: string;
@@ -20,7 +21,7 @@ interface ControlButtonProps extends PaginationControlProps {
   defaultIcon: ReactNode;
 }
 
-function ControlButton({ icon, className = "", label, disabled, onActivate, defaultIcon, ...rest }: ControlButtonProps) {
+const ControlButton = identify("Pagination.Control", function ControlButton({ icon, className = "", label, disabled, onActivate, defaultIcon, ...rest }: ControlButtonProps) {
   const { size, rounded } = usePagination();
   return (
     <li {...rest}>
@@ -35,9 +36,9 @@ function ControlButton({ icon, className = "", label, disabled, onActivate, defa
       </button>
     </li>
   );
-}
+});
 
-export function PaginationPrev(props: PaginationControlProps) {
+export const PaginationPrev = identify("Pagination.Prev", function PaginationPrev(props: PaginationControlProps) {
   const { page, setPage, size, disabled } = usePagination();
   return (
     <ControlButton
@@ -48,9 +49,9 @@ export function PaginationPrev(props: PaginationControlProps) {
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronLeftIcon /></Icon>}
     />
   );
-}
+});
 
-export function PaginationNext(props: PaginationControlProps) {
+export const PaginationNext = identify("Pagination.Next", function PaginationNext(props: PaginationControlProps) {
   const { page, totalPages, setPage, size, disabled } = usePagination();
   return (
     <ControlButton
@@ -61,9 +62,9 @@ export function PaginationNext(props: PaginationControlProps) {
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronRightIcon /></Icon>}
     />
   );
-}
+});
 
-export function PaginationFirst(props: PaginationControlProps) {
+export const PaginationFirst = identify("Pagination.First", function PaginationFirst(props: PaginationControlProps) {
   const { page, setPage, size, disabled } = usePagination();
   return (
     <ControlButton
@@ -74,9 +75,9 @@ export function PaginationFirst(props: PaginationControlProps) {
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronsLeftIcon /></Icon>}
     />
   );
-}
+});
 
-export function PaginationLast(props: PaginationControlProps) {
+export const PaginationLast = identify("Pagination.Last", function PaginationLast(props: PaginationControlProps) {
   const { page, totalPages, setPage, size, disabled } = usePagination();
   return (
     <ControlButton
@@ -87,10 +88,4 @@ export function PaginationLast(props: PaginationControlProps) {
       defaultIcon={<Icon size={controlIconSize[size]}><ChevronsRightIcon /></Icon>}
     />
   );
-}
-
-ControlButton.displayName = "Pagination.Control";
-PaginationPrev.displayName = "Pagination.Prev";
-PaginationNext.displayName = "Pagination.Next";
-PaginationFirst.displayName = "Pagination.First";
-PaginationLast.displayName = "Pagination.Last";
+});

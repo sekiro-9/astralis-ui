@@ -2,8 +2,9 @@ import type { Ref } from "react";
 import { cardPadding } from "../card.styles";
 import type { CardHeaderProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CardHeader({
+export const CardHeader = identify("Card.Header", function CardHeader({
   extra,
   className = "",
   style,
@@ -29,6 +30,4 @@ export function CardHeader({
       {hasExtra && <div className="astralis:shrink-0 astralis:flex astralis:items-center astralis:gap-2">{extra}</div>}
     </div>
   );
-}
-
-CardHeader.displayName = "Card.Header";
+});

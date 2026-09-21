@@ -6,8 +6,9 @@ import { cloneSlot, resolveSlotChild, slotChildRef } from "../../slot";
 import { PopoverContext, usePopover } from "../popover.context";
 import type { PopoverProps, PopoverSlotProps } from "../popover.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
+import { identify } from "../../../../utils/dev-identity";
 
-export function PopoverRoot({
+export const PopoverRoot = identify("Popover", function PopoverRoot({
   children,
   open: openProp,
   defaultOpen = false,
@@ -43,11 +44,9 @@ export function PopoverRoot({
   );
 
   return <PopoverContext.Provider value={ctx}>{children}</PopoverContext.Provider>;
-}
+});
 
-PopoverRoot.displayName = "Popover";
-
-export function PopoverTrigger({ children, ref, ...rest }: PopoverSlotProps) {
+export const PopoverTrigger = identify("Popover.Trigger", function PopoverTrigger({ children, ref, ...rest }: PopoverSlotProps) {
   const { toggle, open, triggerRef, contentId } = usePopover();
   const child = resolveSlotChild(children);
   const mergedRef = useMergedRefs<HTMLElement>(triggerRef, ref, slotChildRef(child));
@@ -58,13 +57,11 @@ export function PopoverTrigger({ children, ref, ...rest }: PopoverSlotProps) {
     "aria-expanded": open,
     "aria-controls": open ? contentId : undefined,
   });
-}
-PopoverTrigger.displayName = "Popover.Trigger";
+});
 
-export function PopoverClose({ children, ref, ...rest }: PopoverSlotProps) {
+export const PopoverClose = identify("Popover.Close", function PopoverClose({ children, ref, ...rest }: PopoverSlotProps) {
   const { close } = usePopover();
   const child = resolveSlotChild(children);
   const mergedRef = useMergedRefs<HTMLElement>(ref, slotChildRef(child));
   return cloneSlot(child, rest, { ref: mergedRef, onClick: close });
-}
-PopoverClose.displayName = "Popover.Close";
+});

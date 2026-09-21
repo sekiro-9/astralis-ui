@@ -9,8 +9,9 @@ import { CarouselContext } from "../carousel.context";
 import type { CarouselProps } from "../carousel.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselRoot({
+export const CarouselRoot = identify("Carousel", function CarouselRoot({
   index: controlledIndex,
   defaultIndex = 0,
   onIndexChange,
@@ -153,6 +154,4 @@ export function CarouselRoot({
       </div>
     </CarouselContext.Provider>
   );
-}
-
-CarouselRoot.displayName = "Carousel";
+});

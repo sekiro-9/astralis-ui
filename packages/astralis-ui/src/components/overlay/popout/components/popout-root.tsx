@@ -3,6 +3,7 @@ import type { PopoutProps } from "../popout.types";
 import { inheritProps } from "../../../../utils/inherit-props";
 import { PopoutTrigger } from "./popout-parts";
 import { PopoutContent } from "./popout-content";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * An anchored disclosure that ships ZERO JavaScript.
@@ -21,7 +22,7 @@ import { PopoutContent } from "./popout-content";
  * `useId` pairs trigger and panel; it is one of the few hooks that runs in
  * Server Components, which is what keeps the whole compound server-side.
  */
-export function PopoutRoot({ children }: PopoutProps) {
+export const PopoutRoot = identify("Popout", function PopoutRoot({ children }: PopoutProps) {
   const id = useId();
   return (
     <>
@@ -34,6 +35,4 @@ export function PopoutRoot({ children }: PopoutProps) {
       )}
     </>
   );
-}
-
-PopoutRoot.displayName = "Popout";
+});

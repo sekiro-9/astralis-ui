@@ -4,8 +4,9 @@ import { useCarousel } from "../carousel.context";
 import type { CarouselProgressTextProps } from "../carousel.types";
 import { carouselProgressVariants } from "../carousel.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
-export function CarouselProgressText({ className = "", format, ...rest }: CarouselProgressTextProps) {
+export const CarouselProgressText = identify("Carousel.ProgressText", function CarouselProgressText({ className = "", format, ...rest }: CarouselProgressTextProps) {
   const { index, slideCount } = useCarousel();
   return (
     <div
@@ -18,6 +19,4 @@ export function CarouselProgressText({ className = "", format, ...rest }: Carous
       {format ? format(index, slideCount) : `${index + 1} / ${slideCount}`}
     </div>
   );
-}
-
-CarouselProgressText.displayName = "Carousel.ProgressText";
+});

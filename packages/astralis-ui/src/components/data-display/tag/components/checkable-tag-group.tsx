@@ -4,9 +4,10 @@ import { CheckableTag } from "./checkable-tag";
 import type { CheckableTagGroupProps } from "../tag.types";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Renders a set of CheckableTags with single- or multi-select behaviour. */
-export function CheckableTagGroup({
+export const CheckableTagGroup = identify("Tag.Group", function CheckableTagGroup({
   value,
   defaultValue = [],
   onValueChange,
@@ -56,6 +57,4 @@ export function CheckableTagGroup({
       })}
     </div>
   );
-}
-
-CheckableTagGroup.displayName = "Tag.Group";
+});

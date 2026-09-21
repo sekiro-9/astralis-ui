@@ -4,6 +4,7 @@ import type { TextProps, TextSize, TextWeight } from "./text.types";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
 import { textVariants, textVariantMap } from "./text.styles";
+import { identify } from "../../../utils/dev-identity";
 
 const DEFAULT_HEADING_SIZES: Record<string, TextSize> = {
   h1: "4xl",
@@ -25,7 +26,7 @@ const DEFAULT_WEIGHTS: Record<string, TextWeight> = {
   strong: "bold",
 };
 
-function Text<C extends ElementType = "p">({
+const Text = identify("Text", function Text<C extends ElementType = "p">({
   children,
   as,
   ref,
@@ -84,7 +85,6 @@ function Text<C extends ElementType = "p">({
       {children}
     </Element>
   );
-}
+});
 
-Text.displayName = "Text";
 export default Text;

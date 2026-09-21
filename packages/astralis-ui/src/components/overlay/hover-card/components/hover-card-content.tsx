@@ -8,10 +8,11 @@ import { usePresence } from "../../../../hooks/use-presence";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
 import { useDismiss } from "../../../../hooks/use-dismiss";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 160;
 
-export function HoverCardContent({ children, className = "", onMouseEnter, onMouseLeave, ...rest }: HoverCardContentProps) {
+export const HoverCardContent = identify("HoverCard.Content", function HoverCardContent({ children, className = "", onMouseEnter, onMouseLeave, ...rest }: HoverCardContentProps) {
   const { open, hide, showNow, scheduleClose, triggerRef, contentRef, contentId, side, align, sideOffset, avoidCollisions } = useHoverCard();
   const { mounted, state } = usePresence(open, DURATION);
   const { x, y, side: resolvedSide } = useAnchorPosition({
@@ -46,6 +47,4 @@ export function HoverCardContent({ children, className = "", onMouseEnter, onMou
       </div>
     </Portal>
   );
-}
-
-HoverCardContent.displayName = "HoverCard.Content";
+});

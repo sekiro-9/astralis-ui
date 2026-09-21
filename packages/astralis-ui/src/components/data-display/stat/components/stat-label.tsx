@@ -2,8 +2,9 @@ import type { StatLabelProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
 import { statLabelSizeMap, statLabelVariants } from "../stat.styles";
+import { identify } from "../../../../utils/dev-identity";
 
-export function StatLabel({ children, className = "", size = "md", ...rest }: StatLabelProps) {
+export const StatLabel = identify("Stat.Label", function StatLabel({ children, className = "", size = "md", ...rest }: StatLabelProps) {
   return (
     <span
       className={astralisMerge(
@@ -16,6 +17,4 @@ export function StatLabel({ children, className = "", size = "md", ...rest }: St
       {children}
     </span>
   );
-}
-
-StatLabel.displayName = "Stat.Label";
+});

@@ -9,8 +9,9 @@ import { StatLabel } from "./stat-label";
 import { StatValue } from "./stat-value";
 import { StatHelpText } from "./stat-help-text";
 import { StatIndicator } from "./stat-indicator";
+import { identify } from "../../../../utils/dev-identity";
 
-export function StatRoot({
+export const StatRoot = identify("Stat", function StatRoot({
   children,
   className = "",
   size = "md",
@@ -46,6 +47,4 @@ export function StatRoot({
       {inheritProps(children, sized)}
     </div>
   );
-}
-
-StatRoot.displayName = "Stat";
+});

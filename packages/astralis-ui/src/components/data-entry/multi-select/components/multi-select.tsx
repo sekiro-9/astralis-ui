@@ -15,6 +15,7 @@ import { consumeEscape, usePickerLayer } from "../../shared/use-picker-layer";
 import { accentClass } from "../../../../const/color-schemes";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../../icon/internal-icons";
 import type { MultiSelectOptionItem, MultiSelectProps, MultiSelectSize } from "../multi-select.types";
+import { identify } from "../../../../utils/dev-identity";
 
 type Values = Array<string | number>;
 const NO_VALUES: Values = [];
@@ -58,7 +59,7 @@ function Tag({
   );
 }
 
-export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
+export const MultiSelectBase = identify("MultiSelect", forwardRef<HTMLDivElement, MultiSelectProps>(
   (
     {
       options = [],
@@ -371,6 +372,4 @@ export const MultiSelectBase = forwardRef<HTMLDivElement, MultiSelectProps>(
       </div>
     );
   },
-);
-
-MultiSelectBase.displayName = "MultiSelect";
+));

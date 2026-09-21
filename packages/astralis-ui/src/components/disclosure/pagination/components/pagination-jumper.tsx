@@ -5,9 +5,10 @@ import { usePagination } from "../pagination.context";
 import type { PaginationJumperProps } from "../pagination.types";
 import { paginationJumperInputVariants } from "../pagination.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { identify } from "../../../../utils/dev-identity";
 
 /** A quick-jump input (Ant's showQuickJumper). Press Enter to jump. */
-export function PaginationJumper({ className = "", label = "Go to", ...rest }: PaginationJumperProps) {
+export const PaginationJumper = identify("Pagination.Jumper", function PaginationJumper({ className = "", label = "Go to", ...rest }: PaginationJumperProps) {
   const { setPage, totalPages, size, disabled } = usePagination();
   const [value, setValue] = useState("");
 
@@ -36,6 +37,4 @@ export function PaginationJumper({ className = "", label = "Go to", ...rest }: P
       />
     </li>
   );
-}
-
-PaginationJumper.displayName = "Pagination.Jumper";
+});

@@ -17,13 +17,14 @@ import {
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { CheckIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A card-shaped checkbox — a whole clickable surface for rich multi-select
  * choices (plans, permissions, features). Joins `Checkbox.Group` the same way
  * `Checkbox` does: give it a `value` inside a group.
  */
-export function CheckboxCard({
+export const CheckboxCard = identify("CheckboxCard", function CheckboxCard({
   children,
   description,
   addon,
@@ -103,6 +104,4 @@ export function CheckboxCard({
       </span>
     </label>
   );
-}
-
-CheckboxCard.displayName = "CheckboxCard";
+});

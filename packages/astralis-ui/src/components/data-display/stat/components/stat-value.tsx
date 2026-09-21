@@ -2,8 +2,9 @@ import type { StatValueProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
 import { statValueSizeMap, statValueVariants } from "../stat.styles";
+import { identify } from "../../../../utils/dev-identity";
 
-export function StatValue({ children, className = "", size = "md", ...rest }: StatValueProps) {
+export const StatValue = identify("Stat.Value", function StatValue({ children, className = "", size = "md", ...rest }: StatValueProps) {
   return (
     <span
       className={astralisMerge(
@@ -16,6 +17,4 @@ export function StatValue({ children, className = "", size = "md", ...rest }: St
       {children}
     </span>
   );
-}
-
-StatValue.displayName = "Stat.Value";
+});

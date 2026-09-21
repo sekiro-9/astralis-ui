@@ -18,9 +18,10 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useFieldContext } from "../../field/field.context";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { UploadIcon, FileIcon, XIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 /** The drop target — also a click/keyboard target that opens the picker. */
-export function FileUploadDropzone({ children, className = "", ...rest }: FileUploadDropzoneProps) {
+export const FileUploadDropzone = identify("FileUpload.Dropzone", function FileUploadDropzone({ children, className = "", ...rest }: FileUploadDropzoneProps) {
   const { openPicker, addFiles, dragging, setDragging, disabled, invalid } = useFileUploadContext();
   const field = useFieldContext();
 
@@ -65,12 +66,10 @@ export function FileUploadDropzone({ children, className = "", ...rest }: FileUp
       )}
     </div>
   );
-}
-
-FileUploadDropzone.displayName = "FileUpload.Dropzone";
+});
 
 /** Wraps a single element (e.g. a Button) and opens the picker on click. */
-export function FileUploadTrigger({ children, onClick, ...rest }: FileUploadTriggerProps) {
+export const FileUploadTrigger = identify("FileUpload.Trigger", function FileUploadTrigger({ children, onClick, ...rest }: FileUploadTriggerProps) {
   const { openPicker } = useFileUploadContext();
   const child = resolveServerChild(children) as FileUploadTriggerProps["children"];
   return cloneElement(child, {
@@ -81,12 +80,10 @@ export function FileUploadTrigger({ children, onClick, ...rest }: FileUploadTrig
       openPicker();
     },
   } as Record<string, unknown>);
-}
-
-FileUploadTrigger.displayName = "FileUpload.Trigger";
+});
 
 /** The kept files, each with name, human size and a remove control. */
-export function FileUploadItemGroup({ className = "", ...rest }: FileUploadItemGroupProps) {
+export const FileUploadItemGroup = identify("FileUpload.ItemGroup", function FileUploadItemGroup({ className = "", ...rest }: FileUploadItemGroupProps) {
   const { files, removeFile } = useFileUploadContext();
   if (!files.length) return null;
 
@@ -113,6 +110,4 @@ export function FileUploadItemGroup({ className = "", ...rest }: FileUploadItemG
       ))}
     </ul>
   );
-}
-
-FileUploadItemGroup.displayName = "FileUpload.ItemGroup";
+});

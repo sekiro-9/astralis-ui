@@ -20,6 +20,7 @@ import {
   toastCloseClasses,
 } from "./toast.styles";
 import type { ToastData, ToasterPlacement, ToasterProps } from "./toast.types";
+import { identify } from "../../../utils/dev-identity";
 
 const EXIT_DURATION = 200;
 /** How long an announcement stays in the live region before it is cleared. */
@@ -176,7 +177,7 @@ function useAnnouncements(toasts: ToastData[]): ToastData[] {
  * The toast outlet — mount ONE near the app root (inside AstralisProvider),
  * then fire notifications from anywhere with `toast(...)`.
  */
-export function Toaster({ placement = "bottom-end", max = 5 }: ToasterProps) {
+export const Toaster = identify("Toaster", function Toaster({ placement = "bottom-end", max = 5 }: ToasterProps) {
   const toasts = useSyncExternalStore(subscribeToasts, getToasts, getToasts);
   const announcements = useAnnouncements(toasts);
   // Where focus was before it entered the toasts, for Escape and ✕ to return it.
@@ -220,5 +221,4 @@ export function Toaster({ placement = "bottom-end", max = 5 }: ToasterProps) {
       </div>
     </Portal>
   );
-}
-Toaster.displayName = "Toaster";
+});

@@ -5,6 +5,7 @@ import type { MouseEvent, Ref } from "react";
 import { Button } from "../../button";
 import type { CopyButtonProps } from "../copy-button.types";
 import { CheckIcon, CopyIcon } from "../../../icon/internal-icons";
+import { identify } from "../../../../utils/dev-identity";
 
 const iconClasses = "astralis:size-3.5 astralis:shrink-0";
 
@@ -13,7 +14,7 @@ const iconClasses = "astralis:size-3.5 astralis:shrink-0";
  * copied state — the general-purpose sibling of `CodeBlock.CopyTrigger`.
  * Every Button prop (variant, size, colorScheme, …) passes through.
  */
-export function CopyButton({
+export const CopyButton = identify("CopyButton", function CopyButton({
   value,
   copiedLabel = "Copied",
   timeout = 1600,
@@ -54,6 +55,4 @@ export function CopyButton({
       {copied ? copiedLabel : children}
     </Button>
   );
-}
-
-CopyButton.displayName = "CopyButton";
+});

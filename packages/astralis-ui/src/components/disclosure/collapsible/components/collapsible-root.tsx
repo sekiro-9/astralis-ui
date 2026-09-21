@@ -3,6 +3,7 @@ import type { CollapsibleProps } from "../collapsible.types";
 import { collapsibleRootClasses } from "../collapsible.styles";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { splitPlacement } from "../../../../utils/placement";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * A single disclosure that ships ZERO JavaScript: the open state is the
@@ -12,7 +13,7 @@ import { splitPlacement } from "../../../../utils/placement";
  * would move the state into React and forfeit exactly the property this
  * component exists for.
  */
-export function CollapsibleRoot({
+export const CollapsibleRoot = identify("Collapsible", function CollapsibleRoot({
   defaultOpen,
   className = "",
   children,
@@ -30,6 +31,4 @@ export function CollapsibleRoot({
       {children}
     </details>
   );
-}
-
-CollapsibleRoot.displayName = "Collapsible";
+});

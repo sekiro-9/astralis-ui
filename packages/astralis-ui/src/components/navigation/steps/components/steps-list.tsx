@@ -5,13 +5,14 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { useStepsContext } from "../steps.context";
 import type { StepsListProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /**
  * Steps.List — the ordered list of steps. It counts its Item children (feeding
  * `count` back to the context) and injects each item's `index`. Connectors are
  * drawn by each Item itself, so the list stays a simple flex container.
  */
-export function StepsList({ children, className, ...rest }: StepsListProps) {
+export const StepsList = identify("Steps.List", function StepsList({ children, className, ...rest }: StepsListProps) {
   const { orientation, labelPlacement, setCount } = useStepsContext();
 
   // Double unwrap: a Server Component's children can arrive as one lazy node
@@ -38,6 +39,4 @@ export function StepsList({ children, className, ...rest }: StepsListProps) {
       {items.map((child, index) => cloneElement(child, { index }))}
     </ol>
   );
-}
-
-StepsList.displayName = "Steps.List";
+});

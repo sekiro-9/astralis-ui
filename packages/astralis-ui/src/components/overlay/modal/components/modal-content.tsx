@@ -7,10 +7,11 @@ import { Portal } from "../../portal";
 import { useDialogPanel } from "../../dialog/dialog-core";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useMergedRefs } from "../../../../utils/merge-refs";
+import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 200;
 
-export function ModalContent({ children, className = "", style, ref, ...rest }: ModalContentProps) {
+export const ModalContent = identify("Modal.Content", function ModalContent({ children, className = "", style, ref, ...rest }: ModalContentProps) {
   const ctx = useModal();
   const { mounted, isOpen, containerRef, backdropProps, panelProps } = useDialogPanel(ctx, {
     duration: DURATION,
@@ -45,5 +46,4 @@ export function ModalContent({ children, className = "", style, ref, ...rest }: 
       </div>
     </Portal>
   );
-}
-ModalContent.displayName = "Modal.Content";
+});

@@ -2,8 +2,9 @@ import type { StatIndicatorProps } from "../stat.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../../utils/responsive";
 import { statHelpSizeMap, statIndicatorVariants } from "../stat.styles";
+import { identify } from "../../../../utils/dev-identity";
 
-export function StatIndicator({ type = "increase", children, className = "", size = "md", ...rest }: StatIndicatorProps) {
+export const StatIndicator = identify("Stat.Indicator", function StatIndicator({ type = "increase", children, className = "", size = "md", ...rest }: StatIndicatorProps) {
   const isIncrease = type === "increase";
 
   return (
@@ -23,6 +24,4 @@ export function StatIndicator({ type = "increase", children, className = "", siz
       {children}
     </span>
   );
-}
-
-StatIndicator.displayName = "Stat.Indicator";
+});

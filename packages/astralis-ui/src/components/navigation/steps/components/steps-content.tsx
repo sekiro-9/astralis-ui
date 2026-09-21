@@ -3,9 +3,10 @@
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useStepsContext } from "../steps.context";
 import type { StepsContentProps } from "../steps.types";
+import { identify } from "../../../../utils/dev-identity";
 
 /** Steps.Content — renders only when its `index` matches the active step. */
-export function StepsContent({ index, children, className, ...rest }: StepsContentProps) {
+export const StepsContent = identify("Steps.Content", function StepsContent({ index, children, className, ...rest }: StepsContentProps) {
   const { step } = useStepsContext();
   if (step !== index) return null;
 
@@ -14,6 +15,4 @@ export function StepsContent({ index, children, className, ...rest }: StepsConte
       {children}
     </div>
   );
-}
-
-StepsContent.displayName = "Steps.Content";
+});
