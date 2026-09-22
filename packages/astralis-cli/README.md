@@ -24,6 +24,7 @@ Scaffold a new project with create-next-app or create-vite and wire Astralis int
 | --- | --- |
 | `--framework <next\|vite>` | Skip the framework prompt. |
 | `--no-starter` | Keep the scaffolder's demo page instead of the Astralis welcome screen. |
+| `--no-devtools` | Leave out the Astralis DevTools overlay, which new projects get in development. |
 
 Any other argument passes straight to the scaffolder.
 
@@ -41,13 +42,17 @@ Wire astralis-ui into an existing Next.js or React + Vite project.
 | `--dry-run` | Show the changes without writing anything. |
 | `--ci` | Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow. |
 | `--force` | With --ci, replace an existing astralis-validate.yml. |
+| `--devtools` | Also add the Astralis DevTools overlay (development only): install astralis-devtools and wire it into the root layout or vite.config. |
 
 init --ci is safe to re-run: it adds only what is missing and never replaces a workflow without --force.
+
+init --devtools is safe to re-run too; production builds contain none of the DevTools.
 
 ```bash
 astralis init
 astralis init --dry-run
 astralis init --ci
+astralis init --devtools
 ```
 
 ### `astralis add <block...>`

@@ -13,6 +13,7 @@ The library's own README is the reference:
 | [`packages/astralis-ui`](packages/astralis-ui) | The component library, published as `astralis-ui` |
 | [`packages/astralis-cli`](packages/astralis-cli) | `astralis` CLI: set up a project, add blocks, generate a theme, validate code against the design system |
 | [`packages/astralis-mcp`](packages/astralis-mcp) | MCP server that gives AI coding agents the docs and a `validate_code` tool |
+| [`packages/astralis-devtools`](packages/astralis-devtools) | Development overlay: inspect any component on the page, Server Components included, and see the validator's findings live |
 | [`packages/create-astralis`](packages/create-astralis) | `npm create astralis`: a new Next.js or Vite project with Astralis wired in |
 | [`packages/astralis-blocks`](packages/astralis-blocks) | Source registry of section-level blocks, delivered as copy-in source by the CLI (private) |
 | [`packages/astralis-docs`](packages/astralis-docs) | The documentation site, Next.js + MDX (private) |

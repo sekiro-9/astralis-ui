@@ -162,6 +162,71 @@ export function addTagAttribute(source, tag, attribute) {
   return { source: source.replace(matches[0][0], `<${tag} ${attribute}`), changed: true };
 }
 
+/**
+ * Insert markup as the last child of <body>, on its own line indented one
+ * step inside the body when </body> starts its line, else just before it.
+ * Skipped when `marker` (e.g. "<AstralisDevTools") is already in the file.
+ */
+export function insertBeforeBodyClose(source, markup, marker = markup) {
+  if (source.includes(marker)) return { source, changed: false };
+  const matches = [...source.matchAll(/<\/body>/g)];
+  if (matches.length !== 1) return { source, changed: false, note: "</body> not found unambiguously" };
+  const at = matches[0].index;
+  const lineStart = source.lastIndexOf("\n", at - 1) + 1;
+  const before = source.slice(lineStart, at);
+  if (/^\s*$/.test(before)) {
+    const eol = source.includes("\r\n") ? "\r\n" : "\n";
+    return { source: `${source.slice(0, lineStart)}${before}  ${markup}${eol}${source.slice(lineStart)}`, changed: true };
+  }
+  return { source: source.slice(0, at) + markup + source.slice(at), changed: true };
+}
+
+/**
+ * Append an element to the one array literal assigned to `property` (Vite's
+ * `plugins: [react()]`), matching the array's layout: inline stays inline, one
+ * per line stays one per line, a trailing comma stays. Skipped when `marker`
+ * already appears inside the array.
+ */
+export function addArrayElement(source, property, element, marker = element) {
+  const ast = parseModule(source);
+  if (!ast) return { source, changed: false, note: "the file doesn't parse, so it was left alone" };
+
+  const arrays = [];
+  (function walk(node) {
+    if (!node || typeof node.type !== "string") return;
+    if (
+      (node.type === "ObjectProperty" || node.type === "Property") &&
+      !node.computed &&
+      (node.key.name ?? node.key.value) === property &&
+      node.value.type === "ArrayExpression"
+    ) {
+      arrays.push(node.value);
+    }
+    for (const key of Object.keys(node)) {
+      if (key === "loc" || key === "start" || key === "end") continue;
+      const value = node[key];
+      if (Array.isArray(value)) value.forEach(walk);
+      else if (value && typeof value === "object") walk(value);
+    }
+  })(ast.program);
+
+  if (arrays.length !== 1) return { source, changed: false, note: `no single \`${property}: [...]\` array found` };
+  const array = arrays[0];
+  if (source.slice(array.start, array.end).includes(marker)) return { source, changed: false };
+
+  const items = array.elements.filter(Boolean);
+  if (items.length === 0) {
+    return { source: source.slice(0, array.start + 1) + element + source.slice(array.end - 1), changed: true };
+  }
+  const last = items.at(-1);
+  const multiline = source.slice(array.start, array.end).includes("\n");
+  if (!multiline) return { source: `${source.slice(0, last.end)}, ${element}${source.slice(last.end)}`, changed: true };
+  const lineStart = source.lastIndexOf("\n", last.start - 1) + 1;
+  const indent = source.slice(lineStart, last.start).match(/^\s*/)[0];
+  const eol = source.includes("\r\n") ? "\r\n" : "\n";
+  return { source: `${source.slice(0, last.end)},${eol}${indent}${element}${source.slice(last.end)}`, changed: true };
+}
+
 /** Insert markup right after the opening <body ...> tag. */
 export function insertAfterBodyTag(source, insert) {
   if (source.includes(insert.trim())) return { source, changed: false };

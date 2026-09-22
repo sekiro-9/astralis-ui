@@ -1,0 +1,68 @@
+{
+  "name": "astralis-devtools",
+  "version": "0.1.0",
+  "description": "Development overlay for Astralis UI: inspect any component on the page (Server Components included) and see the validator's findings live as you edit. Next.js and Vite.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Paul Andrew",
+  "homepage": "https://astralis-zeta.vercel.app/docs/devtools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SekiroDev360/astralis-ui.git",
+    "directory": "packages/astralis-devtools"
+  },
+  "bugs": {
+    "url": "https://github.com/SekiroDev360/astralis-ui/issues"
+  },
+  "keywords": [
+    "astralis-ui",
+    "devtools",
+    "react",
+    "nextjs",
+    "vite",
+    "design-system"
+  ],
+  "exports": {
+    "./next": {
+      "types": "./src/next/devtools.d.mts",
+      "default": "./src/next/devtools.mjs"
+    },
+    "./next/route": {
+      "types": "./src/next/route.d.mts",
+      "default": "./src/next/route.mjs"
+    },
+    "./vite": {
+      "types": "./src/vite.d.mts",
+      "default": "./src/vite.mjs"
+    },
+    "./client": {
+      "types": "./src/client/overlay.d.mts",
+      "default": "./src/client/overlay.mjs"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "astralis-cli": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^19.1.1"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "react": "^19.1.1",
+    "vite": "^7.1.2"
+  }
+}

@@ -34,6 +34,11 @@ export const COMMANDS = [
         type: "boolean",
         description: "Keep the scaffolder's demo page instead of the Astralis welcome screen.",
       },
+      {
+        name: "no-devtools",
+        type: "boolean",
+        description: "Leave out the Astralis DevTools overlay, which new projects get in development.",
+      },
     ],
     notes: ["Any other argument passes straight to the scaffolder."],
     examples: ["astralis create my-app", "astralis create my-app --framework vite --template react"],
@@ -52,9 +57,18 @@ export const COMMANDS = [
           "Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow.",
       },
       { name: "force", type: "boolean", description: "With --ci, replace an existing astralis-validate.yml." },
+      {
+        name: "devtools",
+        type: "boolean",
+        description:
+          "Also add the Astralis DevTools overlay (development only): install astralis-devtools and wire it into the root layout or vite.config.",
+      },
     ],
-    notes: ["init --ci is safe to re-run: it adds only what is missing and never replaces a workflow without --force."],
-    examples: ["astralis init", "astralis init --dry-run", "astralis init --ci"],
+    notes: [
+      "init --ci is safe to re-run: it adds only what is missing and never replaces a workflow without --force.",
+      "init --devtools is safe to re-run too; production builds contain none of the DevTools.",
+    ],
+    examples: ["astralis init", "astralis init --dry-run", "astralis init --ci", "astralis init --devtools"],
   },
   {
     name: "add",

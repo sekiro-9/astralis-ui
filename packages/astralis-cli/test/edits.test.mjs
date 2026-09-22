@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports, parses } from "../src/lib/edits.mjs";
+import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports, parses, insertBeforeBodyClose, addArrayElement } from "../src/lib/edits.mjs";
 
 const LAYOUT = `import type { Metadata } from "next";
 import "./globals.css";
@@ -148,4 +148,45 @@ test("an unparseable file is declined with a note, never edited", () => {
   assert.equal(result.changed, false);
   assert.equal(result.source, broken);
   assert.ok(result.note);
+});
+
+test("insertBeforeBodyClose puts markup on its own line inside a multi-line body", () => {
+  const source = "<html>\n  <body>\n    {children}\n  </body>\n</html>\n";
+  const { source: out, changed } = insertBeforeBodyClose(source, "<X />");
+  assert.equal(changed, true);
+  assert.equal(out, "<html>\n  <body>\n    {children}\n    <X />\n  </body>\n</html>\n");
+  assert.equal(insertBeforeBodyClose(out, "<X />").changed, false, "idempotent");
+});
+
+test("insertBeforeBodyClose goes inline when the body is on one line, and keeps CRLF files CRLF", () => {
+  assert.equal(insertBeforeBodyClose("<body>{children}</body>", "<X />").source, "<body>{children}<X /></body>");
+  assert.equal(
+    insertBeforeBodyClose("<body>\r\n  a\r\n</body>\r\n", "<X />").source,
+    "<body>\r\n  a\r\n  <X />\r\n</body>\r\n",
+  );
+});
+
+test("insertBeforeBodyClose declines without exactly one </body>, and honours its marker", () => {
+  assert.match(insertBeforeBodyClose("<div />", "<X />").note, /not found unambiguously/);
+  assert.equal(insertBeforeBodyClose("<body><X a /></body>", "<X />", "<X").changed, false);
+});
+
+test("addArrayElement matches the array's layout", () => {
+  const inline = addArrayElement("export default { plugins: [react()] };", "plugins", "x()");
+  assert.equal(inline.source, "export default { plugins: [react(), x()] };");
+  const empty = addArrayElement("export default { plugins: [] };", "plugins", "x()");
+  assert.equal(empty.source, "export default { plugins: [x()] };");
+  const trailing = addArrayElement("export default {\n  plugins: [\n    react(),\n    tailwind(),\n  ],\n};\n", "plugins", "x()");
+  assert.equal(trailing.source, "export default {\n  plugins: [\n    react(),\n    tailwind(),\n    x(),\n  ],\n};\n");
+  const bare = addArrayElement("export default {\n  plugins: [\n    react()\n  ]\n};\n", "plugins", "x()");
+  assert.equal(bare.source, "export default {\n  plugins: [\n    react(),\n    x()\n  ]\n};\n");
+});
+
+test("addArrayElement finds the array inside defineConfig and config functions, once", () => {
+  const fn = 'export default defineConfig(({ mode }) => ({ plugins: [react()], base: "/" }));';
+  assert.equal(addArrayElement(fn, "plugins", "x()").source, 'export default defineConfig(({ mode }) => ({ plugins: [react(), x()], base: "/" }));');
+  assert.equal(addArrayElement("export default { plugins: [react(), x()] };", "plugins", "x()", "x(").changed, false);
+  assert.match(addArrayElement("export default {};", "plugins", "x()").note, /no single/);
+  assert.match(addArrayElement("a({ plugins: [] }); b({ plugins: [] });", "plugins", "x()").note, /no single/);
+  assert.match(addArrayElement("export default {", "plugins", "x()").note, /doesn't parse/);
 });

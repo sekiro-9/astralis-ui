@@ -140,7 +140,7 @@ export async function run(argv) {
   info("wiring Astralis into it…");
   process.chdir(name);
   const init = await import("./init.mjs");
-  await init.run([], { nested: true, pm });
+  await init.run(values["no-devtools"] ? [] : ["--devtools"], { nested: true, pm });
 
   /*
    * Replace the scaffolder's demo page with one built from Astralis. Only

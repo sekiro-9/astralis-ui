@@ -1,0 +1,155 @@
+export const metadata = {
+  title: "DevTools",
+  description: "A development overlay that inspects any Astralis component on the page, Server Components included, and shows the validator's findings live as you edit.",
+};
+
+# DevTools
+
+A development overlay for your app. A button in the corner of the page opens
+two tabs: **Inspect** tells you what any Astralis component on the page is, and
+**Findings** shows the validator's findings for your project, live, as you save.
+
+It runs in development only. A production build contains none of it.
+
+## Why a UI library needs its own
+
+React DevTools shows the component tree, but it can only show what hydrates in
+the browser, and many Astralis components never do: 91 of the 238 components
+and parts in the system spec are Server Components that ship no JavaScript. It also knows nothing about your
+design system, such as which props a component was configured with, whether
+those values are valid, or where the component is documented.
+
+The Astralis DevTools read the library itself. In development every component
+names itself on the element it renders, and a bridge in your dev server runs
+the same validator as [`astralis validate`](/docs/cli#validate--check-code-against-the-design-system)
+and [CI](/docs/validate-in-ci).
+
+## Set up
+
+From your project's root:
+
+```bash
+npx astralis-cli init --devtools
+```
+
+It installs `astralis-devtools` as a devDependency and wires it in:
+
+- **Next.js:** `<AstralisDevTools />` goes at the end of `<body>` in your root
+  layout, and the bridge's route is written to
+  `app/api/astralis-devtools/[...path]/route.ts`.
+- **Vite:** `astralisDevtools()` is added to the `plugins` of your
+  `vite.config`.
+
+Projects made with `npm create astralis` have the DevTools already; pass
+`--no-devtools` to leave them out. Running `init --devtools` again changes
+nothing.
+
+### By hand
+
+For **Next.js**, add the component to the root layout:
+
+```tsx
+import { AstralisDevTools } from "astralis-devtools/next";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <AstralisDevTools />
+      </body>
+    </html>
+  );
+}
+```
+
+Then create `app/api/astralis-devtools/[...path]/route.ts`:
+
+```ts
+export { GET } from "astralis-devtools/next/route";
+```
+
+For **Vite**, add the plugin:
+
+```ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { astralisDevtools } from "astralis-devtools/vite";
+
+export default defineConfig({
+  plugins: [react(), astralisDevtools()],
+});
+```
+
+## Inspect
+
+Press **Pick a component**, hover the page, and click. Clicks while picking go
+to the DevTools, not to your app, so a link does not navigate and a trigger
+does not open its menu. Press `Esc` to stop.
+
+For the component you pick you see:
+
+- **Its name,** as you would write it: `Card.Body`, not `div`.
+- **The props it was given:** variant, size, colour scheme and style props,
+  including responsive values such as `p={{ base: "4", md: "8" }}`. Children,
+  text, links and event handlers are never shown.
+- **How it reaches the browser,** from the system spec:
+
+  | Label | Meaning |
+  |---|---|
+  | Server Component | Renders on the server and ships no library JavaScript |
+  | Server shell, client island | Renders on the server; a small interactive part hydrates |
+  | Client Component | Hydrates in the browser to be interactive |
+
+  A Vite app renders everything in the browser, so there the label tells you
+  what the component would ship in a server-rendered app.
+
+- **A link to its documentation.**
+- **What it sits inside:** the Astralis components around it, each one click
+  away.
+
+When one component renders through another onto the same element, you see the
+whole chain. A `Modal.Trigger` wrapping a `Button` shows as
+`Modal.Trigger → Button`, with each one's props.
+
+## Findings
+
+The Findings tab lists every error and warning `astralis validate` would report
+for your project, with file, line and rule. It updates as you save, usually in
+well under a second. The badge on the button counts the errors, or the warnings
+when there are no errors.
+
+On Next.js, the files that render the page you are looking at (its `page`
+file and every `layout` and `template` above it) are listed first, under **This
+page**.
+
+## How it works
+
+In development, every astralis-ui component adds two attributes to the element
+it renders:
+
+```html
+<div data-astralis="Card.Body" data-astralis-props='[{}]'>
+```
+
+They are part of the server-rendered HTML, which is how Server Components can
+be inspected. In production the attributes are never rendered: the library's
+production HTML is byte-for-byte what it would be without the DevTools, and a
+test holds it to that for every component.
+
+The bridge runs inside your dev server. On Next.js that is the route handler
+above; on Vite it is dev-server middleware, fed by Vite's own file watcher. It
+validates your `.tsx` and `.jsx` files against the installed astralis-ui's
+[system spec](/docs/ai-agents), re-validates each file when you save it, and
+streams the findings to the overlay.
+
+## Privacy and security
+
+- **Nothing leaves your machine.** The overlay talks only to your own dev
+  server. There is no telemetry and no background request.
+- **The bridge answers this machine only.** A request from another device, or
+  from a page on another site, is refused, even when the dev server is open to
+  your network (`next dev -H 0.0.0.0`).
+- **Nothing runs in production.** In a production build the Next.js route
+  answers `404` without loading the bridge, and the Vite plugin applies only to
+  `vite dev`.

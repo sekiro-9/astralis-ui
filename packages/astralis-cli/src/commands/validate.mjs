@@ -6,13 +6,14 @@
    1 when anything that typechecks-but-fails is found.
    ========================================================================== */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { relative, resolve } from "node:path";
 import { bold, cyan, dim, red, yellow, green, ok, fail } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
 import { findInstalledSpec } from "../lib/spec-resolve.mjs";
+import { collectSourceFiles } from "../lib/source-files.mjs";
 import { annotation } from "../lib/github-annotations.mjs";
 
 const FORMATS = ["text", "json", "github"];
@@ -29,22 +30,8 @@ function chooseFormat(values, env = process.env) {
   return values.format ?? (env.GITHUB_ACTIONS === "true" ? "github" : "text");
 }
 
-const SKIP_DIRS = new Set(["node_modules", ".git", ".next", "dist", "build", "out", ".astralis"]);
-
 function collectFiles(path, into) {
-  const stats = statSync(path, { throwIfNoEntry: false });
-  if (!stats) fail(`No such path: ${path}`);
-  if (stats.isFile()) {
-    if (/\.(tsx|jsx)$/.test(path)) into.push(path);
-    return into;
-  }
-  for (const entry of readdirSync(path, { withFileTypes: true })) {
-    if (entry.isDirectory()) {
-      if (!SKIP_DIRS.has(entry.name)) collectFiles(join(path, entry.name), into);
-    } else if (/\.(tsx|jsx)$/.test(entry.name)) {
-      into.push(join(path, entry.name));
-    }
-  }
+  if (!collectSourceFiles(path, into)) fail(`No such path: ${path}`);
   return into;
 }
 

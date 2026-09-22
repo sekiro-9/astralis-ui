@@ -38,6 +38,7 @@ export const navigation: NavGroup[] = [
     items: [
       { title: "CLI", href: "/docs/cli" },
       { title: "Validate in CI", href: "/docs/validate-in-ci" },
+      { title: "DevTools", href: "/docs/devtools" },
       { title: "AI Agents", href: "/docs/ai-agents" },
       { title: "Blocks", href: "/blocks" },
     ],

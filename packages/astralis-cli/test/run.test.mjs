@@ -48,9 +48,12 @@ if (args[0] === "create") {
   writeFileSync(join(name, "src", "main.tsx"), "import { StrictMode } from 'react'\\nimport App from './App.tsx'\\n\\ncreateRoot(root).render(\\n  <StrictMode>\\n    <App />\\n  </StrictMode>,\\n)\\n");
   writeFileSync(join(name, "src", "App.css"), "#root { text-align: center }");
   writeFileSync(join(name, "src", "index.css"), ":root { color: red }");
+  writeFileSync(join(name, "vite.config.ts"), "import { defineConfig } from 'vite'\\nimport react from '@vitejs/plugin-react'\\n\\nexport default defineConfig({\\n  plugins: [react()],\\n})\\n");
 } else if (args[0] === "add") {
   const pkg = JSON.parse(readFileSync("package.json", "utf8"));
-  pkg.dependencies[args[1]] = "*";
+  const dev = args[1] === "-D";
+  const field = dev ? "devDependencies" : "dependencies";
+  pkg[field] = { ...pkg[field], [args[dev ? 2 : 1]]: "*" };
   writeFileSync("package.json", JSON.stringify(pkg));
 }
 `,
@@ -66,6 +69,7 @@ if (args[0] === "create") {
     const calls = readFileSync(log, "utf8").trim().split("\n").map((line) => JSON.parse(line));
     assert.deepEqual(calls[0], ["create", "vite@latest", "my-app", "--template", "react-ts", "--no-immediate", "--no-interactive"]);
     assert.deepEqual(calls[1], ["add", "astralis-ui"]);
+    assert.deepEqual(calls[2], ["add", "-D", "astralis-devtools"], "new projects get the DevTools");
 
     const app = join(work.dir, "my-app");
     assert.equal(existsSync(join(app, "package-lock.json")), false);
@@ -74,6 +78,7 @@ if (args[0] === "create") {
     assert.match(main, /<AstralisProvider defaultTheme="system"><App \/><\/AstralisProvider>/);
     assert.match(readFileSync(join(app, "src/App.tsx"), "utf8"), /from "astralis-ui"/);
     assert.equal(existsSync(join(app, "src/App.css")), false);
+    assert.match(readFileSync(join(app, "vite.config.ts"), "utf8"), /plugins: \[react\(\), astralisDevtools\(\)\]/);
     assert.match(result.stdout, /pnpm run dev/);
   } finally {
     work.cleanup();

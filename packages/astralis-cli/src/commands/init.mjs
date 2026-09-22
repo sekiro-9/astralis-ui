@@ -6,6 +6,7 @@ import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { runCommand } from "../lib/run.mjs";
 import { setUpCi } from "../lib/ci-setup.mjs";
+import { devtoolsLayoutEdits, setUpDevtools } from "../lib/devtools-setup.mjs";
 
 const PROVIDER_IMPORT = 'import { AstralisProvider } from "astralis-ui";';
 const STYLES_IMPORT = 'import "astralis-ui/styles.css";';
@@ -34,6 +35,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   if (!args) return;
   const dryRun = args.values["dry-run"];
   const ci = args.values.ci;
+  const devtools = args.values.devtools;
   if (args.values.force && !ci) fail("--force only applies with --ci (it replaces an existing workflow).");
   const cwd = process.cwd();
 
@@ -108,10 +110,12 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     flush();
     warn(`Couldn't find your ${framework === "next" ? "root layout" : "src/main.tsx"} — wire the provider manually:`);
     console.log(MANUAL_SNIPPET);
-    if (ci) {
-      for (const note of setUpCi({ cwd, pkg, pm, dryRun, force: args.values.force, out })) warn(note);
-      for (const fn of afterwards) fn();
-    }
+    const extra = [
+      ...(devtools ? setUpDevtools({ cwd, pkg, pm, framework, entry: null, dryRun, out }) : []),
+      ...(ci ? setUpCi({ cwd, pkg, pm, dryRun, force: args.values.force, out }) : []),
+    ];
+    for (const note of extra) warn(note);
+    for (const fn of afterwards) fn();
     return;
   }
 
@@ -147,6 +151,11 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     apply(addStatementAfterImports(source, THEME_INIT_CONST), "anti-flash theme script const");
     apply(insertAfterBodyTag(source, THEME_INIT_SCRIPT), "theme script injected after <body>");
     apply(addTagAttribute(source, "html", "suppressHydrationWarning"), "suppressHydrationWarning on <html>");
+    if (devtools) {
+      const [imported, placed] = devtoolsLayoutEdits(source);
+      apply(imported, "DevTools import added");
+      apply(placed, "<AstralisDevTools /> placed before </body>");
+    }
   }
 
   // 3. Write — never a file that no longer parses; hand over to the manual steps instead.
@@ -159,8 +168,9 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     else writeFileSync(entry.path, source);
   }
 
-  // 4. CI
+  // 4. DevTools and CI
   const wiringNotes = notes.length;
+  if (devtools) notes.push(...setUpDevtools({ cwd, pkg, pm, framework, entry, dryRun, out }));
   if (ci) notes.push(...setUpCi({ cwd, pkg, pm, dryRun, force: args.values.force, out }));
 
   /*
@@ -168,7 +178,12 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
    * one line instead of listing the steps that were already satisfied.
    */
   if (!changed && notes.length === 0) {
-    ok(ci ? "astralis-ui and its CI check are already set up in this project" : "astralis-ui is already present in this project");
+    const extras = [devtools && "the DevTools", ci && "its CI check"].filter(Boolean);
+    ok(
+      extras.length
+        ? `astralis-ui and ${extras.join(" and ")} are already set up in this project`
+        : "astralis-ui is already present in this project",
+    );
     if (nested) return;
     console.log(`Nothing to scaffold.\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
     return;
@@ -183,7 +198,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   if (nested || !changed) return;
 
   if (dryRun) {
-    console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan(ci ? "astralis init --ci" : "astralis init")} to apply it.`);
+    console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan(["astralis init", devtools && "--devtools", ci && "--ci"].filter(Boolean).join(" "))} to apply it.`);
     return;
   }
   console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);

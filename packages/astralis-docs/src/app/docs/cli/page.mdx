@@ -48,6 +48,7 @@ inside the new folder to start it.
 | --- | --- |
 | `--framework <next\|vite>` | Skip the framework prompt. |
 | `--no-starter` | Keep the scaffolder's demo page instead of the Astralis welcome screen. |
+| `--no-devtools` | Leave out the Astralis DevTools overlay, which new projects get in development. |
 
 With `--yes` it asks nothing: pass `--framework`, and it tells the scaffolder
 to take its defaults too.
@@ -68,6 +69,7 @@ npx astralis-cli init
 | `--dry-run` | Show the changes without writing anything. |
 | `--ci` | Also check every pull request: pin astralis-cli, add a validate script and write a GitHub Actions workflow. |
 | `--force` | With --ci, replace an existing astralis-validate.yml. |
+| `--devtools` | Also add the Astralis DevTools overlay (development only): install astralis-devtools and wire it into the root layout or vite.config. |
 
 It reads your entry file rather than pattern-matching it, so an import that is
 already there (however it's quoted or wrapped) isn't added twice, and it never
