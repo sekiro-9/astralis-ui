@@ -11,6 +11,7 @@ const MODULES = {
   add: () => import("./commands/add.mjs"),
   theme: () => import("./commands/theme.mjs"),
   validate: () => import("./commands/validate.mjs"),
+  report: () => import("./commands/report.mjs"),
   "connect-mcp": () => import("./commands/connect-mcp.mjs"),
 };
 

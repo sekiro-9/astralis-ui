@@ -159,6 +159,36 @@ export const COMMANDS = [
     examples: ["astralis validate", "astralis validate src/components --json", "astralis validate --strict-tokens"],
   },
   {
+    name: "report",
+    args: "<files...>",
+    maxPositionals: Infinity,
+    summary: "Report a problem to the Astralis maintainers, with a snapshot built from your source files",
+    options: [
+      { name: "title", type: "string", arg: "text", description: "The report's title. Asked for when omitted; required with --yes." },
+      { name: "happened", type: "string", arg: "text", description: "What happened." },
+      { name: "expected", type: "string", arg: "text", description: "What you expected instead." },
+      { name: "include-text", type: "boolean", description: "Keep the text in your JSX; by default it is replaced by placeholders." },
+      { name: "no-findings", type: "boolean", description: "Leave out the validator's findings for these files." },
+      { name: "out", type: "string", arg: "file", description: "Write the snapshot to a file instead of sending it." },
+      { name: "dry-run", type: "boolean", description: "Print the snapshot and send nothing." },
+      {
+        name: "spec",
+        type: "string",
+        arg: "path",
+        description: "Build against this system-spec.json.",
+        default: "the installed astralis-ui's",
+      },
+    ],
+    notes: [
+      "It prints the exact JSON first and sends nothing until you confirm; --yes confirms without asking.",
+      "Only literal props are recorded, and only those the spec describes; links, sources and handlers never are.",
+    ],
+    examples: [
+      "astralis report app/page.tsx",
+      'astralis report src/App.tsx --title "Card loses its border" --out snapshot.json',
+    ],
+  },
+  {
     name: "connect-mcp",
     args: "",
     maxPositionals: 0,

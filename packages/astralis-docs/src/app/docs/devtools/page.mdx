@@ -1,13 +1,15 @@
 export const metadata = {
   title: "DevTools",
-  description: "A development overlay that inspects any Astralis component on the page, Server Components included, and shows the validator's findings live as you edit.",
+  description: "A development overlay that inspects any Astralis component on the page, Server Components included, shows the validator's findings live as you edit, and reports a problem to the maintainers with the evidence attached.",
 };
 
 # DevTools
 
 A development overlay for your app. A button in the corner of the page opens
-two tabs: **Inspect** tells you what any Astralis component on the page is, and
-**Findings** shows the validator's findings for your project, live, as you save.
+three tabs: **Inspect** tells you what any Astralis component on the page is,
+**Findings** shows the validator's findings for your project, live, as you
+save, and **Report** sends a problem to the Astralis maintainers with the
+evidence they need to reproduce it.
 
 It runs in development only. A production build contains none of it.
 
@@ -66,7 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 Then create `app/api/astralis-devtools/[...path]/route.ts`:
 
 ```ts
-export { GET } from "astralis-devtools/next/route";
+export { GET, POST } from "astralis-devtools/next/route";
 ```
 
 For **Vite**, add the plugin:
@@ -123,6 +125,37 @@ On Next.js, the files that render the page you are looking at (its `page`
 file and every `layout` and `template` above it) are listed first, under **This
 page**.
 
+## Report
+
+When something in Astralis looks wrong, pick the component it is in and press
+**Report a problem here**, or open the **Report** tab. Write a title and, if you
+like, what happened and what you expected. The tab builds an issue snapshot:
+
+- the Astralis components under the one you picked, each with the props it was
+  given (only those the spec describes; never links, image sources or event
+  handlers);
+- the versions of `astralis-ui`, your framework and React, your browser and
+  window size, and whether the page is light or dark;
+- the page's path, without its query string;
+- the validator's findings for the files that render the page (on Vite, for the
+  project), unless you untick them.
+
+Page text is replaced by placeholders unless you tick **Include page text**.
+Console errors from this session and a screenshot are left out unless you add
+them.
+
+Below the form is **exactly** the JSON that would be sent, updated as you type.
+Nothing leaves your machine until you press **Send**; the snapshot then goes to
+the Astralis issue platform as a draft, and its page opens so you can sign in
+with GitHub and submit it. **Copy JSON** and **Download** keep the snapshot
+without sending it.
+
+From the terminal, [`astralis report`](/docs/cli#report--report-a-problem-to-the-maintainers)
+builds the same snapshot from your source files.
+
+The snapshot's component tree is also a reproduction: the platform turns it
+into a small `repro.tsx` and runs the validator on it again.
+
 ## How it works
 
 In development, every astralis-ui component adds two attributes to the element
@@ -145,8 +178,9 @@ streams the findings to the overlay.
 
 ## Privacy and security
 
-- **Nothing leaves your machine.** The overlay talks only to your own dev
-  server. There is no telemetry and no background request.
+- **Nothing leaves your machine unless you send it.** The overlay talks only to
+  your own dev server, and there is no telemetry or background request. The one
+  request that leaves is a report you have read and pressed **Send** on.
 - **The bridge answers this machine only.** A request from another device, or
   from a page on another site, is refused, even when the dev server is open to
   your network (`next dev -H 0.0.0.0`).

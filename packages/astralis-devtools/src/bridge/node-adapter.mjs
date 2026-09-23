@@ -5,6 +5,21 @@ import { handle } from "./http.mjs";
    event stream included. */
 
 const LOOPBACK_ADDRESS = /^(127\.|::1$|::ffff:127\.)/;
+/** Past this the bridge refuses the request anyway; stop reading rather than buffer more. */
+const READ_LIMIT = 1024 * 1024 + 1;
+
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+    req.on("data", (chunk) => {
+      size += chunk.length;
+      if (size <= READ_LIMIT) chunks.push(chunk);
+    });
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
+}
 
 /**
  * Middleware for `server.middlewares.use(BASE_PATH, middleware)`. `options`
@@ -27,7 +42,9 @@ export function bridgeMiddleware(options) {
         else if (Array.isArray(value)) headers.set(name, value.join(", "));
       }
       const url = new URL(req.originalUrl ?? req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
-      const response = await handle(new Request(url, { method: req.method, headers, signal: controller.signal }), options);
+      const init = { method: req.method, headers, signal: controller.signal };
+      if (req.method === "POST") init.body = await readBody(req);
+      const response = await handle(new Request(url, init), options);
 
       res.statusCode = response.status;
       response.headers.forEach((value, name) => res.setHeader(name, value));

@@ -1,3 +1,5 @@
+import { specEntry } from "astralis-cli/snapshot";
+
 /* What a named element is: read from the attributes astralis-ui renders in
    development (data-astralis, data-astralis-props) and looked up in the
    system spec. Pure, so it runs in the overlay and in Node tests alike. */
@@ -5,6 +7,8 @@
 export const IDENTITY_ATTRIBUTE = "data-astralis";
 export const PROPS_ATTRIBUTE = "data-astralis-props";
 export const DOCS_ORIGIN = "https://astralis-zeta.vercel.app";
+
+export { specEntry };
 
 /**
  * The components on one element, outermost first: `data-astralis="Modal.Trigger Button"`
@@ -21,23 +25,6 @@ export function readIdentity(element) {
   }
   if (!Array.isArray(props) || props.length !== names.length) props = names.map(() => ({}));
   return names.map((name, index) => ({ name, props: props[index] ?? {} }));
-}
-
-/**
- * The spec entry for a public name. "Card" and "CardBody" are keys already;
- * a part ("Card.Body") is found through its root's partExports. "X.Root" is
- * the root itself unless the root exports a separate Root (Calendar.Root is
- * CalendarRoot, not Calendar).
- */
-export function specEntry(spec, name) {
-  const components = spec?.components ?? {};
-  const [root, part] = name.split(".");
-  const found = (key) => (components[key] ? { key, entry: components[key] } : null);
-  if (!part) return found(root);
-  const exported = components[root]?.partExports?.[part];
-  if (exported) return found(exported);
-  if (part === "Root") return found(root);
-  return found(`${root}${part}`);
 }
 
 /** The documented component a name belongs to: "Card.Body" is documented under Card. */

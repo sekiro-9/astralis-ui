@@ -229,6 +229,36 @@ The same validator runs inside the [MCP server](/docs/ai-agents) as the
 `validate_code` tool, so an AI agent checks its own output against the rules
 you run in CI.
 
+## `report` — report a problem to the maintainers
+
+Builds an issue snapshot from the files that show the problem and sends it to
+the Astralis issue platform, where you sign in with GitHub, check it and
+submit it. The snapshot records the `astralis-ui` components in those files
+with their literal props, the validator's findings for them, and the versions
+of `astralis-ui`, your framework and React. It is the same snapshot the
+[DevTools](/docs/devtools) build from a page.
+
+```bash
+npx astralis-cli report app/page.tsx
+npx astralis-cli report src/App.tsx --title "Card loses its border" --out snapshot.json
+```
+
+| Option | |
+| --- | --- |
+| `--title <text>` | The report's title. Asked for when omitted; required with --yes. |
+| `--happened <text>` | What happened. |
+| `--expected <text>` | What you expected instead. |
+| `--include-text` | Keep the text in your JSX; by default it is replaced by placeholders. |
+| `--no-findings` | Leave out the validator's findings for these files. |
+| `--out <file>` | Write the snapshot to a file instead of sending it. |
+| `--dry-run` | Print the snapshot and send nothing. |
+| `--spec <path>` | Build against this system-spec.json. Default: the installed astralis-ui's. |
+
+It prints the exact JSON first and sends nothing until you confirm. Only props
+the spec describes are recorded, and only literal values: a value computed at
+run time, a link, an image source or an event handler never is. Text in your
+JSX becomes a placeholder unless you pass `--include-text`.
+
 ## `connect-mcp` — connect an AI coding agent
 
 Connects one AI client to the Astralis [MCP server](/docs/ai-agents) so its

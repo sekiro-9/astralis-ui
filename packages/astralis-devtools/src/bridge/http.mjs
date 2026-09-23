@@ -1,19 +1,26 @@
 import { bridgeFor } from "./bridge.mjs";
+import { assembleSnapshot, submit } from "./snapshot.mjs";
 
 /* The bridge over HTTP, in web-standard Request/Response so the Next.js
    route handler and the Vite middleware share it. Mounted at BASE_PATH:
 
-     GET info          versions of astralis-ui (with the spec's SHA-256), the framework and React
-     GET spec          the installed system spec, for the Inspect panel
-     GET findings      the validator's findings for the project
-     GET events        the same findings as a server-sent event stream, re-sent on every change
-     GET route-files   ?path=/about: the files that render that page (Next.js)
+     GET  info          versions of astralis-ui (with the spec's SHA-256), the framework and React
+     GET  spec          the installed system spec, for the Inspect panel
+     GET  findings      the validator's findings for the project
+     GET  events        the same findings as a server-sent event stream, re-sent on every change
+     GET  route-files   ?path=/about: the files that render that page (Next.js)
+     POST snapshot      the page's part of an issue snapshot in; the complete snapshot out
+     POST submit        a snapshot the reporter confirmed, forwarded to the issue platform
 
-   It answers the local machine only, and nothing at all in production. */
+   It answers the local machine only, and nothing at all in production. The
+   POST routes take JSON only: a page on another site cannot send that type
+   without a preflight the bridge never grants. */
 
 export const BASE_PATH = "/api/astralis-devtools";
 
 const KEEPALIVE_MS = 15_000;
+/** A snapshot is at most 256 kB; the page's part, with a screenshot, stays well under this. */
+const MAX_BODY_BYTES = 1024 * 1024;
 const LOOPBACK = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 
 const json = (body, status = 200) =>
@@ -94,14 +101,44 @@ function eventStream(bridge, signal) {
  * Answer one request. `root` is the project directory, `framework` "next" or
  * "vite"; `watch` optionally replaces fs.watch (Vite passes its own watcher).
  */
+/** The JSON body of a POST, or a Response explaining why it cannot be read. */
+async function readJson(request) {
+  if (!/^application\/json\b/i.test(request.headers.get("content-type") ?? "")) {
+    return json({ error: "Send JSON (content-type: application/json)." }, 415);
+  }
+  const declared = Number(request.headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY_BYTES) return json({ error: "The request is too large." }, 413);
+  const text = await request.text();
+  if (text.length > MAX_BODY_BYTES) return json({ error: "The request is too large." }, 413);
+  try {
+    return { body: JSON.parse(text) };
+  } catch {
+    return json({ error: "The request is not valid JSON." }, 400);
+  }
+}
+
+async function handlePost(bridge, path, request) {
+  if (path !== "snapshot" && path !== "submit") return json({ error: "Not found." }, 404);
+  if (bridge.problem) return json({ error: bridge.problem }, 409);
+  const read = await readJson(request);
+  if (read instanceof Response) return read;
+  if (path === "snapshot") return json(assembleSnapshot(bridge, read.body));
+  try {
+    return json({ url: await submit(read.body) });
+  } catch (error) {
+    return json({ error: error.message }, 502);
+  }
+}
+
 export async function handle(request, { root = process.cwd(), framework, watch } = {}) {
   if (process.env.NODE_ENV === "production") return new Response(null, { status: 404 });
   if (!isLocal(request)) return json({ error: "The Astralis DevTools bridge answers this machine only." }, 403);
-  if (request.method !== "GET") return json({ error: "Method not allowed." }, 405);
+  if (request.method !== "GET" && request.method !== "POST") return json({ error: "Method not allowed." }, 405);
 
   const bridge = bridgeFor(root, framework, { watch });
   await bridge.start();
   const url = new URL(request.url);
+  if (request.method === "POST") return handlePost(bridge, route(url), request);
 
   switch (route(url)) {
     case "info":

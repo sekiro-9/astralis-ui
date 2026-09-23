@@ -12,7 +12,9 @@ import { runCommand } from "./run.mjs";
 export const PACKAGE = "astralis-devtools";
 export const NEXT_IMPORT = 'import { AstralisDevTools } from "astralis-devtools/next";';
 export const NEXT_ELEMENT = "<AstralisDevTools />";
-export const ROUTE_SOURCE = 'export { GET } from "astralis-devtools/next/route";\n';
+export const ROUTE_SOURCE = 'export { GET, POST } from "astralis-devtools/next/route";\n';
+/** What init wrote before the bridge took reports. */
+const GET_ONLY_ROUTE_SOURCE = 'export { GET } from "astralis-devtools/next/route";\n';
 export const VITE_IMPORT = 'import { astralisDevtools } from "astralis-devtools/vite";';
 export const VITE_PLUGIN = "astralisDevtools()";
 
@@ -82,14 +84,20 @@ export function setUpDevtools({ cwd, pkg, pm, framework, entry, dryRun, out }) {
 
   if (framework === "next") {
     if (!entry) {
-      notes.push(`add ${NEXT_ELEMENT} to your root layout and the route ${cyan("export { GET } from \"astralis-devtools/next/route\";")} yourself`);
+      notes.push(`add ${NEXT_ELEMENT} to your root layout and the route ${cyan(ROUTE_SOURCE.trim())} yourself`);
       return notes;
     }
     const shown = routeFilePath(entry.relative);
     const path = join(cwd, shown);
     const existing = existsSync(path) ? readFileSync(path, "utf8") : null;
-    if (existing !== null && existing.includes("astralis-devtools/next/route")) {
+    if (existing !== null && existing.trim() === GET_ONLY_ROUTE_SOURCE.trim()) {
+      // Written by an earlier init, before the bridge took reports: add POST.
+      out.changed();
+      out.step(() => ok(`${dryRun ? "would update" : "updated"} the DevTools route to take reports ${dim(`(${shown})`)}`));
+      if (!dryRun) writeFileSync(path, ROUTE_SOURCE);
+    } else if (existing !== null && existing.includes("astralis-devtools/next/route")) {
       out.step(() => ok(`DevTools route already present ${dim(`(${shown})`)}`));
+      if (!/\bPOST\b/.test(existing)) notes.push(`${shown} does not export POST, so the DevTools cannot send reports; export POST from "astralis-devtools/next/route" too`);
     } else if (existing !== null) {
       notes.push(`${shown} already exists and does something else; add \`${ROUTE_SOURCE.trim()}\` to it yourself`);
     } else {

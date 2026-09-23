@@ -1,14 +1,18 @@
 import { describeComponent, IDENTITY_ATTRIBUTE, readIdentity } from "./identity.mjs";
+import { browserEnvironment, captureScreenshot, recordConsoleErrors, treeFromElement } from "./report.mjs";
 import { STYLES } from "./styles.mjs";
 
 /* The Astralis DevTools overlay: a button in the corner of a page in
-   development, and a panel with two tabs.
+   development, and a panel with three tabs.
 
      Inspect   pick any Astralis component on the page, Server Components
                included, and see its name, the props it was given, how it
                reaches the browser, and its documentation
      Findings  the validator's findings for the project, live, with the
                files that render the current page first
+     Report    an issue snapshot of the selected component: the exact JSON is
+               shown before anything is sent, and nothing is sent until the
+               reporter presses Send
 
    Plain DOM in a shadow root, so it needs no framework and the page's CSS
    cannot reach it. Everything from the page or the bridge goes in as text. */
@@ -59,6 +63,20 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     bridge: "connecting", // connecting | live | unreachable
     route: location.pathname,
     routeFiles: [],
+    report: {
+      title: "",
+      happened: "",
+      expected: "",
+      includeText: false,
+      includeFindings: true,
+      includeConsole: false,
+      screenshot: null,
+      snapshot: null,
+      problems: [],
+      status: "idle", // idle | sending | sent | failed | notice
+      message: "",
+      url: null,
+    },
   };
 
   const cleanups = [];
@@ -86,6 +104,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     h("button", { class: "tab", type: "button", role: "tab", "data-tab": id, onclick: () => setTab(id) }, label);
   const inspectTab = tabButton("inspect", "Inspect");
   const findingsTab = tabButton("findings", "Findings");
+  const reportTab = tabButton("report", "Report");
   const panel = h(
     "section",
     { class: "panel", role: "dialog", "aria-label": "Astralis DevTools", hidden: true },
@@ -95,7 +114,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       h("h2", {}, "Astralis DevTools"),
       h("button", { class: "close", type: "button", "aria-label": "Close", onclick: () => setOpen(false) }, "×"),
     ),
-    h("div", { class: "tabs", role: "tablist" }, inspectTab, findingsTab),
+    h("div", { class: "tabs", role: "tablist" }, inspectTab, findingsTab, reportTab),
     body,
   );
 
@@ -141,9 +160,22 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     panel.hidden = !state.open;
     inspectTab.setAttribute("aria-selected", String(state.tab === "inspect"));
     findingsTab.setAttribute("aria-selected", String(state.tab === "findings"));
+    reportTab.setAttribute("aria-selected", String(state.tab === "report"));
     const errors = state.findings?.errors ?? 0;
     findingsTab.textContent = errors > 0 ? `Findings (${errors})` : "Findings";
     if (!state.open) return;
+    if (state.tab === "report") {
+      // The form keeps its input while findings stream in: rebuild it only for a new selection.
+      const selected = state.selected?.isConnected ? state.selected : null;
+      if (!reportView || reportView.element !== selected) {
+        reportView = buildReportView(selected);
+        body.replaceChildren(reportView.root);
+        if (selected) scheduleSnapshot();
+      }
+      reportView.refresh();
+      return;
+    }
+    reportView = null;
     body.replaceChildren(state.tab === "inspect" ? renderInspect() : renderFindings());
   }
 
@@ -187,7 +219,12 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     return h(
       "div",
       {},
-      h("div", { class: "row" }, pick),
+      h(
+        "div",
+        { class: "row" },
+        pick,
+        h("button", { class: "secondary", type: "button", onclick: () => setTab("report") }, "Report a problem here"),
+      ),
       h(
         "div",
         { class: "component" },
@@ -246,7 +283,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
               "Add ",
               h("code", {}, "app/api/astralis-devtools/[...path]/route.ts"),
               " containing ",
-              h("code", {}, 'export { GET } from "astralis-devtools/next/route";'),
+              h("code", {}, 'export { GET, POST } from "astralis-devtools/next/route";'),
               ", or run ",
               h("code", {}, "astralis init --devtools"),
               ".",
@@ -316,6 +353,218 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
         ),
       ),
     );
+  }
+
+  /* ---- report ---------------------------------------------------------------- */
+
+  let reportView = null;
+  let snapshotTimer = null;
+  let snapshotRequest = 0;
+  const consoleErrors = recordConsoleErrors(window);
+  cleanups.push(() => consoleErrors.stop());
+  cleanups.push(() => clearTimeout(snapshotTimer));
+
+  /** The JSON as shown: exact, except that a screenshot's data is summarised (it is shown as an image). */
+  function previewText(snapshot) {
+    if (!snapshot) return "";
+    const shown = snapshot.screenshot
+      ? { ...snapshot, screenshot: `data:image/jpeg;base64,… (${Math.round((snapshot.screenshot.length * 0.75) / 1024)} kB, shown above)` }
+      : snapshot;
+    return JSON.stringify(shown, null, 2);
+  }
+
+  function scheduleSnapshot() {
+    clearTimeout(snapshotTimer);
+    snapshotTimer = setTimeout(assembleSnapshot, 250);
+  }
+
+  /** Ask the bridge to complete the snapshot from the page's part. Nothing leaves the machine. */
+  async function assembleSnapshot() {
+    const selected = state.selected?.isConnected ? state.selected : null;
+    if (!selected) return;
+    const r = state.report;
+    const request = ++snapshotRequest;
+    const body = {
+      tree: treeFromElement(selected, state.spec, { includeText: r.includeText, skip: host }),
+      route: location.pathname,
+      environment: browserEnvironment(window),
+      description: { title: r.title, happened: r.happened, expected: r.expected },
+      include: { findings: r.includeFindings, console: r.includeConsole, screenshot: Boolean(r.screenshot) },
+      console: [...consoleErrors.messages],
+      ...(r.screenshot ? { screenshot: r.screenshot } : {}),
+    };
+    try {
+      const response = await fetch(`${base}/snapshot`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const result = await response.json();
+      if (request !== snapshotRequest) return; // a newer edit is on its way
+      if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
+      r.snapshot = result.snapshot;
+      r.problems = result.problems;
+      if (r.status === "notice") r.status = "idle";
+    } catch (error) {
+      if (request !== snapshotRequest) return;
+      r.snapshot = null;
+      r.problems = [error.message];
+    }
+    reportView?.refresh();
+  }
+
+  async function sendReport() {
+    const r = state.report;
+    if (!r.snapshot || r.problems.length) return;
+    r.status = "sending";
+    r.message = "";
+    reportView?.refresh();
+    try {
+      const response = await fetch(`${base}/submit`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(r.snapshot),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
+      r.status = "sent";
+      r.url = result.url;
+      window.open(result.url, "_blank", "noopener");
+    } catch (error) {
+      r.status = "failed";
+      r.message = error.message;
+    }
+    reportView?.refresh();
+  }
+
+  function notice(message) {
+    state.report.status = "notice";
+    state.report.message = message;
+    reportView?.refresh();
+  }
+
+  async function copyReport() {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(state.report.snapshot, null, 2));
+      notice("Copied the snapshot's JSON.");
+    } catch {
+      notice("The browser did not allow copying; use Download instead.");
+    }
+  }
+
+  function downloadReport() {
+    const blob = new Blob([`${JSON.stringify(state.report.snapshot, null, 2)}\n`], { type: "application/json" });
+    const link = h("a", { href: URL.createObjectURL(blob), download: "astralis-snapshot.json" });
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    notice("Saved astralis-snapshot.json.");
+  }
+
+  async function addScreenshot() {
+    try {
+      state.report.screenshot = await captureScreenshot({
+        hide: () => (host.style.visibility = "hidden"),
+        show: () => (host.style.visibility = ""),
+      });
+      scheduleSnapshot();
+    } catch (error) {
+      notice(error?.name === "NotAllowedError" ? "No screenshot: the capture was declined." : `No screenshot: ${error.message}`);
+    }
+    reportView?.refresh();
+  }
+
+  function buildReportView(selected) {
+    if (!selected) {
+      const root = h(
+        "div",
+        {},
+        h("p", { class: "muted", style: "margin-top:0" }, "Pick the component the problem is in first; the report describes it and everything inside it."),
+        h("button", { class: "primary", type: "button", onclick: () => { setTab("inspect"); startPicking(); } }, "Pick a component"),
+      );
+      return { element: null, root, refresh() {} };
+    }
+    const r = state.report;
+    const field = (label, key, multiline) => {
+      const input = h(multiline ? "textarea" : "input", {
+        class: "field",
+        rows: multiline ? 3 : null,
+        maxlength: multiline ? 4000 : 200,
+        "aria-label": label,
+      });
+      input.value = r[key];
+      input.addEventListener("input", () => {
+        r[key] = input.value;
+        scheduleSnapshot();
+      });
+      return h("label", { class: "field-label" }, label, input);
+    };
+    const toggle = (label, key) => {
+      const box = h("input", { type: "checkbox" });
+      box.checked = r[key];
+      box.addEventListener("change", () => {
+        r[key] = box.checked;
+        scheduleSnapshot();
+      });
+      const text = h("span", {}, label);
+      return { row: h("label", { class: "toggle" }, box, text), text };
+    };
+
+    const textToggle = toggle("Include page text", "includeText");
+    const findingsToggle = toggle("Include the validator's findings", "includeFindings");
+    const consoleToggle = toggle("Include console errors", "includeConsole");
+    const shot = h("div", { class: "shot" });
+    const preview = h("pre", { class: "json", "aria-label": "Snapshot JSON" });
+    const problems = h("ul", { class: "problems" });
+    const status = h("p", { class: "status" });
+    const send = h("button", { class: "primary", type: "button", onclick: sendReport }, "Send to the Astralis issue platform");
+    const copy = h("button", { class: "secondary", type: "button", onclick: copyReport }, "Copy JSON");
+    const download = h("button", { class: "secondary", type: "button", onclick: downloadReport }, "Download");
+
+    const root = h(
+      "div",
+      { class: "report" },
+      h("p", { class: "muted", style: "margin-top:0" }, `Reporting ${readIdentity(selected)[0]?.name ?? "this component"} and what it contains. Nothing is sent until you press Send.`),
+      field("Title", "title", false),
+      field("What happened?", "happened", true),
+      field("What did you expect?", "expected", true),
+      h("div", { class: "section" }, textToggle.row, findingsToggle.row, consoleToggle.row, shot),
+      h("div", { class: "section" }, h("h4", {}, "Exactly what will be sent"), problems, preview),
+      h("div", { class: "row actions" }, send, copy, download),
+      status,
+    );
+
+    function refresh() {
+      consoleToggle.text.textContent = `Include console errors (${consoleErrors.messages.length})`;
+      shot.replaceChildren(
+        r.screenshot
+          ? h(
+              "div",
+              { class: "row" },
+              h("img", { class: "thumb", src: r.screenshot, alt: "Screenshot to be sent" }),
+              h("button", { class: "secondary", type: "button", onclick: () => { r.screenshot = null; scheduleSnapshot(); refresh(); } }, "Remove screenshot"),
+            )
+          : h("button", { class: "secondary", type: "button", onclick: addScreenshot }, "Add a screenshot…"),
+      );
+      preview.textContent = r.snapshot ? previewText(r.snapshot) : "Assembling…";
+      problems.replaceChildren(...r.problems.map((p) => h("li", {}, p)));
+      const blocked = !r.snapshot || r.problems.length > 0 || r.status === "sending";
+      send.disabled = blocked;
+      copy.disabled = !r.snapshot;
+      download.disabled = !r.snapshot;
+      send.textContent = r.status === "sending" ? "Sending…" : "Send to the Astralis issue platform";
+      status.className = `status ${r.status}`;
+      status.replaceChildren(
+        r.status === "sent"
+          ? h("span", {}, "Draft created. ", h("a", { class: "link", href: r.url, target: "_blank", rel: "noreferrer" }, "Open it"), " to sign in with GitHub and submit.")
+          : r.status === "failed"
+            ? `${r.message} Nothing was sent; Copy JSON or Download keeps the snapshot.`
+            : r.status === "notice"
+              ? r.message
+              : "",
+      );
+    }
+
+    return { element: selected, root, refresh };
   }
 
   /* ---- picking -------------------------------------------------------------- */
@@ -439,6 +688,8 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
         state.findings = JSON.parse(event.data);
         state.bridge = "live";
         render();
+        // An open report shows current findings, not the ones from when it was opened.
+        if (state.open && state.tab === "report") scheduleSnapshot();
       } catch {
         // a malformed event changes nothing
       }

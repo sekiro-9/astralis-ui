@@ -8,11 +8,11 @@
 
 import { readFileSync } from "node:fs";
 import { relative, resolve } from "node:path";
-import { bold, cyan, dim, red, yellow, green, ok, fail } from "../lib/ui.mjs";
+import { bold, dim, red, yellow, green, ok, fail } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
-import { findInstalledSpec } from "../lib/spec-resolve.mjs";
+import { loadSpec } from "../lib/spec-load.mjs";
 import { collectSourceFiles } from "../lib/source-files.mjs";
 import { annotation } from "../lib/github-annotations.mjs";
 
@@ -35,29 +35,6 @@ function collectFiles(path, into) {
   return into;
 }
 
-function loadSpec(explicitPath) {
-  const path = explicitPath ? resolve(explicitPath) : findInstalledSpec(process.cwd());
-  if (!path) {
-    fail(`Could not find astralis-ui's system spec here — is astralis-ui installed? (or pass ${cyan("--spec <path>")})`);
-  }
-  let text;
-  try {
-    text = readFileSync(path, "utf8");
-  } catch (error) {
-    fail(`Can't read the spec at ${path} (${error.code ?? error.message}).`);
-  }
-  let spec;
-  try {
-    spec = JSON.parse(text);
-  } catch {
-    fail(`${path} isn't valid JSON — expected astralis-ui's dist/system-spec.json.`);
-  }
-  if (!spec?.components || !Array.isArray(spec.classes)) {
-    fail(`${path} isn't an astralis-ui system spec (it has no components or classes).`);
-  }
-  return spec;
-}
-
 export async function run(argv) {
   const args = parseCommandArgs(commandNamed("validate"), argv);
   if (!args) return;
@@ -65,7 +42,7 @@ export async function run(argv) {
   const strictTokens = args.values["strict-tokens"];
   const format = chooseFormat(args.values);
 
-  const spec = loadSpec(args.values.spec);
+  const { spec } = loadSpec(args.values.spec);
   const prepared = prepareSpec(spec);
   const files = paths.reduce((acc, p) => collectFiles(resolve(p), acc), []);
   if (files.length === 0) fail("No .tsx/.jsx files found under the given paths.");

@@ -22,6 +22,9 @@ let unmount;
 let streams;
 let requests;
 let routeFiles;
+let posts;
+let submitResult;
+let opened;
 
 class FakeEventSource {
   constructor(url) {
@@ -48,16 +51,30 @@ beforeEach(() => {
   streams = [];
   requests = [];
   routeFiles = ["app/about/page.tsx", "app/layout.tsx"];
+  posts = [];
+  opened = [];
+  submitResult = { ok: true, body: { url: "https://astralis-zeta.vercel.app/issues/new?draft=d1" } };
   const { window } = dom;
+  window.open = (url) => opened.push(url);
   Object.assign(globalThis, {
     window,
     document: window.document,
     location: window.location,
     Element: window.Element,
     EventSource: FakeEventSource,
-    fetch: async (url) => {
+    fetch: async (url, init = {}) => {
       requests.push(url);
       const path = url.replace("/api/astralis-devtools/", "");
+      if (init.method === "POST") {
+        const sent = JSON.parse(init.body);
+        posts.push({ path, body: sent });
+        if (path === "snapshot") {
+          const snapshot = { format: "astralis-snapshot/1", tree: sent.tree, description: sent.description, route: sent.route };
+          const problems = sent.description.title.trim() ? [] : ["description.title is required (at most 200 characters)"];
+          return { ok: true, status: 200, json: async () => ({ snapshot, problems }) };
+        }
+        return { ok: submitResult.ok, status: submitResult.ok ? 200 : 502, json: async () => submitResult.body };
+      }
       const body = path === "spec"
         ? SPEC
         : path === "info"
@@ -233,4 +250,105 @@ test("unmounting removes the overlay and everything it listened to", () => {
   document.addEventListener("click", () => pageClicks++);
   click(document.getElementById("plain"));
   assert.equal(pageClicks, 1, "no picking listener left behind");
+});
+
+/* ---- the Report tab ---------------------------------------------------------- */
+
+/** Past the report's 250 ms debounce and the stubbed bridge's reply. */
+const settle = () => new Promise((done) => setTimeout(done, 320));
+const typeInto = (element, value) => {
+  element.value = value;
+  element.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+};
+
+async function reportOn(id) {
+  await tick();
+  click($(".launcher"));
+  click(button("Pick a component"));
+  click(document.getElementById(id));
+  click(button("Report a problem here"));
+  await settle();
+}
+
+test("the Report tab asks for a component first", () => {
+  click($(".launcher"));
+  click(button("Report"));
+  assert.match($(".body").textContent, /Pick the component the problem is in first/);
+  click(button("Pick a component"));
+  assert.equal(button("Picking").getAttribute("aria-pressed"), "true");
+});
+
+test("the report shows the exact snapshot and cannot be sent without a title", async () => {
+  await reportOn("text");
+  assert.match($(".report").textContent, /Reporting Card\.Body/);
+  const snap = posts.at(-1);
+  assert.equal(snap.path, "snapshot");
+  assert.equal(snap.body.tree[0].component, "Card.Body");
+  assert.deepEqual(snap.body.tree[0].children, [{ redacted: true, length: 5 }], "page text is redacted by default");
+  assert.equal(snap.body.route, "/about");
+  assert.equal(snap.body.include.findings, true);
+  assert.equal(snap.body.include.console, false);
+  assert.match($(".json").textContent, /"format": "astralis-snapshot\/1"/);
+  assert.match($(".problems").textContent, /title is required/);
+  assert.equal(button("Send to the Astralis").disabled, true);
+});
+
+test("editing the form re-assembles the snapshot, and streamed findings do not wipe it", async () => {
+  await reportOn("text");
+  const title = $(".field");
+  typeInto(title, "Card loses its border");
+  streams[0].emit("findings", { version: 3, files: 1, errors: 0, warnings: 0, results: [] });
+  assert.equal($(".field"), title, "the form was not rebuilt");
+  assert.equal($(".field").value, "Card loses its border");
+  await settle();
+  assert.equal(posts.at(-1).body.description.title, "Card loses its border");
+  assert.equal($(".problems").children.length, 0);
+  assert.equal(button("Send to the Astralis").disabled, false);
+
+  const includeText = $$(".toggle input")[0];
+  includeText.checked = true;
+  includeText.dispatchEvent(new dom.window.Event("change"));
+  await settle();
+  assert.deepEqual(posts.at(-1).body.tree[0].children, [{ text: "Hello" }]);
+});
+
+test("Send posts exactly the snapshot shown and opens the draft", async () => {
+  await reportOn("text");
+  typeInto($(".field"), "Card loses its border");
+  await settle();
+  const shown = JSON.parse($(".json").textContent);
+  click(button("Send to the Astralis"));
+  await settle();
+  const submitted = posts.find((p) => p.path === "submit");
+  assert.deepEqual(submitted.body, shown);
+  assert.deepEqual(opened, ["https://astralis-zeta.vercel.app/issues/new?draft=d1"]);
+  assert.match($(".status").textContent, /Draft created/);
+});
+
+test("a failed send says so and keeps Copy and Download", async () => {
+  submitResult = { ok: false, body: { error: "Could not reach the Astralis issue platform at https://x (fetch failed)." } };
+  await reportOn("text");
+  typeInto($(".field"), "t");
+  await settle();
+  click(button("Send to the Astralis"));
+  await settle();
+  assert.match($(".status").textContent, /Could not reach the Astralis issue platform.*Nothing was sent/);
+  assert.equal(button("Copy JSON").disabled, false);
+  assert.equal(button("Download").disabled, false);
+  assert.deepEqual(opened, []);
+});
+
+test("console errors are counted, and sent only when ticked", async () => {
+  await reportOn("text");
+  dom.window.console.error("Failed at http://localhost:3000/_next/app.js");
+  typeInto($(".field"), "t");
+  await settle();
+  assert.match($(".body").textContent, /Include console errors \(1\)/);
+  assert.equal(posts.at(-1).body.include.console, false);
+  const consoleBox = $$(".toggle input")[2];
+  consoleBox.checked = true;
+  consoleBox.dispatchEvent(new dom.window.Event("change"));
+  await settle();
+  assert.equal(posts.at(-1).body.include.console, true);
+  assert.deepEqual(posts.at(-1).body.console, ["Failed at /_next/app.js"]);
 });

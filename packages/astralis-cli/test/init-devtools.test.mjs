@@ -78,7 +78,7 @@ test("Next.js: the overlay goes in the root layout and the bridge gets its route
     const layout = read(project.dir, "app/layout.tsx");
     assert.match(layout, /^import \{ AstralisDevTools \} from "astralis-devtools\/next";$/m);
     assert.match(layout, /<AstralisProvider defaultTheme="system">\{children\}<\/AstralisProvider><AstralisDevTools \/><\/body>/);
-    assert.equal(read(project.dir, ROUTE), 'export { GET } from "astralis-devtools/next/route";\n');
+    assert.equal(read(project.dir, ROUTE), 'export { GET, POST } from "astralis-devtools/next/route";\n');
     assert.match(result.stdout, /wrote the DevTools route/);
     assert.match(result.stdout, /click the ✦ button/);
   } finally {
@@ -120,6 +120,31 @@ test("Next.js: a JavaScript layout under src/app gets a .js route beside it", as
     const result = await runCli(["init", "--devtools"], { cwd: project.dir });
     assert.equal(result.code, 0, result.output);
     assert.ok(existsSync(join(project.dir, "src/app/api/astralis-devtools/[...path]/route.js")));
+  } finally {
+    project.cleanup();
+  }
+});
+
+test("Next.js: a GET-only route an earlier init wrote is updated to take reports", async () => {
+  const project = nextProject({ [ROUTE]: 'export { GET } from "astralis-devtools/next/route";\n' });
+  try {
+    const result = await runCli(["init", "--devtools"], { cwd: project.dir });
+    assert.equal(result.code, 0, result.output);
+    assert.equal(read(project.dir, ROUTE), 'export { GET, POST } from "astralis-devtools/next/route";\n');
+    assert.match(result.stdout, /updated the DevTools route to take reports/);
+  } finally {
+    project.cleanup();
+  }
+});
+
+test("Next.js: a hand-written route without POST is kept, with a note that reports need it", async () => {
+  const mine = 'import { GET as bridge } from "astralis-devtools/next/route";\nexport const GET = bridge;\n';
+  const project = nextProject({ [ROUTE]: mine });
+  try {
+    const result = await runCli(["init", "--devtools"], { cwd: project.dir });
+    assert.equal(result.code, 0, result.output);
+    assert.equal(read(project.dir, ROUTE), mine);
+    assert.match(result.output, /does not export POST/);
   } finally {
     project.cleanup();
   }

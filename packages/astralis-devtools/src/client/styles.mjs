@@ -111,6 +111,32 @@ td:last-child { word-break: break-word; }
 .notice { padding: 10px; border: 1px dashed var(--line); border-radius: 6px; color: var(--muted); }
 .notice code { font-family: var(--mono); color: var(--text); }
 
+.secondary {
+  background: var(--bg-raised); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px;
+}
+.secondary:hover { border-color: var(--accent); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.field-label { display: block; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.field {
+  display: block; width: 100%; margin-top: 4px; padding: 6px 8px; border-radius: 6px;
+  background: var(--bg-raised); color: var(--text); border: 1px solid var(--line); font: inherit; resize: vertical;
+}
+.field:focus { outline: 2px solid var(--accent); outline-offset: 0; }
+.toggle { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.toggle input { accent-color: var(--accent); }
+.shot { margin-top: 8px; }
+.thumb { max-width: 160px; max-height: 100px; border: 1px solid var(--line); border-radius: 4px; }
+.json {
+  margin: 0; max-height: 220px; overflow: auto; padding: 8px; border-radius: 6px;
+  background: #0f1115; border: 1px solid var(--line); font: 11px/1.4 var(--mono); white-space: pre-wrap; word-break: break-word;
+}
+.problems { margin: 0 0 8px; padding-left: 18px; color: var(--warning); font-size: 12px; }
+.problems:empty { display: none; }
+.actions { margin-top: 10px; }
+.status { margin: 8px 0 0; font-size: 12px; }
+.status.failed { color: var(--error); }
+.status.sent { color: var(--ok); }
+
 .highlight {
   position: fixed; z-index: 2147482999; pointer-events: none;
   border: 2px solid var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);

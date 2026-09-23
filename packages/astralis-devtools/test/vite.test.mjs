@@ -118,3 +118,38 @@ test("the middleware refuses a socket from another machine, whatever its headers
   await middleware(req, res, (error) => assert.fail(error));
   assert.equal(res.statusCode, 403);
 });
+
+test("in a real Vite dev server: a POST reaches the bridge with its body", async () => {
+  const project = viteProject();
+  const server = await createServer({
+    root: project.dir,
+    configFile: false,
+    logLevel: "silent",
+    plugins: [astralisDevtools()],
+    server: { port: 0, host: "127.0.0.1" },
+    optimizeDeps: { noDiscovery: true, include: [] },
+  });
+  await server.listen();
+  const origin = `http://127.0.0.1:${server.httpServer.address().port}`;
+  try {
+    const response = await fetch(`${origin}/api/astralis-devtools/snapshot`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        tree: [{ component: "Card", props: { variant: "outline" }, children: [] }],
+        route: "/",
+        description: { title: "From Vite" },
+      }),
+    });
+    assert.equal(response.status, 200);
+    const { snapshot, problems } = await response.json();
+    assert.deepEqual(problems, []);
+    assert.equal(snapshot.environment.framework.name, "vite");
+    assert.equal(snapshot.description.title, "From Vite");
+    assert.equal((await fetch(`${origin}/api/astralis-devtools/snapshot`, { method: "POST", body: "x" })).status, 415);
+  } finally {
+    await server.close();
+    globalThis[Symbol.for("astralis-devtools.bridges")]?.forEach((bridge) => bridge.close());
+    project.cleanup();
+  }
+});
