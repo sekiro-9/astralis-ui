@@ -1,0 +1,27 @@
+# Postgres for the issue platform in local development. Not a deployment
+# artefact: the credentials are weak on purpose, because the port is published
+# on localhost only and the database holds nothing but test data. Production
+# uses a hosted Postgres through DATABASE_URL.
+#
+# Port 5433, so it can run beside another project's Postgres on 5432.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: astralis-issues-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: issues
+      POSTGRES_PASSWORD: issues
+      POSTGRES_DB: astralis_issues
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - issues-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U issues -d astralis_issues"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  issues-db:

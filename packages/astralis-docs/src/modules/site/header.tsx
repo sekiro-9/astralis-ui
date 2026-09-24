@@ -16,14 +16,14 @@ export function Header({ version }: { version: string }) {
       <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-8">
           <Logo />
-          <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
             {links.map((link) => {
               const active = link.isActive(pathname);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                  className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm transition-colors ${
                     active
                       ? "text-label"
                       : "text-label-muted hover:bg-surface-subtle hover:text-label"

@@ -17,9 +17,8 @@ import { navLinks } from "./nav-links";
  * full docs tree, since a reader on a component page needs the sidebar more
  * than the header row.
  *
- * Shown up to `lg` rather than `md`, because the sidebar is the surface that
- * disappears last. Between the two breakpoints the top-level links appear in
- * both places, which costs nothing and keeps one rule instead of two.
+ * Shown up to `lg`, where both surfaces take over. The header row waited
+ * for `lg` too once Issues & Contributions made it too long for a tablet.
  */
 export function MobileNav({ version }: { version: string }) {
   const pathname = usePathname();

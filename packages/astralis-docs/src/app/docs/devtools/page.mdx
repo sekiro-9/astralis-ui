@@ -146,15 +146,20 @@ them.
 
 Below the form is **exactly** the JSON that would be sent, updated as you type.
 Nothing leaves your machine until you press **Send**; the snapshot then goes to
-the Astralis issue platform as a draft, and its page opens so you can sign in
-with GitHub and submit it. **Copy JSON** and **Download** keep the snapshot
-without sending it.
+[Issues & Contributions](/issues), the Astralis issue platform, as a private
+draft, and its page opens so you can sign in with GitHub and submit it. A draft
+nobody submits is deleted after 24 hours. **Copy JSON** and **Download** keep
+the snapshot without sending it.
 
 From the terminal, [`astralis report`](/docs/cli#report--report-a-problem-to-the-maintainers)
 builds the same snapshot from your source files.
 
 The snapshot's component tree is also a reproduction: the platform turns it
-into a small `repro.tsx` and runs the validator on it again.
+into a small `repro.tsx` and runs the validator on it again. Before you submit,
+it compares the report with open issues: one with the same component, the same
+rule codes in its findings and the same minor version of `astralis-ui` is
+offered as the likely duplicate, and adding your report to it raises its report
+count instead of opening a second issue.
 
 ## How it works
 
