@@ -168,9 +168,9 @@ export const navigation: NavGroup[] = [
     title: "Feedback",
     items: [
       { title: "Alert", href: "/docs/components/alert" },
+      { title: "Loader", href: "/docs/components/loader" },
       { title: "Progress", href: "/docs/components/progress" },
       { title: "Skeleton", href: "/docs/components/skeleton" },
-      { title: "Spinner", href: "/docs/components/spinner" },
       { title: "Toast", href: "/docs/components/toast" },
       { title: "Empty State", href: "/docs/components/empty-state", since: "0.7.6" },
     ],

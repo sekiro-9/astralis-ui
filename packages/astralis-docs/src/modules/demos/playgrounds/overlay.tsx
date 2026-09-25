@@ -10,7 +10,7 @@ import {
   Menu,
   Modal,
   Popover,
-  Spinner,
+  Loader,
   Text,
   Tooltip,
 } from "astralis-ui";
@@ -210,6 +210,6 @@ export const overlayPlaygrounds = definePlaygrounds({
     component: asEntry(Backdrop),
     rows: backdropProps,
     baseProps: { style: { position: "absolute" } },
-    fixture: <Spinner colorScheme="gray" />,
+    fixture: <Loader colorScheme="gray" />,
   },
 });

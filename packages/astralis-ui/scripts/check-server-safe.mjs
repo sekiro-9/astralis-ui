@@ -54,7 +54,7 @@ const MUST_BE_ZERO_CLIENT = [
   "Alert",
   "Progress",
   "Skeleton",
-  "Spinner",
+  "Loader",
   // theme: the pre-paint script renders in a Server Component <head>
   "ThemeScript",
   // de-contexted compounds (phase 2): size/state travels via data attributes

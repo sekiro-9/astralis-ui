@@ -11,7 +11,7 @@ export const backdropProps: PropRow[] = [
   {
     prop: "children",
     type: "ReactNode",
-    description: "Centered on the scrim, such as a Spinner or a message.",
+    description: "Centered on the scrim, such as a Loader or a message.",
   },
   {
     prop: "style",

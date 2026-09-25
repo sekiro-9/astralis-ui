@@ -21,7 +21,7 @@ import {
   Radio,
   Skeleton,
   Slider,
-  Spinner,
+  Loader,
   Stat,
   Steps,
   Switch,
@@ -241,7 +241,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
           <SheetSection title="Feedback">
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
-                <Spinner size="sm" />
+                <Loader size="sm" />
                 <Progress value={64} aria-label="Upload" className="flex-1" />
               </div>
               <div className="flex items-center gap-3">

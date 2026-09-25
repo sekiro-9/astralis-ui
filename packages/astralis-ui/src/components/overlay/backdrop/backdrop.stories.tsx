@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Backdrop } from "./index";
 import { Button } from "../../buttons/button";
-import { Spinner } from "../../feedback/spinner";
+import { Loader } from "../../feedback/loader";
 
 /**
  * Backdrop is the scrim Modal and Drawer paint behind their panels, as a
@@ -27,7 +27,7 @@ export const Blocking: Story = {
         <Button onClick={() => setShown(true)}>Show backdrop</Button>
         {shown && (
           <Backdrop onClick={() => setShown(false)}>
-            <Spinner size="lg" />
+            <Loader size="lg" />
           </Backdrop>
         )}
       </>

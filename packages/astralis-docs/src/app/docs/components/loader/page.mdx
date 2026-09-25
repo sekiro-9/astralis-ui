@@ -1,0 +1,49 @@
+import { loaderProps } from "@/modules/demos/loader/loader-props";
+
+export const metadata = {
+  title: "Loader",
+  description: "An indeterminate loading indicator in five variants, with a screen-reader label built in.",
+};
+
+# Loader
+
+An indeterminate loading indicator in five variants, with a screen-reader label
+built in.
+
+<ComponentPreview name="loader-demo" />
+
+## Import
+
+```tsx
+import { Loader } from "astralis-ui";
+```
+
+## Variants
+
+`blocks` is the default: the Astralis mark assembling itself. `spinner` is a
+rotating arc, `dots` three dots in sequence, `bars` an equaliser, and `pulse` a
+dot sending out rings.
+
+<ComponentPreview name="loader-variants" />
+
+## Sizes
+
+<ComponentPreview name="loader-sizes" />
+
+## Color schemes
+
+Every variant paints with the accent channel, so any scheme works.
+
+<ComponentPreview name="loader-schemes" />
+
+## Props
+
+<PropsTable rows={loaderProps} />
+
+## Accessibility
+
+- Renders `role="status"` with a visually-hidden label, so assistive tech
+  announces the loading state without any extra wiring.
+- The animation keeps running under `prefers-reduced-motion`, because it
+  conveys state, not decoration. Pair long operations with
+  [Progress](/docs/components/progress) when you can report actual completion.

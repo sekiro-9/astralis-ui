@@ -8,7 +8,7 @@ import { identify } from "../../../utils/dev-identity";
 /**
  * A pulsing placeholder that holds space while content loads. Hidden from
  * assistive tech (`aria-hidden`) — pair the surrounding region with
- * `aria-busy` or a Spinner if the loading state itself must be announced.
+ * `aria-busy` or a Loader if the loading state itself must be announced.
  */
 export const Skeleton = identify("Skeleton", function Skeleton({
   variant = "text",

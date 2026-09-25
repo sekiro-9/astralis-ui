@@ -77,9 +77,9 @@ export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 export const PLACEMENT_ADOPTERS = [
   "Accordion", "Alert", "Avatar", "Badge", "Breadcrumb", "Button", "ButtonGroup",
   "Calendar", "Card", "Carousel", "Checkbox", "CodeBlock", "Combobox", "DataList",
-  "Field", "Heading", "Highlight", "Icon", "Image", "Input", "Kbd", "Link", "Marquee",
+  "Field", "Heading", "Highlight", "Icon", "Image", "Input", "Kbd", "Link", "Loader", "Marquee",
   "MultiSelect", "NumberInput", "Pagination", "PinInput", "Progress", "QrCode", "Radio",
-  "ScrollArea", "Skeleton", "Slider", "Spinner", "Splitter", "Steps", "Switch", "Table",
+  "ScrollArea", "Skeleton", "Slider", "Splitter", "Steps", "Switch", "Table",
   "TableOfContents", "Tabs", "Tag", "Text", "Timeline", "Toolbar",
 ] as const;
 

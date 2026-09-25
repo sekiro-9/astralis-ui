@@ -19,7 +19,7 @@ import {
   Progress,
   Separator,
   Skeleton,
-  Spinner,
+  Loader,
   Stack,
   Stat,
   Table,
@@ -71,7 +71,7 @@ export default function RscProbePage() {
               </Text>
             </Stack>
             <HStack gap="2">
-              <Spinner size="sm" />
+              <Loader size="sm" />
               <Skeleton w="16" h="4" />
             </HStack>
           </Flex>

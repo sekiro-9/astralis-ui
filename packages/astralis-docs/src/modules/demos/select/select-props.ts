@@ -37,7 +37,7 @@ export const selectProps: PropRow[] = [
     prop: "loading",
     type: `boolean`,
     default: `false`,
-    description: "Spinner instead of the chevron.",
+    description: "A spinning arc instead of the chevron.",
   },
   {
     prop: "emptyText",

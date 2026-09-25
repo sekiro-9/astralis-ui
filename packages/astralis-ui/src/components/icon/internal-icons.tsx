@@ -170,7 +170,7 @@ export function MinusIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-/** Indeterminate spinner glyph shared by Button, Select, MultiSelect and Spinner. */
+/** Indeterminate spinner glyph shared by Button, Select, MultiSelect and Loader. */
 export function SpinnerIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg aria-hidden="true" className="astralis:h-4 astralis:w-4 astralis:shrink-0 astralis:animate-spin" viewBox="0 0 24 24" fill="none" {...props}>

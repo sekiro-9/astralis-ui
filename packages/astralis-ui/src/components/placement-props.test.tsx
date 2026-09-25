@@ -12,7 +12,7 @@ import { Steps } from "./navigation/steps";
 import { Tabs } from "./navigation/tabs";
 import { Tag } from "./data-display/tag";
 import { Skeleton } from "./feedback/skeleton";
-import { Spinner } from "./feedback/spinner";
+import { Loader } from "./feedback/loader";
 import { Icon } from "./icon";
 import { Link } from "./typography/link";
 import { Alert } from "./feedback/alert";
@@ -84,7 +84,7 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Tabs", (p) => <Tabs {...p} defaultValue="a"><span>a</span></Tabs>],
   ["Tag", (p) => <Tag {...p}>tag</Tag>],
   ["Skeleton", (p) => <Skeleton {...p} />],
-  ["Spinner", (p) => <Spinner {...p} />],
+  ["Loader", (p) => <Loader {...p} />],
   ["Icon", (p) => <Icon {...p} as="svg" />],
   ["Link", (p) => <Link {...p} href="#">link</Link>],
   ["Alert", (p) => <Alert {...p}>alert</Alert>],

@@ -149,8 +149,10 @@ import { ProgressDemo } from "./progress/progress-demo";
 import { ProgressCircle } from "./progress/progress-circle";
 import { SkeletonDemo } from "./skeleton/skeleton-demo";
 import { SkeletonLoaded } from "./skeleton/skeleton-loaded";
-import { SpinnerDemo } from "./spinner/spinner-demo";
-import { SpinnerSchemes } from "./spinner/spinner-schemes";
+import { LoaderDemo } from "./loader/loader-demo";
+import { LoaderVariants } from "./loader/loader-variants";
+import { LoaderSizes } from "./loader/loader-sizes";
+import { LoaderSchemes } from "./loader/loader-schemes";
 import { BadgeDemo } from "./badge/badge-demo";
 import { BadgeVariants } from "./badge/badge-variants";
 import { AvatarDemo } from "./avatar/avatar-demo";
@@ -363,8 +365,10 @@ export const demos = {
   "progress-circle": { component: ProgressCircle, file: "progress/progress-circle.tsx" },
   "skeleton-demo": { component: SkeletonDemo, file: "skeleton/skeleton-demo.tsx" },
   "skeleton-loaded": { component: SkeletonLoaded, file: "skeleton/skeleton-loaded.tsx" },
-  "spinner-demo": { component: SpinnerDemo, file: "spinner/spinner-demo.tsx" },
-  "spinner-schemes": { component: SpinnerSchemes, file: "spinner/spinner-schemes.tsx" },
+  "loader-demo": { component: LoaderDemo, file: "loader/loader-demo.tsx" },
+  "loader-variants": { component: LoaderVariants, file: "loader/loader-variants.tsx" },
+  "loader-sizes": { component: LoaderSizes, file: "loader/loader-sizes.tsx" },
+  "loader-schemes": { component: LoaderSchemes, file: "loader/loader-schemes.tsx" },
   "badge-demo": { component: BadgeDemo, file: "badge/badge-demo.tsx" },
   "badge-variants": { component: BadgeVariants, file: "badge/badge-variants.tsx" },
   "avatar-demo": { component: AvatarDemo, file: "avatar/avatar-demo.tsx" },

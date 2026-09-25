@@ -2,14 +2,15 @@
 
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   generateBrandShades, useTheme,
   Button, Card, Stat, Badge, Avatar, Switch, Slider, Tag, HStack, VStack,
 } from "astralis-ui";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { CopyCommand } from "@/modules/docs/copy-command";
-import { Entrance } from "./reveal";
+import { EASE, Entrance, useEntranceTransition } from "./reveal";
+import { HeroScene } from "./scene/hero-scene";
 
 const swatches = [
   // First entry = the library's actual default brand (yellow-500).
@@ -26,8 +27,7 @@ const swatches = [
  * overriding only the primitive shades on a subtree never reaches them —
  * they must be re-declared here too, per theme (mirrors semantic.css).
  */
-function brandOverride(hex: string, mode: "light" | "dark"): CSSProperties {
-  const shades = generateBrandShades(hex) as Record<string, string>;
+function brandOverride(shades: Record<string, string>, mode: "light" | "dark"): CSSProperties {
   const shade = (step: number) => shades[`--astralis-color-brand-${step}`];
   const roles =
     mode === "dark"
@@ -51,59 +51,49 @@ function brandOverride(hex: string, mode: "light" | "dark"): CSSProperties {
   } as CSSProperties;
 }
 
-export function Hero({ components }: { components: number }) {
+export function Hero() {
   const [brand, setBrand] = useState(swatches[0].hex);
   const { resolvedTheme } = useTheme();
-  const reduce = useReducedMotion();
-  const brandStyle = brandOverride(brand, resolvedTheme);
+  const cardTransition = useEntranceTransition({ duration: 1, delay: 0.3, ease: EASE });
+  const shades = generateBrandShades(brand) as Record<string, string>;
+  const shade = (step: number) => shades[`--astralis-color-brand-${step}`] ?? brand;
 
   return (
-    <section className="relative overflow-hidden" style={brandStyle}>
-      {/* Layered backdrop: line grid + two drifting orbs that follow the brand */}
-      <div aria-hidden="true" className="hero-grid absolute inset-0" />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/4 h-130 w-130 -translate-x-1/2 rounded-full opacity-20 blur-3xl transition-colors duration-700"
-        style={{ backgroundColor: brand }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-40 h-96 w-96 translate-x-1/3 rounded-full opacity-10 blur-3xl transition-colors duration-700"
-        style={{ backgroundColor: brand }}
-      />
+    <section
+      // The header is h-14 (3.5rem): the hero fills the rest of the first screen,
+      // up to 60rem so very tall monitors do not get a mostly empty hero.
+      className="relative isolate flex items-center overflow-hidden lg:min-h-[min(calc(100svh-3.5rem),60rem)]"
+      style={brandOverride(shades, resolvedTheme)}
+    >
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <HeroScene palette={[shade(700), shade(400), shade(300)]} />
+        <div className="hero-veil absolute inset-0" />
+      </div>
 
-      <div className="relative mx-auto grid max-w-screen-xl items-center gap-16 px-6 pb-14 pt-14 lg:grid-cols-2 lg:px-12 lg:pb-16 lg:pt-16">
-        {/* Copy + CTAs + picker */}
-        <div className="flex flex-col items-start">
+      <div className="mx-auto grid w-full max-w-screen-xl items-center gap-16 px-6 py-12 lg:grid-cols-2 lg:px-12 lg:py-16">
+        <div className="flex min-w-0 flex-col items-start">
           <Entrance delay={0}>
-            <p className="mb-8 inline-flex items-center gap-2 rounded-full border border-stroke-base bg-surface/60 px-4 py-2 text-xs font-medium text-label-muted backdrop-blur">
-              <Sparkles size={13} className="text-accent-label" />
-              {components} components · server-first · 0 KB static parts
-            </p>
-          </Entrance>
-
-          <Entrance delay={0.08}>
-            <h1 className="font-display text-balance text-5xl font-semibold leading-[1.02] tracking-tight text-label sm:text-6xl">
+            <h1 className="font-display text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-label min-[420px]:text-5xl sm:text-6xl">
               Interfaces with a<br />
               <span className="text-gradient">stellar finish</span>
             </h1>
           </Entrance>
 
-          <Entrance delay={0.16}>
-            <p className="mt-8 max-w-lg text-pretty text-base leading-relaxed text-label-muted">
-              A React component library on semantic tokens — one brand color
-              restyles everything at runtime. Try it: this whole section is
-              listening.
+          <Entrance delay={0.08}>
+            <p className="mt-8 max-w-lg text-pretty text-lg leading-relaxed text-label-muted">
+              Accessible React components for building fast, beautiful web apps and design
+              systems. Server-rendered by default, themed from a single brand colour.
             </p>
           </Entrance>
 
-          <Entrance delay={0.24}>
+          <Entrance delay={0.16}>
             <div className="mt-10 flex flex-wrap items-center gap-2.5" role="group" aria-label="Try a brand color">
               {swatches.map((swatch) => (
                 <button
                   key={swatch.hex}
                   type="button"
                   aria-label={`Brand color ${swatch.name}`}
+                  aria-pressed={brand === swatch.hex}
                   onClick={() => setBrand(swatch.hex)}
                   className={`size-9 cursor-pointer rounded-full transition-all duration-200 hover:scale-115 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring ${
                     brand === swatch.hex
@@ -113,7 +103,7 @@ export function Hero({ components }: { components: number }) {
                   style={{ backgroundColor: swatch.hex }}
                 />
               ))}
-              <label className="relative ml-1 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed border-stroke-base text-label-muted transition-all duration-200 hover:scale-110 hover:text-label">
+              <label className="relative ml-1 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed border-stroke-base bg-surface/40 text-label-muted backdrop-blur transition-all duration-200 hover:scale-110 hover:text-label">
                 <span className="text-base leading-none">+</span>
                 <input
                   type="color"
@@ -127,40 +117,47 @@ export function Hero({ components }: { components: number }) {
             </div>
           </Entrance>
 
-          <Entrance delay={0.32}>
+          <Entrance delay={0.24}>
             <div className="mt-12 flex flex-wrap gap-4">
-              <Button as={Link} href="/docs" size="lg" rounded="xl" rightIcon={<ArrowRight size={18} />}>
+              <Button as={Link} href="/docs" size="md" rounded="xl" rightIcon={<ArrowRight size={18} />}>
                 Get started
               </Button>
-              <Button as={Link} href="/docs/components/button" size="lg" rounded="xl" variant="outline" colorScheme="gray">
+              <Button
+                as={Link}
+                href="/docs/components/button"
+                size="md"
+                rounded="xl"
+                variant="outline"
+                colorScheme="gray"
+                className="bg-surface/60 backdrop-blur"
+              >
                 Browse components
               </Button>
             </div>
 
-            {/* The fastest path in, and the only place on this page the CLI
-                is visible at all. CopyCommand is the same component the block
-                pages use — a command is a code block. */}
-            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <CopyCommand command="npx astralis-cli create my-app" />
-              <span className="text-xs text-label-subtle">
-                scaffolds and wires it up —{" "}
+            <div className="mt-6 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <div className="shrink-0">
+                <CopyCommand command="npx astralis-cli create my-app" />
+              </div>
+              <span className="text-xs text-label-subtle sm:whitespace-nowrap">
+                Scaffold your React project —{" "}
                 <Link href="/docs/cli" className="underline underline-offset-2 hover:text-label-muted">
-                  what the CLI does
+                  How the CLI works
                 </Link>
               </span>
             </div>
           </Entrance>
         </div>
 
-        {/* Live composition — floats gently; every accent tracks the brand */}
+        {/* Live composition — floats over the scene; every accent tracks the brand */}
         <motion.div
           className="relative lg:pl-6"
-          initial={reduce ? false : { opacity: 0, y: 40, rotate: 1.5 }}
+          initial={{ opacity: 0, y: 40, rotate: 1.5 }}
           animate={{ opacity: 1, y: 0, rotate: 0 }}
-          transition={{ duration: 1, delay: 0.35, ease: [0.21, 0.47, 0.32, 0.98] }}
+          transition={cardTransition}
         >
           <div className="animate-float-slow">
-            <Card variant="elevated">
+            <Card variant="elevated" className="bg-raised/85 backdrop-blur-xl">
               <Card.Header extra={<Badge colorScheme="brand" variant="subtle">Live</Badge>}>
                 <Card.Title>Mission control</Card.Title>
                 <Card.Description>Recolored by the swatches — no rebuild</Card.Description>
@@ -201,7 +198,6 @@ export function Hero({ components }: { components: number }) {
             </Card>
           </div>
 
-          {/* Floating satellites */}
           <div className="animate-float-slower absolute -left-8 -top-6 hidden lg:block">
             <div className="rounded-2xl border border-stroke-base bg-raised/90 p-3 shadow-lg backdrop-blur">
               <Tag colorScheme="brand" variant="solid" size="sm">Shipped ✦</Tag>

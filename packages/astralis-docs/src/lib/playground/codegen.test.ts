@@ -150,14 +150,14 @@ describe("generateJsx", () => {
 
   describe("children", () => {
     it("self-closes when there are none", () => {
-      expect(generateJsx({ tag: "Spinner", props: { size: "lg" }, rows })).toBe(
-        `import { Spinner } from "astralis-ui";\n\n<Spinner size="lg" />\n`,
+      expect(generateJsx({ tag: "Loader", props: { size: "lg" }, rows })).toBe(
+        `import { Loader } from "astralis-ui";\n\n<Loader size="lg" />\n`,
       );
     });
 
     it("self-closes with no props either", () => {
-      expect(generateJsx({ tag: "Spinner", props: {}, rows })).toBe(
-        `import { Spinner } from "astralis-ui";\n\n<Spinner />\n`,
+      expect(generateJsx({ tag: "Loader", props: {}, rows })).toBe(
+        `import { Loader } from "astralis-ui";\n\n<Loader />\n`,
       );
     });
 

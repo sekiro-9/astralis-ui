@@ -54,3 +54,33 @@
   0% { transform: translateX(-100%); }
   100% { transform: translateX(300%); }
 }
+
+/* Loader. `place`: a block drops in, holds, fades, and the set starts over.
+   `place-tipped` lands the last block of the mark rotated. Both run with
+   staggered delays, one per block. */
+@keyframes astralis-loader-place {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.6); }
+  22%, 70% { opacity: 1; transform: none; }
+  88%, 100% { opacity: 0; transform: none; }
+}
+
+@keyframes astralis-loader-place-tipped {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.6) rotate(0deg); }
+  22%, 70% { opacity: 1; transform: rotate(14deg); }
+  88%, 100% { opacity: 0; transform: rotate(14deg); }
+}
+
+@keyframes astralis-loader-dot {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.6); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes astralis-loader-bar {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes astralis-loader-ring {
+  0% { opacity: 0.9; transform: scale(0.35); }
+  100% { opacity: 0; transform: scale(1); }
+}

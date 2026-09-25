@@ -5,6 +5,20 @@ their history lives in the git log.
 
 ## Unreleased
 
+### Spinner is now Loader, in five variants (breaking)
+
+`Spinner` is renamed `Loader`, since most of its variants no longer spin. A
+`variant` prop picks the animation: `blocks` (the default, the Astralis mark
+assembling itself), `spinner` (the arc `Spinner` drew), `dots`, `bars` and
+`pulse`. Size, `colorScheme`, `label` and the placement props are unchanged,
+and it is still a Server Component that ships no client JavaScript.
+
+To keep the old look, rename the import and pass `variant="spinner"`:
+
+```tsx
+<Loader variant="spinner" />
+```
+
 ### Development builds name each component
 
 Outside production, every component's root element carries

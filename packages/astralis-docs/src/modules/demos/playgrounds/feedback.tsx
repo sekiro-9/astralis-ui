@@ -1,9 +1,9 @@
-import { Alert, Button, EmptyState, Progress, Skeleton, Spinner } from "astralis-ui";
+import { Alert, Button, EmptyState, Loader, Progress, Skeleton } from "astralis-ui";
 import { alertProps } from "../alert/alert-props";
 import { emptyStateProps } from "../empty-state/empty-state-props";
 import { progressProps } from "../progress/progress-props";
 import { skeletonProps } from "../skeleton/skeleton-props";
-import { spinnerProps } from "../spinner/spinner-props";
+import { loaderProps } from "../loader/loader-props";
 import { asEntry, definePlaygrounds } from "./define";
 
 export const feedbackPlaygrounds = definePlaygrounds({
@@ -21,7 +21,7 @@ export const feedbackPlaygrounds = definePlaygrounds({
     ),
   },
   "progress-demo": { tag: "Progress", component: asEntry(Progress), rows: progressProps },
-  "spinner-demo": { tag: "Spinner", component: asEntry(Spinner), rows: spinnerProps },
+  "loader-demo": { tag: "Loader", component: asEntry(Loader), rows: loaderProps },
   "skeleton-demo": { tag: "Skeleton", component: asEntry(Skeleton), rows: skeletonProps },
   "empty-state-demo": {
     tag: "EmptyState",

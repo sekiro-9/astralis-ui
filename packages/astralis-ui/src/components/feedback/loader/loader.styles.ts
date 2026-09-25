@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-export const spinnerVariants = cva("astralis:inline-flex astralis:shrink-0 astralis:text-accent-solid", {
+export const loaderVariants = cva("astralis:inline-flex astralis:shrink-0 astralis:text-accent-solid", {
   variants: {
     size: {
       xs: "astralis:h-3 astralis:w-3",

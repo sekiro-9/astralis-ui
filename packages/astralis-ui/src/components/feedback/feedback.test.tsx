@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { Alert } from "./alert";
 import { Progress } from "./progress";
 import { Skeleton } from "./skeleton";
-import { Spinner } from "./spinner";
+import { Loader } from "./loader";
 
 describe("Alert", () => {
   it("announces errors and warnings assertively, the rest politely", () => {
@@ -67,9 +67,30 @@ describe("Skeleton", () => {
   });
 });
 
-describe("Spinner", () => {
+describe("Loader", () => {
   it("is a status with a visually hidden label", () => {
-    render(<Spinner label="Saving" />);
+    render(<Loader label="Saving" />);
     expect(screen.getByRole("status")).toHaveTextContent("Saving");
+  });
+
+  it("draws the blocks mark by default", () => {
+    render(<Loader />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveAttribute("data-variant", "blocks");
+    expect(status.querySelectorAll("rect")).toHaveLength(4);
+  });
+
+  it.each([
+    ["spinner", "circle", 1],
+    ["dots", "circle", 3],
+    ["bars", "rect", 4],
+    ["pulse", "circle", 3],
+  ] as const)("draws the %s variant", (variant, shape, count) => {
+    render(<Loader variant={variant} />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveAttribute("data-variant", variant);
+    expect(status.querySelectorAll(`svg ${shape}`)).toHaveLength(count);
+    // The glyph is decoration; the label is what is announced.
+    expect(status.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 });

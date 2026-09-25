@@ -12,7 +12,7 @@ const meta: Meta<typeof Skeleton> = {
     docs: {
       description: {
         component:
-          "A pulsing placeholder that holds space while content loads. It is hidden from assistive tech; announce the loading state on the surrounding region (`aria-busy`) or with a Spinner.",
+          "A pulsing placeholder that holds space while content loads. It is hidden from assistive tech; announce the loading state on the surrounding region (`aria-busy`) or with a Loader.",
       },
     },
   },

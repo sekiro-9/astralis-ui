@@ -138,7 +138,7 @@ export function generateJsx({
   // An attribute that spans lines forces block form, like a multi-line fixture.
   const wideAttrs = attrs.some((attr) => attr.includes("\n"));
 
-  // Self-closing when there are no children — `<Spinner size="lg" />`.
+  // Self-closing when there are no children — `<Loader size="lg" />`.
   if (!body) {
     const selfClosed = attrs.length ? `<${tag} ${attrs.join(" ")} />` : `<${tag} />`;
     const element =
