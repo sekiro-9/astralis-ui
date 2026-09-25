@@ -53,26 +53,18 @@ function starterSource() {
  * It is an ordinary file in your project. Edit it, or delete it and start over.
  */
 /**
- * The Astralis mark — an eight-point compass rose. Painted with the brand
- * token rather than fixed hex, so it re-colours with the rest of the theme.
+ * The Astralis mark — four blocks, the last still being placed. Painted with
+ * the brand token rather than fixed hex, so it re-colours with the theme.
  */
-const ROTATIONS = [0, 90, 180, 270];
-
 function AstralisMark() {
   return (
-    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-      {ROTATIONS.map((deg) => (
-        <g key={\`d\${deg}\`} transform={\`rotate(\${deg} 16 16)\`}>
-          <path d="M22.8 9.2 L17.7 11.1 L16 16 Z" fill="var(--astralis-color-brand-500)" />
-          <path d="M22.8 9.2 L20.9 14.3 L16 16 Z" fill="var(--astralis-color-brand-300)" />
-        </g>
-      ))}
-      {ROTATIONS.map((deg) => (
-        <g key={\`c\${deg}\`} transform={\`rotate(\${deg} 16 16)\`}>
-          <path d="M16 0.8 L14.15 12.4 L16 16 Z" fill="var(--astralis-color-brand-200)" />
-          <path d="M16 0.8 L17.85 12.4 L16 16 Z" fill="var(--astralis-color-brand-500)" />
-        </g>
-      ))}
+    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" style={{ overflow: "visible" }}>
+      <g fill="var(--astralis-color-brand-500)">
+        <rect x="3" y="17" width="12" height="12" rx="3" />
+        <rect x="17" y="17" width="12" height="12" rx="3" />
+        <rect x="3" y="3" width="12" height="12" rx="3" />
+        <rect x="19" y="1" width="12" height="12" rx="3" opacity="0.6" transform="rotate(14 25 7)" />
+      </g>
     </svg>
   );
 }
