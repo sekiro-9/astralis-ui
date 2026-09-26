@@ -2,13 +2,13 @@ import { fileUploadProps, fileUploadPartsProps } from "@/modules/demos/file-uplo
 
 export const metadata = {
   title: "File Upload",
-  description: "File picking + drag-and-drop on a hidden native input — validation rejects loudly, never truncates silently.",
+  description: "File picking + drag-and-drop on a hidden native input. Validation rejects loudly, never truncates silently.",
 };
 
 # File Upload
 
 File picking and drag-and-drop built around a hidden native
-`<input type="file">` — the picker dialog, `accept` filtering and mobile
+`<input type="file">`: the picker dialog, `accept` filtering and mobile
 integrations stay the platform's. `maxSize`/`maxFiles` violations are
 **rejected and reported** via `onReject`, never silently truncated.
 
@@ -22,7 +22,7 @@ import { FileUpload } from "astralis-ui";
 
 ## Button trigger
 
-Skip the dropzone entirely — `FileUpload.Trigger` wraps any element and opens
+Skip the dropzone entirely: `FileUpload.Trigger` wraps any element and opens
 the picker:
 
 <ComponentPreview name="file-upload-trigger" />

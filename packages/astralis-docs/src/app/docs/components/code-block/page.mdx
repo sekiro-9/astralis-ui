@@ -22,8 +22,8 @@ import { CodeBlock } from "astralis-ui";
 ## Anatomy
 
 `Root` holds the source string via `code` and hands it to its parts during
-server render: `Code` renders it when given no children, and `CopyTrigger` —
-the compound's only client part — copies the rendered code to the clipboard. `Header` is an optional top row for `Title`,
+server render: `Code` renders it when given no children, and `CopyTrigger`,
+the compound's only client part, copies the rendered code to the clipboard. `Header` is an optional top row for `Title`,
 `WindowControls` (the macOS traffic lights) and a trailing `Control` slot;
 `Content` is the scrollable `<pre>` wrapping `Code`.
 
@@ -45,14 +45,14 @@ the compound's only client part — copies the rendered code to the clipboard. `
 ## Variants
 
 The same three-variant family as [Code](/docs/components/code); `solid` is
-the strongest surface — it tracks the active theme (dark block in dark mode,
-light in light) — and pairs well with `WindowControls`.
+the strongest surface: it tracks the active theme (dark block in dark mode,
+light in light) and pairs well with `WindowControls`.
 
 <ComponentPreview name="code-block-variants" align="start" />
 
 ## Syntax highlighting
 
-Code Block renders plain text by itself — bring your own highlighter and pass
+Code Block renders plain text by itself: bring your own highlighter and pass
 its output as `highlightedHtml` on `Code`. The blocks on this very site are
 Shiki output rendered this way:
 

@@ -25,7 +25,7 @@ interface BlockThumbnailProps {
  * A scaled-down desktop render of a block.
  *
  * The frame loads a prerendered static document, not the app's /preview route.
- * That route is a full Next.js page — 17 subresources and 2.34 MB decoded per
+ * That route is a full Next.js page: 17 subresources and 2.34 MB decoded per
  * frame, 36 frames deep, to paint 95 DOM nodes. The gallery was booting React
  * 36 times to show a picture. `scripts/gen-block-thumbnails.mjs` renders each
  * block once at build time into markup plus one shared stylesheet, with no
@@ -37,7 +37,7 @@ interface BlockThumbnailProps {
  * Rendering inline would break both.
  *
  * The iframe is laid out at a real 1440px and shrunk with `scale()`, rather
- * than being given the card's width directly — a 380px-wide iframe would
+ * than being given the card's width directly: a 380px-wide iframe would
  * resolve the block's `lg:` breakpoints as mobile and the thumbnail would show
  * the wrong layout entirely.
  *
@@ -52,7 +52,7 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
   const [loaded, setLoaded] = useState(false);
 
   // Not an onLoad prop. These documents are static HTML and finish loading in
-  // single-digit milliseconds — routinely before hydration attaches a React
+  // single-digit milliseconds, routinely before hydration attaches a React
   // listener, so the event is missed and the frame stays hidden forever. The
   // old Next.js preview route took ~880ms and always lost that race, which is
   // why an onLoad prop appeared to work. Check the state first, then subscribe.

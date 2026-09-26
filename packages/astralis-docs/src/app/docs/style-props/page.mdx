@@ -3,12 +3,12 @@ import { placementProps } from "@/modules/demos/box/placement-props";
 
 export const metadata = {
   title: "Style Props",
-  description: "The design scale as typed props — spacing, color, radius and more on every layout primitive.",
+  description: "The design scale as typed props: spacing, color, radius and more on every layout primitive.",
 };
 
 # Style Props
 
-The design scale as typed props — spacing, color, radius and more on every
+The design scale as typed props: spacing, color, radius and more on every
 layout primitive.
 
 ## The idea
@@ -22,20 +22,20 @@ pass tokens as props:
 
 Three things distinguish this from a `style` attribute:
 
-- **Values come from the design scale first** — `p="6"` is the spacing token
+- **Values come from the design scale first**: `p="6"` is the spacing token
   `6`, `bg="subtle"` is a semantic color role. Your editor autocompletes the
   tokens, so consistency is the default, not a discipline.
 - **The scale is a vocabulary, not a ceiling.** When no token fits, pass the
-  CSS value itself — `p="37px"`, `w="calc(100vw - 200px)"` — and it rides the
+  CSS value itself (`p="37px"`, `w="calc(100vw - 200px)"`) and it rides the
   same delivery. See [Arbitrary values](#arbitrary-values).
-- **Every prop is responsive.** Any value can be a breakpoint map — see
+- **Every prop is responsive.** Any value can be a breakpoint map. See
   [Responsive Props](/docs/responsive).
 
 <ComponentPreview name="box-style-props" />
 
 ## Where style props live
 
-[Box](/docs/components/box) is the host — a polymorphic `div` exposing the
+[Box](/docs/components/box) is the host: a polymorphic `div` exposing the
 full set. Every other layout primitive (**Flex, Stack, Grid, Center,
 Container, AspectRatio, Float**) extends Box, so all of them accept all of
 these props on top of their own. Typography components (**Text, Heading**)
@@ -47,13 +47,13 @@ Everything else follows one rule:
 
 > **A component owns how it looks. Its parent owns where it sits and how big it is.**
 
-**Paint** is how something looks on its own — `bg`, `color`, `borderColor`,
+**Paint** is how something looks on its own: `bg`, `color`, `borderColor`,
 `rounded`, `shadow`, and the padding *inside* it. Higher-level components
 (Button, Card, Select, Alert…) do **not** take these. Their appearance is the
 design system's job, adjusted through `variant`, `size` and `colorScheme`.
 Repainting one from the outside would defeat the variants it ships with.
 
-**Placement** is how big something is and where it sits *inside its parent* —
+**Placement** is how big something is and where it sits *inside its parent*:
 width and height, the flex-item props, and margin. A component cannot know
 these: only the composition can. So every component that can be a child
 accepts them.
@@ -62,8 +62,8 @@ The test, if you're unsure which one you're reaching for:
 
 > If I moved this component to a different page, would the prop still be right?
 
-`variant="outline"` still is — that's paint. `w="full"` depends entirely on
-what's around it — that's placement.
+`variant="outline"` still is. That's paint. `w="full"` depends entirely on
+what's around it. That's placement.
 
 <PropsTable rows={placementProps} />
 
@@ -75,7 +75,7 @@ decide.
 ### One name, two meanings
 
 `size` is the exception worth knowing. On Box it sets width **and** height. On
-a component with its own scale — Card, Button, Badge — it selects that scale.
+a component with its own scale (Card, Button, Badge), it selects that scale.
 They are different props that happen to share a name, so a component with a
 recipe `size` does not inherit Box's.
 
@@ -83,7 +83,7 @@ Container has no scale of its own, so `size` there used to fall through to
 Box's and silently constrain the height. It is now a type error; use `maxW`.
 
 ```tsx
-<Container size="lg">   {/* error — Container has no size */}
+<Container size="lg">   {/* error: Container has no size */}
 <Container maxW="4xl">  {/* what you meant */}
 ```
 
@@ -94,7 +94,7 @@ Box's and silently constrain the height. It is now a type error; use `maxW`.
 ## Arbitrary values
 
 Every **value** prop (spacing, sizing, gap, radius, offsets, colors, shadow,
-opacity — everything that isn't a closed keyword set) accepts any CSS value
+opacity: everything that isn't a closed keyword set) accepts any CSS value
 alongside its tokens. A string that isn't a token is delivered through the
 same custom property the token would have used:
 
@@ -108,22 +108,22 @@ same custom property the token would have used:
 
 Two things to know:
 
-- **Tokens win.** If the string is a token, you get the token's variable —
+- **Tokens win.** If the string is a token, you get the token's variable:
   `p="4"` is always `var(--astralis-spacing-4)`, never the literal `4`.
 - **Units are on you.** A bare number like `p="37"` isn't valid CSS for a
   length, so Astralis warns in development and passes it through unchanged.
   Write `p="37px"` (or use a token).
 
 **Keyword props stay closed.** `display`, alignment, overflow and friends are
-finite CSS vocabularies backed by build-time classes — an unknown value there
+finite CSS vocabularies backed by build-time classes. An unknown value there
 resolves to nothing, exactly as before.
 
 ## Escape hatches
 
 Arbitrary values cover most "outside the scale" needs. For everything else,
-drop down a level — in this order:
+drop down a level, in this order:
 
-**1. `style`** — for dynamic values and properties that aren't props. Value
+**1. `style`**: for dynamic values and properties that aren't props. Value
 props deliver through CSS custom properties, and your `style` always wins
 over them:
 
@@ -138,18 +138,18 @@ Reach for the token variables inside `style` to stay on the scale:
 <Box style={{ gap: "var(--astralis-spacing-1)" }} />
 ```
 
-**2. `className`** — every component forwards it. Astralis's internal
-classes are prefixed (`astralis:*`), so your own utility classes — whatever
-generates them — can't collide. Note that Astralis ships utility classes
+**2. `className`**: every component forwards it. Astralis's internal
+classes are prefixed (`astralis:*`), so your own utility classes, whatever
+generates them, can't collide. Note that Astralis ships utility classes
 only for **keyword** props (`display`, alignment, overflow, ...); since the
 var-channel migration there is no per-value class like `astralis:p-4` to
-reach for — value styling belongs to the props or to `style`.
+reach for. Value styling belongs to the props or to `style`.
 
 ```tsx
 <Box p="4" className="my-fancy-gradient" />
 ```
 
-**3. Plain CSS** — Astralis renders ordinary DOM elements, and every design
+**3. Plain CSS**: Astralis renders ordinary DOM elements, and every design
 token is a documented CSS variable, so your stylesheets can target
 components and stay on the scale:
 
@@ -164,9 +164,9 @@ components and stay on the scale:
 
 Astralis ships **precompiled CSS**. Value props resolve to a fixed rule per
 prop that reads a custom property (see [Responsive Props](/docs/responsive)
-for the mechanics), and keyword props resolve to pre-generated classes — a
+for the mechanics), and keyword props resolve to pre-generated classes. A
 build-time coverage gate verifies every rule, class, and token value has CSS
 behind it. Because values ride custom properties rather than classes, they
-don't need to exist at build time — which is what makes arbitrary values
-free — and everything stays zero-runtime: no style engine executes in the
+don't need to exist at build time (which is what makes arbitrary values
+free), and everything stays zero-runtime: no style engine executes in the
 browser.

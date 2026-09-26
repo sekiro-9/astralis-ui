@@ -31,7 +31,7 @@ interface BlockWorkbenchProps {
  * The block viewer: a resizable live frame plus its source.
  *
  * The preview is an iframe so narrowing it actually narrows the *viewport* the
- * block sees — a CSS-resized div would keep resolving `lg:` against the page
+ * block sees. A CSS-resized div would keep resolving `lg:` against the page
  * and the mobile toggle would be a lie.
  *
  * Height is driven from the frame's own content. Same-origin lets us read it
@@ -46,7 +46,7 @@ export function BlockWorkbench({ id, name, code }: BlockWorkbenchProps) {
   /**
    * Measure the element the preview page wraps the block in, not `body`. The
    * body stretches to the iframe's height, so it can only ever report the block
-   * as taller than the frame — never shorter, which would leave dead space
+   * as taller than the frame, never shorter, which would leave dead space
    * under a short block forever.
    */
   const measure = useCallback(() => {

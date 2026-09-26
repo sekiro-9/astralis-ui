@@ -5,7 +5,7 @@ export const contextMenuProps: PropRow[] = [
   {
     prop: "open · defaultOpen · onOpenChange",
     type: "boolean · boolean · (open: boolean) => void",
-    default: "— · false · —",
+    default: "None · false · None",
     description: "Controlled / initial state, and the change callback.",
   },
   {

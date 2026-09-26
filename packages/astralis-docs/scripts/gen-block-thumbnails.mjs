@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ASTRALIS — BLOCK THUMBNAIL PRERENDER
+   ASTRALIS: BLOCK THUMBNAIL PRERENDER
    --------------------------------------------------------------------------
    The gallery shows every block as a live, scaled-down render. Pointing those
    thumbnails at the app's own /preview route meant each card loaded a full
@@ -18,7 +18,7 @@
    browser's, and `min-h-screen` resolves to the frame rather than the page.
    Rendering inline would have broken both.
 
-   The detail page keeps the live /preview route — one frame is cheap, and
+   The detail page keeps the live /preview route: one frame is cheap, and
    that is where poking at the real thing matters.
    ========================================================================== */
 
@@ -43,7 +43,7 @@ const { blocks } = JSON.parse(readFileSync(join(BLOCKS, "registry", "index.json"
 /* -------------------------------------------------------------------------- */
 
 // Build inside astralis-blocks so Node resolves react/react-dom from the same
-// place the bundle's externals point at — the smoke test's constraint exactly.
+// place the bundle's externals point at, the smoke test's constraint exactly.
 const work = join(BLOCKS, "node_modules", ".tmp-thumbs");
 mkdirSync(work, { recursive: true });
 
@@ -105,8 +105,8 @@ try {
 
 /**
  * Applies `.astralis-dark` before first paint, reading the same storage key the
- * site's provider owns. Same-origin, so the frame sees the same localStorage —
- * without this a thumbnail flashes light on a dark page. This is the only
+ * site's provider owns. Same-origin, so the frame sees the same localStorage.
+ * Without this a thumbnail flashes light on a dark page. This is the only
  * script in the document, and it is inline: no bundle, no framework.
  */
 const THEME_INIT =
@@ -116,8 +116,8 @@ const THEME_INIT =
 
 /**
  * Mirrors the parts of the site's globals.css that a block can see. The font
- * stack drops `var(--font-inter)` — next/font's hashed files belong to the app
- * build and are not addressable from a static file — so thumbnails render in
+ * stack drops `var(--font-inter)` (next/font's hashed files belong to the app
+ * build and are not addressable from a static file), so thumbnails render in
  * the same fallback a consumer gets before their own font loads.
  */
 const BASE_CSS = [
@@ -129,7 +129,7 @@ const BASE_CSS = [
   // The provider's wrapper: Preflight is scoped to .astralis, so without this
   // class the block renders against the browser's default styles.
   ".astralis{min-height:100vh;width:100%}",
-  // The frame is not interactive — it is a picture of a block.
+  // The frame is not interactive: it is a picture of a block.
   "body{cursor:default}",
 ].join("");
 

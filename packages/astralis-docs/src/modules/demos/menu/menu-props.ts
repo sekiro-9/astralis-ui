@@ -4,7 +4,7 @@ import type { PropRow } from "@/modules/docs/props-table";
 export const menuProps: PropRow[] = [
   {
     prop: "open / defaultOpen / onOpenChange",
-    type: `—`,
+    type: `boolean / boolean / (open: boolean) => void`,
     description: "Controlled/uncontrolled open state.",
   },
   {

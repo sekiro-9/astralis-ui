@@ -35,7 +35,7 @@ export const qrCodeProps: PropRow[] = [
   {
     prop: "overlay / overlaySize",
     type: "ReactNode / number",
-    default: "— / 20",
+    default: "None / 20",
     description: "A centered logo, sized as a percentage of the code.",
   },
   {

@@ -20,7 +20,7 @@ interface CodeBlockProps {
 
 /**
  * Server-rendered Shiki code block, built on the library's own CodeBlock
- * compound — every block on the site dogfoods the real component. Highlights
+ * compound: every block on the site dogfoods the real component. Highlights
  * with a light + dark theme pair; `.astralis-dark` swaps token colors via the
  * --shiki-dark variables (see globals.css). Shiki's outer `<pre><code>` shell
  * is stripped so `CodeBlock.Content`/`Code` own the structure; backgrounds

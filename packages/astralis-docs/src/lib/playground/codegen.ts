@@ -7,7 +7,7 @@ import { unquote, UNSET } from "./controls";
  * The rule that matters is **omit anything still at its default**. Emit every
  * prop and the output is noise nobody copies; omit one that *isn't* actually
  * default and the pasted code renders differently from the preview, which is
- * worse than noise. Hence the `rows` argument — defaults come from the same
+ * worse than noise. Hence the `rows` argument: defaults come from the same
  * documented data the controls were derived from.
  *
  * Pure and React-free on purpose.
@@ -20,12 +20,12 @@ interface GenerateOptions {
   props: Record<string, unknown>;
   /** The documented rows, for default comparison. */
   rows: readonly PropRow[];
-  /** Children source — plain text, or a fixture's JSX, which may be multi-line. */
+  /** Children source: plain text, or a fixture's JSX, which may be multi-line. */
   children?: string;
   /**
    * Names the children need beyond `tag`, so a fixture's code still pastes and
-   * runs. Compound parts (`Alert.Title`) need nothing extra — they come in on
-   * the root — but a ButtonGroup full of `Button`s does.
+   * runs. Compound parts (`Alert.Title`) need nothing extra (they come in on
+   * the root), but a ButtonGroup full of `Button`s does.
    */
   imports?: readonly string[];
   /** Package the import line points at. */
@@ -54,7 +54,7 @@ export function dedent(source: string): string {
 const DEFAULT_MAX_WIDTH = 72;
 
 /**
- * A JS literal for a prop that isn't a primitive — `options` arrays and the
+ * A JS literal for a prop that isn't a primitive: `options` arrays and the
  * like. JSON.stringify quotes every key, which is not how anyone writes JSX,
  * so identifier keys are unquoted and short collections stay on one line.
  */
@@ -81,7 +81,7 @@ function isDefault(row: PropRow | undefined, value: unknown): boolean {
   const documented = unquote(row.default);
   if (documented === undefined) {
     // No documented default: booleans default to false, so only `true` is worth
-    // emitting. Strings and numbers have no safe assumption — always emit.
+    // emitting. Strings and numbers have no safe assumption: always emit.
     return typeof value === "boolean" ? value === false : false;
   }
   // Objects and arrays have no documented default worth comparing against.
@@ -92,7 +92,7 @@ function isDefault(row: PropRow | undefined, value: unknown): boolean {
 /** `variant="outline"`, `max={100}`, `options={[…]}`, or a bare `disabled`. */
 function attribute(prop: string, value: unknown): string | null {
   if (typeof value === "boolean") return value ? prop : null;
-  // Numbers take braces — `max="100"` would pass the string "100".
+  // Numbers take braces: `max="100"` would pass the string "100".
   if (typeof value === "number") return `${prop}={${value}}`;
   if (typeof value === "string") return `${prop}="${value}"`;
   return `${prop}={${jsLiteral(value)}}`;
@@ -138,7 +138,7 @@ export function generateJsx({
   // An attribute that spans lines forces block form, like a multi-line fixture.
   const wideAttrs = attrs.some((attr) => attr.includes("\n"));
 
-  // Self-closing when there are no children — `<Loader size="lg" />`.
+  // Self-closing when there are no children: `<Loader size="lg" />`.
   if (!body) {
     const selfClosed = attrs.length ? `<${tag} ${attrs.join(" ")} />` : `<${tag} />`;
     const element =

@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Input, NumberInput, Select, Switch, Text } from "a
 import { UNSET, type Control, type PropValue } from "@/lib/playground/controls";
 
 /**
- * The control rail. Every input here is an Astralis component — this panel is
+ * The control rail. Every input here is an Astralis component: this panel is
  * the library exercising its own form primitives, so anything awkward to build
  * is a finding about the API, not something to work around locally.
  *
@@ -14,7 +14,7 @@ import { UNSET, type Control, type PropValue } from "@/lib/playground/controls";
 
 interface PlaygroundPanelProps {
   controls: readonly Control[];
-  /** Style props, shown under their own heading — see styleControls(). */
+  /** Style props, shown under their own heading (see styleControls()). */
   styleControls?: readonly Control[];
   state: Record<string, PropValue>;
   onChange: (prop: string, value: PropValue) => void;
@@ -51,7 +51,7 @@ function ControlRow({
           {/* ButtonGroup is inline-flex; as a flex item it blockifies and fills
               the rail, which is what lets flex-wrap actually break the row. */}
           <ButtonGroup spacing="sm" className="flex-wrap">
-            {/* An optional prop needs a way back to "not set" — otherwise the
+            {/* An optional prop needs a way back to "not set". Otherwise the
                 first click is irreversible and the generated code keeps a prop
                 the reader never wanted. */}
             {control.optional && (
@@ -132,7 +132,7 @@ function ControlRow({
           <NumberInput
             size="sm"
             value={Number(value)}
-            /* null when cleared — fall back to 0 so the live component never
+            /* null when cleared: fall back to 0 so the live component never
                receives undefined mid-edit and blank the stage. */
             onChange={(next) => onChange(next ?? 0)}
             aria-label={control.prop}
@@ -151,7 +151,7 @@ export function PlaygroundPanel({
   childrenLabel = "Content",
   onChildrenChange,
 }: PlaygroundPanelProps) {
-  /* Reset lives beside the rail's tabs, not here — it acts on the whole
+  /* Reset lives beside the rail's tabs, not here: it acts on the whole
      playground, so it shouldn't scroll away with the controls. */
   return (
     <div className="flex flex-col gap-5 pb-1">

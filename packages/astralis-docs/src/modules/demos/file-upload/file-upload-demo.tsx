@@ -21,7 +21,7 @@ export function FileUploadDemo() {
       </FileUpload>
       {rejected && (
         <Text size="xs" color="muted" mt="2">
-          Rejected: {rejected} — max 3 files, 5 MB each.
+          Rejected: {rejected}. Max 3 files, 5 MB each.
         </Text>
       )}
     </Box>

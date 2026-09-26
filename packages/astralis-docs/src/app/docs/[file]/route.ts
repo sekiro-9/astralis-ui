@@ -3,7 +3,7 @@ import { docAsMarkdown, listDocs } from "@/lib/docs-markdown";
 /**
  * Markdown twin of every guide page: /docs/theming.md, /docs/tokens.md, …
  * (static folders win routing, so this dynamic segment only ever sees
- * requests that didn't match a real page — i.e. the .md variants).
+ * requests that didn't match a real page, i.e. the .md variants).
  * Component pages have their own twin under /docs/components/[file].
  */
 export function generateStaticParams() {

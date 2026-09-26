@@ -2,7 +2,7 @@ import { popoutContentProps, popoutPartsProps } from "@/modules/demos/popout/pop
 
 export const metadata = {
   title: "Popout",
-  description: "An anchored disclosure panel that ships zero JavaScript — native popover plus CSS anchor positioning.",
+  description: "An anchored disclosure panel that ships zero JavaScript: native popover plus CSS anchor positioning.",
 };
 
 # Popout
@@ -25,7 +25,7 @@ import { Popout } from "astralis-ui";
 ## Placement
 
 `side` and `align` compile to `position-area`; when there is no room, the
-panel flips via `position-try-fallbacks` — the browser's collision handling,
+panel flips via `position-try-fallbacks`, the browser's collision handling,
 not a resize listener:
 
 <ComponentPreview name="popout-placement" />
@@ -34,7 +34,7 @@ not a resize listener:
 
 Deliberately: there is no roving focus and no menu ARIA, because those
 require state CSS cannot own. For an actions menu with arrow-key navigation,
-reach for [Menu](/docs/components/menu) — that's what it's for. Popout is the
+reach for [Menu](/docs/components/menu). That's what it's for. Popout is the
 right shape for nav dropdowns, info panels, and filters.
 
 ## Browser support

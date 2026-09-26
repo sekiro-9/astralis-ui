@@ -1,12 +1,12 @@
 // Server Component since 0.7.2: Table is a true server module now, so
-// compound statics like `Table.Header` resolve during server render — the
+// compound statics like `Table.Header` resolve during server render. The
 // "use client" workaround this file used to carry is gone, and the props
 // tables ship zero JS.
 import { Code, Table, Text } from "astralis-ui";
 
 /**
  * Optional playground control for a prop. Omit it and the control is derived
- * from `type` (see lib/playground/controls.ts) — this exists only for the rows
+ * from `type` (see lib/playground/controls.ts). This exists only for the rows
  * derivation can't read, like `colorScheme`, whose `type` is deliberately the
  * prose "all 15 schemes" rather than fifteen quoted literals in a table cell.
  *
@@ -36,7 +36,7 @@ export interface PropRow {
 export function PropsTable({ rows }: { rows: PropRow[] }) {
   return (
     /* Table brings its own overflow-x wrapper and, on `outline`, the rounded
-       border — so the scroll container this used to hand-roll is gone. */
+       border, so the scroll container this used to hand-roll is gone. */
     <Table variant="outline" className="docs-scroll my-6">
       <Table.Header>
         <Table.Row>
@@ -75,7 +75,7 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
                 </Code>
               ) : (
                 <Text as="span" color="subtle">
-                  —
+                  None
                 </Text>
               )}
             </Table.Cell>

@@ -11,7 +11,7 @@ export function CardVariants() {
         <Card key={variant} variant={variant} size="sm" hoverable>
           <Card.Body>
             <Text size="sm" weight="medium">{variant}</Text>
-            <Text size="xs" color="muted">hoverable — try me</Text>
+            <Text size="xs" color="muted">hoverable: try me</Text>
           </Card.Body>
         </Card>
       ))}

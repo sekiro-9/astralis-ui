@@ -41,6 +41,6 @@ export const sliderProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];

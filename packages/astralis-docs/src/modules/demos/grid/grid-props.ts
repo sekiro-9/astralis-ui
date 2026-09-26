@@ -41,7 +41,7 @@ export const gridProps: PropRow[] = [
   {
     prop: "templateColumns · templateRows · templateAreas",
     type: "string",
-    description: "Escape hatches — arbitrary track/area templates, applied as inline styles.",
+    description: "Escape hatches: arbitrary track/area templates, applied as inline styles.",
   },
 ];
 

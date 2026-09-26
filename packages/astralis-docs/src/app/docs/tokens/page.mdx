@@ -1,12 +1,12 @@
 export const metadata = {
   title: "Design Tokens",
-  description: "The complete reference of every scale in the system — spacing, sizing, type, radius, shadows and motion.",
+  description: "The complete reference of every scale in the system: spacing, sizing, type, radius, shadows and motion.",
 };
 
 # Design Tokens
 
 The complete reference of every scale in the system. Each token is a CSS
-variable (prefixed `--astralis-`) *and* a typed prop value — the same name
+variable (prefixed `--astralis-`) *and* a typed prop value. The same name
 works in both worlds:
 
 ```tsx
@@ -17,7 +17,7 @@ works in both worlds:
 padding: var(--astralis-spacing-6);       /* as a variable */
 ```
 
-Color tokens have their own page — see [Colors](/docs/colors).
+Color tokens have their own page. See [Colors](/docs/colors).
 
 ## Spacing
 
@@ -58,7 +58,7 @@ Plus viewport units: `vw` `vh` and the small/large/dynamic variants
 
 Font families are theme hooks: set `--astralis-font-heading` and
 `--astralis-font-body` in your CSS to give the whole library your
-typefaces — the [Text](/docs/components/text) and
+typefaces. The [Text](/docs/components/text) and
 [Heading](/docs/components/heading) components pick them up automatically.
 
 ## Radius
@@ -84,7 +84,7 @@ page.
 ## Shadows
 
 Used by the `shadow` prop: `none` `xs` `sm` `md` `lg` `xl` `2xl` `inner`.
-Shadows are theme-aware — dark mode automatically swaps in deeper values so
+Shadows are theme-aware: dark mode automatically swaps in deeper values so
 elevation stays legible on dark surfaces. Variables:
 `--astralis-shadow-{token}`.
 
@@ -97,18 +97,18 @@ Durations used by every component transition:
 | Value | 50ms | 100ms | 150ms | 200ms | 300ms | 400ms | 500ms |
 
 Variables: `--astralis-duration-{token}`. Components honor
-`prefers-reduced-motion` — continuous animations (Marquee, Carousel
+`prefers-reduced-motion`: continuous animations (Marquee, Carousel
 autoplay) pause for users who ask for less motion.
 
 ## Breakpoints
 
 The responsive-prop keys: `sm` 640px · `md` 768px · `lg` 1024px ·
-`xl` 1280px — details on [Responsive Props](/docs/responsive).
+`xl` 1280px. Details on [Responsive Props](/docs/responsive).
 
 ## Overriding tokens
 
 Every token above is a plain CSS variable, so retuning the system globally
-is one declaration — no build step, no config file:
+is one declaration (no build step, no config file):
 
 ```css
 :root {

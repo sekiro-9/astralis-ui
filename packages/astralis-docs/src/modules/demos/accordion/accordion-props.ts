@@ -30,7 +30,7 @@ export const accordionProps: PropRow[] = [
   {
     prop: "value · defaultValue",
     type: `string | string[]`,
-    description: "Controlled / initial open item(s) — an array in multiple mode.",
+    description: "Controlled / initial open item(s), an array in multiple mode.",
   },
   {
     prop: "onValueChange",
@@ -73,7 +73,7 @@ export const accordionItemProps: PropRow[] = [
   {
     prop: "value",
     type: "string",
-    description: "Required — identifies the item in value/defaultValue.",
+    description: "Required: identifies the item in value/defaultValue.",
   },
   {
     prop: "disabled",

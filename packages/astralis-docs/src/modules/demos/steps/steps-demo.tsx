@@ -35,7 +35,7 @@ export function StepsDemo() {
             <Text size="sm" color="muted">Review your order.</Text>
           </Steps.Content>
           <Steps.Completed>
-            <Text size="sm" color="success" weight="medium">Order placed — all steps complete.</Text>
+            <Text size="sm" color="success" weight="medium">Order placed. All steps complete.</Text>
           </Steps.Completed>
         </Box>
 

@@ -34,7 +34,7 @@ From your project's root:
 npx astralis-cli init --ci
 ```
 
-On top of what [`init`](/docs/cli#init--add-astralis-to-an-existing-project)
+On top of what [`init`](/docs/cli#init-add-astralis-to-an-existing-project)
 already does, `--ci`:
 
 1. installs `astralis-cli` as a devDependency, so CI and your hook run the
@@ -42,7 +42,7 @@ already does, `--ci`:
 2. adds a `"validate": "astralis validate"` script to `package.json` (or
    `"astralis:validate"`, if you already have a `validate` script that does
    something else);
-3. writes `.github/workflows/astralis-validate.yml` for your package manager —
+3. writes `.github/workflows/astralis-validate.yml` for your package manager:
    npm, pnpm, yarn or bun, read from your lockfile.
 
 Running it again changes nothing. A workflow you have edited is never replaced
@@ -143,6 +143,6 @@ npx astralis-cli validate
 
 With `astralis-cli` in your devDependencies, `npx` runs that pinned copy;
 without it, `npx` downloads the latest release on every run. For a
-machine-readable result — to post a comment, or to fail on warnings as well —
+machine-readable result (to post a comment, or to fail on warnings as well),
 use `--json`, which prints a single report in [this
 shape](/docs/cli#json-output).

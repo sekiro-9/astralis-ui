@@ -210,7 +210,7 @@ import { TableOfContentsDemo } from "./table-of-contents/table-of-contents-demo"
 
 export interface DemoEntry {
   component: ComponentType;
-  /** Path relative to src/modules/demos — shown verbatim in the Code tab. */
+  /** Path relative to src/modules/demos, shown verbatim in the Code tab. */
   file: string;
 }
 

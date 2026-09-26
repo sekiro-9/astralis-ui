@@ -19,7 +19,7 @@ import { Skeleton } from "astralis-ui";
 
 ## Swapping in real content
 
-Pass `loaded` with the real content as children — the placeholder and the
+Pass `loaded` with the real content as children: the placeholder and the
 content occupy the same slot, so nothing jumps when data arrives.
 
 <ComponentPreview name="skeleton-loaded" />
@@ -30,6 +30,6 @@ content occupy the same slot, so nothing jumps when data arrives.
 
 ## Accessibility
 
-The placeholder is `aria-hidden` — it's decoration, not information. If the
+The placeholder is `aria-hidden`: it's decoration, not information. If the
 loading state itself matters to screen-reader users, set `aria-busy` on the
 region or show a [Loader](/docs/components/loader).

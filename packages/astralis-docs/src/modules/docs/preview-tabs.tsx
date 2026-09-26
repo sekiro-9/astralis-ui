@@ -6,7 +6,7 @@ import { Tabs } from "astralis-ui";
 interface PreviewTabsProps {
   preview: ReactNode;
   code: ReactNode;
-  /** Live prop editor. Omitted for demos with no playground entry — the
+  /** Live prop editor. Omitted for demos with no playground entry. The
       trigger is then absent entirely rather than rendered empty. */
   playground?: ReactNode;
   align?: "center" | "start";
@@ -15,7 +15,7 @@ interface PreviewTabsProps {
 export function PreviewTabs({ preview, code, playground, align = "center" }: PreviewTabsProps) {
   return (
     /* keepMounted: both panels stay mounted (hidden) so demo state survives a
-       tab switch — the reason this was hand-rolled before Tabs had the prop. */
+       tab switch (the reason this was hand-rolled before Tabs had the prop). */
     <Tabs
       defaultValue="preview"
       variant="segmented"

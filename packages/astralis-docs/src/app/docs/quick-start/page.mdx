@@ -6,7 +6,7 @@ export const metadata = {
 # Quick Start
 
 A working form, theming and responsive layout in about twenty lines. This
-assumes Astralis is installed — either the three
+assumes Astralis is installed, via either the three
 [installation](/docs/installation) steps, or one command:
 
 ```bash
@@ -24,7 +24,7 @@ import { Button } from "astralis-ui";
 <Button colorScheme="blue">Save changes</Button>;
 ```
 
-Every interactive component ships styled and accessible out of the box —
+Every interactive component ships styled and accessible out of the box:
 hover, focus ring, keyboard behavior and dark mode are already handled.
 
 ## A real slice of UI
@@ -32,7 +32,7 @@ hover, focus ring, keyboard behavior and dark mode are already handled.
 Here's a small signup card combining a compound component (`Card`), form
 plumbing (`Field` + `Input`), layout (`VStack`) and feedback (`Alert`).
 Note what's absent: no CSS file, no class soup, no wiring between the label,
-help text and input — `Field` connects them (including `aria-describedby`)
+help text and input: `Field` connects them (including `aria-describedby`)
 automatically.
 
 <ComponentPreview name="quick-start-form" />
@@ -50,7 +50,7 @@ them:
 ```
 
 And the whole library recolors at once if you hand the provider your brand
-color — shades, hover states and a readable text color are derived at
+color. Shades, hover states and a readable text color are derived at
 runtime:
 
 ```tsx
@@ -78,7 +78,7 @@ scale as typed props, and every one of them accepts a responsive map:
 ```
 
 Values autocomplete in your editor, and anything off the scale is a type
-error — see [Style Props](/docs/style-props) and
+error. See [Style Props](/docs/style-props) and
 [Responsive Props](/docs/responsive).
 
 ## Dark mode
@@ -96,8 +96,8 @@ setTheme(resolvedTheme === "dark" ? "light" : "dark");
 
 ## Don't build the page from scratch
 
-[Blocks](/blocks) are whole sections — navbars, pricing tables, dashboard
-shells — assembled from the same components. The CLI copies one into your
+[Blocks](/blocks) are whole sections (navbars, pricing tables, dashboard
+shells) assembled from the same components. The CLI copies one into your
 project as source you own:
 
 ```bash
@@ -106,10 +106,10 @@ npx astralis-cli add pricing-01
 
 ## Where to go next
 
-- [Theming](/docs/theming) — how tokens, dark mode and the brand color work.
-- [Style Props](/docs/style-props) — the full prop-based styling system.
-- [CLI](/docs/cli) — scaffolding, blocks, and static theme generation.
-- [AI agents](/docs/ai-agents) — point your coding agent at these docs so it
+- [Theming](/docs/theming): how tokens, dark mode and the brand color work.
+- [Style Props](/docs/style-props): the full prop-based styling system.
+- [CLI](/docs/cli): scaffolding, blocks, and static theme generation.
+- [AI agents](/docs/ai-agents): point your coding agent at these docs so it
   writes against the real API.
-- Any component page in the sidebar — each pairs live examples with the
+- Any component page in the sidebar: each pairs live examples with the
   exact source that renders them.

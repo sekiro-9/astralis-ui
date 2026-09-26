@@ -19,7 +19,7 @@ export function AlertDemo() {
       </Alert>
       <Alert status="error">
         <Alert.Title>Payment failed</Alert.Title>
-        <Alert.Description>Your card was declined — update billing to keep deploys running.</Alert.Description>
+        <Alert.Description>Your card was declined. Update billing to keep deploys running.</Alert.Description>
       </Alert>
     </VStack>
   );

@@ -6,7 +6,7 @@ export const codeProps: PropRow[] = [
     prop: "variant",
     type: `"subtle" | "solid" | "outline"`,
     default: `"subtle"`,
-    description: "Tinted, strongly tinted, or bordered — all track the active theme.",
+    description: "Tinted, strongly tinted, or bordered. All track the active theme.",
   },
   {
     prop: "size",

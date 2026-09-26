@@ -10,7 +10,7 @@ export function ListStyleTypes() {
       {styleTypes.map((styleType) => (
         <VStack key={styleType} gap="1" alignItems="start">
           <Text as="span" size="xs" color="subtle">{styleType}</Text>
-          {/* Ordered markers belong on an <ol> — as swaps the element. */}
+          {/* Ordered markers belong on an <ol>: as swaps the element. */}
           <List styleType={styleType} as={styleType === "disc" || styleType === "circle" || styleType === "square" ? "ul" : "ol"} spacing="1">
             <List.Item>One</List.Item>
             <List.Item>Two</List.Item>

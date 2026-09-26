@@ -17,13 +17,13 @@ interface ComponentPreviewProps {
  * disk, so example code can never drift from what actually renders.
  *
  * A third Playground tab appears on its own when this demo has an entry in the
- * playgrounds registry — adding a component there is the only step, so no MDX
+ * playgrounds registry: adding a component there is the only step, so no MDX
  * page needs editing and the feature can't be half-applied to a page.
  */
 export function ComponentPreview({ name, align }: ComponentPreviewProps) {
   const demo = demos[name];
   if (!demo) {
-    throw new Error(`[docs] Unknown demo "${String(name)}" — add it to src/modules/demos/index.ts`);
+    throw new Error(`[docs] Unknown demo "${String(name)}". Add it to src/modules/demos/index.ts`);
   }
 
   const source = fs.readFileSync(

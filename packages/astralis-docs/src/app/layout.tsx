@@ -24,10 +24,10 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: {
     default: "Astralis UI",
-    template: "%s — Astralis UI",
+    template: "%s · Astralis UI",
   },
   description:
-    "A modern React component library with runtime theming, semantic tokens, and zero-config styling.",
+    "Accessible, themeable React components for crafting polished web apps and design systems. Server-first, built for the Next.js App Router.",
 };
 
 /**

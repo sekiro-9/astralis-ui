@@ -5,7 +5,7 @@ import { Icon, Link, Text } from "astralis-ui";
 
 /**
  * Client module on purpose. The library's `Link` takes a component through
- * `as`, and a component is a function — passing one from a Server Component
+ * `as`, and a component is a function. Passing one from a Server Component
  * fails serialization ("Functions cannot be passed directly to Client
  * Components"). Declaring both sides on the client makes it an ordinary prop.
  */

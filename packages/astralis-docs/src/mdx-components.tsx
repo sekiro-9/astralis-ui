@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import type { BundledLanguage } from "shiki";
 // Flat parts by preference (compound `Table.*` dot-access also works
-// server-side since 0.7.2 — the client-reference-stub problem this map used
+// server-side since 0.7.2: the client-reference-stub problem this map used
 // to work around is gone).
 import {
   Blockquote,
@@ -94,7 +94,7 @@ const components: MDXComponents = {
   strong: (props) => <strong className="font-semibold text-label" {...props} />,
   /*
    * Prose primitives that map 1:1 onto library components. The docs page for
-   * each of these documents the very component now rendering it — Code,
+   * each of these documents the very component now rendering it: Code,
    * Blockquote, Table and Separator all paint from the same tokens as the
    * examples beside them, which is the whole point of dogfooding.
    */

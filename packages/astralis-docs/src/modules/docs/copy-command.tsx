@@ -11,7 +11,7 @@ interface CopyCommandProps {
 
 /**
  * A one-line shell command with a copy button. Built on the library's CodeBlock
- * compound rather than a hand-rolled button — a command IS a code block, and
+ * compound rather than a hand-rolled button: a command IS a code block, and
  * CopyTrigger already reads Root's `code`.
  *
  * Every override rides `style` with token variables: it has to beat

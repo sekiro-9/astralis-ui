@@ -11,8 +11,8 @@ import { navLinks } from "./nav-links";
 /**
  * The only way into the site's navigation below `lg`.
  *
- * Both nav surfaces are desktop-gated — the header row is `md:flex` and the
- * docs sidebar is `lg:block` — so on a phone every link in the site was
+ * Both nav surfaces are desktop-gated (the header row is `md:flex` and the
+ * docs sidebar is `lg:block`), so on a phone every link in the site was
  * unreachable. The drawer carries both: the top-level destinations, then the
  * full docs tree, since a reader on a component page needs the sidebar more
  * than the header row.

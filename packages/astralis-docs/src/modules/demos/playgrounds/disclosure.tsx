@@ -20,7 +20,7 @@ export const disclosurePlaygrounds = definePlaygrounds({
         </Accordion.Item>
         <Accordion.Item value="build">
           <Accordion.Trigger>Do I need a build step?</Accordion.Trigger>
-          <Accordion.Content>No — the library ships precompiled CSS.</Accordion.Content>
+          <Accordion.Content>No, the library ships precompiled CSS.</Accordion.Content>
         </Accordion.Item>
       </>
     ),

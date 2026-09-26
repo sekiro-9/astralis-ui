@@ -8,7 +8,7 @@ export function BoxResponsive() {
       p={{ base: "4", md: "8", lg: "12" }}
     >
       <Text size="sm" color="muted">
-        Resize the window — padding and radius step up at md and lg.
+        Resize the window: padding and radius step up at md and lg.
       </Text>
     </Box>
   );

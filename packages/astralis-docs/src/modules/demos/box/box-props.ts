@@ -8,13 +8,13 @@ export const boxProps: PropRow[] = [
   {
     prop: "p · px · py · pt/pb/pl/pr",
     type: `"0" – "96" (spacing scale)`,
-    description: "Padding — all sides, per axis, or per edge.",
+    description: "Padding: all sides, per axis, or per edge.",
   },
   {
     prop: "m · mx · my · mt/mb/ml/mr",
     type: `"0" – "96" (spacing scale) | "auto"`,
     description:
-      "Margin — all sides, per axis, or per edge. auto pushes a flex item to the far edge or centres a fixed-width block.",
+      "Margin: all sides, per axis, or per edge. auto pushes a flex item to the far edge or centres a fixed-width block.",
   },
   {
     prop: "w · h · size · minW/maxW · minH/maxH",
@@ -36,12 +36,12 @@ export const boxProps: PropRow[] = [
     prop: "border (+ borderT/R/B/L) · borderStyle · borderColor",
     type: `"normal"–"thickest" · CSS styles · "base" | "subtle" | "muted" | "{hue}" (stroke)`,
     description:
-      "Border width, style and color tokens. Per-side widths mirror rounded — borderB is a header rule, borderT a footer one.",
+      "Border width, style and color tokens. Per-side widths mirror rounded: borderB is a header rule, borderT a footer one.",
   },
   {
     prop: "rounded (+ roundedT/R/B/L, roundedTl/Tr/Br/Bl)",
     type: `"none" | "2xs"–"4xl" | "full"`,
-    description: "Corner radius — all corners, per side, or per corner.",
+    description: "Corner radius: all corners, per side, or per corner.",
   },
   {
     prop: "display",

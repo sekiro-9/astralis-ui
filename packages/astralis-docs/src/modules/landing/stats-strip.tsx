@@ -9,7 +9,9 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const reduce = useReducedMotion();
-  const [display, setDisplay] = useState(reduce ? target : 0);
+  // Starts at 0 on both sides; reduced motion jumps to the target once seen
+  // rather than starting there, which the server could not match.
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
     if (!inView || reduce) return;
@@ -28,9 +30,9 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
   }, [inView, target, reduce]);
 
   return (
-    // The ref must sit on the element itself — useInView observes this node.
+    // The ref must sit on the element itself: useInView observes this node.
     <span ref={ref}>
-      {display}
+      {reduce && inView ? target : display}
       {suffix}
     </span>
   );

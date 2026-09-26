@@ -18,6 +18,6 @@ export const inputProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited automatically inside a [Field](/docs/components/field).",
+    description: "State flags, inherited automatically inside a [Field](/docs/components/field).",
   },
 ];

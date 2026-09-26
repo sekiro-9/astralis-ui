@@ -11,7 +11,7 @@ const examples = [
   { key: "grid-responsive", title: "Responsive", blurb: "Breakpoint maps instead of media queries." },
 ] as const;
 
-/* The code shown is the exact demo source rendered next to it — read from disk. */
+/* The code shown is the exact demo source rendered next to it, read from disk. */
 export function CodeResult() {
   const panels = examples.map(({ key, title, blurb }) => {
     const demo = demos[key];
@@ -34,9 +34,8 @@ export function CodeResult() {
         <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
           The code is the demo
         </h2>
-        <p className="mt-4 max-w-xl text-lg text-label-muted">
-          Each snippet is the literal source of the preview beside it — the same
-          guarantee every docs page makes.
+        <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
+          Each snippet is the exact source of the preview beside it, as on every docs page.
         </p>
       </Reveal>
       <Reveal delay={0.1}>

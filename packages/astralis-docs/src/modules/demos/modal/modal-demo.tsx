@@ -18,7 +18,7 @@ export function ModalDemo() {
             This permanently removes the project and all of its data.
           </Modal.Description>
           <Text size="sm" color="muted">
-            Type the project name to confirm — just kidding, this is a demo.
+            Type the project name to confirm. Just kidding, this is a demo.
           </Text>
         </Modal.Body>
         <Modal.Footer>

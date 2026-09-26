@@ -8,7 +8,7 @@ export function RadioCardDemo() {
           Free
         </RadioCard>
         <RadioCard value="pro" description="For growing teams">
-          Pro — $12/mo
+          Pro: $12/mo
         </RadioCard>
         <RadioCard value="enterprise" description="SSO, audit log, SLAs">
           Enterprise

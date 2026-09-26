@@ -48,7 +48,7 @@ function useStoredSeed(): ThemeSeed | null {
 /**
  * The theme builder, full-page: token controls in a sectioned left rail, a
  * zoomable scroll-canvas rendering a component overview from every category,
- * and the artifacts on the right — stylesheet or provider props, ready to copy.
+ * and the artifacts on the right: stylesheet or provider props, ready to copy.
  *
  * A shared `?t=` seed is decoded on the server (see page.tsx) and wins over the
  * last local session, so a link someone sends always shows what they meant.
@@ -60,7 +60,7 @@ export function ThemeBuilder({ initialSeed }: { initialSeed: ThemeSeed }) {
 
   /*
    * `key` remounts the editor once, when the stored seed resolves after
-   * hydration — the only way useState's initial value can pick it up. Without
+   * hydration, the only way useState's initial value can pick it up. Without
    * a shared link and without storage the key never changes, so this is inert
    * in the common case.
    */
@@ -80,7 +80,7 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
    *
    * The delay is not cosmetic. Next patches history.replaceState to sync its
    * Router synchronously, so calling it inside React's commit updates the
-   * Router mid-commit — "Cannot update a component while rendering a different
+   * Router mid-commit: "Cannot update a component while rendering a different
    * component". A timeout moves the write past the commit entirely.
    *
    * It also spares a slider drag one history write and one storage write per
@@ -93,7 +93,7 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
         if (empty) window.localStorage.removeItem(STORAGE_KEY);
         else window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state.seed));
       } catch {
-        // Private browsing — sharing via URL still works.
+        // Private browsing: sharing via URL still works.
       }
       const params = new URLSearchParams(window.location.search);
       if (empty) params.delete(URL_PARAM);
@@ -113,7 +113,7 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
     <K extends keyof ThemeSeed>(key: K, value: ThemeSeed[K]) =>
       update((prev) => {
         const next = { ...prev.seed };
-        // `undefined` means "back to the library default", so drop the key —
+        // `undefined` means "back to the library default", so drop the key:
         // an explicit undefined would survive into the JSON export.
         if (value === undefined) delete next[key];
         else next[key] = value;
@@ -132,7 +132,7 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
   const json = useMemo(() => jsonExport(state), [state]);
 
   return (
-    // grid-rows-[minmax(0,1fr)] pins the single row to the container height —
+    // grid-rows-[minmax(0,1fr)] pins the single row to the container height:
     // without it the row grows with the rail's content and its scroll never engages.
     <div className="grid min-h-0 flex-1 gap-4 lg:h-full lg:grid-cols-[280px_minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_340px]">
       <ControlRail

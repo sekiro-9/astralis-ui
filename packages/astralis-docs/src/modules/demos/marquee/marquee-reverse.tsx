@@ -7,7 +7,7 @@ const row2 = ["Compound components", "Accent channel", "Zero build step", "Typed
 
 export function MarqueeReverse() {
   return (
-    /* Two rows in opposite directions — the classic logo-wall move. */
+    /* Two rows in opposite directions: the classic logo-wall move. */
     <VStack gap="3" w="full" maxW="md">
       <Marquee speed={35} gap="0.75rem" gradient>
         {row1.map((label) => (

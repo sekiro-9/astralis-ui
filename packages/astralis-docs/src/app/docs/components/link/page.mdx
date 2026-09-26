@@ -33,8 +33,8 @@ readers and search still get all of it.
 <PropsTable rows={linkProps} />
 
 A link is text with special highlighting, so it also takes every
-[Text](/docs/components/text) typography prop — `size`, `weight`, `color`,
-`casing`, `align`, `lineHeight`, `letterSpacing` — each responsive.
+[Text](/docs/components/text) typography prop (`size`, `weight`, `color`,
+`casing`, `align`, `lineHeight`, `letterSpacing`), each responsive.
 
 Unlike Text it defaults none of them. A bare `<Link>` emits no type classes at
 all, so it inherits from the paragraph around it, which is what an inline link
@@ -48,7 +48,7 @@ should do:
 <Link href="#" size="lg" weight="semibold">A large standalone link</Link>
 ```
 
-Setting `color` explicitly holds it in **both** states — the hover colour shift
+Setting `color` explicitly holds it in **both** states: the hover colour shift
 is dropped rather than swapping your colour out from under you, and `variant`'s
 underline carries the affordance instead. That is what makes a link usable on a
 surface the accent channel does not cover:

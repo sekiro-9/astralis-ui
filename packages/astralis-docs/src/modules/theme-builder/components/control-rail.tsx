@@ -33,11 +33,11 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
     (p) => (p.heading?.export ?? undefined) === seed.fontHeading && (p.body?.export ?? undefined) === seed.fontBody,
   );
 
-  /** A free-typed stack is its own preview — there is no webfont to swap in. */
+  /** A free-typed stack is its own preview: there is no webfont to swap in. */
   const setFontText = (field: SeedFontField, value: string) =>
     setState((prev) => withFont(prev, field, value ? { preview: value, export: value } : null));
 
-  // A scale of exactly 1 is the library default, so store it as "unset" —
+  // A scale of exactly 1 is the library default, so store it as "unset":
   // that keeps the export empty and the reset state honest.
   const scale = (key: "radiusScale" | "spacingScale" | "fontSizeScale" | "motionScale") => ({
     value: seed[key] ?? 1,
@@ -82,7 +82,7 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
               <div className="flex flex-col gap-6 pb-2">
                 <ScaleControl
                   label="Radius"
-                  info="Corner rounding across every component — buttons, cards, inputs, menus. A multiplier on the whole radius ramp, so the relationship between sm and 2xl is preserved."
+                  info="Corner rounding across every component: buttons, cards, inputs, menus. A multiplier on the whole radius ramp, so the relationship between sm and 2xl is preserved."
                   presets={RADIUS_PRESETS}
                   {...scale("radiusScale")}
                   min={0}
@@ -111,7 +111,7 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                   <Text size="sm" weight="medium">
                     Font pairing
                   </Text>
-                  {/* Same row as every other preset strip — matched by identity,
+                  {/* Same row as every other preset strip, matched by identity,
                       since each option IS an entry of FONT_PRESETS. */}
                   <PresetChips
                     options={FONT_PRESETS.map((preset) => ({ label: preset.label, value: preset }))}

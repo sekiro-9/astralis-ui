@@ -1,11 +1,11 @@
 export const metadata = {
   title: "Responsive Props",
-  description: "Every style prop accepts a breakpoint map — mobile-first, precompiled, zero runtime cost.",
+  description: "Every style prop accepts a breakpoint map: mobile-first, precompiled, zero runtime cost.",
 };
 
 # Responsive Props
 
-Every style prop accepts a breakpoint map — mobile-first, precompiled, zero
+Every style prop accepts a breakpoint map: mobile-first, precompiled, zero
 runtime cost.
 
 ## The syntax
@@ -24,7 +24,7 @@ breakpoint:
 
 | Key | Min-width | Typical device |
 | --- | --- | --- |
-| `base` | — | Everything (mobile first) |
+| `base` | None | Everything (mobile first) |
 | `sm` | 40rem / 640px | Large phones |
 | `md` | 48rem / 768px | Tablets |
 | `lg` | 64rem / 1024px | Laptops |
@@ -36,17 +36,17 @@ and `xl` unless you override again. You only write the breakpoints where
 something *changes*:
 
 ```tsx
-{/* column on phones, row from tablets up — nothing else needed */}
+{/* column on phones, row from tablets up, nothing else needed */}
 <Flex direction={{ base: "column", md: "row" }} />
 ```
 
-Omitting `base` is fine too — the prop's normal default fills in below your
+Omitting `base` is fine too: the prop's normal default fills in below your
 first breakpoint.
 
 ## What's responsive
 
 All layout style props (spacing, sizing, colors, radius, display,
-position — everything on [Style Props](/docs/style-props)) plus the
+position: everything on [Style Props](/docs/style-props)) plus the
 layout-shaping variant props of the primitives:
 
 ```tsx
@@ -72,7 +72,7 @@ The common recipes:
 ## Container queries
 
 Every responsive key has a container-query twin, written with an `@` prefix:
-`@sm`, `@md`, `@lg`, `@xl` — same names, same widths, but measured against the
+`@sm`, `@md`, `@lg`, `@xl`. Same names, same widths, but measured against the
 **nearest ancestor marked `container`** instead of the browser window.
 
 ```tsx
@@ -81,13 +81,13 @@ Every responsive key has a container-query twin, written with an `@` prefix:
 </Box>
 ```
 
-The card is `lg` when *the Box* is at least 48rem wide — drop the same card
+The card is `lg` when *the Box* is at least 48rem wide. Drop the same card
 into a narrow sidebar and it renders `sm`, on the same screen, with no extra
 code. That is the promise viewport breakpoints can't keep: a component styled
 by the space it actually has, wherever it lands.
 
-Everything responsive works with `@` keys — keyword props, value props,
-arbitrary values — and viewport and container keys mix freely in one map:
+Everything responsive works with `@` keys (keyword props, value props,
+arbitrary values), and viewport and container keys mix freely in one map:
 
 ```tsx
 <Flex container direction="column" gap="2">
@@ -101,7 +101,7 @@ Two rules to remember:
 - **Something must be the container.** `@` keys measure the nearest ancestor
   with the `container` prop (any layout primitive takes it). With no container
   ancestor, `@` values simply never fire.
-- `container` uses `container-type: inline-size` — the element sizes from its
+- `container` uses `container-type: inline-size`. The element sizes from its
   context as usual, but note it no longer contributes its intrinsic width to
   `max-content` ancestors.
 
@@ -118,7 +118,7 @@ Nothing is computed in the browser. A value-bearing prop resolves to one
 />
 ```
 
-The classes already exist in the stylesheet you imported — `.astralis-p`
+The classes already exist in the stylesheet you imported: `.astralis-p`
 reads `var(--astralis-p)`, and `.astralis-p-md` does the same inside a
 `min-width: 48rem` media query. The class says *where* the value lands; the
 variable says *what* it is. Because the value travels as a token variable
@@ -128,16 +128,16 @@ tokens.
 
 Keyword props (`display`, `position`, alignment, ...) are small closed sets
 and resolve to pre-generated classes per breakpoint instead
-(`astralis:hidden astralis:md:flex`). A build gate verifies every class —
-fixed rules and keyword variants alike — landed in the compiled CSS.
+(`astralis:hidden astralis:md:flex`). A build gate verifies every class
+(fixed rules and keyword variants alike) landed in the compiled CSS.
 From there it's ordinary media queries, handled natively by the browser.
 
 Two practical consequences:
 
-- **No resize listeners, no JS at breakpoints, no flash** — server-rendered
+- **No resize listeners, no JS at breakpoints, no flash**: server-rendered
   HTML is responsive before hydration (custom properties in `style` are
   plain HTML attributes).
 - **Values are unbounded.** Because only the class must exist at build time,
-  a breakpoint entry can be a scale token *or* any CSS value —
+  a breakpoint entry can be a scale token *or* any CSS value:
   `p={{ base: "5vw", md: "4" }}` mixes both. See
   [Arbitrary values](/docs/style-props#arbitrary-values).

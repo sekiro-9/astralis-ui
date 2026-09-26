@@ -8,7 +8,7 @@ export function BoxAs() {
         Did you know?
       </Text>
       <Text size="sm" color="muted">
-        Box is polymorphic — the `as` prop swaps the rendered element while
+        Box is polymorphic: the `as` prop swaps the rendered element while
         keeping every style prop.
       </Text>
     </Box>

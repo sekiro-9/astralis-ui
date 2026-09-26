@@ -10,7 +10,7 @@ export function PinInputDemo() {
     <VStack gap="3" alignItems="start">
       <PinInput length={4} onComplete={() => setDone(true)} onChange={() => setDone(false)} />
       <Text size="xs" color={done ? "success" : "muted"}>
-        {done ? "Code complete — verifying…" : "Paste works too — try it."}
+        {done ? "Code complete, verifying…" : "Paste works too. Try it."}
       </Text>
     </VStack>
   );

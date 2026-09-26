@@ -1,6 +1,6 @@
 import { Popout, Text } from "astralis-ui";
 
-// No "use client" — a fully interactive anchored panel with no JavaScript:
+// No "use client". A fully interactive anchored panel with no JavaScript:
 // a native [popover] invoked by popovertarget, positioned by CSS anchor
 // positioning against the trigger's implicit anchor.
 export function PopoutDemo() {

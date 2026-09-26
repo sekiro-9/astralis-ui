@@ -6,7 +6,7 @@ export const switchProps: PropRow[] = [
   {
     prop: "checked / defaultChecked / onChange",
     type: `boolean / boolean / (e) => void`,
-    default: `— / false / —`,
+    default: `None / false / None`,
     description: "Controlled / uncontrolled API.",
   },
   {
@@ -30,6 +30,6 @@ export const switchProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];

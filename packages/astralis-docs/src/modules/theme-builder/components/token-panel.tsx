@@ -17,7 +17,7 @@ const EXPORTS = [
 type ExportTab = (typeof EXPORTS)[number];
 
 /**
- * One export panel. Split out so `useShikiHtml` runs for the visible tab only —
+ * One export panel. Split out so `useShikiHtml` runs for the visible tab only:
  * Tabs unmounts the inactive panel, which also replaces the manual `key` remount
  * that used to stop the copy control holding the other tab's text.
  */
@@ -46,7 +46,7 @@ function ExportView({ tab, source }: { tab: ExportTab; source: string }) {
           </>
         ) : (
           <>
-            Pass to <Code>{"<AstralisProvider tokens={…}>"}</Code> — same math as the stylesheet.
+            Pass to <Code>{"<AstralisProvider tokens={…}>"}</Code>, same math as the stylesheet.
           </>
         )}
       </Text>
@@ -66,7 +66,7 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // Clipboard blocked — the URL is in the address bar either way.
+      // Clipboard blocked: the URL is in the address bar either way.
     }
   };
 
@@ -92,7 +92,7 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
         onValueChange={(value) => setTab(value as ExportTab["value"])}
         variant="segmented"
         size="sm"
-        /* Inline style so the override beats the root's own gap class —
+        /* Inline style so the override beats the root's own gap class:
            value-utility classes no longer ship since the var-channel. */
         className="min-h-0 flex-1"
         style={{ gap: "var(--astralis-spacing-2)" }}

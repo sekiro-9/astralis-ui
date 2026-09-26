@@ -9,7 +9,7 @@ import { COLOR_SCHEME_TYPE, COLOR_SCHEMES } from "@/modules/demos/color-schemes"
  * and the metadata export stripped, each <ComponentPreview name="x" />
  * replaced by the demo's actual source, and each <PropsTable rows={x} />
  * rendered as a real markdown table from the same data file the live table
- * uses — so agents read exactly what users see, props included.
+ * uses, so agents read exactly what users see, props included.
  *
  * Consumed by the .md route handlers, llms.txt / llms-full.txt, and (via
  * those endpoints) the astralis-mcp server's live mode.
@@ -29,7 +29,7 @@ export interface DocEntry {
   kind: "component" | "guide";
 }
 
-/** Every published page — guides and components — from the sidebar's navigation. */
+/** Every published page (guides and components) from the sidebar's navigation. */
 export function listDocs(): DocEntry[] {
   const entries: DocEntry[] = [];
   for (const section of navigation) {
@@ -185,7 +185,7 @@ function propsTableMarkdown(rows: PropRow[]): string {
     "| --- | --- | --- | --- |",
     ...rows.map(
       (row) =>
-        `| \`${cell(row.prop)}\` | ${cell(row.type)} | ${row.default ? `\`${cell(row.default)}\`` : "—"} | ${cell(row.description)} |`,
+        `| \`${cell(row.prop)}\` | ${cell(row.type)} | ${row.default ? `\`${cell(row.default)}\`` : "None"} | ${cell(row.description)} |`,
     ),
   ].join("\n");
 }

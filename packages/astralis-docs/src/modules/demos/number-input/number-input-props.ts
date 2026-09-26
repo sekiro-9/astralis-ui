@@ -36,7 +36,7 @@ export const numberInputProps: PropRow[] = [
   },
   {
     prop: "size / variant / invalid",
-    type: `—`,
+    type: `as Input`,
     default: `as Input`,
     description: "Shares the Input styling system.",
   },

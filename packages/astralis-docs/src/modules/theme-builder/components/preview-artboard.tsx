@@ -34,7 +34,7 @@ import {
 } from "astralis-ui";
 import { Check, Package, Truck } from "lucide-react";
 
-/** The artboard's fixed design width — the canvas scales it visually. */
+/** The artboard's fixed design width. The canvas scales it visually. */
 export const ARTBOARD_WIDTH = 1080;
 
 function SheetSection({ title, children }: { title: string; children: React.ReactNode }) {
@@ -51,7 +51,7 @@ function SheetSection({ title, children }: { title: string; children: React.Reac
 /**
  * The page rendered inside the canvas: a product-dashboard mock followed by a
  * component sheet touching every category, all painting from the scoped vars.
- * No overlay components — portals escape the scoped-vars subtree.
+ * No overlay components: portals escape the scoped-vars subtree.
  */
 export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
   return (
@@ -225,7 +225,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                     </Accordion.Item>
                     <Accordion.Item value="b">
                       <Accordion.Trigger>Build step</Accordion.Trigger>
-                      <Accordion.Content>None — precompiled CSS.</Accordion.Content>
+                      <Accordion.Content>None: precompiled CSS.</Accordion.Content>
                     </Accordion.Item>
                   </Accordion>
                 </div>
@@ -319,7 +319,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
 
         <Text size="xs" color="subtle">
           Overlay components (Modal, Drawer, Popover, Tooltip, Toast) render in portals outside
-          this canvas — they use the same tokens.
+          this canvas. They use the same tokens.
         </Text>
       </div>
     </div>

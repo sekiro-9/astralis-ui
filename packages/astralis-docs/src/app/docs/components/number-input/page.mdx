@@ -17,7 +17,7 @@ A numeric field with steppers, clamping, and spinbutton keyboard support.
 import { NumberInput } from "astralis-ui";
 ```
 
-Typing is free-form — the value parses, clamps to `min`/`max`, and rounds to
+Typing is free-form: the value parses, clamps to `min`/`max`, and rounds to
 `precision` when you commit (blur, Enter, or the steppers). `onChange`
 receives the committed `number`, or `null` when cleared.
 
@@ -37,5 +37,5 @@ receives the committed `number`, or `null` when cleared.
 
 Renders `role="spinbutton"` with `aria-valuemin/max/now` and inherits label
 and description wiring from [Field](/docs/components/field). The stepper
-buttons are excluded from the tab order — keyboard users get arrows, which
+buttons are excluded from the tab order: keyboard users get arrows, which
 are faster.

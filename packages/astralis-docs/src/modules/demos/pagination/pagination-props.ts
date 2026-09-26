@@ -6,18 +6,18 @@ export const paginationProps: PropRow[] = [
   {
     prop: "page · defaultPage · onPageChange",
     type: "number · number · (page: number) => void",
-    default: "— · 1 · —",
+    default: "None · 1 · None",
     description: "Controlled / initial page, and the change callback.",
   },
   {
     prop: "totalPages",
     type: "number",
-    description: "Explicit page count — use this OR count + pageSize.",
+    description: "Explicit page count. Use this OR count + pageSize.",
   },
   {
     prop: "count · pageSize",
     type: "number · number",
-    default: "— · 10",
+    default: "None · 10",
     description: "Total items; the page count is derived.",
   },
   {

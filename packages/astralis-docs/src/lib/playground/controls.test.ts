@@ -49,7 +49,7 @@ describe("parseUnion", () => {
     expect(parseUnion(`"a" | number`)).toBeNull();
   });
 
-  it("rejects a single literal — one option is not a choice", () => {
+  it("rejects a single literal: one option is not a choice", () => {
     expect(parseUnion(`"only"`)).toBeNull();
   });
 
@@ -103,7 +103,7 @@ describe("deriveControl", () => {
     });
 
     it("starts unset when the documented default isn't a selectable value", () => {
-      // Alert's colorScheme is "from status" — derived, not one of the hues.
+      // Alert's colorScheme is "from status": derived, not one of the hues.
       const control = deriveControl(
         row({ prop: "colorScheme", type: `"red" | "blue"`, default: "from status" }),
       );
@@ -185,7 +185,7 @@ describe("deriveControl", () => {
 
   it("declines grouped rows that name several props at once", () => {
     // These exist in box/stack/pagination/text and are documentation groupings,
-    // not single props — offering a control would write nonsense JSX.
+    // not single props. Offering a control would write nonsense JSX.
     expect(deriveControl(row({ prop: "p · px · py", type: `"0.5" – "96" (spacing scale)` }))).toBeNull();
     expect(deriveControl(row({ prop: "alignItems · justifyContent", type: "Flex props" }))).toBeNull();
     expect(deriveControl(row({ prop: "Pagination.Pages", type: `"a" | "b"` }))).toBeNull();
@@ -249,7 +249,7 @@ describe("styleControls", () => {
     bg: ["base", "subtle", "muted", "raised", "inverted", "transparent"],
   };
 
-  it("starts every style prop unset — the component's own default applies", () => {
+  it("starts every style prop unset: the component's own default applies", () => {
     for (const control of styleControls(["p", "rounded"], tokens)) {
       expect(control).toMatchObject({ initial: UNSET, optional: true });
     }
@@ -287,7 +287,7 @@ describe("styleControls", () => {
   });
 
   it("skips props the component has no tokens for", () => {
-    // Grid props asked of a Box entry, say — offering them would generate a
+    // Grid props asked of a Box entry, say. Offering them would generate a
     // prop that resolves to no class and silently does nothing.
     expect(styleControls(["columns", "p"], tokens).map((c) => c.prop)).toEqual(["p"]);
   });
@@ -308,7 +308,7 @@ describe("deriveControls / initialState", () => {
     expect(initialState(deriveControls(rows))).toEqual({ variant: "subtle", disabled: false });
   });
 
-  it("returns nothing when no row is editable — the signal to hide the tab", () => {
+  it("returns nothing when no row is editable, the signal to hide the tab", () => {
     expect(deriveControls([row({ prop: "children", type: "ReactNode" })])).toEqual([]);
   });
 });

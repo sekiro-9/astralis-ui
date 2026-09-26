@@ -15,7 +15,7 @@ export function HighlightVariants() {
       </Text>
       <Text>
         <Highlight query="CASE" ignoreCase={false}>
-          Set ignoreCase to false and only exact CASE matches — not case — light up.
+          Set ignoreCase to false and only exact CASE matches (not case) light up.
         </Highlight>
       </Text>
     </VStack>

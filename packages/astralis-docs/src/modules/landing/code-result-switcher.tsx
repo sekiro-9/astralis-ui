@@ -26,7 +26,7 @@ export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
         ))}
       </Tabs.List>
 
-      {/* One panel mounts at a time, so each owns its blurb and grid outright —
+      {/* One panel mounts at a time, so each owns its blurb and grid outright:
           no `contents` wrapper juggling `hidden` children to hold the layout. */}
       {panels.map((panel) => (
         <Tabs.Content key={panel.title} value={panel.title}>

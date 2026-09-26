@@ -7,7 +7,7 @@ export function TextDemo() {
         Typography that stays on scale
       </Text>
       <Text color="muted">
-        Text is the prose primitive — size, weight, color and spacing come
+        Text is the prose primitive: size, weight, color and spacing come
         from the token scale, and every prop takes a responsive map.
       </Text>
       <Text size="sm" color="subtle" fontStyle="italic">

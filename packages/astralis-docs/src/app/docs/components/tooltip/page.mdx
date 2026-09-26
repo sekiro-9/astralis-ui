@@ -2,12 +2,12 @@ import { tooltipProps } from "@/modules/demos/tooltip/tooltip-props";
 
 export const metadata = {
   title: "Tooltip",
-  description: "Supplementary text on hover or focus — delayed, collision-aware, never interactive.",
+  description: "Supplementary text on hover or focus: delayed, collision-aware, never interactive.",
 };
 
 # Tooltip
 
-Supplementary text on hover or focus — delayed, collision-aware, never interactive.
+Supplementary text on hover or focus: delayed, collision-aware, never interactive.
 
 <ComponentPreview name="tooltip-demo" />
 
@@ -22,7 +22,7 @@ import { Tooltip } from "astralis-ui";
 
 Wrap any focusable element in `Tooltip.Trigger`. The tooltip shows after a
 delay on hover **and on keyboard focus**, and flips automatically when it
-would leave the viewport. Tooltips are for supplementary hints only — the
+would leave the viewport. Tooltips are for supplementary hints only: the
 icon-button above still needs its `aria-label`; if the content must be
 clickable, use a [Popover](/docs/components/popover).
 
@@ -48,4 +48,4 @@ clickable, use a [Popover](/docs/components/popover).
 - Renders `role="tooltip"` and wires `aria-describedby` onto the trigger
   while open.
 - Shows on focus for keyboard users; Escape dismisses.
-- Pointer-events are disabled — it can never trap the cursor.
+- Pointer-events are disabled: it can never trap the cursor.

@@ -5,7 +5,7 @@ export const editableProps: PropRow[] = [
   {
     prop: "value / defaultValue / onChange",
     type: "string / string / (value: string) => void",
-    default: `— / "" / —`,
+    default: `None / "" / None`,
     description: "Controlled / uncontrolled text. onChange fires on every keystroke while editing.",
   },
   {

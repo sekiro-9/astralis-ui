@@ -8,7 +8,7 @@ import { Header } from "./header";
  *
  * `/preview/*` exists to be loaded inside an iframe (block thumbnails and the
  * viewport switcher), where a sticky header would sit on top of the very thing
- * being previewed. Gating here keeps the single root layout intact — the
+ * being previewed. Gating here keeps the single root layout intact. The
  * alternative is moving every existing route into a `(site)` group just to get
  * a second root layout.
  */

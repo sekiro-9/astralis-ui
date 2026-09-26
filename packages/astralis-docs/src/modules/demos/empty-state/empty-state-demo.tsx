@@ -1,7 +1,7 @@
 import { EmptyState, Button } from "astralis-ui";
 import { Inbox } from "lucide-react";
 
-// No "use client" — EmptyState is pure composition and ships zero client JS.
+// No "use client": EmptyState is pure composition and ships zero client JS.
 export function EmptyStateDemo() {
   return (
     <EmptyState>

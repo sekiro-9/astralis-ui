@@ -3,7 +3,7 @@ import { docAsMarkdown, listDocs } from "@/lib/docs-markdown";
 /**
  * Markdown twin of every component page: /docs/components/button.md
  * (static folders win routing, so this dynamic segment only ever sees
- * requests that didn't match a real page — i.e. the .md variants).
+ * requests that didn't match a real page, i.e. the .md variants).
  */
 export function generateStaticParams() {
   return listDocs().map((doc) => ({ file: `${doc.slug}.md` }));

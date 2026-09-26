@@ -57,7 +57,7 @@ describe("generateJsx", () => {
     expect(gen({}, "Hi")).toBe(`${IMPORT}\n\n<Badge>Hi</Badge>\n`);
   });
 
-  describe("default omission — the rule that makes output pasteable", () => {
+  describe("default omission: the rule that makes output pasteable", () => {
     it("drops every prop still at its documented default", () => {
       expect(gen({ variant: "subtle", size: "sm", disabled: false }, "Hi")).toBe(
         `${IMPORT}\n\n<Badge>Hi</Badge>\n`,
@@ -213,7 +213,7 @@ describe("generateJsx", () => {
     });
   });
 
-  describe("fixtures — multi-line element children", () => {
+  describe("fixtures: multi-line element children", () => {
     const fixture = `<Alert.Title>Heads up</Alert.Title>
 <Alert.Description>
   Something happened.
@@ -256,7 +256,7 @@ describe("generateJsx", () => {
       ).toContain(`import { Button, ButtonGroup } from "astralis-ui";`);
     });
 
-    it("does not import compound parts separately — Alert.Title comes in on Alert", () => {
+    it("does not import compound parts separately: Alert.Title comes in on Alert", () => {
       const out = generateJsx({
         tag: "Alert",
         props: {},

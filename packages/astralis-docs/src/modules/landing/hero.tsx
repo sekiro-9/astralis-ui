@@ -24,8 +24,8 @@ const swatches = [
 
 /**
  * Role tokens (brand-solid, brand-subtle, …) are substituted at :root, so
- * overriding only the primitive shades on a subtree never reaches them —
- * they must be re-declared here too, per theme (mirrors semantic.css).
+ * overriding only the primitive shades on a subtree never reaches them.
+ * They must be re-declared here too, per theme (mirrors semantic.css).
  */
 function brandOverride(shades: Record<string, string>, mode: "light" | "dark"): CSSProperties {
   const shade = (step: number) => shades[`--astralis-color-brand-${step}`];
@@ -70,7 +70,7 @@ export function Hero() {
         <div className="hero-veil absolute inset-0" />
       </div>
 
-      <div className="mx-auto grid w-full max-w-screen-xl items-center gap-16 px-6 py-12 lg:grid-cols-2 lg:px-12 lg:py-16">
+      <div className="mx-auto grid w-full max-w-screen-xl items-center gap-16 px-6 py-12 lg:grid-cols-2 lg:px-14 lg:py-16">
         <div className="flex min-w-0 flex-col items-start">
           <Entrance delay={0}>
             <h1 className="font-display text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-label min-[420px]:text-5xl sm:text-6xl">
@@ -80,9 +80,9 @@ export function Hero() {
           </Entrance>
 
           <Entrance delay={0.08}>
-            <p className="mt-8 max-w-lg text-pretty text-lg leading-relaxed text-label-muted">
-              Accessible React components for building fast, beautiful web apps and design
-              systems. Server-rendered by default, themed from a single brand colour.
+            <p className="mt-8 max-w-lg text-pretty text-base leading-relaxed text-label-muted">
+              Accessible, themeable React components for crafting polished web apps and
+              design systems. Server-first, built for the Next.js RSC
             </p>
           </Entrance>
 
@@ -140,7 +140,7 @@ export function Hero() {
                 <CopyCommand command="npx astralis-cli create my-app" />
               </div>
               <span className="text-xs text-label-subtle sm:whitespace-nowrap">
-                Scaffold your React project —{" "}
+                Scaffold your React project ·{" "}
                 <Link href="/docs/cli" className="underline underline-offset-2 hover:text-label-muted">
                   How the CLI works
                 </Link>
@@ -149,7 +149,7 @@ export function Hero() {
           </Entrance>
         </div>
 
-        {/* Live composition — floats over the scene; every accent tracks the brand */}
+        {/* Live composition: floats over the scene; every accent tracks the brand */}
         <motion.div
           className="relative lg:pl-6"
           initial={{ opacity: 0, y: 40, rotate: 1.5 }}
@@ -160,7 +160,7 @@ export function Hero() {
             <Card variant="elevated" className="bg-raised/85 backdrop-blur-xl">
               <Card.Header extra={<Badge colorScheme="brand" variant="subtle">Live</Badge>}>
                 <Card.Title>Mission control</Card.Title>
-                <Card.Description>Recolored by the swatches — no rebuild</Card.Description>
+                <Card.Description>Recolored by the swatches, no rebuild</Card.Description>
               </Card.Header>
               <Card.Body>
                 <VStack gap="5" alignItems="stretch">

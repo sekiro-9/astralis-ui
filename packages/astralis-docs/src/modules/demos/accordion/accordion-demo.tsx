@@ -10,13 +10,13 @@ export function AccordionDemo() {
           <Accordion.Trigger>What are semantic tokens?</Accordion.Trigger>
           <Accordion.Content>
             Named colors like surface, label and stroke that resolve differently
-            in light and dark mode — components never reference raw hex values.
+            in light and dark mode. Components never reference raw hex values.
           </Accordion.Content>
         </Accordion.Item>
         <Accordion.Item value="build">
           <Accordion.Trigger>Do I need a build step?</Accordion.Trigger>
           <Accordion.Content>
-            No. The library ships precompiled CSS — import one stylesheet and
+            No. The library ships precompiled CSS: import one stylesheet and
             every component works.
           </Accordion.Content>
         </Accordion.Item>

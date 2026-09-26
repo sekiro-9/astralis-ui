@@ -11,17 +11,17 @@ to be used.
 ## The palettes
 
 Ten hues plus `brand`, each with eleven steps from `50` (near white) to
-`950` (near black). These are the **primitives** — the only real color
+`950` (near black). These are the **primitives**, the only real color
 values in the system; everything else is a pointer to one of these.
 
 <ComponentPreview name="palette-grid" />
 
 `brand` is special: by default it aliases the gold palette, but it's the one
-palette that can be **replaced at runtime** — pass
+palette that can be **replaced at runtime**: pass
 `tokens={{ brandColor }}` to the provider and all ten brand steps are
 recomputed from your color (see [Theming](/docs/theming)).
 
-## Roles — how components actually pick colors
+## Roles: how components actually pick colors
 
 Components rarely touch a raw step like `blue-600`. Every palette exposes
 the same seven **roles**, and those are what variant styles are written
@@ -43,20 +43,20 @@ Two things make this vocabulary powerful:
   points at `blue-100`; in dark mode it re-points at a deep step. Write
   against roles and dark mode is automatic.
 - **Every hue answers the same questions.** Because all palettes share the
-  vocabulary, one set of component styles can be recolored to any hue —
-  that's what makes `colorScheme` possible.
+  vocabulary, one set of component styles can be recolored to any hue.
+  That's what makes `colorScheme` possible.
 
 ## The accent channel
 
 `accent-*` is a *virtual* palette. It has the same seven roles but
-no colors of its own — it forwards to whichever real palette the nearest
+no colors of its own: it forwards to whichever real palette the nearest
 `colorScheme` chose (brand by default). Components are written once against
 `accent-*` and recolor through it. The full mechanism is explained on the
 [Theming](/docs/theming) page.
 
 ## Neutral semantic tokens
 
-For everyday UI structure — page backgrounds, text, borders — use the
+For everyday UI structure (page backgrounds, text, borders), use the
 neutral roles instead of any palette:
 
 | Family | Tokens | Job |
@@ -71,20 +71,20 @@ Three neutrals, one rule each. You should never have to guess which to reach for
 
 | Token | When |
 | --- | --- |
-| `base` | The page, and any control at rest — an input, a checkbox, an active tab |
-| `subtle` | Something sitting on the page but not floating — a card, a table header, an inactive item |
-| `muted` | Not interactive — disabled controls (with reduced opacity), and inert parts like a progress track or slider rail |
+| `base` | The page, and any control at rest: an input, a checkbox, an active tab |
+| `subtle` | Something sitting on the page but not floating: a card, a table header, an inactive item |
+| `muted` | Not interactive: disabled controls (with reduced opacity), and inert parts like a progress track or slider rail |
 
 **Hover is one step up the ladder from wherever the element rests.** A control
 resting on `base` hovers to `subtle`; something already at `subtle` hovers to
 `muted`. There is no separate hover token to memorise, and no component gets to
 pick its own answer.
 
-Two things the ladder does not cover. **`raised` is not a fourth neutral** — it
+Two things the ladder does not cover. **`raised` is not a fourth neutral**: it
 is identical to `base` in light mode and one step lighter in dark, where a
 shadow cannot read. Floating layers only: menus, toasts, popovers, modals,
 drawers, listboxes. Cards never use it. And **`inverted`** is for the few things
-that must read against any surface at all — tooltips, the slider value bubble.
+that must read against any surface at all: tooltips, the slider value bubble.
 
 ### The label ladder
 
@@ -93,11 +93,11 @@ Three tiers of text, ordered by contrast against the page.
 | Token | When |
 | --- | --- |
 | `base` | Body copy, headings, anything you actually read |
-| `muted` | Secondary text — descriptions, captions, help text |
+| `muted` | Secondary text: descriptions, captions, help text |
 | `subtle` | The faintest tier that is still content: placeholders, empty states, listbox group headers, calendar weekday rows |
 
 **Every tier clears WCAG AA (4.5:1) on the page it sits on**, in both modes.
-`subtle` is deliberately the floor rather than "as light as it can go" — it
+`subtle` is deliberately the floor rather than "as light as it can go": it
 paints placeholder text, and a placeholder nobody can read is a bug, not a
 style. If you want something genuinely decorative and unreadable, reach for
 `opacity`, not a lighter label token.
@@ -114,18 +114,18 @@ slider value bubble.
 
 Strokes work differently, and the difference is deliberate. A default
 *background* is the absence of tint, so surfaces can only ever step up from
-`base`. A default *border* has to be visible — so `stroke-base` sits in the
+`base`. A default *border* has to be visible, so `stroke-base` sits in the
 middle, with one step either side of it.
 
 | Token | When |
 | --- | --- |
-| `subtle` | A dividing line inside something that is already bordered — a card header rule, a drawer footer |
+| `subtle` | A dividing line inside something that is already bordered: a card header rule, a drawer footer |
 | `base` | Every default border, and every control outline: cards, tables, inputs, checkboxes, panels, Separator |
-| `muted` | Stronger than the default — the hover border on an outline input |
+| `muted` | Stronger than the default: the hover border on an outline input |
 
 So the direction reads `subtle < base < muted`, ordered by contrast against the
 page in both light and dark. Hovering an outline control still means "one step
-up", exactly as it does for surfaces — it just starts from `base` rather than
+up", exactly as it does for surfaces. It just starts from `base` rather than
 ending there.
 
 ### Status colours are palettes, not neutrals
@@ -133,12 +133,12 @@ ending there.
 `error`, `warning`, `success` and `info` are **not** part of the three families
 above. Those families are ladders measuring emphasis; a status colour carries
 meaning, which is a different axis entirely. So status lives where every other
-colour lives — as a palette with the same seven roles:
+colour lives: as a palette with the same seven roles:
 
 ```jsx
-<Text color="error" />       {/* error-label — the text role   */}
-<Box bg="success" />         {/* success-solid — the fill role  */}
-<Box borderColor="warning" />{/* warning-stroke — the line role */}
+<Text color="error" />       {/* error-label: the text role    */}
+<Box bg="success" />         {/* success-solid: the fill role   */}
+<Box borderColor="warning" />{/* warning-stroke: the line role  */}
 ```
 
 These are the same tokens `colorScheme="error"` rebinds onto the accent
@@ -148,8 +148,8 @@ rather than two that drift apart.
 ### Naming a hue picks the role that fits the property
 
 Every palette works this way, not just the status ones. The bare hue resolves
-to whichever role the CSS property actually wants — `solid` for a fill, `label`
-for text, `stroke` for a line — so the common case is one word:
+to whichever role the CSS property actually wants (`solid` for a fill, `label`
+for text, `stroke` for a line), so the common case is one word:
 
 | | Bare form | Also available |
 | --- | --- | --- |
@@ -157,7 +157,7 @@ for text, `stroke` for a line — so the common case is one word:
 | `color` | `"blue"` → `blue-label` | `blue-solid` · `blue-contrast` · `blue-50`–`blue-950` |
 | `borderColor` | `"blue"` → `blue-stroke` | `blue-50`–`blue-950` |
 
-Two things worth knowing. **`gray` has no bare form** — its `solid` is
+Two things worth knowing. **`gray` has no bare form**: its `solid` is
 near-black in light and white in dark, which is never what `bg="gray"` would
 suggest, and the neutral ladder already covers those cases. And the numbered
 shades are the escape hatch, not the default: they are the only colour tokens
@@ -171,12 +171,12 @@ Style props accept all three tiers:
 ```tsx
 <Box bg="subtle" />            {/* neutral semantic role */}
 <Box bg="blue-subtle" />       {/* palette role */}
-<Box bg="blue-100" />          {/* raw primitive — last resort */}
+<Box bg="blue-100" />          {/* raw primitive, last resort */}
 <Text color="muted" />         {/* neutral label role */}
 ```
 
 Prefer the highest tier that says what you mean: semantic roles adapt to
 both themes on their own, palette roles adapt within their hue, and raw
 steps don't adapt at all. In custom CSS, the same values are available as
-variables — `var(--astralis-color-blue-subtle)`, exactly like the swatch
+variables: `var(--astralis-color-blue-subtle)`, exactly like the swatch
 grid demo above does.

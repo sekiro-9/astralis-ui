@@ -53,7 +53,7 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
         </Flex>
 
         {/* Tag, not Badge: Badge is the status pill (Active, Beta), Tag is the
-            keyword chip. The id is not repeated here — it is right above in the
+            keyword chip. The id is not repeated here: it is right above in the
             install command. */}
         <Flex wrap="wrap" alignItems="center" gap="1.5">
           {meta.tags.map((tag) => (
@@ -74,11 +74,11 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
         </Heading>
 
         {/* `as="ol"`: List renders a <ul> by default, and numbered steps are an
-            ordered list — decimal markers alone don't carry that to a reader. */}
+            ordered list. Decimal markers alone don't carry that to a reader. */}
         <List as="ol" styleType="decimal" spacing="3" pl="5">
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
-              Run the command — it writes{" "}
+              Run the command: it writes{" "}
               <Code>components/blocks/{filename}</Code> and leaves the rest of
               your project untouched.
             </Text>
@@ -89,14 +89,14 @@ export function BlockDetail({ meta, filename, code }: BlockDetailProps) {
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
               Import it where you need it. The block only depends on{" "}
-              <Code>astralis-ui</Code>, so it compiles in any React project — no
+              <Code>astralis-ui</Code>, so it compiles in any React project: no
               extra packages, no framework lock-in.
             </Text>
           </ListItem>
           <ListItem>
             <Text color="muted" lineHeight="relaxed">
-              Edit it. The copy, links and layout are plain JSX in your repo now
-              — this is your file, not a dependency to configure around.
+              Edit it. The copy, links and layout are plain JSX in your repo now.
+              This is your file, not a dependency to configure around.
             </Text>
           </ListItem>
         </List>

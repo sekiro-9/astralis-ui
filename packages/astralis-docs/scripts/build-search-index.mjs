@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ASTRALIS — SITE SEARCH INDEX
+   ASTRALIS: SITE SEARCH INDEX
    --------------------------------------------------------------------------
    Runs after `next build` and writes a Pagefind index to public/pagefind/,
    which ships with the deploy as static files. The header's search dialog
@@ -33,7 +33,7 @@ const die = (message) => {
 };
 
 if (!existsSync(join(APP, "docs.html"))) {
-  die("no prerendered docs in .next/server/app — run `next build` first");
+  die("no prerendered docs in .next/server/app. Run `next build` first");
 }
 
 /** `docs/components/button.html` -> `/docs/components/button`. */

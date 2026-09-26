@@ -50,7 +50,7 @@ export function BrandTheming() {
             <Tag>Tag</Tag>
           </HStack>
           <Text size="sm" color="muted">
-            One hex in, a full palette out — shades, hover states and a
+            One hex in, a full palette out: shades, hover states and a
             readable text color are all derived at runtime.
           </Text>
         </VStack>

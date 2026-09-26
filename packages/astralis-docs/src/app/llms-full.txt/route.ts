@@ -2,10 +2,10 @@ import { docAsMarkdown, listDocs } from "@/lib/docs-markdown";
 
 export const dynamic = "force-static";
 
-/** llms-full.txt — every guide and component page as one markdown corpus. */
+/** llms-full.txt: every guide and component page as one markdown corpus. */
 export function GET() {
   const parts: string[] = [
-    "# Astralis UI — full documentation",
+    "# Astralis UI: full documentation",
     "",
     "React 19 component library on semantic design tokens. Server-first: static components are true Server Components that ship zero client JavaScript (enforced by a build gate, labeled per component in system-spec.json's client field). Precompiled, prefix-isolated CSS (value props deliver through CSS custom properties); no build tooling required in the consuming app.",
     "",
@@ -15,7 +15,7 @@ export function GET() {
     const md = docAsMarkdown(doc.slug);
     if (!md) continue;
     const path = doc.kind === "guide" ? `/docs/${doc.slug}` : `/docs/components/${doc.slug}`;
-    parts.push("---", "", `<!-- ${doc.section} / ${doc.title} — ${path} -->`, "", md);
+    parts.push("---", "", `<!-- ${doc.section} / ${doc.title}: ${path} -->`, "", md);
   }
 
   return new Response(parts.join("\n"), {

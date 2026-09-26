@@ -34,8 +34,8 @@ export const popoverProps: PropRow[] = [
   },
   {
     prop: "open / defaultOpen / onOpenChange",
-    type: `—`,
-    default: `— / false / —`,
+    type: `boolean / boolean / (open: boolean) => void`,
+    default: `None / false / None`,
     description: "Controlled API.",
   },
 ];

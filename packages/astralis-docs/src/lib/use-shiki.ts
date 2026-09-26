@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
  * Client-side Shiki highlighting with the docs' dual-theme pair. Shiki loads
  * lazily in its own chunk the first time any consumer needs it; results are
  * cached per (lang, code). Returns the INNER html (Shiki's <pre><code> shell
- * stripped) ready for CodeBlock.Code's highlightedHtml — or null while
+ * stripped) ready for CodeBlock.Code's highlightedHtml, or null while
  * loading / for never-seen code, so callers fall back to plain text of the
  * CURRENT code instead of flashing a stale highlight.
  *
@@ -32,7 +32,7 @@ export function useShikiHtml(code: string, lang: string): string | null {
           themes: { light: "github-light-default", dark: "github-dark-default" },
           defaultColor: "light",
         });
-        // Strip Shiki's own <pre><code> shell — CodeBlock.Content/Code own the structure.
+        // Strip Shiki's own <pre><code> shell: CodeBlock.Content/Code own the structure.
         const inner = full.replace(/^<pre[^>]*>\s*<code[^>]*>/, "").replace(/<\/code>\s*<\/pre>\s*$/, "");
         if (cache.size >= MAX_CACHE) cache.clear();
         cache.set(key, inner);

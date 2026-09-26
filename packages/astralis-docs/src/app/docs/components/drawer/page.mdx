@@ -2,12 +2,12 @@ import { drawerProps } from "@/modules/demos/drawer/drawer-props";
 
 export const metadata = {
   title: "Drawer",
-  description: "An edge-anchored dialog that slides in from any side — settings panels, carts, mobile nav.",
+  description: "An edge-anchored dialog that slides in from any side: settings panels, carts, mobile nav.",
 };
 
 # Drawer
 
-An edge-anchored dialog that slides in from any side — settings panels, carts, mobile nav.
+An edge-anchored dialog that slides in from any side: settings panels, carts, mobile nav.
 
 <ComponentPreview name="drawer-demo" />
 
@@ -21,8 +21,8 @@ import { Drawer } from "astralis-ui";
 
 ## Usage
 
-Drawer shares Modal's anatomy and behavior — focus trap, scroll lock,
-Escape/backdrop dismissal — but anchors to an edge and slides instead of
+Drawer shares Modal's anatomy and behavior (focus trap, scroll lock,
+Escape/backdrop dismissal) but anchors to an edge and slides instead of
 fading in the center. If the content is a critical decision, use
 [Modal](/docs/components/modal); if it's a workspace panel, use Drawer.
 
@@ -46,7 +46,7 @@ The parts (`Trigger`, `Content`, `Header`, `Body`, `Footer`, `Title`,
 | Key | Action |
 | --- | --- |
 | `Esc` | Close (opt out with `closeOnEsc={false}`) |
-| `Tab` / `Shift+Tab` | Cycle focus inside the drawer — it can't escape |
+| `Tab` / `Shift+Tab` | Cycle focus inside the drawer (it can't escape) |
 
 Focus returns to the trigger on close; with stacked overlays, Escape peels
 the topmost layer first.

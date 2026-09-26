@@ -12,7 +12,7 @@ export function Sidebar({ version }: { version: string }) {
 
   // Keep the active link visible: when a page loads (or navigation happens via
   // search/TOC/links) with the active item outside the sidebar's viewport,
-  // scroll the sidebar — and only the sidebar — so the item sits near the top.
+  // scroll the sidebar (and only the sidebar) so the item sits near the top.
   useEffect(() => {
     const link = activeLinkRef.current;
     if (!link) return;

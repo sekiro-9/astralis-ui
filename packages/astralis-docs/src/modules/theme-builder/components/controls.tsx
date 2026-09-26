@@ -34,7 +34,7 @@ export function InfoPopover({ label, info }: { label: string; info: string }) {
  * A row of mutually exclusive presets.
  *
  * Generic in the value so the same row serves a numeric scale and a font
- * pairing — the two used to be separate copies of this markup. Options are
+ * pairing. The two used to be separate copies of this markup. Options are
  * matched by `===`, so object values must be the identical reference (they are:
  * both callers select from a module-level preset array).
  */
@@ -50,7 +50,7 @@ export function PresetChips<T>({
 }) {
   return (
     // ButtonGroup is inline-flex, but as a flex item it blockifies and fills
-    // the rail — which is what lets flex-wrap actually break the row.
+    // the rail, which is what lets flex-wrap actually break the row.
     <ButtonGroup spacing="sm" className="flex-wrap">
       {options.map((option) => {
         const active = option.value === value;

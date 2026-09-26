@@ -29,19 +29,19 @@ import {
 } from "astralis-ui";
 
 /**
- * RSC probe — the end-to-end proof that the server boundary works.
+ * RSC probe: the end-to-end proof that the server boundary works.
  *
  * This file is deliberately a SERVER Component (no "use client") and it
  * renders every zero-client component plus compound dot-access plus a client
  * compound. `next build` prerendering this page proves, in one shot, that:
  *
  * - server-safe components arrive as real functions (not client-reference
- *   stubs that render as `undefined` — the 0.7.1 failure mode),
+ *   stubs that render as `undefined`, the 0.7.1 failure mode),
  * - compound statics (`Card.Body`, `Table.Head`) resolve server-side, which
  *   the Object.assign compound assembly makes non-obvious across the boundary,
  * - client compounds (Menu, Tabs) still render from a server page as islands.
  *
- * Not linked from navigation and not in llms.txt — it exists for the build,
+ * Not linked from navigation and not in llms.txt. It exists for the build,
  * not for readers. If a hook or context sneaks into a "server" module, this
  * page fails the docs build before any consumer sees the regression.
  */
@@ -91,7 +91,7 @@ export default function RscProbePage() {
           <Card.Header>
             <Card.Title>Card.Title via dot access</Card.Title>
             <Card.Description>
-              Undefined server-side in 0.7.1 — a real element now.
+              Undefined server-side in 0.7.1, a real element now.
             </Card.Description>
           </Card.Header>
           <Card.Body>
@@ -127,7 +127,7 @@ export default function RscProbePage() {
           <Stat.HelpText>dot access from a server page</Stat.HelpText>
         </Stat>
 
-        {/* Zero-JS interactive: native details + popover/anchor — these ship
+        {/* Zero-JS interactive: native details + popover/anchor. These ship
             NO JavaScript at all, yet open, close, and light-dismiss. */}
         <VStack gap="3" alignItems="stretch" data-probe="zero-js">
           <Collapsible name="probe-faq" defaultOpen>
@@ -136,7 +136,7 @@ export default function RscProbePage() {
           </Collapsible>
           <Collapsible name="probe-faq">
             <Collapsible.Trigger>Zero-JS collapsible B (exclusive)</Collapsible.Trigger>
-            <Collapsible.Content>Opening me closes A — native name grouping.</Collapsible.Content>
+            <Collapsible.Content>Opening me closes A: native name grouping.</Collapsible.Content>
           </Collapsible>
           <HStack>
             <Popout>
@@ -154,7 +154,7 @@ export default function RscProbePage() {
             </EmptyState.Title>
             <EmptyState.Description>Pure composition, zero client JS.</EmptyState.Description>
           </EmptyState>
-          {/* Backdrop is fixed by design — scope it inside the probe box. */}
+          {/* Backdrop is fixed by design. Scope it inside the probe box. */}
           <Box position="relative" h="10" overflow="hidden" rounded="md">
             <Backdrop style={{ position: "absolute" }} />
           </Box>

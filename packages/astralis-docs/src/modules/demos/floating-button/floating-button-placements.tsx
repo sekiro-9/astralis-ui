@@ -11,7 +11,7 @@ const anchors = [
   { placement: "bottom-right", colorScheme: "green" },
 ] as const;
 
-/* One panel, six resting anchors — four corners plus the two edge midpoints.
+/* One panel, six resting anchors: four corners plus the two edge midpoints.
    The transform scopes `fixed` to the panel; see floating-button-demo.tsx. */
 export function FloatingButtonPlacements() {
   return (

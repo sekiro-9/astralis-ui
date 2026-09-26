@@ -19,7 +19,7 @@ export const flexProps: PropRow[] = [
     type: `"start" | "center" | "end" | "baseline" | "stretch"`,
     default: `"stretch"`,
     description:
-      "Alignment along the cross axis. Unset, it is CSS's stretch — children fill the cross size — so a row gives equal heights and a column gives equal widths.",
+      "Alignment along the cross axis. Unset, it is CSS's stretch (children fill the cross size), so a row gives equal heights and a column gives equal widths.",
   },
   {
     prop: "wrap",
@@ -41,13 +41,13 @@ export const flexProps: PropRow[] = [
 
 /**
  * Keep in sync with flexItemVariants. Box declares the same props, so these
- * work on any primitive — Flex.Item is the spelling, not the only route.
+ * work on any primitive. Flex.Item is the spelling, not the only route.
  */
 export const flexItemProps: PropRow[] = [
   {
     prop: "basis",
     type: `spacing scale | "3xs"–"8xl" | fractions | "auto" | "full" | "min" | "max" | "fit"`,
-    description: "flex-basis — the item's starting size.",
+    description: "flex-basis: the item's starting size.",
   },
   {
     prop: "flex",

@@ -7,13 +7,13 @@ export const themeToggleProps: PropRow[] = [
     type: "boolean",
     default: "false",
     description:
-      "Shows a text label next to the icon — “Light Mode” or “Dark Mode”, reflecting what a click switches to.",
+      "Shows a text label next to the icon: “Light Mode” or “Dark Mode”, reflecting what a click switches to.",
   },
   {
     prop: "variant",
     type: `"solid" | "subtle" | "surface" | "outline" | "text" | "link"`,
     default: `"outline"`,
-    description: "Inherited from Button — every Button variant works.",
+    description: "Inherited from Button. Every Button variant works.",
   },
   {
     prop: "size",

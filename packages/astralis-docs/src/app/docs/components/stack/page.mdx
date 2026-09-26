@@ -2,12 +2,12 @@ import { stackProps } from "@/modules/demos/stack/stack-props";
 
 export const metadata = {
   title: "Stack",
-  description: "One-dimensional stacking with a consistent gap — plus the HStack and VStack presets.",
+  description: "One-dimensional stacking with a consistent gap, plus the HStack and VStack presets.",
 };
 
 # Stack
 
-One-dimensional stacking with a consistent gap — plus the `HStack` and `VStack` presets.
+One-dimensional stacking with a consistent gap, plus the `HStack` and `VStack` presets.
 
 <ComponentPreview name="stack-demo" />
 
@@ -21,7 +21,7 @@ import { Stack, HStack, VStack } from "astralis-ui";
 
 Stack is the shorthand for the most common flex layout: children in one
 direction with even spacing. `VStack` stacks vertically, `HStack` lays out
-horizontally **and centers its children on the cross axis** — usually what
+horizontally **and centers its children on the cross axis**, usually what
 you want for rows of mixed-height content.
 
 <ComponentPreview name="stack-horizontal" />
@@ -29,13 +29,13 @@ you want for rows of mixed-height content.
 ## Direction
 
 The base `Stack` takes a `direction` prop if you'd rather not pick a preset.
-It speaks in axes — `"vertical"` and `"horizontal"` — rather than CSS's
+It speaks in axes (`"vertical"` and `"horizontal"`) rather than CSS's
 `column` and `row`.
 
 <ComponentPreview name="stack-direction" align="start" />
 
 `direction` is responsive like every other style prop, so the most common
-layout of all — stacked on mobile, side by side on desktop — is one prop:
+layout of all (stacked on mobile, side by side on desktop) is one prop:
 
 <ComponentPreview name="stack-responsive" align="start" />
 

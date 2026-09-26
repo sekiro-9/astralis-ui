@@ -24,19 +24,19 @@ function Count({ value }: { value: number }) {
 /**
  * The block gallery: one row of category tabs over a grid of live thumbnails.
  *
- * Every card holds an iframe, so the expensive thing here is not rendering —
+ * Every card holds an iframe, so the expensive thing here is not rendering:
  * it is how many preview *documents* exist and how often they are thrown away.
  * Two decisions follow from that:
  *
  * 1. One grid holding every block, filtered by hiding cards. A panel per
  *    category would render its own copy of cards the "All" panel already had,
- *    and Tabs.Content unmounts inactive panels — so every filter click tore
+ *    and Tabs.Content unmounts inactive panels, so every filter click tore
  *    down all 36 frames and reloaded them from scratch.
  *
  * 2. A single Tabs.Content whose `value` tracks the active tab, so the panel is
  *    always the active one. React reconciles the same node and the grid inside
  *    it is never remounted; only the panel's id and label change. ARIA still
- *    reads correctly — the panel is labelled by whichever trigger is active.
+ *    reads correctly: the panel is labelled by whichever trigger is active.
  *
  * The net effect is that a preview loads at most once per page visit. Cards
  * filtered out stay in the DOM as `display: none`, which also means their lazy
@@ -69,7 +69,7 @@ export function BlockGallery({ groups, all }: BlockGalleryProps) {
       <Tabs.Content value={category}>
         <Grid columns={{ base: "1", sm: "2", lg: "3" }} gap="5">
           {all.map((block, index) => (
-            /* The first row is above the fold — load those iframes eagerly so
+            /* The first row is above the fold. Load those iframes eagerly so
                the gallery does not open on a grid of blank tiles. */
             <BlockCard
               key={block.id}

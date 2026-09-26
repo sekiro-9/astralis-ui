@@ -12,7 +12,7 @@ export function PopoverDemo() {
         <VStack gap="2" alignItems="stretch" maxW="3xs">
           <Popover.Title>Share this page</Popover.Title>
           <Popover.Description>
-            Anyone with the link can view. Popovers hold interactive content —
+            Anyone with the link can view. Popovers hold interactive content,
             unlike tooltips.
           </Popover.Description>
           <Text size="xs" color="subtle">astralis.dev/docs/popover</Text>

@@ -1,18 +1,18 @@
 export const metadata = {
   title: "Installation",
-  description: "Install the package, import one stylesheet, wrap your app — that's the whole setup.",
+  description: "Install the package, import one stylesheet, wrap your app. That's the whole setup.",
 };
 
 # Installation
 
-Install the package, import one stylesheet, wrap your app — that's the whole setup.
+Install the package, import one stylesheet, wrap your app. That's the whole setup.
 
 ## Requirements
 
 | | |
 | --- | --- |
 | React | `^19.1` (with `react-dom`) |
-| Build tooling | None — no plugins, no preprocessors, no theme compiler |
+| Build tooling | None: no plugins, no preprocessors, no theme compiler |
 
 Astralis ships **precompiled CSS**: every class any component can emit is
 already in the stylesheet, generated and verified at the library's own build
@@ -27,7 +27,7 @@ npx astralis-cli create my-app
 ```
 
 It runs the official `create-next-app` or `create-vite` prompts, then wires
-Astralis into the result — stylesheet imported, provider mounted, ready to
+Astralis into the result: stylesheet imported, provider mounted, ready to
 run. For a project you already have:
 
 ```bash
@@ -37,7 +37,7 @@ npx astralis-cli init
 Same edits, made in place. Pass `--dry-run` to see them first.
 
 If you'd rather do it by hand, or the CLI doesn't recognise your setup, the
-three steps are below — that's all `init` is doing.
+three steps are below. That's all `init` is doing.
 
 ## 1. Install the package
 
@@ -46,7 +46,7 @@ pnpm add astralis-ui
 # or: npm install astralis-ui / yarn add astralis-ui
 ```
 
-## 2. Import the stylesheet — once
+## 2. Import the stylesheet (once)
 
 ```tsx
 import "astralis-ui/styles.css";
@@ -67,14 +67,14 @@ export function App({ children }) {
 ```
 
 `AstralisProvider` owns theming: it resolves light/dark (including the
-`"system"` preference), persists the user's choice to `localStorage`, and —
-if you pass a brand color — derives the full shade scale at runtime. Details
+`"system"` preference), persists the user's choice to `localStorage`, and,
+if you pass a brand color, derives the full shade scale at runtime. Details
 on the [Theming](/docs/theming) page.
 
 ## Next.js (App Router)
 
 Import the stylesheet and mount the provider in your root layout. The
-provider is a client component, but your pages stay server components —
+provider is a client component, but your pages stay server components:
 children pass straight through.
 
 ```tsx
@@ -95,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### Avoiding the dark-mode flash
 
-The provider applies the `.astralis-dark` class after hydration — so a user
+The provider applies the `.astralis-dark` class after hydration, so a user
 who prefers dark can see one light-themed frame first. To paint dark from the
 very first frame, run this tiny inline script before the body renders (it
 reads the same storage key the provider uses):
@@ -127,8 +127,8 @@ createRoot(document.getElementById("root")!).render(
 
 ## Using Astralis alongside your own styling
 
-Whatever your app already uses — a utility framework, CSS Modules, plain
-stylesheets — Astralis coexists with it. Every Astralis class is namespaced
+Whatever your app already uses (a utility framework, CSS Modules, plain
+stylesheets), Astralis coexists with it. Every Astralis class is namespaced
 under an `astralis:` prefix internally, so the library's styles can never
 collide with your own, and your styling setup never needs to know Astralis
 exists. You can also pass your own classes to any component via `className`;
@@ -138,16 +138,16 @@ see [Style Props](/docs/style-props) for how conflicts are resolved.
 
 The package publishes one ES module per component with a `sideEffects`
 declaration, so bundlers drop everything you don't import. Importing a
-Button ships the Button — not the library.
+Button ships the Button, not the library.
 
 ## Tooling
 
 Two things worth setting up once, both covered on their own pages:
 
-- **[The CLI](/docs/cli)** — beyond `create` and `init`, it copies
+- **[The CLI](/docs/cli)**: beyond `create` and `init`, it copies
   [blocks](/blocks) into your project (`npx astralis-cli add dashboard-01`) and
   generates a static theme stylesheet from a brand seed.
-- **[AI agents](/docs/ai-agents)** — `npx astralis-cli connect-mcp` points
+- **[AI agents](/docs/ai-agents)**: `npx astralis-cli connect-mcp` points
   your coding agent at a server that serves these docs, so it writes against
   the current component API instead of guessing at one.
 

@@ -6,7 +6,7 @@ export const checkboxProps: PropRow[] = [
   {
     prop: "checked / defaultChecked / onChange",
     type: `boolean / boolean / (e) => void`,
-    default: `— / false / —`,
+    default: `None / false / None`,
     description: "Controlled / uncontrolled API.",
   },
   {
@@ -36,7 +36,7 @@ export const checkboxProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];
 
@@ -44,7 +44,7 @@ export const checkboxGroupProps: PropRow[] = [
   {
     prop: "value / defaultValue / onValueChange",
     type: "string[] / string[] / (value: string[]) => void",
-    default: "— / [] / —",
+    default: "None / [] / None",
     description: "Controlled / uncontrolled selection. onChange still fires too, but is deprecated.",
   },
   {

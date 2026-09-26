@@ -11,7 +11,7 @@ export const pinInputProps: PropRow[] = [
   {
     prop: "value / defaultValue / onChange",
     type: `string / string / (value: string) => void`,
-    default: `— / "" / —`,
+    default: `None / "" / None`,
     description: "The combined code.",
   },
   {
@@ -53,6 +53,6 @@ export const pinInputProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];

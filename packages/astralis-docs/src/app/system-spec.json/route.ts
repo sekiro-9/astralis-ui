@@ -1,7 +1,7 @@
 import spec from "astralis-ui/system-spec.json";
 
 /**
- * The system spec of the astralis-ui version THIS docs deploy documents —
+ * The system spec of the astralis-ui version THIS docs deploy documents:
  * the machine-verifiable ground truth (components, prop vocabularies, class
  * inventory, anatomy). Served for consumers with no local install to read:
  * the MCP validate tool falls back here when no node_modules/astralis-ui is

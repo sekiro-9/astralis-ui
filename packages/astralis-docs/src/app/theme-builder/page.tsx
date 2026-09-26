@@ -5,13 +5,13 @@ import { URL_PARAM, decodeSeed } from "@/lib/theme-builder";
 export const metadata: Metadata = {
   title: "Theme Builder",
   description:
-    "Design your Astralis theme visually — color, size, typography and motion tokens with a live component canvas, exported as one stylesheet.",
+    "Design your Astralis theme visually: color, size, typography and motion tokens with a live component canvas, exported as one stylesheet.",
 };
 
 /**
  * The shared seed is decoded HERE, on the server, so the first paint already
  * shows the shared theme and the client has nothing to restore. Doing it in a
- * client effect instead would render the default first, then swap — a flash,
+ * client effect instead would render the default first, then swap: a flash,
  * plus a hydration mismatch to work around.
  */
 export default async function ThemesPage({

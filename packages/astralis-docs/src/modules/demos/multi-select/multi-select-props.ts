@@ -11,7 +11,7 @@ export const multiSelectProps: PropRow[] = [
   {
     prop: "value / defaultValue / onChange",
     type: `Array<string | number> / same / (values) => void`,
-    default: `— / [] / —`,
+    default: `None / [] / None`,
     description: "Controlled / uncontrolled API.",
   },
   {
@@ -32,12 +32,12 @@ export const multiSelectProps: PropRow[] = [
   },
   {
     prop: "placeholder / emptyText / loading",
-    type: `—`,
+    type: `string / string / boolean`,
     description: "Same behavior as Select.",
   },
   {
     prop: "variant / size / colorScheme",
-    type: `—`,
+    type: `"outline" | "filled" | "underline" | "unstyled" / "sm" | "md" | "lg" / ColorScheme`,
     default: `"outline" / "md" / "brand"`,
     description: "Styling; colorScheme tints the tags.",
   },
@@ -45,6 +45,6 @@ export const multiSelectProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];

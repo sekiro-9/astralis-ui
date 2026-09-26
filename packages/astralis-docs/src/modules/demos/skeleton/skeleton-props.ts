@@ -12,7 +12,7 @@ export const skeletonProps: PropRow[] = [
     prop: "animated",
     type: `boolean`,
     default: `true`,
-    description: "Pulse animation — automatically pauses under `prefers-reduced-motion`.",
+    description: "Pulse animation, automatically paused under `prefers-reduced-motion`.",
   },
   {
     prop: "loaded",

@@ -5,7 +5,7 @@ import { Badge, Tooltip } from "astralis-ui";
 
 /**
  * The per-component client/server badge. Client-side only because a STATIC
- * layout cannot know which child segment is active during server render —
+ * layout cannot know which child segment is active during server render:
  * `useSelectedLayoutSegment` is the supported way to read it, and it is a
  * client hook. The payload is one tiny slug→tier map serialized by the
  * server layout; the spec itself never reaches the browser.
@@ -17,7 +17,7 @@ const LABELS = {
 } as const;
 
 const EXPLAIN = {
-  none: "Rendering this component ships none of its JavaScript to the browser — it renders to HTML on the server.",
+  none: "Rendering this component ships none of its JavaScript to the browser: it renders to HTML on the server.",
   leaf: "The shell renders on the server; only a small interactive part inside hydrates.",
   required: "This component is interactive and hydrates in the browser.",
 } as const;

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { blocks, type BlockId } from "astralis-blocks";
 
 /**
- * A block on its own, with no site chrome — the render target for the gallery
+ * A block on its own, with no site chrome: the render target for the gallery
  * thumbnails and the detail page's viewport switcher. Loading it in an iframe
  * is what makes the preview honest: the block's `lg:` breakpoints resolve
  * against the iframe's width, so a thumbnail shows the real desktop layout and
@@ -27,7 +27,7 @@ export default async function BlockPreviewPage({
 
   // Where the block sits when it is shorter than the frame. Page-edge furniture
   // reads wrong floating in the middle: a navbar belongs against the top, a
-  // footer against the bottom. Everything else — heroes, mid-page sections —
+  // footer against the bottom. Everything else (heroes, mid-page sections)
   // centres. A single auto margin pins to the opposite edge and still collapses
   // to zero once the block outgrows the viewport, so tall blocks are unaffected.
   const placement =
@@ -49,7 +49,7 @@ export default async function BlockPreviewPage({
       <style>{`nextjs-portal { display: none; }`}</style>
       {/*
         Place the block when it is shorter than the window, so opening a preview
-        in its own tab does not leave it stranded — centred for a mid-page
+        in its own tab does not leave it stranded: centred for a mid-page
         section, pinned to the matching edge for a navbar or footer (see
         `placement`).
 

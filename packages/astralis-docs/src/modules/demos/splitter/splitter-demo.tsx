@@ -12,7 +12,7 @@ export function SplitterDemo() {
         <Splitter.Handle aria-label="Resize sidebar" />
         <Splitter.Panel>
           <Center h="full">
-            <Text size="sm" color="muted">Content — drag the divider, or focus it and use arrow keys</Text>
+            <Text size="sm" color="muted">Content: drag the divider, or focus it and use arrow keys</Text>
           </Center>
         </Splitter.Panel>
       </Splitter>

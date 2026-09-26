@@ -11,7 +11,7 @@ export const splitterProps: PropRow[] = [
   {
     prop: "size · defaultSize · onResize",
     type: "number · number · (size: number) => void",
-    default: "— · 50 · —",
+    default: "None · 50 · None",
     description: "Controlled / initial share of the first panel, in percent, and the change callback.",
   },
   {

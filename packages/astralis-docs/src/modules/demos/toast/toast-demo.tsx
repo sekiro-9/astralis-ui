@@ -5,7 +5,7 @@ import { Button, HStack, Toaster, toast } from "astralis-ui";
 export function ToastDemo() {
   return (
     <>
-      {/* Mount ONE Toaster near your app root — it catches toasts from anywhere. */}
+      {/* Mount ONE Toaster near your app root. It catches toasts from anywhere. */}
       <Toaster placement="bottom-end" />
       <HStack gap="3" wrap="wrap">
         <Button size="sm" colorScheme="blue" variant="subtle" onClick={() => toast.info("Heads up", { description: "A new version is available." })}>

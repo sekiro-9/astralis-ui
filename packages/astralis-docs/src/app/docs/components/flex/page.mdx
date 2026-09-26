@@ -2,12 +2,12 @@ import { flexProps, flexItemProps } from "@/modules/demos/flex/flex-props";
 
 export const metadata = {
   title: "Flex",
-  description: "A Box with flexbox layout props — direction, alignment, wrap and gap as typed tokens.",
+  description: "A Box with flexbox layout props: direction, alignment, wrap and gap as typed tokens.",
 };
 
 # Flex
 
-A [Box](/docs/components/box) with flexbox layout props — direction, alignment, wrap and gap as typed tokens.
+A [Box](/docs/components/box) with flexbox layout props: direction, alignment, wrap and gap as typed tokens.
 
 <ComponentPreview name="flex-demo" />
 
@@ -21,14 +21,14 @@ import { Flex } from "astralis-ui";
 ## Alignment
 
 `justifyContent` distributes children along the main axis, `alignItems` along
-the cross axis — the same vocabulary as CSS, minus the `flex-` prefixes.
+the cross axis, the same vocabulary as CSS, minus the `flex-` prefixes.
 
 <ComponentPreview name="flex-align" align="start" />
 
 Left alone, `alignItems` is CSS's `stretch`: children fill the cross size, so a
 row gives you equal-height cards and a column gives you equal-width rows. That
-is usually what you want for a page skeleton — a sidebar reaching the full
-height of the row it sits in — and it is why a bare `<Flex>` behaves exactly
+is usually what you want for a page skeleton (a sidebar reaching the full
+height of the row it sits in), and it is why a bare `<Flex>` behaves exactly
 like `display: flex` and nothing more. When you want children to keep their
 natural size, say so:
 
@@ -41,7 +41,7 @@ natural size, say so:
 
 `basis`, `flex`, `grow`, `shrink`, `order` and `alignSelf` describe how an
 element behaves as a *child*, so they live on [Box](/docs/components/box) and
-work on any primitive — `<Flex shrink="0">` needs no wrapper. `Flex.Item`
+work on any primitive: `<Flex shrink="0">` needs no wrapper. `Flex.Item`
 declares the same props and stays the clearer spelling when a plain `div` is
 all you wanted.
 

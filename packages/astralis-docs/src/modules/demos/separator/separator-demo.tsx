@@ -6,7 +6,7 @@ export function SeparatorDemo() {
       <Text size="sm" weight="semibold">Astralis UI</Text>
       <Separator />
       <Text size="sm" color="muted">
-        A dividing line with the separator role built in — horizontal by
+        A dividing line with the separator role built in: horizontal by
         default, one prop to go vertical.
       </Text>
     </VStack>

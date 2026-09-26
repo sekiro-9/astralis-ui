@@ -10,12 +10,12 @@ import { COLOR_SCHEMES, COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes"
  * switch with no extra per-component data. A `control` override on the row
  * handles the few cases the string can't express.
  *
- * Pure and React-free on purpose — this is the part worth unit-testing.
+ * Pure and React-free on purpose: this is the part worth unit-testing.
  */
 
 /**
  * An enum control that starts with nothing chosen. `optional: true` means the
- * component's real default is not one of the selectable values — either it
+ * component's real default is not one of the selectable values: either it
  * isn't documented, or it's derived (Alert's `colorScheme` comes from
  * `status`). Picking the first option would then be a guess that codegen has
  * to emit, so the rest state is UNSET: no prop passed, nothing generated.
@@ -23,9 +23,9 @@ import { COLOR_SCHEMES, COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes"
 export const UNSET = "";
 
 export type Control =
-  /** Few, short options — rendered as a row of chips. */
+  /** Few, short options, rendered as a row of chips. */
   | { kind: "chips"; prop: string; options: readonly string[]; initial: string; optional: boolean }
-  /** Many or long options — rendered as a dropdown. */
+  /** Many or long options, rendered as a dropdown. */
   | { kind: "select"; prop: string; options: readonly string[]; initial: string; optional: boolean }
   | { kind: "switch"; prop: string; initial: boolean }
   | { kind: "text"; prop: string; initial: string }
@@ -38,8 +38,8 @@ const MAX_CHIP_LABEL = 12;
 /**
  * Types written as prose for the reader, mapped back to their real options.
  *
- * `colorScheme` is deliberately documented as "all 15 schemes" — fifteen quoted
- * literals in a table cell is unreadable — so the union parser can't see it.
+ * `colorScheme` is deliberately documented as "all 15 schemes" (fifteen quoted
+ * literals in a table cell is unreadable), so the union parser can't see it.
  * Handling it here means one rule instead of the same `control` override copied
  * into every component that has a hue, which is exactly the duplication that
  * let five props tables drift to a stale 11 in the first place.
@@ -60,7 +60,7 @@ export function unquote(value: string | undefined): string | undefined {
 
 /**
  * Parse `"solid" | "subtle" | "outline"` into its members. Returns null for
- * anything that isn't a clean union of string literals — prose like
+ * anything that isn't a clean union of string literals: prose like
  * "all 15 schemes", bare `boolean`, `ReactNode`, and so on.
  */
 export function parseUnion(type: string): string[] | null {
@@ -69,7 +69,7 @@ export function parseUnion(type: string): string[] | null {
   const members: string[] = [];
   for (const part of parts) {
     // The body must not itself contain a quote. With a greedy `.*` this
-    // accepted grouped rows like `"italic" · "underline"` as ONE literal —
+    // accepted grouped rows like `"italic" · "underline"` as ONE literal,
     // producing a control for a prop that doesn't exist and emitting invalid
     // JSX. Real option labels never contain quotes.
     const m = part.match(/^(["'`])([^"'`]*)\1$/);
@@ -108,7 +108,7 @@ function pickerFor(options: readonly string[], row: PropRow): Control {
 /**
  * A row whose `prop` is a real, single JSX attribute name.
  *
- * Props tables group related props into one row for readability — `p · px · py`,
+ * Props tables group related props into one row for readability: `p · px · py`,
  * `fontStyle · textDecoration`, `Pagination.Pages`. Those document several
  * things at once, so there is no single attribute a control could write. This
  * is the backstop: whatever the type string looks like, a row that doesn't name
@@ -172,7 +172,7 @@ export function deriveControl(row: PropRow): Control | null {
     };
   }
 
-  // ReactNode, ElementType, function signatures, prose — no honest control.
+  // ReactNode, ElementType, function signatures, prose: no honest control.
   return null;
 }
 
@@ -181,21 +181,21 @@ export function deriveControls(rows: readonly PropRow[]): Control[] {
 }
 
 /**
- * Controls for style props — `p`, `gap`, `bg` and the rest of the Box
- * vocabulary — which no props table documents one row at a time.
+ * Controls for style props (`p`, `gap`, `bg` and the rest of the Box
+ * vocabulary), which no props table documents one row at a time.
  *
  * Options come from the library's own token maps (`BOX_STYLE_TOKENS` and
  * friends), never a hand-written list. That is not tidiness: a value outside
  * those maps resolves to no class at all, so the prop would silently do
  * nothing, and a picker offering it would be lying.
  *
- * Every style prop is optional — the component's own default applies when it
- * is UNSET — which is why these need no documented default to behave.
+ * Every style prop is optional (the component's own default applies when it
+ * is UNSET), which is why these need no documented default to behave.
  */
 export function styleControls(
   props: readonly string[],
   tokens: Readonly<Record<string, readonly string[]>>,
-  /** Props the props table already documents — Flex's `direction` is both. */
+  /** Props the props table already documents. Flex's `direction` is both. */
   taken: ReadonlySet<string> = new Set(),
 ): Control[] {
   const controls: Control[] = [];
@@ -218,7 +218,7 @@ export function styleControls(
 
 /**
  * Object.keys puts integer-like keys first in numeric order and everything else
- * in insertion order, so a spacing scale comes back as 1,2,3,…,0.5,1.5 — the
+ * in insertion order, so a spacing scale comes back as 1,2,3,…,0.5,1.5. The
  * source order is simply not recoverable. Re-sort when every token is a number;
  * leave word scales (`xs`, `sm`, `auto`) exactly as declared.
  */
@@ -239,7 +239,7 @@ export function initialState(controls: readonly Control[]): Record<string, PropV
 
 /**
  * What to actually spread onto the live component. An UNSET control must
- * contribute nothing — passing `variant=""` would hand cva an empty variant key
+ * contribute nothing: passing `variant=""` would hand cva an empty variant key
  * and silently drop the recipe's classes, so the stage would stop matching the
  * generated code.
  */

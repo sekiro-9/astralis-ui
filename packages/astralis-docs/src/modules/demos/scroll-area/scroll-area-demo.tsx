@@ -1,6 +1,6 @@
 import { ScrollArea, Box, Text, VStack } from "astralis-ui";
 
-// No "use client" — the scrollbars are the platform's own, restyled with CSS.
+// No "use client": the scrollbars are the platform's own, restyled with CSS.
 export function ScrollAreaDemo() {
   return (
     <ScrollArea style={{ width: "18rem", height: "12rem" }}>

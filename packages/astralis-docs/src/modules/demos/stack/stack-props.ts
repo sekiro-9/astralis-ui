@@ -7,7 +7,7 @@ export const stackProps: PropRow[] = [
     type: `"horizontal" | "vertical"`,
     default: `"vertical"`,
     description:
-      "Stacking axis, responsive like every other style prop — direction={{ base: \"vertical\", md: \"horizontal\" }} is stack-on-mobile, row-on-desktop. HStack and VStack are presets with this fixed (HStack also centres on the cross axis).",
+      "Stacking axis, responsive like every other style prop: direction={{ base: \"vertical\", md: \"horizontal\" }} is stack-on-mobile, row-on-desktop. HStack and VStack are presets with this fixed (HStack also centres on the cross axis).",
   },
   {
     prop: "gap",
@@ -17,6 +17,6 @@ export const stackProps: PropRow[] = [
   {
     prop: "alignItems · justifyContent · wrap …",
     type: "Flex props",
-    description: "Stack is a Flex preset — every Flex and Box prop works.",
+    description: "Stack is a Flex preset: every Flex and Box prop works.",
   },
 ];

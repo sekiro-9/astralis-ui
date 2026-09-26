@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.astralis-dark, .astralis-dark *));
 
 /* ==========================================================================
-   Theme bridge — the docs site's own Tailwind theme resolves to Astralis
+   Theme bridge: the docs site's own Tailwind theme resolves to Astralis
    tokens, so the whole site recolors with the brand token and dark mode
    without a single hard-coded color.
    ========================================================================== */
@@ -90,7 +90,7 @@ body {
 }
 
 /* ==========================================================================
-   Shiki dual theme — light values inline, dark values from --shiki-dark.
+   Shiki dual theme: light values inline, dark values from --shiki-dark.
    Backgrounds are stripped so code sits on our own panel token.
    ========================================================================== */
 .shiki,
@@ -123,13 +123,20 @@ body {
    Landing-page motion & texture
    ========================================================================== */
 
-/* Fine line grid that fades out radially — hero backdrop. */
-.hero-grid {
-  background-image:
-    linear-gradient(var(--astralis-color-stroke-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--astralis-color-stroke-subtle) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 20%, black 30%, transparent 75%);
+/* Fades the hero scene into the page under the copy and along the bottom
+   edge, so the text keeps its contrast whatever the scene paints. */
+.hero-veil {
+  background:
+    linear-gradient(90deg, var(--astralis-color-surface-base) 0%, color-mix(in srgb, var(--astralis-color-surface-base) 78%, transparent) 38%, transparent 68%),
+    linear-gradient(180deg, transparent 55%, var(--astralis-color-surface-base) 100%);
+}
+
+/* Stacked layout: the copy spans the full width, over the brightest part. */
+@media (width < 64rem) {
+  .hero-veil {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--astralis-color-surface-base) 72%, transparent) 0%, color-mix(in srgb, var(--astralis-color-surface-base) 58%, transparent) 60%, var(--astralis-color-surface-base) 100%);
+  }
 }
 
 /* Animated accent gradient for display text. */

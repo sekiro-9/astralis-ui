@@ -1,12 +1,12 @@
 export const metadata = {
   title: "CLI",
-  description: "Scaffold a project, add blocks, generate a static brand theme, validate code against the design system, and connect AI agents — the astralis command-line tool.",
+  description: "Scaffold a project, add blocks, generate a static brand theme, validate code against the design system, and connect AI agents with the astralis command-line tool.",
 };
 
 # CLI
 
 Scaffold a project, add blocks, generate a static brand theme, validate code
-against the design system, and connect AI agents — the `astralis`
+against the design system, and connect AI agents with the `astralis`
 command-line tool.
 
 ## Running it
@@ -28,7 +28,7 @@ It needs Node `^22.18` or `>=24.11`. Run `astralis --help` for the command
 list, or `astralis <command> --help` for a command's options. The option
 tables on this page are generated from the same source as `--help`.
 
-## `create` — start a new project
+## `create`: start a new project
 
 Scaffolds a fresh app with the official `create-next-app` / `create-vite`
 prompts, then wires Astralis into it.
@@ -37,7 +37,7 @@ prompts, then wires Astralis into it.
 npx astralis-cli create my-app
 ```
 
-It asks which framework you want — Next.js, or React via Vite — then hands
+It asks which framework you want (Next.js, or React via Vite), then hands
 off to that scaffolder's own prompts, so you get the official setup rather
 than a copy of it that drifts. When it finishes, the stylesheet is imported,
 the provider is mounted, and a welcome page you can delete replaces the
@@ -53,11 +53,11 @@ inside the new folder to start it.
 With `--yes` it asks nothing: pass `--framework`, and it tells the scaffolder
 to take its defaults too.
 
-## `init` — add Astralis to an existing project
+## `init`: add Astralis to an existing project
 
 Wires `astralis-ui` into a project you already have (Next.js or Vite): installs
 the package, adds the `astralis-ui/styles.css` import, and mounts
-`<AstralisProvider>` at your app's entry point — the same [manual
+`<AstralisProvider>` at your app's entry point: the same [manual
 steps](/docs/installation), done for you.
 
 ```bash
@@ -81,10 +81,10 @@ With `--ci` it also sets up a check on every pull request: it pins
 Actions workflow. [Validate in CI](/docs/validate-in-ci) covers that, and a
 pre-commit hook.
 
-## `add` — copy a block into your project
+## `add`: copy a block into your project
 
 Writes a [block](/blocks)'s source into your codebase. Blocks aren't imported
-from a package — the file lands in your repo and you own it, so editing it is
+from a package: the file lands in your repo and you own it, so editing it is
 editing your own code.
 
 ```bash
@@ -108,13 +108,13 @@ npx astralis-cli add --list
 
 This command is deliberately small compared with the equivalent in other
 libraries, and the reason is architectural: a block imports only
-`astralis-ui`, React, or a sibling file — the registry builder rejects
-anything else — and the stylesheet is precompiled. So there are no import
+`astralis-ui`, React, or a sibling file (the registry builder rejects
+anything else), and the stylesheet is precompiled. So there are no import
 paths to rewrite, no dependency graph between blocks, and no Tailwind config
 to merge. It fetches text and writes files, and refuses any file path that
 would land outside the target folder.
 
-## `theme` — generate a static theme
+## `theme`: generate a static theme
 
 Produces a plain CSS stylesheet from a brand seed, for when you want your theme
 baked into a file rather than derived at runtime by the provider. See
@@ -151,7 +151,7 @@ point after the library stylesheet. Before writing, it checks every text and
 fill pairing the theme promises against WCAG AA in light and dark mode;
 failures are warnings unless you pass `--strict-contrast`.
 
-## `validate` — check code against the design system
+## `validate`: check code against the design system
 
 Checks your TSX and JSX against the machine-readable spec of the `astralis-ui`
 version you have installed. It catches what type-checks and still fails:
@@ -176,15 +176,15 @@ npx astralis-cli validate --json       # one JSON report, for CI and tools
 | `--strict-tokens` | Also warn on raw colors that bypass the tokens. |
 
 It skips `node_modules`, `.git`, `.next`, `dist`, `build` and `out`. Each
-finding names the file, line and column, a rule code, and — where there's a
-closed set — the nearest valid value.
+finding names the file, line and column, a rule code, and, where there's a
+closed set, the nearest valid value.
 
 ### Exit codes
 
 | Code | Meaning |
 | --- | --- |
 | `0` | No errors. Warnings alone never fail the run. |
-| `1` | At least one error — or the run couldn't start: no spec found, no `.tsx`/`.jsx` files, a path that doesn't exist. |
+| `1` | At least one error, or the run couldn't start: no spec found, no `.tsx`/`.jsx` files, a path that doesn't exist. |
 
 ### JSON output
 
@@ -217,7 +217,7 @@ every finding has the same five fields.
 
 ### Raw colours: `--strict-tokens`
 
-Arbitrary values are a feature — `bg="#ff0000"` is valid CSS and renders. But
+Arbitrary values are a feature: `bg="#ff0000"` is valid CSS and renders. But
 a raw colour won't follow the theme or dark mode. `--strict-tokens` adds an
 `off-token-color` warning for each one, as a drift check, without failing the
 run.
@@ -229,7 +229,7 @@ The same validator runs inside the [MCP server](/docs/ai-agents) as the
 `validate_code` tool, so an AI agent checks its own output against the rules
 you run in CI.
 
-## `report` — report a problem to the maintainers
+## `report`: report a problem to the maintainers
 
 Builds an issue snapshot from the files that show the problem and sends it to
 [the Astralis issue platform](/issues) as a draft, where you sign in with
@@ -259,11 +259,11 @@ the spec describes are recorded, and only literal values: a value computed at
 run time, a link, an image source or an event handler never is. Text in your
 JSX becomes a placeholder unless you pass `--include-text`.
 
-## `connect-mcp` — connect an AI coding agent
+## `connect-mcp`: connect an AI coding agent
 
 Connects one AI client to the Astralis [MCP server](/docs/ai-agents) so its
 agent reads your current component docs instead of guessing. It prompts for the
-client, tells you exactly what it will do, and — once you confirm — does it.
+client, tells you exactly what it will do, and, once you confirm, does it.
 
 ```bash
 npx astralis-cli connect-mcp
@@ -288,5 +288,5 @@ Every command takes these, and `astralis --version` prints the CLI's version.
 | `-h, --help` | Show this command's options. |
 | `--debug` | Print the stack trace if something fails unexpectedly. |
 
-Without a terminal — in CI, say — a command that needs an answer stops and
+Without a terminal (in CI, say), a command that needs an answer stops and
 tells you which flag supplies it, rather than guessing.

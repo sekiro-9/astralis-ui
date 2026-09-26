@@ -5,7 +5,7 @@ import { ClientTierBadge } from "@/modules/docs/client-tier-badge";
 /**
  * Shared layout for every component page: injects the client/server badge in
  * one place. The slug→tier map is computed here (server) from the
- * build-emitted system spec — the same artifact `astralis validate` and the
+ * build-emitted system spec, the same artifact `astralis validate` and the
  * MCP validate_code tool read, so the badge can't drift from what ships.
  * Only this tiny map crosses to the client; the active segment is read
  * client-side because static layouts don't receive it during server render.

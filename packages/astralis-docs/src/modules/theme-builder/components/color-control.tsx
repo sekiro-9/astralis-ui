@@ -12,8 +12,8 @@ const HEX_PATTERN = /^#[0-9a-f]{6}$/i;
  * as the sixth, and a hex field below.
  *
  * The hex draft is local so a half-typed value ("#8b5") can sit in the input
- * without being committed. The parent remounts these on reset — see the
- * `resetNonce` key in ControlRail — which is why no effect syncs them back.
+ * without being committed. The parent remounts these on reset (see the
+ * `resetNonce` key in ControlRail), which is why no effect syncs them back.
  */
 export function ColorControlRow({
   control,
@@ -46,7 +46,7 @@ export function ColorControlRow({
       </div>
 
       {/* Tooltip, not `title`: the native one waits a second, ignores the theme
-          and never appears on touch — the swatch's hex is worth more than that. */}
+          and never appears on touch. The swatch's hex is worth more than that. */}
       <div className="flex flex-wrap items-center gap-2 mb-2">
         <Tooltip>
           <Tooltip.Trigger>
@@ -59,7 +59,7 @@ export function ColorControlRow({
               style={{ backgroundColor: defaultHex }}
             />
           </Tooltip.Trigger>
-          <Tooltip.Content>Library default — {defaultHex}</Tooltip.Content>
+          <Tooltip.Content>Library default: {defaultHex}</Tooltip.Content>
         </Tooltip>
 
         {presets.map((preset) => (
@@ -75,7 +75,7 @@ export function ColorControlRow({
               />
             </Tooltip.Trigger>
             <Tooltip.Content>
-              {preset.name} — {preset.hex}
+              {preset.name}: {preset.hex}
             </Tooltip.Content>
           </Tooltip>
         ))}
@@ -104,7 +104,7 @@ export function ColorControlRow({
       <Input
         size="sm"
         aria-label={`${label} hex`}
-        /* The library's own value, shown but not applied — an untouched
+        /* The library's own value, shown but not applied: an untouched
            field must emit nothing so the export stays minimal. */
         placeholder={defaultHex}
         value={draft}

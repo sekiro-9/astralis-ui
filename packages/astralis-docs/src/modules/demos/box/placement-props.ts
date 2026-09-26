@@ -1,7 +1,7 @@
 import type { PropRow } from "@/modules/docs/props-table";
 
 /**
- * The placement set — the props every component accepts, including the ones
+ * The placement set: the props every component accepts, including the ones
  * with their own recipe. Keep in sync with PLACEMENT_PROP_NAMES in
  * astralis-ui/src/utils/placement.ts, which is the single source of truth.
  */
@@ -19,7 +19,7 @@ export const placementProps: PropRow[] = [
   {
     prop: "flex · basis · grow · shrink",
     type: `"1", "auto", "initial", "none" · spacing scale`,
-    description: "How the component behaves as a flex child — whether it fills, holds, or shrinks.",
+    description: "How the component behaves as a flex child: whether it fills, holds, or shrinks.",
   },
   {
     prop: "order · alignSelf",

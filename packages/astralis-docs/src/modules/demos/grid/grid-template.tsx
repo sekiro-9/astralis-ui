@@ -4,7 +4,7 @@ import { Grid, Center, Text } from "astralis-ui";
 
 export function GridTemplate() {
   return (
-    /* templateAreas + Grid.Item area — the escape hatch for named layouts. */
+    /* templateAreas + Grid.Item area: the escape hatch for named layouts. */
     <Grid
       templateAreas={`"header header" "sidebar main" "footer footer"`}
       templateColumns="8rem 1fr"

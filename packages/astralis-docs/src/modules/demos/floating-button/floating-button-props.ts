@@ -6,7 +6,7 @@ export const floatingButtonProps: PropRow[] = [
     prop: "placement",
     type: `"bottom-right" | "bottom-left" | "top-right" | "top-left" | "center-bottom" | "center-top"`,
     default: `"bottom-right"`,
-    description: "Anchor the button rests at until it is dragged — a corner or an edge midpoint.",
+    description: "Anchor the button rests at until it is dragged: a corner or an edge midpoint.",
   },
   {
     prop: "offset",
@@ -34,7 +34,7 @@ export const floatingButtonProps: PropRow[] = [
   {
     prop: "onPositionCommit",
     type: "(position: { x: number; y: number }) => void",
-    description: "Fires once when a drag ends — the right hook for persisting a position.",
+    description: "Fires once when a drag ends, the right hook for persisting a position.",
   },
   {
     prop: "edgePadding",

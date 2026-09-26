@@ -12,7 +12,7 @@ export const selectProps: PropRow[] = [
   {
     prop: "value / defaultValue / onChange",
     type: `string | number | null / same / (value) => void`,
-    default: `— / null / —`,
+    default: `None / null / None`,
     description: "Controlled / uncontrolled API.",
   },
   {
@@ -66,6 +66,6 @@ export const selectProps: PropRow[] = [
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,
-    description: "State flags — inherited from [Field](/docs/components/field).",
+    description: "State flags, inherited from [Field](/docs/components/field).",
   },
 ];

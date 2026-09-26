@@ -17,7 +17,7 @@ A hierarchy trail with automatic separators and current-page semantics.
 import { Breadcrumb } from "astralis-ui";
 ```
 
-Separators are inserted automatically between items — you never render them
+Separators are inserted automatically between items. You never render them
 by hand, so they can't drift out of sync.
 
 ## Custom separator
@@ -37,7 +37,7 @@ by hand, so they can't drift out of sync.
 
 ## Accessibility
 
-- The root is `<nav aria-label="Breadcrumb">` with an ordered list inside —
+- The root is `<nav aria-label="Breadcrumb">` with an ordered list inside:
   the APG breadcrumb pattern.
 - The current page is marked with `aria-current="page"` and rendered
   non-interactive; separators are `aria-hidden`.

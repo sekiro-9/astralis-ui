@@ -9,16 +9,16 @@ export function AlertVariants() {
   return (
     <VStack gap="3" alignItems="stretch" w="full" maxW="xl">
       <Alert status="success" variant="subtle">
-        <Alert.Title>subtle — the default tinted panel</Alert.Title>
+        <Alert.Title>subtle: the default tinted panel</Alert.Title>
       </Alert>
       <Alert status="success" variant="solid">
-        <Alert.Title>solid — maximum emphasis</Alert.Title>
+        <Alert.Title>solid: maximum emphasis</Alert.Title>
       </Alert>
       <Alert status="success" variant="outline">
-        <Alert.Title>outline — quiet, keeps the surface</Alert.Title>
+        <Alert.Title>outline: quiet, keeps the surface</Alert.Title>
       </Alert>
       <Alert status="success" variant="left-accent">
-        <Alert.Title>left-accent — editorial side rule</Alert.Title>
+        <Alert.Title>left-accent: editorial side rule</Alert.Title>
       </Alert>
       {dismissed ? (
         <Button size="sm" variant="subtle" onClick={() => setDismissed(false)}>

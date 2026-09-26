@@ -80,8 +80,8 @@ export function Bento({ stats }: { stats: SiteStats }) {
         <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
           Built on tokens, not guesses
         </h2>
-        <p className="mt-4 max-w-xl text-lg text-label-muted">
-          Every cell below is live — the same components and tokens you’d ship.
+        <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
+          Every cell below is live: the same components and tokens you’d ship.
         </p>
       </Reveal>
 
@@ -96,7 +96,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
 
         <Cell
           title={`${stats.hues} hues, ${stats.statusAliases} status aliases`}
-          body="One accent channel recolors any component — no per-hue CSS."
+          body="One accent channel recolors any component, with no per-hue CSS."
           className="lg:col-span-2"
         >
           <BentoSchemeCell />
@@ -104,7 +104,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
 
         <Cell
           title="Zero build step"
-          body="Precompiled CSS. No plugins, no config — your bundler just serves a stylesheet."
+          body="Precompiled CSS. No plugins, no config: your bundler just serves a stylesheet."
         >
           <div className="w-full font-mono text-[13px]">
             <CodeBlock code={`pnpm add astralis-ui`} lang="bash" />
@@ -113,7 +113,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
 
         <Cell
           title="Responsive props"
-          body="Breakpoint maps on every style prop — resize the window."
+          body="Breakpoint maps on every style prop. Resize the window."
           className="lg:col-span-2"
         >
           <BentoResponsiveCell />
@@ -121,7 +121,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
 
         <Cell
           title="Static parts ship zero JavaScript"
-          body="Every static component is a true Server Component — build-gate enforced, labeled on every docs page. The same page in five libraries, and the client JS each adds:"
+          body="Every static component is a true Server Component, enforced at build time and labeled on every docs page. The same page in five libraries, and the client JS each adds:"
           className="lg:col-span-2"
         >
           {/* Static markup on purpose: the cell about shipping no JS ships none. */}
@@ -150,7 +150,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
           body="Named roles resolve per theme; components never see a hex."
           className="lg:col-span-2"
         >
-          {/* Label/value pairs — DataList is exactly this, and it renders the
+          {/* Label/value pairs: DataList is exactly this, and it renders the
               proper <dl>/<dt>/<dd> the hand-rolled <ul> never did. */}
           <DataList size="sm" className="w-full font-mono">
             {tokenRows.map((row) => (

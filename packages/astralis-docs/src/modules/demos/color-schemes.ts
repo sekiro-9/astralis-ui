@@ -5,7 +5,7 @@ import { COLOR_SCHEMES } from "astralis-ui/color-schemes";
  *
  * Imported from the library's own `COLOR_SCHEMES`, not copied. Six props
  * modules each carried their own hand-written list and five had gone stale at
- * 11 entries — the four semantic hues (error/warning/success/info) were added
+ * 11 entries: the four semantic hues (error/warning/success/info) were added
  * to the library and the tables never caught up, so Button documented a
  * narrower type than it actually accepts.
  *

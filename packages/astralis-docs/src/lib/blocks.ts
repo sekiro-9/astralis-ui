@@ -1,6 +1,6 @@
 import { blocks, type BlockId } from "astralis-blocks";
 
-/** A block's registry entry — plain data, safe to hand to a Client Component. */
+/** A block's registry entry: plain data, safe to hand to a Client Component. */
 export type BlockSummary = (typeof blocks)[BlockId]["meta"];
 
 export interface BlockCategoryGroup {
@@ -43,7 +43,7 @@ export function listBlocks(): BlockSummary[] {
 
 /**
  * Blocks bucketed by category for the gallery tabs. Derived from the registry,
- * so a new block folder shows up — tab and count included — on the next build.
+ * so a new block folder shows up (tab and count included) on the next build.
  */
 export function groupByCategory(all: BlockSummary[]): BlockCategoryGroup[] {
   const byCategory = new Map<string, BlockSummary[]>();

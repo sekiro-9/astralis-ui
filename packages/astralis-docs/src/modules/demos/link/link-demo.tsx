@@ -10,7 +10,7 @@ export function LinkDemo() {
         Always underlined: <Link href="/docs" variant="underline">theming reference</Link>.
       </Text>
       <Text>
-        External: <Link href="https://react.dev" external>react.dev</Link> — new tab, safe rel.
+        External: <Link href="https://react.dev" external>react.dev</Link> (new tab, safe rel).
       </Text>
       <Text>
         Any hue: <Link href="/docs" colorScheme="purple">purple link</Link>,{" "}

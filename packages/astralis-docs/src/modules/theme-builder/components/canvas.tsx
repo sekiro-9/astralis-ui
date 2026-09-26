@@ -11,7 +11,7 @@ const ZOOM_STEP = 0.125;
 
 /**
  * The middle zone: a scrollable, zoomable viewport around the artboard.
- * Native scroll (no drag-pan — pointer capture blocked clicks); zoom via the
+ * Native scroll (no drag-pan: pointer capture blocked clicks); zoom via the
  * −/%/+ controls, with the percentage doubling as fit-to-width.
  */
 export function Canvas({ vars }: { vars: Record<string, string> }) {
@@ -21,7 +21,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
   const [artboardHeight, setArtboardHeight] = useState(2000);
 
   // Track the artboard's natural (unscaled) height so the scroll area and
-  // centering are exact. Measure explicitly on mount — relying on the
+  // centering are exact. Measure explicitly on mount. Relying on the
   // observer's initial notification alone left the height at its placeholder.
   useEffect(() => {
     const node = artboardRef.current;
@@ -68,7 +68,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
             padding: 16,
           }}
         >
-          {/* overflow:hidden clips the artboard's UNSCALED layout box — the scaled
+          {/* overflow:hidden clips the artboard's UNSCALED layout box. The scaled
               visual fits this wrapper exactly, but the layout box still spans the
               full natural height and would otherwise inflate the scroll area,
               shoving the "centered" page around. */}

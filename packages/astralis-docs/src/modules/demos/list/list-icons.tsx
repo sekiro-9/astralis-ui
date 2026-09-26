@@ -5,7 +5,7 @@ import { CircleCheck, CircleAlert, CircleX } from "lucide-react";
 
 export function ListIcons() {
   return (
-    /* styleType="none" + per-item icons — the changelog/feature-list recipe. */
+    /* styleType="none" + per-item icons: the changelog/feature-list recipe. */
     <List styleType="none" spacing="2.5">
       <List.Item icon={<Icon as={CircleCheck} size="sm" color="success" />}>
         Layout category fully documented

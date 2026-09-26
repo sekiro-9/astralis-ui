@@ -5,7 +5,7 @@ export const drawerProps: PropRow[] = [
   {
     prop: "open / defaultOpen / onOpenChange",
     type: `boolean / boolean / (open) => void`,
-    default: `— / false / —`,
+    default: `None / false / None`,
     description: "Controlled / initial state and callback.",
   },
   {

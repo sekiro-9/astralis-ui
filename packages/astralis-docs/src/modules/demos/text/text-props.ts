@@ -64,12 +64,12 @@ export const textProps: PropRow[] = [
     prop: "gutterBottom · paragraph",
     type: "boolean",
     default: "false",
-    description: "Rhythm helpers — small / paragraph-sized bottom margin (paragraph also forces a <p>).",
+    description: "Rhythm helpers: small / paragraph-sized bottom margin (paragraph also forces a <p>).",
   },
   {
     prop: "as",
     type: "ElementType",
     default: `"p"`,
-    description: "Rendered element — span, label, figcaption, …",
+    description: "Rendered element: span, label, figcaption, …",
   },
 ];

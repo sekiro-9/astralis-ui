@@ -28,8 +28,8 @@ import { PlaygroundPanel } from "./playground-panel";
  * The Playground tab: live component beside its controls, with the JSX that
  * produces exactly what you're looking at underneath.
  *
- * Controls are derived from the component's documented `PropRow[]` — the same
- * data the props table renders — so there is no second description of a
+ * Controls are derived from the component's documented `PropRow[]`, the same
+ * data the props table renders, so there is no second description of a
  * component's API to keep in step.
  *
  * State lives here rather than in the stage so the inline view and the expanded
@@ -51,7 +51,7 @@ function Stage({
   /** Named `content`, not `children`, so it stays a value we pass through
       rather than this component's own JSX children. */
   content: string;
-  /** Pinned to the canvas's top-right — the expand affordance. */
+  /** Pinned to the canvas's top-right: the expand affordance. */
   overlay?: React.ReactNode;
   className?: string;
 }) {
@@ -115,7 +115,7 @@ function GeneratedCode({
  * The playground board: canvas on the left, a Controls/Code rail on the right.
  *
  * The rail is tabbed rather than stacked so the code doesn't steal width from
- * the canvas — the component being previewed is the point, and it gets the
+ * the canvas: the component being previewed is the point, and it gets the
  * whole left side.
  *
  * One component for both the inline tab and the modal; they drifted apart when
@@ -142,7 +142,7 @@ function Board({
   highlighted: string | null;
   onReset: () => void;
   dirty: boolean;
-  /** Inline only — the modal is already expanded. */
+  /** Inline only: the modal is already expanded. */
   expandButton?: React.ReactNode;
   /** The modal has room for a rail wide enough to read code without scrolling. */
   wide?: boolean;
@@ -246,7 +246,7 @@ export function PlaygroundView({ name }: { name: PlaygroundName }) {
 
   const code = generateJsx({
     tag: entry.tag,
-    /* baseProps are emitted too — the snippet needs them to actually work. */
+    /* baseProps are emitted too: the snippet needs them to actually work. */
     props: { ...entry.baseProps, ...state },
     rows: entry.rows,
     children: entry.fixture
@@ -302,7 +302,7 @@ export function PlaygroundView({ name }: { name: PlaygroundName }) {
       />
 
       {/* size="full" (max-w-[calc(100vw-2rem)]): the widest the library offers,
-          and the three-column layout below needs it — "xl" is only max-w-2xl,
+          and the three-column layout below needs it: "xl" is only max-w-2xl,
           which is narrower than the docs column this modal expands out of. */}
       <Modal open={expanded} onOpenChange={setExpanded} size="full">
         {/* A floor as well as a ceiling: components with few controls (Kbd,

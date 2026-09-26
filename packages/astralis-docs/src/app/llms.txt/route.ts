@@ -2,14 +2,14 @@ import { listDocs, type DocEntry } from "@/lib/docs-markdown";
 
 export const dynamic = "force-static";
 
-/** Absolute URLs — agents often read this file's content detached from its origin. */
+/** Absolute URLs: agents often read this file's content detached from its origin. */
 const SITE = "https://astralis-zeta.vercel.app";
 
 const mdUrl = (doc: DocEntry) =>
   doc.kind === "guide" ? `${SITE}/docs/${doc.slug}.md` : `${SITE}/docs/components/${doc.slug}.md`;
 
 /**
- * llms.txt — the AI-agent index (llmstxt.org). Points coding agents at the
+ * llms.txt: the AI-agent index (llmstxt.org). Points coding agents at the
  * per-page .md endpoints so they read current APIs instead of hallucinating.
  */
 export function GET() {
@@ -23,9 +23,9 @@ export function GET() {
   const lines: string[] = [
     "# Astralis UI",
     "",
-    "> A React 19 component library on semantic design tokens: server-first (static components are true Server Components shipping zero client JavaScript — gate-enforced, labeled per component), precompiled prefix-isolated CSS with value props delivered through CSS custom properties (no build tooling required in the consuming app), runtime brand theming, responsive style props (viewport and container-query keys), compound components, and an accent-channel colorScheme system.",
+    "> A React 19 component library on semantic design tokens: server-first (static components are true Server Components shipping zero client JavaScript, gate-enforced, labeled per component), precompiled prefix-isolated CSS with value props delivered through CSS custom properties (no build tooling required in the consuming app), runtime brand theming, responsive style props (viewport and container-query keys), compound components, and an accent-channel colorScheme system.",
     "",
-    "Install: `pnpm add astralis-ui` — import `astralis-ui/styles.css` once and wrap the app in `<AstralisProvider>`.",
+    "Install: `pnpm add astralis-ui`. Import `astralis-ui/styles.css` once and wrap the app in `<AstralisProvider>`.",
     "",
     "Every page below is available as plain markdown at the listed .md URL (full demo source and props tables included).",
     "",

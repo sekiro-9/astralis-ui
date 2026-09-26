@@ -6,7 +6,7 @@ export const carouselProps: PropRow[] = [
   {
     prop: "index · defaultIndex · onIndexChange",
     type: "number · number · (index: number) => void",
-    default: "— · 0 · —",
+    default: "None · 0 · None",
     description: "Controlled / initial slide, and the change callback.",
   },
   {

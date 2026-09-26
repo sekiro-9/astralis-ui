@@ -20,7 +20,7 @@ import { ThemeToggle } from "astralis-ui";
 
 ## Usage
 
-Drop it anywhere inside an `AstralisProvider` — it reads and writes the theme
+Drop it anywhere inside an `AstralisProvider`: it reads and writes the theme
 through the same context the whole library uses, and persists the choice to
 `localStorage`. Every demo on this page is live: clicking one switches this
 site's theme, and the icon rotates a quarter turn as sun and moon cross-fade.
@@ -50,8 +50,8 @@ import { useTheme } from "astralis-ui";
 
 function CustomSwitch() {
   const { theme, resolvedTheme, setTheme } = useTheme();
-  // theme: "light" | "dark" | "system" — the user's setting
-  // resolvedTheme: "light" | "dark" — what's actually applied
+  // theme: "light" | "dark" | "system" (the user's setting)
+  // resolvedTheme: "light" | "dark" (what's actually applied)
   return (
     <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
       Switch to {resolvedTheme === "dark" ? "light" : "dark"}
@@ -71,4 +71,4 @@ Theme Toggle accepts every [Button](/docs/components/button) prop except
 
 - Without a label it carries `aria-label="Toggle theme"` automatically; with
   `showLabel` the visible text is the accessible name.
-- Must be rendered inside an `AstralisProvider` — `useTheme` throws otherwise.
+- Must be rendered inside an `AstralisProvider`: `useTheme` throws otherwise.

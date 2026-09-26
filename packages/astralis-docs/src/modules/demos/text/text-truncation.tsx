@@ -7,7 +7,7 @@ export function TextTruncation() {
   return (
     <VStack gap="4" alignItems="stretch" w="full" maxW="xs">
       <Box>
-        <Text size="xs" color="subtle" gutterBottom>truncate — one line, ellipsis</Text>
+        <Text size="xs" color="subtle" gutterBottom>truncate: one line, ellipsis</Text>
         <Text size="sm" truncate>{long}</Text>
       </Box>
       <Box>

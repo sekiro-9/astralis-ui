@@ -10,8 +10,8 @@ import {
 /**
  * The theme builder's pure logic.
  *
- * All derivation — colour ramps, semantic re-declaration, numeric scales, the
- * Tailwind-alias handling — lives in astralis-ui. This file holds only what is
+ * All derivation (colour ramps, semantic re-declaration, numeric scales, the
+ * Tailwind-alias handling) lives in astralis-ui. This file holds only what is
  * genuinely the docs' business: the preset lists the UI offers, and the one
  * place the builder legitimately differs from a consumer (preview fonts).
  *
@@ -24,7 +24,7 @@ import {
 /* State                                                               */
 /* ------------------------------------------------------------------ */
 
-/** A font the canvas and the export disagree about — see BuilderState. */
+/** A font the canvas and the export disagree about. See BuilderState. */
 export interface FontSetting {
   /** What the canvas renders with (may lean on fonts the docs site loads). */
   preview: string;
@@ -39,7 +39,7 @@ export interface BuilderState {
   seed: ThemeSeed;
   /**
    * Docs-only overlay. The docs site already loads Inter and Space Grotesk as
-   * CSS vars, so the canvas can preview them without a network request — but
+   * CSS vars, so the canvas can preview them without a network request, but
    * the exported file must name a stack the consumer's app can actually load.
    * Keeping this beside the seed rather than inside it means the seed stays a
    * truthful consumer artifact.
@@ -49,7 +49,7 @@ export interface BuilderState {
 
 export const DEFAULT_STATE: BuilderState = { seed: {}, previewFonts: {} };
 
-/** True while everything is at the library defaults — the landing state. */
+/** True while everything is at the library defaults: the landing state. */
 export const isDefaultState = (state: BuilderState): boolean => isEmptySeed(state.seed);
 
 /* ------------------------------------------------------------------ */
@@ -61,7 +61,7 @@ export type ColorField = "brandColor" | "grayColor" | "errorColor" | "warningCol
 export interface ColorControl {
   field: ColorField;
   label: string;
-  /** Explains what the token actually drives — shown in the info popover. */
+  /** Explains what the token actually drives, shown in the info popover. */
   info: string;
   /** The library's own value for this palette's 500 step, resolved from color.css. */
   defaultHex: string;
@@ -72,7 +72,7 @@ export interface ColorControl {
 /**
  * Every seedable colour, in one table.
  *
- * Each seeds its OWN palette — the status colours never touch the red / orange
+ * Each seeds its OWN palette: the status colours never touch the red / orange
  * / green / blue hues they alias, so `colorScheme="orange"` stays orange
  * whatever a consumer picks for warnings.
  *
@@ -83,7 +83,7 @@ export const COLOR_CONTROLS = [
   {
     field: "brandColor",
     label: "Brand",
-    info: "Your accent — buttons, links, focus rings, and anything painted with colorScheme=\"brand\". Also the default accent channel, so most components follow it.",
+    info: "Your accent: buttons, links, focus rings, and anything painted with colorScheme=\"brand\". Also the default accent channel, so most components follow it.",
     defaultHex: "#eab308",
     presets: [
       { name: "Violet", hex: "#8b5cf6" },
@@ -107,7 +107,7 @@ export const COLOR_CONTROLS = [
   {
     field: "errorColor",
     label: "Error",
-    info: "Destructive and failure states — error alerts, invalid fields, danger buttons. Seeds its own palette; the red hue is untouched.",
+    info: "Destructive and failure states: error alerts, invalid fields, danger buttons. Seeds its own palette; the red hue is untouched.",
     defaultHex: "#ef4444",
     presets: [
       { name: "Crimson", hex: "#dc2626" },
@@ -119,7 +119,7 @@ export const COLOR_CONTROLS = [
   {
     field: "warningColor",
     label: "Warning",
-    info: "Caution states — warning alerts and confirmations that need a second look. Seeds its own palette; the orange hue is untouched.",
+    info: "Caution states: warning alerts and confirmations that need a second look. Seeds its own palette; the orange hue is untouched.",
     defaultHex: "#f97316",
     presets: [
       { name: "Amber", hex: "#f59e0b" },
@@ -131,7 +131,7 @@ export const COLOR_CONTROLS = [
   {
     field: "successColor",
     label: "Success",
-    info: "Confirmation states — success alerts, completed steps, positive badges. Seeds its own palette; the green hue is untouched.",
+    info: "Confirmation states: success alerts, completed steps, positive badges. Seeds its own palette; the green hue is untouched.",
     defaultHex: "#22c55e",
     presets: [
       { name: "Emerald", hex: "#10b981" },
@@ -143,7 +143,7 @@ export const COLOR_CONTROLS = [
   {
     field: "infoColor",
     label: "Info",
-    info: "Informational states — neutral notices and hints that carry no urgency. Seeds its own palette; the blue hue is untouched.",
+    info: "Informational states: neutral notices and hints that carry no urgency. Seeds its own palette; the blue hue is untouched.",
     defaultHex: "#3b82f6",
     presets: [
       { name: "Azure", hex: "#2563eb" },
@@ -210,7 +210,7 @@ export const FONT_PRESETS: Array<{
 ];
 
 /* ------------------------------------------------------------------ */
-/* Derivation — both sides go through the library                      */
+/* Derivation: both sides go through the library                      */
 /* ------------------------------------------------------------------ */
 
 /** Applies a FontSetting to both halves of the state, or clears the field. */
@@ -249,10 +249,10 @@ export function cssExport(state: BuilderState): string {
   const usesCustomFont = Boolean(state.seed.fontHeading ?? state.seed.fontBody ?? state.seed.fontMono);
   return themeCss(state.seed, {
     banner: [
-      "/* astralis-theme.css — generated by the Astralis theme builder.",
+      "/* astralis-theme.css: generated by the Astralis theme builder.",
       ' * Import AFTER "astralis-ui/styles.css" so these overrides win.',
       usesCustomFont ? " * Custom fonts must be loaded by your app (next/font or a <link>)." : null,
-      " * Runtime equivalent: <AstralisProvider tokens={…}> — same math.",
+      " * Runtime equivalent: <AstralisProvider tokens={…}>, same math.",
       " */",
     ]
       .filter((line): line is string => line !== null)
@@ -289,8 +289,8 @@ const FONT_FIELDS: ReadonlySet<keyof ThemeSeed> = new Set(["fontHeading", "fontB
 const UNSAFE_FONT = /[;{}<>\\]|\/\*|\*\//;
 
 /**
- * A seed that arrived from outside the builder — a shared link or another
- * tab's storage — minus every field the library rejects and every font stack
+ * A seed that arrived from outside the builder (a shared link or another
+ * tab's storage) minus every field the library rejects and every font stack
  * that could inject CSS. The seed is untrusted: a link is anyone's input.
  */
 export function sanitizeSeed(seed: ThemeSeed): ThemeSeed {

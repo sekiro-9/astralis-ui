@@ -6,7 +6,7 @@ export const ratingProps: PropRow[] = [
   {
     prop: "value / defaultValue / onChange",
     type: "number / number / (value: number) => void",
-    default: "— / 0 / —",
+    default: "None / 0 / None",
     description: "Controlled / uncontrolled value. Fractions such as 4.5 render only in readOnly mode.",
   },
   {

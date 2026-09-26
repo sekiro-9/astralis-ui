@@ -2,7 +2,7 @@ import { collapsibleProps, collapsibleTriggerProps, collapsiblePartsProps } from
 
 export const metadata = {
   title: "Collapsible",
-  description: "A single disclosure that ships zero JavaScript — native details/summary, with exclusive grouping via name.",
+  description: "A single disclosure that ships zero JavaScript: native details/summary, with exclusive grouping via name.",
 };
 
 # Collapsible
@@ -22,7 +22,7 @@ import { Collapsible } from "astralis-ui";
 
 ## Exclusive groups (accordion, no JS)
 
-Collapsibles sharing a `name` form a native exclusive accordion — opening one
+Collapsibles sharing a `name` form a native exclusive accordion: opening one
 closes its siblings via the `<details name>` attribute:
 
 <ComponentPreview name="collapsible-exclusive" />
@@ -36,11 +36,11 @@ Use `defaultOpen` for the initial state; if you need programmatic control,
 
 ## Accessibility
 
-- The trigger stays a real `<summary>` with its native `list-item` display —
+- The trigger stays a real `<summary>` with its native `list-item` display:
   only the marker is hidden. Restyling summary's display is the documented
   way to lose expanded/collapsed announcements in some screen readers, so the
   layout row is an inner span instead.
-- Find-in-page can auto-open a collapsed section in Chromium — content is
+- Find-in-page can auto-open a collapsed section in Chromium: content is
   searchable, not trapped.
 
 ## Props

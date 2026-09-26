@@ -2,7 +2,7 @@
  * The site's top-level destinations, shared by the desktop header row and the
  * mobile drawer so the two can never drift.
  *
- * Each link owns its own active test — "Docs" covers every guide page except
+ * Each link owns its own active test: "Docs" covers every guide page except
  * the component pages, which have their own entry, so the rule can't be
  * derived from the href alone.
  */

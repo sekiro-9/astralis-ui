@@ -21,7 +21,7 @@ import { Modal } from "astralis-ui";
 
 ## Anatomy
 
-`Trigger` and `Close` wrap your own elements — usually Buttons — so the
+`Trigger` and `Close` wrap your own elements (usually Buttons), so the
 modal composes with anything focusable:
 
 ```tsx
@@ -46,7 +46,7 @@ modal composes with anything focusable:
 
 ## Controlled
 
-Own the state to keep the modal open during async work — pair with
+Own the state to keep the modal open during async work. Pair with
 `closeOnOverlayClick={false}` so a stray click can't discard a pending save.
 
 <ComponentPreview name="modal-controlled" />
@@ -64,7 +64,7 @@ Own the state to keep the modal open during async work — pair with
 | Key | Action |
 | --- | --- |
 | `Esc` | Close (opt out with `closeOnEsc={false}`) |
-| `Tab` / `Shift+Tab` | Cycle focus inside the dialog — it can't escape |
+| `Tab` / `Shift+Tab` | Cycle focus inside the dialog (it can't escape) |
 
 On open, focus moves to the first focusable element inside; on close it
 returns to the trigger. With stacked overlays, Escape closes only the

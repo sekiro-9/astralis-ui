@@ -5,7 +5,7 @@ export const stepsProps: PropRow[] = [
   {
     prop: "step · defaultStep · onStepChange",
     type: "number · number · (step: number) => void",
-    default: "— · 0 · —",
+    default: "None · 0 · None",
     description: "Controlled / initial step (0-based), and the change callback.",
   },
   {
@@ -30,7 +30,7 @@ export const stepsProps: PropRow[] = [
     prop: "labelPlacement",
     type: `"inline" | "bottom"`,
     default: `"inline"`,
-    description: "Horizontal only — titles beside or centered beneath indicators.",
+    description: "Horizontal only: titles beside or centered beneath indicators.",
   },
   {
     prop: "clickable",
@@ -42,7 +42,7 @@ export const stepsProps: PropRow[] = [
     prop: "linear",
     type: "boolean",
     default: "false",
-    description: "Restricts navigation to one step forward — no skipping ahead.",
+    description: "Restricts navigation to one step forward, no skipping ahead.",
   },
   {
     prop: "count",
@@ -60,7 +60,7 @@ export const stepsPartsProps: PropRow[] = [
   {
     prop: "Steps.Indicator",
     type: "children?: ReactNode",
-    description: "Circle/dot — shows the number, a check when completed, or ! on error. Children override.",
+    description: "Circle/dot: shows the number, a check when completed, or ! on error. Children override.",
   },
   {
     prop: "Steps.Title / Steps.Description",

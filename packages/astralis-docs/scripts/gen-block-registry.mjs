@@ -1,14 +1,14 @@
 /* ==========================================================================
-   ASTRALIS — PUBLIC BLOCK REGISTRY
+   ASTRALIS: PUBLIC BLOCK REGISTRY
    --------------------------------------------------------------------------
    `astralis add <id>` has to get a block's source from somewhere. The registry
    JSON already exists in astralis-blocks, but it is a build artifact inside a
-   workspace package — nothing outside this repo can read it.
+   workspace package: nothing outside this repo can read it.
 
    This copies it into the docs site's public/ directory, so the deployed docs
    ARE the registry:
 
-     /r/index.json      catalogue — every block, no source. `astralis add --list`
+     /r/index.json      catalogue: every block, no source. `astralis add --list`
      /r/{id}.json       one block: metadata + the full text of its files
 
    Static files, so they ride the docs deploy and are cached by the CDN like

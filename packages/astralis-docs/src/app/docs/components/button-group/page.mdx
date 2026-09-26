@@ -21,7 +21,7 @@ import { ButtonGroup, Button } from "astralis-ui";
 ## Usage
 
 Set `variant`, `colorScheme`, `size` or `disabled` once on the group and every
-direct child [Button](/docs/components/button) inherits it — the group hands
+direct child [Button](/docs/components/button) inherits it. The group hands
 the props down during server render, so the sharing costs no client
 JavaScript. An explicit prop on a child always wins, which is how the
 "Publish" button above breaks out of its group's outline style.
@@ -49,7 +49,7 @@ When not attached, `spacing` controls the gap between buttons.
 
 ## Disabled
 
-Disabling the group disables every button in it — handy while a form section
+Disabling the group disables every button in it, handy while a form section
 is pending.
 
 <ComponentPreview name="button-group-disabled" />
@@ -64,5 +64,5 @@ Button Group renders a `div` and accepts all its standard attributes.
 
 - Renders with `role="group"` by default; pass a `role` (e.g. `toolbar`) and
   an `aria-label` to describe the set when the context isn't obvious.
-- Attached icon-only buttons still need individual `aria-label`s — see the
+- Attached icon-only buttons still need individual `aria-label`s. See the
   alignment toolbar demo.

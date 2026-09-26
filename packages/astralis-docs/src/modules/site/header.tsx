@@ -38,7 +38,7 @@ export function Header({ version }: { version: string }) {
 
         <div className="flex items-center gap-2">
           <Search />
-          {/* Read from astralis-ui's package.json, not typed in — it read
+          {/* Read from astralis-ui's package.json, not typed in. It read
               0.2.0 for two releases after the library moved on. */}
           <Tag variant="subtle" colorScheme="brand">
             {version}

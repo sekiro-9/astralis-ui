@@ -6,7 +6,7 @@ import { groupByCategory, listBlocks } from "@/lib/blocks";
 export const metadata: Metadata = {
   title: "Blocks",
   description:
-    "Section-level compositions of Astralis primitives — heroes, pricing, footers. Copied into your project as source you own, not imported from a package.",
+    "Section-level compositions of Astralis primitives: heroes, pricing, footers. Copied into your project as source you own, not imported from a package.",
 };
 
 export default function BlocksPage() {
@@ -20,7 +20,7 @@ export default function BlocksPage() {
         </Heading>
         <Text color="muted" lineHeight="relaxed" mt="3">
           Ready-made page sections built from the primitives you already use. Blocks
-          aren&apos;t imported from a package — the CLI copies the source into your project,
+          aren&apos;t imported from a package: the CLI copies the source into your project,
           so you own the file and edit it like any other component.
         </Text>
       </header>

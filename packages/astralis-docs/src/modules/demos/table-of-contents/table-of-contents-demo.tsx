@@ -18,7 +18,7 @@ export function TableOfContentsDemo() {
               {s.title}
             </Heading>
             <Text size="sm" color="muted" mt="2">
-              Scroll this pane — the entry for the section under the header
+              Scroll this pane: the entry for the section under the header
               highlights on the right. The links are plain anchors, so they
               work before hydration too.
             </Text>
