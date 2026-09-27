@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { blocks } from "astralis-blocks";
 import { COLOR_SCHEMES } from "astralis-ui/color-schemes";
 import { navigation } from "./navigation";
 import { uiVersion } from "./ui-version";
@@ -33,6 +34,7 @@ export interface SiteStats {
   hues: number;
   statusAliases: number;
   examples: number;
+  blocks: number;
 }
 
 export const siteStats: SiteStats = {
@@ -41,4 +43,5 @@ export const siteStats: SiteStats = {
   hues: COLOR_SCHEMES.filter((scheme) => !STATUS_ALIASES.has(scheme)).length,
   statusAliases: COLOR_SCHEMES.filter((scheme) => STATUS_ALIASES.has(scheme)).length,
   examples: countExamples(join(process.cwd(), "src", "app", "docs")),
+  blocks: Object.keys(blocks).length,
 };

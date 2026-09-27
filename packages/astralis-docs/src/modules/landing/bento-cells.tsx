@@ -29,7 +29,7 @@ export function BentoResponsiveCell() {
         p={{ base: "3", md: "4" }}
       />
       <Text as="span" size="sm" color="muted">
-        {"p={{ base: '3', md: '4' }}"} — this box changes at the md breakpoint.
+        {"p={{ base: '3', md: '4' }}"}: this box changes at the md breakpoint.
       </Text>
     </HStack>
   );

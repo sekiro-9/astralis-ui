@@ -33,14 +33,13 @@ export function FinalCta() {
         <div className="absolute inset-x-0 bottom-0 mx-auto h-72 max-w-3xl rounded-full bg-accent-subtle blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex max-w-2xl flex-col items-center px-6 text-center">
+      <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
         <Reveal>
           <h2 className="font-display text-balance text-5xl font-semibold tracking-tight text-label sm:text-6xl">
             Ship something <span className="text-gradient">stellar</span>
           </h2>
-          <p className="mx-auto mt-6 max-w-md text-pretty text-lg text-label-muted">
-            Install the package, wrap your app in the provider, and every
-            component on this site is yours.
+          <p className="mx-auto mt-6 text-balance text-lg text-label-muted lg:whitespace-nowrap">
+            Install the package, add the provider, and every component here is yours.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button as={Link} href="/docs" size="lg" rounded="xl" rightIcon={<ArrowRight size={18} />}>

@@ -11,11 +11,20 @@ const columns = [
     ],
   },
   {
-    title: "Components",
+    title: "Tools",
     links: [
-      { label: "Button", href: "/docs/components/button" },
-      { label: "Layout", href: "/docs/components/box" },
-      { label: "Data entry", href: "/docs/components/input" },
+      { label: "CLI", href: "/docs/cli" },
+      { label: "Blocks", href: "/blocks" },
+      { label: "Theme builder", href: "/theme-builder" },
+      { label: "AI assistants", href: "/docs/ai-agents" },
+      { label: "DevTools", href: "/docs/devtools" },
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      { label: "Issues & contributions", href: "/issues" },
+      { label: "GitHub", href: "https://github.com/SekiroDev360/astralis-ui" },
     ],
   },
 ];
@@ -27,11 +36,11 @@ export function Footer({ version }: { version: string }) {
         <div className="max-w-xs">
           <Logo />
           <p className="mt-4 text-sm leading-relaxed text-label-muted">
-            A React component library with a stellar finish — semantic tokens,
+            A React component library with a stellar finish: semantic tokens,
             runtime theming, zero build step.
           </p>
         </div>
-        <div className="flex gap-16">
+        <div className="flex flex-wrap gap-x-16 gap-y-10">
           {columns.map((column) => (
             <div key={column.title}>
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">

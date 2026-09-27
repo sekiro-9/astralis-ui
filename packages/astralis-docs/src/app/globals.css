@@ -123,12 +123,10 @@ body {
    Landing-page motion & texture
    ========================================================================== */
 
-/* Fades the hero scene into the page under the copy and along the bottom
-   edge, so the text keeps its contrast whatever the scene paints. */
+/* Keeps the copy readable over the hero scene. It covers the copy column
+   only and is clear by the middle, where the form runs edge to edge. */
 .hero-veil {
-  background:
-    linear-gradient(90deg, var(--astralis-color-surface-base) 0%, color-mix(in srgb, var(--astralis-color-surface-base) 78%, transparent) 38%, transparent 68%),
-    linear-gradient(180deg, transparent 55%, var(--astralis-color-surface-base) 100%);
+  background: linear-gradient(90deg, var(--astralis-color-surface-base) 0%, color-mix(in srgb, var(--astralis-color-surface-base) 85%, transparent) 42%, transparent 56%);
 }
 
 /* Stacked layout: the copy spans the full width, over the brightest part. */

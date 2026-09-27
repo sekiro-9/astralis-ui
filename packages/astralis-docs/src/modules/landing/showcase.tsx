@@ -17,9 +17,8 @@ export function Showcase({ components, version }: { components: number; version:
               <h2 className="font-display text-4xl font-semibold tracking-tight text-label">
                 {components} components, all real
               </h2>
-              <p className="mt-4 max-w-xl text-lg text-label-muted">
-                Nothing below is a screenshot — hover to pause, then go meet
-                them in the docs.
+              <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
+                Nothing below is a screenshot. Hover to pause, then meet them in the docs.
               </p>
             </div>
             <Link as={NextLink} href="/docs/components/button" variant="underline" className="text-sm font-medium">

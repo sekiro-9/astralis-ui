@@ -1,9 +1,18 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Transition } from "framer-motion";
 import type { ReactNode } from "react";
 
-const EASE = [0.21, 0.47, 0.32, 0.98] as const;
+export const EASE = [0.21, 0.47, 0.32, 0.98] as const;
+
+/**
+ * The reduced-motion preference may only change the transition. The server
+ * cannot know it, so letting it change `initial` renders different HTML on
+ * each side and fails hydration.
+ */
+export function useEntranceTransition(transition: Transition): Transition {
+  return useReducedMotion() ? { duration: 0 } : transition;
+}
 
 /** Scroll-into-view fade-up. Wrap any section block; stagger with `delay`. */
 export function Reveal({
@@ -17,14 +26,14 @@ export function Reveal({
   y?: number;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const transition = useEntranceTransition({ duration: 0.7, delay, ease: EASE });
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
+      transition={transition}
     >
       {children}
     </motion.div>
@@ -43,13 +52,13 @@ export function Entrance({
   y?: number;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const transition = useEntranceTransition({ duration: 0.8, delay, ease: EASE });
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay, ease: EASE }}
+      transition={transition}
     >
       {children}
     </motion.div>

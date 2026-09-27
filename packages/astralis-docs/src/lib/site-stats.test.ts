@@ -31,4 +31,8 @@ describe("siteStats", () => {
   it("finds the live examples", () => {
     expect(siteStats.examples).toBeGreaterThan(siteStats.components);
   });
+
+  it("counts the blocks in the registry", () => {
+    expect(siteStats.blocks).toBeGreaterThan(0);
+  });
 });
