@@ -5,6 +5,12 @@ their history lives in the git log.
 
 ## Unreleased
 
+### Search inputs drop the browser's clear button
+
+`Input.Search`, and any `type="search"` input inside the provider, no longer
+shows the browser's own clear button, a blue X in Chromium that ignored the
+theme.
+
 ### Spinner is now Loader, in five variants (breaking)
 
 `Spinner` is renamed `Loader`, since most of its variants no longer spin. A

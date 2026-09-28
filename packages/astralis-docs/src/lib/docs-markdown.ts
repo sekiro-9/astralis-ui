@@ -49,15 +49,25 @@ export function listDocs(): DocEntry[] {
   return entries;
 }
 
+interface MarkdownOptions {
+  /** Inline each live demo's source. Site search leaves them out: demo code drowns the prose. */
+  demos?: boolean;
+}
+
+/** The /docs introduction, which the sidebar lists but listDocs() does not. */
+export function introductionAsMarkdown(options: MarkdownOptions = {}): string {
+  return mdxToMarkdown(join(APP_DOCS, "page.mdx"), options);
+}
+
 /** One page as plain markdown (returns null for unknown slugs). */
-export function docAsMarkdown(slug: string): string | null {
+export function docAsMarkdown(slug: string, options: MarkdownOptions = {}): string | null {
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
   const mdxPath = mdxPathFor(slug, "component") ?? mdxPathFor(slug, "guide");
   if (!mdxPath) return null;
-  return mdxToMarkdown(mdxPath);
+  return mdxToMarkdown(mdxPath, options);
 }
 
-function mdxToMarkdown(mdxPath: string): string {
+function mdxToMarkdown(mdxPath: string, { demos = true }: MarkdownOptions = {}): string {
   let md = readFileSync(mdxPath, "utf8").replaceAll("\r\n", "\n");
 
   // Map imported identifiers to their module paths BEFORE stripping imports,
@@ -77,6 +87,7 @@ function mdxToMarkdown(mdxPath: string): string {
 
   // Inline each preview's demo source as a fenced tsx block.
   md = md.replace(/<ComponentPreview\s+name="([a-z0-9-]+)"[^/]*\/>/g, (_, name: string) => {
+    if (!demos) return "";
     const demoPath = findDemoFile(name);
     if (!demoPath) return `*(interactive demo: ${name})*`;
     const source = readFileSync(demoPath, "utf8").replaceAll("\r\n", "\n").trim();

@@ -834,6 +834,9 @@
   .astralis :where(textarea) { resize: vertical; }
   .astralis :where(button, input:is([type="button"], [type="reset"], [type="submit"]), ::file-selector-button) { appearance: button; }
   .astralis :where(::-webkit-inner-spin-button, ::-webkit-outer-spin-button) { height: auto; }
+  /* A search input's native clear button: a browser-coloured X (blue in Chromium) that ignores the theme. */
+  .astralis ::-webkit-search-decoration,
+  .astralis ::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
   .astralis :where([hidden]:not([hidden="until-found"])) { display: none !important; }
 }
 

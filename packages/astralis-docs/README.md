@@ -16,7 +16,7 @@ It serves more than the pages people read:
 - **Machine-readable twins** for agents: every docs page as markdown at its URL
   plus `.md`, `/llms.txt`, `/llms-full.txt`, and `/system-spec.json`. The MCP
   server reads these.
-- **Site search**, a Pagefind index built from the prerendered pages.
+- **Site search**, a Pagefind index built from each page's source, so it works in `dev` too.
 - **Issues & Contributions** at `/issues`, the issue platform: it takes the
   snapshots the DevTools and `astralis report` send, as private drafts at
   `POST /api/issues/drafts`, and turns them into public issues once the
@@ -57,8 +57,8 @@ run `pnpm db:migrate` against it before deploying a change to the schema.
 
 | Script | What it does |
 | --- | --- |
-| `dev` | Generates block thumbnails and the public registry, then starts `next dev` |
-| `build` | The same generation, `next build`, then the search index |
+| `dev` | Generates block thumbnails, the public registry and the search index, then starts `next dev` |
+| `build` | The same generation, then `next build` |
 | `start` | Serves a production build |
 | `test` | Vitest over the site's pure logic: playground codegen, theme-builder seeds, the markdown twins, the landing numbers, the issue platform's fingerprints, draft checks and filters |
 | `test:db` | The issue platform's queries against real Postgres, in a separate `astralis_issues_test` database; needs `docker compose up -d` |
@@ -67,7 +67,7 @@ run `pnpm db:migrate` against it before deploying a change to the schema.
 | `lint` | ESLint (Next's core-web-vitals and TypeScript configs) |
 | `gen:thumbs` | Server-renders every block into a standalone HTML thumbnail in `public/block-thumbs/` |
 | `gen:registry` | Copies the block registry from `astralis-blocks` into `public/r/` |
-| `gen:search` | Indexes the prerendered docs pages and the block registry into `public/pagefind/`; needs `next build` output |
+| `gen:search` | Indexes every docs page, from its source, and the block registry into `public/pagefind/`; runs before `dev` and `build` |
 
 `public/block-thumbs/`, `public/r/` and `public/pagefind/` are generated and
 git-ignored. Vercel runs the `build` script (see `vercel.json`), so the deploy

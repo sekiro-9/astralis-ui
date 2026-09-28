@@ -1,28 +1,27 @@
 /* ==========================================================================
    ASTRALIS: SITE SEARCH INDEX
    --------------------------------------------------------------------------
-   Runs after `next build` and writes a Pagefind index to public/pagefind/,
-   which ships with the deploy as static files. The header's search dialog
-   loads it on first open; there is no search server.
+   Writes a Pagefind index to public/pagefind/, which ships as static files.
+   The header's search dialog loads it on first open; there is no search
+   server.
 
-   Docs pages are read from the prerendered HTML in .next/server/app, and
-   Pagefind only indexes what sits inside `data-pagefind-body` (the docs
-   article), so the header, sidebar and TOC never pollute results. Each file
-   is handed over with its route as the URL, because Next serves
-   `docs/theming.html` at `/docs/theming`, not at the file's own path.
+   Pages are indexed from their source, through the same Markdown that
+   llms.txt serves (src/lib/docs-markdown.ts), not from built HTML. So the
+   index needs no `next build` and search works under `next dev` too. Each
+   page becomes a small HTML document whose headings carry the ids the site
+   gives them, so a result can deep-link to the section that matched.
 
-   Block pages are indexed from the registry instead of their HTML: the
-   detail page is mostly a live preview and source code, while the registry
-   holds the words a reader searches for (name, description, tags).
+   Blocks are indexed from the registry: the words a reader searches for
+   (name, description, tags) live there, not in the live preview.
    ========================================================================== */
 
-import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join, relative } from "node:path";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { build } from "esbuild";
 import * as pagefind from "pagefind";
 
 const DOCS = join(dirname(fileURLToPath(import.meta.url)), "..");
-const APP = join(DOCS, ".next", "server", "app");
 const OUT = join(DOCS, "public", "pagefind");
 // Workspace sibling by path, as in gen-block-registry.mjs.
 const CATALOGUE = join(DOCS, "..", "astralis-blocks", "registry", "index.json");
@@ -32,37 +31,116 @@ const die = (message) => {
   process.exit(1);
 };
 
-if (!existsSync(join(APP, "docs.html"))) {
-  die("no prerendered docs in .next/server/app. Run `next build` first");
+/**
+ * docs-markdown.ts is TypeScript with "@/" paths; esbuild resolves both. The
+ * bundle sits inside this package so its external imports still resolve.
+ */
+async function loadDocsMarkdown() {
+  const cache = join(DOCS, "node_modules", ".cache");
+  mkdirSync(cache, { recursive: true });
+  const dir = mkdtempSync(join(cache, "astralis-search-"));
+  const outfile = join(dir, "docs-markdown.mjs");
+  await build({
+    entryPoints: [join(DOCS, "src", "lib", "docs-markdown.ts")],
+    absWorkingDir: DOCS,
+    tsconfig: join(DOCS, "tsconfig.json"),
+    bundle: true,
+    platform: "node",
+    format: "esm",
+    packages: "external",
+    outfile,
+    logLevel: "error",
+  });
+  try {
+    return await import(pathToFileURL(outfile).href);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 }
 
-/** `docs/components/button.html` -> `/docs/components/button`. */
-const routeOf = (file) =>
-  `/${relative(APP, file)
-    .replace(/\\/g, "/")
-    .replace(/\.html$/, "")}`;
+const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const docsPages = [
-  join(APP, "docs.html"),
-  ...readdirSync(join(APP, "docs"), { withFileTypes: true, recursive: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(".html"))
-    .map((entry) => join(entry.parentPath, entry.name)),
-].sort();
+/** Markdown inline syntax and JSX tags down to the words a reader sees. */
+const plain = (text) =>
+  text
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/<[^>]+>/g, "")
+    .replace(/`([^`]*)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\\([|*_`])/g, "$1")
+    .trim();
+
+/** rehype-slug's ids (github-slugger), so deep links land on the heading. */
+function slugger() {
+  const seen = new Map();
+  return (text) => {
+    const base = text
+      .toLowerCase()
+      .replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, "")
+      .replace(/ /g, "-");
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    return count === 0 ? base : `${base}-${count}`;
+  };
+}
+
+/**
+ * A page's Markdown as the minimal HTML Pagefind needs: headings and prose.
+ * Code examples and component tags stay out, so an excerpt is always words a
+ * reader can scan, never a stray `/>`.
+ */
+function toHtml(title, markdown) {
+  const prose = markdown
+    .replace(/^```[\s\S]*?^```$/gm, "")
+    .replace(/<[A-Z][^>]*?\/>/gs, "")
+    .replace(/<\/?[A-Z][^>]*>/gs, "");
+  const slug = slugger();
+  const html = [];
+  let paragraph = [];
+  const flush = () => {
+    if (paragraph.length) html.push(`<p>${escape(paragraph.join(" "))}</p>`);
+    paragraph = [];
+  };
+
+  for (const line of prose.split("\n")) {
+    const heading = line.match(/^(#{1,6})\s+(.*)$/);
+    if (heading) {
+      flush();
+      const text = plain(heading[2]);
+      const level = heading[1].length;
+      html.push(`<h${level} id="${slug(text)}">${escape(text)}</h${level}>`);
+    } else if (/^\|?\s*:?-{3,}/.test(line)) {
+      continue; // a table's separator row
+    } else if (line.trim() === "") {
+      flush();
+    } else {
+      paragraph.push(plain(line.replace(/\|/g, " ")));
+    }
+  }
+  flush();
+  return `<html lang="en"><head><title>${escape(title)}</title></head><body data-pagefind-body>${html.join("")}</body></html>`;
+}
+
+const docs = await loadDocsMarkdown();
+const pages = [
+  { url: "/docs", title: "Introduction", markdown: docs.introductionAsMarkdown({ demos: false }) },
+  ...docs.listDocs().map((entry) => ({
+    url: entry.kind === "component" ? `/docs/components/${entry.slug}` : `/docs/${entry.slug}`,
+    title: entry.title,
+    markdown: docs.docAsMarkdown(entry.slug, { demos: false }),
+  })),
+];
 
 const { index, errors: createErrors } = await pagefind.createIndex({ forceLanguage: "en" });
 if (!index) die(createErrors.join("\n"));
 
 const problems = [];
-
-for (const file of docsPages) {
-  const content = readFileSync(file, "utf8");
-  // Without the marker Pagefind indexes the whole <body>, header and sidebar
-  // included, and silently drops the page once any other page has it.
-  if (!content.includes("data-pagefind-body")) {
-    problems.push(`${routeOf(file)} has no data-pagefind-body`);
+for (const page of pages) {
+  if (!page.markdown) {
+    problems.push(`${page.url} has no page source`);
     continue;
   }
-  const { errors } = await index.addHTMLFile({ url: routeOf(file), content });
+  const { errors } = await index.addHTMLFile({ url: page.url, content: toHtml(page.title, page.markdown) });
   problems.push(...errors);
 }
 
@@ -90,6 +168,4 @@ const { errors: writeErrors } = await index.writeFiles({ outputPath: OUT });
 if (writeErrors.length) die(writeErrors.join("\n"));
 await pagefind.close();
 
-console.log(
-  `[astralis] search index: ${docsPages.length} docs page(s) + ${blocks.length} block(s) -> public/pagefind`,
-);
+console.log(`[astralis] search index: ${pages.length} docs page(s) + ${blocks.length} block(s) -> public/pagefind`);

@@ -12,24 +12,13 @@ import {
   type ReactNode,
 } from "react";
 import { Search as SearchIcon } from "lucide-react";
-import {
-  Button,
-  Code,
-  Highlight,
-  Icon,
-  Input,
-  InputGroup,
-  Kbd,
-  Modal,
-  ScrollArea,
-  Text,
-} from "astralis-ui";
+import { Button, Highlight, HStack, Icon, Input, Kbd, Modal, ScrollArea, Text } from "astralis-ui";
 import { navigation } from "@/lib/navigation";
 
 /*
  * Pagefind's runtime and index are static files that scripts/build-search-index.mjs
- * writes into public/ after `next build`. They are fetched on first open,
- * never bundled, so the import has to stay out of the bundler's reach.
+ * writes into public/ before `next dev` and `next build`. They are fetched on
+ * first open, never bundled, so the import has to stay out of the bundler's reach.
  */
 const PAGEFIND_URL = "/pagefind/pagefind.js";
 const MAX_HITS = 8;
@@ -169,12 +158,17 @@ export function Search() {
           size="sm"
           aria-label="Search the docs"
           aria-keyshortcuts={apple ? "Meta+K" : "Control+K"}
-          leftIcon={<Icon as={SearchIcon} size="xs" />}
+          rightIcon={
+            <Kbd size="sm" className="hidden md:inline-flex">
+              {apple ? "⌘K" : "Ctrl K"}
+            </Kbd>
+          }
+          className="justify-between md:w-56"
         >
-          <span className="hidden text-label-muted sm:inline">Search</span>
-          <Kbd size="sm" className="ml-3 hidden md:inline-flex">
-            {apple ? "⌘K" : "Ctrl K"}
-          </Kbd>
+          <span className="flex items-center gap-2">
+            <Icon as={SearchIcon} size={14} />
+            <span className="hidden text-xs font-normal text-label-muted sm:inline">Search docs</span>
+          </span>
         </Button>
       </Modal.Trigger>
 
@@ -245,12 +239,7 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
 
   let message: ReactNode = null;
   if (status === "unavailable") {
-    message = (
-      <>
-        The search index ships with the production build. Run <Code>pnpm build</Code> to generate
-        it.
-      </>
-    );
+    message = "Search could not load. Check your connection and try again.";
   } else if (status === "ready" && hits.length === 0) {
     message = `Nothing matches “${query}”. Try a component name or a prop.`;
   } else if (status === "idle") {
@@ -262,24 +251,20 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
       <Modal.Title className="sr-only">Search the docs</Modal.Title>
 
       <div className="border-b border-stroke-base p-3">
-        <InputGroup prefix={<Icon as={SearchIcon} size="sm" />}>
-          <Input
-            type="search"
-            size="lg"
-            value={query}
-            onChange={(event) => search(event.target.value)}
-            onKeyDown={onKeyDown}
-            placeholder="Components, props, guides, blocks…"
-            aria-label="Search the docs"
-            role="combobox"
-            aria-expanded={hits.length > 0}
-            aria-controls={hits.length > 0 ? listId : undefined}
-            aria-autocomplete="list"
-            aria-activedescendant={hits.length > 0 ? optionId(active) : undefined}
-            autoComplete="off"
-            spellCheck={false}
-          />
-        </InputGroup>
+        <Input.Search
+          value={query}
+          onChange={(event) => search(event.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="Components, props, guides, blocks…"
+          aria-label="Search the docs"
+          role="combobox"
+          aria-expanded={hits.length > 0}
+          aria-controls={hits.length > 0 ? listId : undefined}
+          aria-autocomplete="list"
+          aria-activedescendant={hits.length > 0 ? optionId(active) : undefined}
+          autoComplete="off"
+          spellCheck={false}
+        />
       </div>
 
       <ScrollArea tabIndex={-1} style={{ maxHeight: "min(60vh, 32rem)" }}>
@@ -334,18 +319,18 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
         {status === "ready" ? `${hits.length} result${hits.length === 1 ? "" : "s"}` : ""}
       </p>
 
-      <div className="flex items-center gap-4 border-t border-stroke-base px-4 py-2.5 text-xs text-label-subtle">
-        <span className="flex items-center gap-1.5">
+      <HStack gap="4" className="border-t border-stroke-base px-4 py-2.5 text-xs text-label-subtle">
+        <HStack gap="1.5">
           <Kbd size="sm">↑</Kbd>
           <Kbd size="sm">↓</Kbd> to move
-        </span>
-        <span className="flex items-center gap-1.5">
+        </HStack>
+        <HStack gap="1.5">
           <Kbd size="sm">Enter</Kbd> to open
-        </span>
-        <span className="flex items-center gap-1.5">
+        </HStack>
+        <HStack gap="1.5">
           <Kbd size="sm">Esc</Kbd> to close
-        </span>
-      </div>
+        </HStack>
+      </HStack>
     </>
   );
 }

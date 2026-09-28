@@ -15,8 +15,7 @@ export default function DocsLayout({
       </aside>
 
       <main className="min-w-0 flex-1 px-0 py-10 lg:px-12">
-        {/* The search index reads only what is inside this marker. */}
-        <article className="mx-auto max-w-3xl" data-pagefind-body>
+        <article className="mx-auto max-w-3xl">
           {children}
         </article>
         <PageNav />

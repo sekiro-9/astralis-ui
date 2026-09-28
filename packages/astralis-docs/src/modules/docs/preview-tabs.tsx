@@ -21,8 +21,6 @@ export function PreviewTabs({ preview, code, playground, align = "center" }: Pre
       variant="segmented"
       size="sm"
       keepMounted
-      // Demo markup and source would drown the prose in search results.
-      data-pagefind-ignore="all"
       /* Inline style beats the root's own gap class (value utilities no
          longer ship since the var-channel). */
       className="my-6"
