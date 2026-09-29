@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ScenePalette } from "./scene-canvas";
+import type { SceneFade } from "./scene-canvas";
 import styles from "./scene.module.css";
 
 const SceneMount = dynamic(() => import("./scene-mount").then((m) => m.SceneMount), {
@@ -9,7 +9,7 @@ const SceneMount = dynamic(() => import("./scene-mount").then((m) => m.SceneMoun
   loading: () => <div className={styles.fallback} />,
 });
 
-/** A new form on every visit, painted in the brand's deep, mid and light shades. */
-export function HeroScene({ palette }: { palette: ScenePalette }) {
-  return <SceneMount palette={palette} />;
+/** A new form on every visit, painted in the site's brand and following the picker. */
+export function BrandScene({ fade }: { fade: SceneFade }) {
+  return <SceneMount fade={fade} />;
 }

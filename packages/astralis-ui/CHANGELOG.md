@@ -5,6 +5,23 @@ their history lives in the git log.
 
 ## Unreleased
 
+### Visitors can re-theme at run time, and keep their choice
+
+`useTheme()` now returns `setTokens`, which re-themes everything under the
+provider from a new seed, for example a brand picker. `setTokens(undefined)`
+returns to the `tokens` prop.
+
+With `persistTokens` on the provider, that choice is stored in localStorage
+and restored on the next visit. Add `persistTokens` to `ThemeScript` too, and
+the stored theme is applied before first paint, so a returning visitor never
+sees the default brand first. The stored theme also sits on `:root`, so
+overlays portalled out of the provider's container take it as well.
+
+```tsx
+<ThemeScript persistTokens />
+<AstralisProvider persistTokens>{children}</AstralisProvider>
+```
+
 ### Search inputs drop the browser's clear button
 
 `Input.Search`, and any `type="search"` input inside the provider, no longer

@@ -6,6 +6,12 @@ import { generateThemeTokens } from "./css-vars";
 import { ThemeProviderContext } from "./theme-context";
 import type { Theme, ThemeTokens } from "./theme-context";
 import { THEME_STORAGE_KEY, isTheme, readStoredTheme, writeStoredTheme } from "./theme-storage";
+import {
+  applyStoredThemeStyle,
+  readStoredSeed,
+  storedThemeCss,
+  writeStoredSeed,
+} from "./theme-token-storage";
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -13,6 +19,12 @@ interface ThemeProviderProps {
   storageKey?: string;
   className?: string;
   tokens?: ThemeTokens;
+  /**
+   * Remember a seed chosen with `setTokens` across visits, in localStorage.
+   * Pair it with `<ThemeScript persistTokens />` so the stored theme applies
+   * before first paint. Only one provider on a page should set it.
+   */
+  persistTokens?: boolean;
 }
 
 const DARK_QUERY = "(prefers-color-scheme: dark)";
@@ -23,26 +35,30 @@ export function AstralisProvider({
   storageKey = THEME_STORAGE_KEY,
   className = "",
   tokens,
+  persistTokens = false,
 }: ThemeProviderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Server and first client render agree: the default theme, system = light.
-  // The stored preference and the media query are read after hydration.
+  // Server and first client render agree: the default theme, system = light,
+  // and the `tokens` prop. Stored choices are read after hydration.
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [systemDark, setSystemDark] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [chosenTokens, setChosenTokens] = useState<ThemeTokens | undefined>(undefined);
+  const activeTokens = chosenTokens ?? tokens;
 
   const resolvedTheme: "light" | "dark" =
     theme === "system" ? (systemDark ? "dark" : "light") : theme;
 
   useEffect(() => {
     setThemeState(readStoredTheme(storageKey) ?? defaultTheme);
+    if (persistTokens) setChosenTokens(readStoredSeed(storageKey));
     const media = window.matchMedia(DARK_QUERY);
     setSystemDark(media.matches);
     setHydrated(true);
     const onChange = () => setSystemDark(media.matches);
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
-  }, [defaultTheme, storageKey]);
+  }, [defaultTheme, storageKey, persistTokens]);
 
   // Only an explicit choice is persisted, so a changed defaultTheme still
   // reaches visitors who never picked one.
@@ -55,6 +71,14 @@ export function AstralisProvider({
     [storageKey],
   );
 
+  const setTokens = useCallback(
+    (next: ThemeTokens | undefined) => {
+      setChosenTokens(next);
+      if (persistTokens) writeStoredSeed(storageKey, storedThemeCss(next));
+    },
+    [persistTokens, storageKey],
+  );
+
   // The provider owns the root dark class. Waiting for the stored preference
   // keeps it from stripping the class a pre-paint ThemeScript already set.
   // The document is the one the provider renders into, so a provider
@@ -65,12 +89,19 @@ export function AstralisProvider({
     root.classList.toggle("astralis-dark", resolvedTheme === "dark");
   }, [hydrated, resolvedTheme]);
 
+  useEffect(() => {
+    if (!hydrated || !persistTokens) return;
+    applyStoredThemeStyle(containerRef.current?.ownerDocument ?? document, storedThemeCss(chosenTokens));
+  }, [hydrated, persistTokens, chosenTokens]);
+
   // Semantic tokens are baked at :root, so the seed's overrides re-declare
   // the roles that point at an overridden primitive, per mode.
-  const tokenStyles = generateThemeTokens(tokens, resolvedTheme);
+  const tokenStyles = generateThemeTokens(activeTokens, resolvedTheme);
 
   return (
-    <ThemeProviderContext.Provider value={{ theme, setTheme, resolvedTheme, tokens }}>
+    <ThemeProviderContext.Provider
+      value={{ theme, setTheme, resolvedTheme, tokens: activeTokens, setTokens }}
+    >
       <div
         ref={containerRef}
         className={`astralis ${className}`.trim()}

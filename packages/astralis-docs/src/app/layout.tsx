@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
-import { AstralisProvider } from "astralis-ui";
+import { AstralisProvider, ThemeScript } from "astralis-ui";
 import { SiteChrome } from "@/modules/site/site-chrome";
 import { uiVersion } from "@/lib/ui-version";
 import "astralis-ui/styles.css";
@@ -30,13 +30,6 @@ export const metadata: Metadata = {
     "Accessible, themeable React components for crafting polished web apps and design systems. Server-first, built for the Next.js App Router.",
 };
 
-/**
- * Applies `.astralis-dark` before first paint so a stored/system dark
- * preference never flashes light. The AstralisProvider takes ownership of the
- * class after hydration using the same storage key.
- */
-const themeInitScript = `(function(){try{var t=localStorage.getItem("astralis-ui-theme");var d=t==="dark"||((!t||t==="system")&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("astralis-dark");}catch(e){}})();`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,9 +41,12 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Before first paint: the stored dark mode and the brand the visitor picked. */}
+        <ThemeScript persistTokens />
+      </head>
       <body suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <AstralisProvider defaultTheme="system">
+        <AstralisProvider defaultTheme="system" persistTokens>
           <SiteChrome version={uiVersion}>{children}</SiteChrome>
         </AstralisProvider>
       </body>

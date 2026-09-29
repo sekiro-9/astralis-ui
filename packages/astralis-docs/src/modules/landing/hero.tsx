@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  generateBrandShades, useTheme,
+  useTheme,
   Button, Card, Stat, Badge, Avatar, Switch, Slider, Tag, HStack, VStack,
 } from "astralis-ui";
 import { ArrowRight } from "lucide-react";
 import { CopyCommand } from "@/modules/docs/copy-command";
 import { EASE, Entrance, useEntranceTransition } from "./reveal";
-import { HeroScene } from "./scene/hero-scene";
+import { BrandScene } from "./scene/brand-scene";
 
 const swatches = [
   // First entry = the library's actual default brand (yellow-500).
@@ -22,51 +21,23 @@ const swatches = [
   { name: "Cyan", hex: "#06b6d4" },
 ];
 
-/**
- * Role tokens (brand-solid, brand-subtle, …) are substituted at :root, so
- * overriding only the primitive shades on a subtree never reaches them.
- * They must be re-declared here too, per theme (mirrors semantic.css).
- */
-function brandOverride(shades: Record<string, string>, mode: "light" | "dark"): CSSProperties {
-  const shade = (step: number) => shades[`--astralis-color-brand-${step}`];
-  const roles =
-    mode === "dark"
-      ? { label: shade(300), subtle: shade(900), muted: shade(800), stroke: shade(400) }
-      : { label: shade(700), subtle: shade(100), muted: shade(200), stroke: shade(500) };
-
-  return {
-    ...shades,
-    "--astralis-color-brand-solid": shade(500),
-    "--astralis-color-brand-label": roles.label,
-    "--astralis-color-brand-subtle": roles.subtle,
-    "--astralis-color-brand-muted": roles.muted,
-    "--astralis-color-brand-stroke": roles.stroke,
-    "--astralis-color-brand-ring": shade(500),
-    "--astralis-color-accent-solid": shade(500),
-    "--astralis-color-accent-label": roles.label,
-    "--astralis-color-accent-subtle": roles.subtle,
-    "--astralis-color-accent-muted": roles.muted,
-    "--astralis-color-accent-stroke": roles.stroke,
-    "--astralis-color-accent-ring": shade(500),
-  } as CSSProperties;
-}
-
 export function Hero() {
-  const [brand, setBrand] = useState(swatches[0].hex);
-  const { resolvedTheme } = useTheme();
+  // The picker re-themes the whole site through the provider, which stores the
+  // choice. The default swatch clears it rather than storing the default.
+  const { tokens, setTokens } = useTheme();
+  const brand = tokens?.brandColor ?? swatches[0].hex;
+  const setBrand = (hex: string) =>
+    setTokens(hex.toLowerCase() === swatches[0].hex ? undefined : { brandColor: hex });
   const cardTransition = useEntranceTransition({ duration: 1, delay: 0.3, ease: EASE });
-  const shades = generateBrandShades(brand) as Record<string, string>;
-  const shade = (step: number) => shades[`--astralis-color-brand-${step}`] ?? brand;
 
   return (
     <section
       // The header is h-14 (3.5rem): the hero fills the rest of the first screen,
       // up to 60rem so very tall monitors do not get a mostly empty hero.
       className="relative isolate flex items-center overflow-hidden lg:min-h-[min(calc(100svh-3.5rem),60rem)]"
-      style={brandOverride(shades, resolvedTheme)}
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <HeroScene palette={[shade(700), shade(400), shade(300)]} />
+        <BrandScene fade="left" />
         <div className="hero-veil absolute inset-0" />
       </div>
 

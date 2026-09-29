@@ -16,7 +16,14 @@ export interface ThemeProviderState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   resolvedTheme: "light" | "dark";
+  /** The seed in effect: one set with setTokens, else the provider's `tokens` prop. */
   tokens?: ThemeTokens;
+  /**
+   * Re-themes everything under the provider at run time, for example from a
+   * brand picker. `undefined` returns to the `tokens` prop. With
+   * `persistTokens` the choice is stored and restored on the next visit.
+   */
+  setTokens: (tokens: ThemeTokens | undefined) => void;
 }
 
 /*

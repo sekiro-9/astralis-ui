@@ -21,8 +21,23 @@ const LG_PX = 1024;
 /** Deep, mid and light shades of the brand, as hex. */
 export type ScenePalette = readonly [string, string, string];
 
+/**
+ * Where the form gives way to the page: `left` fades it out across a copy
+ * column on the left (side by side at lg and up); `none` runs it edge to edge,
+ * for content centred over it with its own veil.
+ */
+export type SceneFade = "left" | "none";
+
 /** `palette` changes without a rebuild; the scene eases into the new colours. */
-export function SceneCanvas({ variant, palette }: { variant: SceneVariant; palette: ScenePalette }) {
+export function SceneCanvas({
+  variant,
+  palette,
+  fade,
+}: {
+  variant: SceneVariant;
+  palette: ScenePalette;
+  fade: SceneFade;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
   const scene = useRef<Scene | null>(null);
   const paletteRef = useRef(palette);
@@ -33,7 +48,7 @@ export function SceneCanvas({ variant, palette }: { variant: SceneVariant; palet
     const canvas = ref.current;
     if (canvas === null) return;
 
-    const created = createScene(canvas, variant, paletteRef.current, () => setUnsupported(true));
+    const created = createScene(canvas, variant, fade, paletteRef.current, () => setUnsupported(true));
     if (created === null) {
       setUnsupported(true);
       return;
@@ -43,7 +58,7 @@ export function SceneCanvas({ variant, palette }: { variant: SceneVariant; palet
       created.dispose();
       scene.current = null;
     };
-  }, [variant]);
+  }, [variant, fade]);
 
   useEffect(() => {
     paletteRef.current = [deep, mid, light];
@@ -75,6 +90,7 @@ function toRgb(palette: ScenePalette): [Rgb, Rgb, Rgb] {
 function createScene(
   canvas: HTMLCanvasElement,
   variant: SceneVariant,
+  fadeMode: SceneFade,
   palette: ScenePalette,
   onLost: () => void,
 ): Scene | null {
@@ -100,7 +116,7 @@ function createScene(
   setUniforms(gl, program, variant);
 
   const colours = createColours(gl, program, toRgb(palette));
-  const loop = startLoop(canvas, { gl, program, variant, beforeDraw: colours.step });
+  const loop = startLoop(canvas, { gl, program, variant, fadeMode, beforeDraw: colours.step });
   const lost = (event: Event) => {
     event.preventDefault();
     loop.stop();
@@ -168,11 +184,13 @@ function startLoop(
     gl,
     program,
     variant,
+    fadeMode,
     beforeDraw,
   }: {
     gl: WebGLRenderingContext;
     program: WebGLProgram;
     variant: SceneVariant;
+    fadeMode: SceneFade;
     beforeDraw: (now: number) => void;
   },
 ): { stop: () => void; redrawIfStill: () => void; still: boolean } {
@@ -200,8 +218,8 @@ function startLoop(
     }
     gl.uniform2f(resolution, width, height);
     // Side by side (lg and up), the form fades out across the copy column.
-    // Stacked, it sits behind the copy, and the CSS veil handles contrast.
-    const sideBySide = canvas.clientWidth >= LG_PX;
+    // Stacked, or with no fade, it runs edge to edge and a CSS veil handles contrast.
+    const sideBySide = fadeMode === "left" && canvas.clientWidth >= LG_PX;
     gl.uniform2f(fade, sideBySide ? 0.44 : -1, sideBySide ? 0.64 : -0.5);
   };
   const loop = (now: number) => {
