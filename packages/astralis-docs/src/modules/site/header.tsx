@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Separator, Tag, ThemeToggle } from "astralis-ui";
+import { Button, Icon, Separator, Tag, ThemeToggle } from "astralis-ui";
+import { GithubMark } from "./github-mark";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
-import { navLinks as links } from "./nav-links";
+import { GITHUB_URL, navLinks as links } from "./nav-links";
 import { Search } from "./search";
 
 export function Header({ version }: { version: string }) {
@@ -43,6 +44,21 @@ export function Header({ version }: { version: string }) {
           <Tag variant="subtle" colorScheme="brand">
             {version}
           </Tag>
+          <Button
+            as="a"
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="text"
+            colorScheme="gray"
+            size="sm"
+            aria-label="Astralis on GitHub"
+            className="w-8 px-0"
+          >
+            <Icon size={18} color="brand-solid">
+              <GithubMark />
+            </Icon>
+          </Button>
           <Separator
             orientation="vertical"
             h="4"

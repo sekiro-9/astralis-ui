@@ -12,6 +12,8 @@ export interface NavLink {
   isActive: (path: string) => boolean;
 }
 
+export const GITHUB_URL = "https://github.com/SekiroDev360/astralis-ui";
+
 export const navLinks: NavLink[] = [
   {
     title: "Docs",

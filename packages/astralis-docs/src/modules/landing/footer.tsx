@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/modules/site/logo";
+import { GITHUB_URL } from "@/modules/site/nav-links";
 
 const columns = [
   {
@@ -24,7 +25,7 @@ const columns = [
     title: "Community",
     links: [
       { label: "Issues & contributions", href: "/issues" },
-      { label: "GitHub", href: "https://github.com/SekiroDev360/astralis-ui" },
+      { label: "GitHub", href: GITHUB_URL },
     ],
   },
 ];

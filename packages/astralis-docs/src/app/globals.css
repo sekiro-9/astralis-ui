@@ -129,6 +129,17 @@ body {
   background: linear-gradient(90deg, var(--astralis-color-surface-base) 0%, color-mix(in srgb, var(--astralis-color-surface-base) 85%, transparent) 42%, transparent 56%);
 }
 
+/* The closing call to action sits centred over the scene: a soft pool of page
+   colour behind the copy, the form running free around it. */
+.cta-veil {
+  background: radial-gradient(
+    ellipse 50% 58% at 50% 50%,
+    color-mix(in srgb, var(--astralis-color-surface-base) 94%, transparent) 0%,
+    color-mix(in srgb, var(--astralis-color-surface-base) 86%, transparent) 50%,
+    transparent 100%
+  );
+}
+
 /* Stacked layout: the copy spans the full width, over the brightest part. */
 @media (width < 64rem) {
   .hero-veil {
