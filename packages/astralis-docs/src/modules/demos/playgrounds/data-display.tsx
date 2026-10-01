@@ -153,7 +153,7 @@ export const dataDisplayPlaygrounds = definePlaygrounds({
     tag: "QrCode",
     component: asEntry(QrCode),
     rows: qrCodeProps,
-    baseProps: { value: "https://astralis-zeta.vercel.app" },
+    baseProps: { value: "https://astralis-ui.com" },
   },
   "stat-demo": {
     tag: "Stat",

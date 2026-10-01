@@ -53,7 +53,7 @@ beforeEach(() => {
   routeFiles = ["app/about/page.tsx", "app/layout.tsx"];
   posts = [];
   opened = [];
-  submitResult = { ok: true, body: { url: "https://astralis-zeta.vercel.app/issues/new?draft=d1" } };
+  submitResult = { ok: true, body: { url: "https://astralis-ui.com/issues/new?draft=d1" } };
   const { window } = dom;
   window.open = (url) => opened.push(url);
   Object.assign(globalThis, {
@@ -193,7 +193,7 @@ test("picking a component shows its name, props, client tier, docs and ancestors
   assert.equal(pageClicks, 0, "the picking click is swallowed");
   assert.equal($(".component h3").textContent, "Card.Body");
   assert.match($(".body").textContent, /Server Component/);
-  assert.equal($(".link").getAttribute("href"), "https://astralis-zeta.vercel.app/docs/components/card");
+  assert.equal($(".link").getAttribute("href"), "https://astralis-ui.com/docs/components/card");
   assert.match($(".body").textContent, /No props beyond its defaults/);
 
   click($$(".crumb").find((c) => c.textContent === "Card"));
@@ -321,7 +321,7 @@ test("Send posts exactly the snapshot shown and opens the draft", async () => {
   await settle();
   const submitted = posts.find((p) => p.path === "submit");
   assert.deepEqual(submitted.body, shown);
-  assert.deepEqual(opened, ["https://astralis-zeta.vercel.app/issues/new?draft=d1"]);
+  assert.deepEqual(opened, ["https://astralis-ui.com/issues/new?draft=d1"]);
   assert.match($(".status").textContent, /Draft created/);
 });
 

@@ -6,7 +6,7 @@ import { specEntry } from "astralis-cli/snapshot";
 
 export const IDENTITY_ATTRIBUTE = "data-astralis";
 export const PROPS_ATTRIBUTE = "data-astralis-props";
-export const DOCS_ORIGIN = "https://astralis-zeta.vercel.app";
+export const DOCS_ORIGIN = "https://astralis-ui.com";
 
 export { specEntry };
 

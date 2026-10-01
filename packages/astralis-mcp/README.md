@@ -1,6 +1,6 @@
 # astralis-mcp
 
-MCP server for [Astralis UI](https://astralis-zeta.vercel.app) — lets AI
+MCP server for [Astralis UI](https://astralis-ui.com) — lets AI
 coding agents (Claude Code, Cursor, …) look up the library's **current**
 component APIs, full props tables, runnable demo source, theming guides and
 block sources instead of guessing from training data, and check the code they
@@ -58,7 +58,7 @@ answer. Responses over 5 MB are refused.
 
 | Env var | Default | Purpose |
 | --- | --- | --- |
-| `ASTRALIS_DOCS_URL` | `https://astralis-zeta.vercel.app` | Point at a local docs dev server (`http://localhost:3000`) when working on unpublished docs |
+| `ASTRALIS_DOCS_URL` | `https://astralis-ui.com` | Point at a local docs dev server (`http://localhost:3000`) when working on unpublished docs |
 
 ## License
 

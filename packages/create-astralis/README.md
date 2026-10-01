@@ -1,6 +1,6 @@
 # create-astralis
 
-Start a new [Astralis UI](https://astralis-zeta.vercel.app) project:
+Start a new [Astralis UI](https://astralis-ui.com) project:
 
 ```bash
 npm create astralis my-app
@@ -24,7 +24,7 @@ npm create astralis -- --help
 ```
 
 Needs Node `^22.18` or `>=24.11`. Full guide:
-<https://astralis-zeta.vercel.app/docs/cli>.
+<https://astralis-ui.com/docs/cli>.
 
 ## License
 

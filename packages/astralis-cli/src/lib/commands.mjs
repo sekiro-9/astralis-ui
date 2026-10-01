@@ -7,7 +7,7 @@
  * for a string's value), description, default? (shown, not applied), group?.
  */
 
-export const DOCS_URL = "https://astralis-zeta.vercel.app/docs/cli";
+export const DOCS_URL = "https://astralis-ui.com/docs/cli";
 
 export const GLOBAL_OPTIONS = [
   {

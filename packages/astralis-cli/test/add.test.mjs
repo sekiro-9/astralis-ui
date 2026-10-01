@@ -113,7 +113,7 @@ test("an empty ASTRALIS_REGISTRY falls back to the default host", () => {
   const saved = process.env.ASTRALIS_REGISTRY;
   process.env.ASTRALIS_REGISTRY = "";
   try {
-    assert.equal(registryBase(undefined), "https://astralis-zeta.vercel.app/r");
+    assert.equal(registryBase(undefined), "https://astralis-ui.com/r");
     assert.equal(registryBase("http://localhost:3000/r/"), "http://localhost:3000/r");
   } finally {
     if (saved === undefined) delete process.env.ASTRALIS_REGISTRY;

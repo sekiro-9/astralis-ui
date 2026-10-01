@@ -4,7 +4,7 @@ React 19 component library built on semantic design tokens: precompiled CSS,
 runtime brand theming, first-class dark mode and responsive style props.
 **83 components across 11 categories.**
 
-**Docs & live demos:** https://astralis-zeta.vercel.app
+**Docs & live demos:** https://astralis-ui.com
 
 ## Why Astralis
 
@@ -96,10 +96,10 @@ import { Button, Card, Field, Input, VStack } from "astralis-ui";
 </Card>;
 ```
 
-- [Installation guide](https://astralis-zeta.vercel.app/docs/installation)
-- [Quick start](https://astralis-zeta.vercel.app/docs/quick-start)
-- [Theming](https://astralis-zeta.vercel.app/docs/theming)
-- [All 83 components](https://astralis-zeta.vercel.app/docs)
+- [Installation guide](https://astralis-ui.com/docs/installation)
+- [Quick start](https://astralis-ui.com/docs/quick-start)
+- [Theming](https://astralis-ui.com/docs/theming)
+- [All 83 components](https://astralis-ui.com/docs)
 
 ## Entry points
 
@@ -115,9 +115,9 @@ import { Button, Card, Field, Input, VStack } from "astralis-ui";
 
 ## For AI agents
 
-The docs are machine-readable: [`/llms.txt`](https://astralis-zeta.vercel.app/llms.txt)
+The docs are machine-readable: [`/llms.txt`](https://astralis-ui.com/llms.txt)
 indexes every page, and each page is available as plain markdown (e.g.
-[`/docs/components/button.md`](https://astralis-zeta.vercel.app/docs/components/button.md))
+[`/docs/components/button.md`](https://astralis-ui.com/docs/components/button.md))
 with full demo source included.
 
 ## License

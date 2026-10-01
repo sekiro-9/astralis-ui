@@ -11,7 +11,7 @@ import { fail } from "./ui.mjs";
  * the registry gets tested against a local docs server before it ships.
  */
 
-const DEFAULT_REGISTRY = "https://astralis-zeta.vercel.app/r";
+const DEFAULT_REGISTRY = "https://astralis-ui.com/r";
 
 export function registryBase(flag) {
   const base = flag ?? (process.env.ASTRALIS_REGISTRY || DEFAULT_REGISTRY);

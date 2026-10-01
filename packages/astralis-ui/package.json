@@ -6,14 +6,14 @@
   "types": "dist/index.d.ts",
   "author": "Paul Andrew",
   "license": "MIT",
-  "homepage": "https://astralis-zeta.vercel.app",
+  "homepage": "https://astralis-ui.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SekiroDev360/astralis-ui.git",
+    "url": "git+https://github.com/sekiro-9/astralis-ui.git",
     "directory": "packages/astralis-ui"
   },
   "bugs": {
-    "url": "https://github.com/SekiroDev360/astralis-ui/issues"
+    "url": "https://github.com/sekiro-9/astralis-ui/issues"
   },
   "keywords": [
     "react",

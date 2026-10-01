@@ -5,14 +5,14 @@
   "type": "module",
   "license": "MIT",
   "author": "Paul Andrew",
-  "homepage": "https://astralis-zeta.vercel.app/docs/devtools",
+  "homepage": "https://astralis-ui.com/docs/devtools",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SekiroDev360/astralis-ui.git",
+    "url": "git+https://github.com/sekiro-9/astralis-ui.git",
     "directory": "packages/astralis-devtools"
   },
   "bugs": {
-    "url": "https://github.com/SekiroDev360/astralis-ui/issues"
+    "url": "https://github.com/sekiro-9/astralis-ui/issues"
   },
   "keywords": [
     "astralis-ui",

@@ -60,7 +60,7 @@ for (const [framework, entry] of [["next", "/p/app/layout.tsx"], ["vite", "/p/sr
 
     assert.deepEqual(logged, []);
     assert.match(html, /set up\./);
-    assert.match(html, /href="https:\/\/astralis-zeta\.vercel\.app\/docs\/quick-start"/);
+    assert.match(html, /href="https:\/\/astralis-ui\.com\/docs\/quick-start"/);
     assert.match(html, /aria-label="Toggle theme"/);
   });
 }

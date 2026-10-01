@@ -4,7 +4,7 @@ A React 19 component library on semantic design tokens, with its tooling.
 The library's own README is the reference:
 **[packages/astralis-ui](packages/astralis-ui/README.md)**.
 
-**Docs & live demos:** https://astralis-zeta.vercel.app
+**Docs & live demos:** https://astralis-ui.com
 
 ## Monorepo layout
 

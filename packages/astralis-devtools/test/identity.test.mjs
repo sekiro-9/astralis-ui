@@ -55,8 +55,8 @@ test("describeComponent reports the client tier and the docs page", () => {
   assert.equal(card.known, true);
   assert.equal(card.client, "none");
   assert.equal(card.clientLabel, "Server Component");
-  assert.equal(card.docsUrl, "https://astralis-zeta.vercel.app/docs/components/card");
-  assert.equal(describeComponent(SPEC, "Modal.Trigger").docsUrl, "https://astralis-zeta.vercel.app/docs/components/modal");
+  assert.equal(card.docsUrl, "https://astralis-ui.com/docs/components/card");
+  assert.equal(describeComponent(SPEC, "Modal.Trigger").docsUrl, "https://astralis-ui.com/docs/components/modal");
   assert.equal(describeComponent(null, "Card").client, null, "works before the spec arrives");
 });
 

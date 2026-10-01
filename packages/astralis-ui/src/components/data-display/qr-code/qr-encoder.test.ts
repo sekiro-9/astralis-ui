@@ -73,7 +73,7 @@ describe("encodeQr", () => {
   });
 
   it("grows the version with the error-correction level", () => {
-    const text = "https://astralis-zeta.vercel.app/docs/components/qr-code";
+    const text = "https://astralis-ui.com/docs/components/qr-code";
     const versions = (["L", "M", "Q", "H"] as const).map((l) => encodeQr(text, l).version);
     expect(versions).toEqual([...versions].sort((a, b) => a - b));
     expect(versions[3]).toBeGreaterThan(versions[0]);

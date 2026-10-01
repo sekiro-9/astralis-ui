@@ -25,7 +25,7 @@ export const LIMITS = {
 };
 
 /** Where drafts go unless a caller says otherwise (ASTRALIS_ISSUES_URL in Node). */
-export const ISSUES_ORIGIN = "https://astralis-zeta.vercel.app";
+export const ISSUES_ORIGIN = "https://astralis-ui.com";
 export const DRAFTS_PATH = "/api/issues/drafts";
 
 /* ---- names and the spec -------------------------------------------------------- */

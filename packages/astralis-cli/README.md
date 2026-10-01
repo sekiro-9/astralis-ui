@@ -1,6 +1,6 @@
 # astralis-cli
 
-Setup and tooling CLI for [Astralis UI](https://astralis-zeta.vercel.app): start
+Setup and tooling CLI for [Astralis UI](https://astralis-ui.com): start
 a project, wire the library into an existing one, copy in blocks, generate a
 static theme, check code against the design system, and connect AI agents.
 
@@ -10,7 +10,7 @@ npx astralis-cli <command>
 ```
 
 Needs Node `^22.18` or `>=24.11`. Run `astralis <command> --help` for any
-command's options. Full guide: <https://astralis-zeta.vercel.app/docs/cli>.
+command's options. Full guide: <https://astralis-ui.com/docs/cli>.
 
 ## Commands
 

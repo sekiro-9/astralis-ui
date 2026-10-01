@@ -71,4 +71,4 @@ export const isSeverity = (value: unknown): value is Severity =>
   typeof value === "string" && (SEVERITIES as readonly string[]).includes(value);
 
 /** The repository issues are mirrored to. */
-export const GITHUB_REPO = "SekiroDev360/astralis-ui";
+export const GITHUB_REPO = "sekiro-9/astralis-ui";

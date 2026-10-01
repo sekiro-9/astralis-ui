@@ -1,7 +1,7 @@
 # astralis-docs
 
 The Astralis UI documentation site, deployed at
-[astralis-zeta.vercel.app](https://astralis-zeta.vercel.app). A Next.js App Router
+[astralis-ui.com](https://astralis-ui.com). A Next.js App Router
 app with MDX pages, built on the library it documents: every surface uses
 `astralis-ui` components through the package's public entry points, never its
 internals.

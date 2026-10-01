@@ -3,7 +3,7 @@ import { listDocs, type DocEntry } from "@/lib/docs-markdown";
 export const dynamic = "force-static";
 
 /** Absolute URLs: agents often read this file's content detached from its origin. */
-const SITE = "https://astralis-zeta.vercel.app";
+const SITE = "https://astralis-ui.com";
 
 const mdUrl = (doc: DocEntry) =>
   doc.kind === "guide" ? `${SITE}/docs/${doc.slug}.md` : `${SITE}/docs/components/${doc.slug}.md`;

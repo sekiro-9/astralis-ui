@@ -27,7 +27,7 @@ const BENCH = [
   { name: "Chakra", kb: 94.5, self: false },
 ];
 const BENCH_MAX = Math.max(...BENCH.map((row) => row.kb));
-const BENCH_URL = "https://github.com/SekiroDev360/astralis-ui/tree/main/bench";
+const BENCH_URL = "https://github.com/sekiro-9/astralis-ui/tree/main/bench";
 
 const tokenRows = [
   { token: "--astralis-color-surface-base", light: "#ffffff", dark: "#000000" },

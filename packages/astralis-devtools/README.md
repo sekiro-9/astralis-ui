@@ -1,6 +1,6 @@
 # astralis-devtools
 
-A development overlay for [Astralis UI](https://astralis-zeta.vercel.app). A
+A development overlay for [Astralis UI](https://astralis-ui.com). A
 button in the corner of your page opens three tabs:
 
 - **Inspect.** Pick any Astralis component on the page and see its name, the

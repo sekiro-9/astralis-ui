@@ -99,7 +99,7 @@ export default function Welcome() {
         <Flex gap="3" wrap="wrap">
           <Button
             as="a"
-            href="https://astralis-zeta.vercel.app/docs/quick-start"
+            href="https://astralis-ui.com/docs/quick-start"
             target="_blank"
             rel="noreferrer"
             size="lg"
@@ -109,7 +109,7 @@ export default function Welcome() {
           </Button>
           <Button
             as="a"
-            href="https://astralis-zeta.vercel.app/docs"
+            href="https://astralis-ui.com/docs"
             target="_blank"
             rel="noreferrer"
             size="lg"

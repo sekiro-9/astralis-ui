@@ -23,7 +23,7 @@ import { prepareSpec, validateSource, findInstalledSpec } from "astralis-cli/val
 /** Single source of truth for the version — the handshake can't drift from what npm publishes. */
 const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
 
-const SITE = (process.env.ASTRALIS_DOCS_URL ?? "https://astralis-zeta.vercel.app").replace(/\/$/, "");
+const SITE = (process.env.ASTRALIS_DOCS_URL ?? "https://astralis-ui.com").replace(/\/$/, "");
 
 /*
  * A localhost docs URL means someone is editing docs live, so nothing is

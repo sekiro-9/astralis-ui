@@ -22,7 +22,7 @@ const MANUAL_SNIPPET = `
     1. ${PROVIDER_IMPORT}
     2. ${STYLES_IMPORT}   ${dim("(once, at your entry point)")}
     3. Wrap your app:  <AstralisProvider defaultTheme="system">…</AstralisProvider>
-  Full guide: ${cyan("https://astralis-zeta.vercel.app/docs/installation")}`;
+  Full guide: ${cyan("https://astralis-ui.com/docs/installation")}`;
 
 /**
  * `nested` is set when `create` calls this as its wiring step. It suppresses
@@ -185,7 +185,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
         : "astralis-ui is already present in this project",
     );
     if (nested) return;
-    console.log(`Nothing to scaffold.\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
+    console.log(`Nothing to scaffold.\nDocs: ${cyan("https://astralis-ui.com/docs")}`);
     return;
   }
 
@@ -201,5 +201,5 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
     console.log(`\n${bold("Dry run:")} nothing was written. Run ${cyan(["astralis init", devtools && "--devtools", ci && "--ci"].filter(Boolean).join(" "))} to apply it.`);
     return;
   }
-  console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-zeta.vercel.app/docs")}`);
+  console.log(`\n${bold("Done.")} Try it:\n  ${cyan('import { Button } from "astralis-ui";')}\n  ${cyan('<Button colorScheme="teal">Hello</Button>')}\nDocs: ${cyan("https://astralis-ui.com/docs")}`);
 }
