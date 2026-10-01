@@ -181,7 +181,7 @@ warnings never fail the run. `--json` prints one report:
 
 ```json
 {
-  "spec": { "name": "astralis-ui", "version": "0.7.8", "specVersion": 1 },
+  "spec": { "name": "astralis-ui", "version": "0.8.0", "specVersion": 3 },
   "files": 12,
   "errors": 1,
   "warnings": 0,
