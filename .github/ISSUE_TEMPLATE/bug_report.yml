@@ -1,0 +1,63 @@
+name: Bug report
+description: Something in a package or on the docs site doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Security problems go through [private reporting](https://github.com/sekiro-9/astralis-ui/security/advisories/new) instead, please.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - astralis-ui
+        - astralis-cli
+        - astralis-mcp
+        - astralis-devtools
+        - create-astralis
+        - Blocks
+        - Docs site
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The package version (from your package.json or lockfile).
+      placeholder: "0.8.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, and what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: |
+        The smallest code that shows the problem, or a link to a repository or sandbox.
+        For a component bug, `npx astralis-cli report <file> --out snapshot.json` captures the components in a file; attach the snapshot here.
+      render: tsx
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Framework and version, React version, browser and OS.
+      placeholder: "Next.js 16.3, React 19.2, Chrome 140, Windows 11"
