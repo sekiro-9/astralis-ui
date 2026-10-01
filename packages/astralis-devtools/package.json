@@ -41,7 +41,8 @@
     }
   },
   "files": [
-    "src"
+    "src",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": "^22.18.0 || >=24.11.0"
