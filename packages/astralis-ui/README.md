@@ -1,10 +1,30 @@
-# Astralis UI
+<div align="center">
+
+<a href="https://astralis-ui.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/sekiro-9/astralis-ui/main/.github/assets/logo-dark.png">
+    <img alt="Astralis UI" src="https://raw.githubusercontent.com/sekiro-9/astralis-ui/main/.github/assets/logo-light.png" height="64">
+  </picture>
+</a>
+
+<p>Accessible, themeable React components for polished web apps and design systems.</p>
+
+[![npm version](https://img.shields.io/npm/v/astralis-ui?color=eab308&label=npm)](https://www.npmjs.com/package/astralis-ui)
+[![CI](https://github.com/sekiro-9/astralis-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/sekiro-9/astralis-ui/actions/workflows/ci.yml)
+[![React 19](https://img.shields.io/badge/react-19-149eca)](https://react.dev)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/sekiro-9/astralis-ui/blob/main/LICENSE)
+
+[Documentation](https://astralis-ui.com/docs) ·
+[Components](https://astralis-ui.com/docs/components/button) ·
+[Theme builder](https://astralis-ui.com/theme-builder) ·
+[Changelog](https://github.com/sekiro-9/astralis-ui/blob/main/packages/astralis-ui/CHANGELOG.md) ·
+[GitHub](https://github.com/sekiro-9/astralis-ui)
+
+</div>
 
 React 19 component library built on semantic design tokens: precompiled CSS,
 runtime brand theming, first-class dark mode and responsive style props.
-**83 components across 11 categories.**
-
-**Docs & live demos:** https://astralis-ui.com
+**80+ components across 11 categories.**
 
 ## Why Astralis
 
@@ -99,7 +119,7 @@ import { Button, Card, Field, Input, VStack } from "astralis-ui";
 - [Installation guide](https://astralis-ui.com/docs/installation)
 - [Quick start](https://astralis-ui.com/docs/quick-start)
 - [Theming](https://astralis-ui.com/docs/theming)
-- [All 83 components](https://astralis-ui.com/docs)
+- [Every component](https://astralis-ui.com/docs/components/button)
 
 ## Entry points
 
@@ -122,4 +142,4 @@ with full demo source included.
 
 ## License
 
-MIT © Paul Andrew
+[MIT](https://github.com/sekiro-9/astralis-ui/blob/main/LICENSE) © 2026 Paul Andrew
