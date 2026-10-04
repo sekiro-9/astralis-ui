@@ -1,0 +1,27 @@
+name: Docs feedback
+description: Something on astralis-ui.com is wrong, unclear or missing.
+title: "[docs] "
+labels: [documentation, needs triage]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The address of the page.
+      placeholder: "https://astralis-ui.com/docs/components/select"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong or missing
+      description: Quote the sentence if it's about wording, or describe the example you were looking for.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: Optional. How you'd put it.

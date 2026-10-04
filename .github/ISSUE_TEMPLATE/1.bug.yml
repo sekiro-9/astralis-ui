@@ -1,11 +1,24 @@
 name: Bug report
 description: Something in a package or on the docs site doesn't work as it should.
-labels: [bug]
+title: "[bug] "
+labels: [bug, needs triage]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting. Security problems go through [private reporting](https://github.com/sekiro-9/astralis-ui/security/advisories/new) instead, please.
+        Thanks for taking the time to report this. A small reproduction is the fastest way to a fix.
+
+        Found a security problem? Please report it [privately](https://github.com/sekiro-9/astralis-ui/security/advisories/new) instead.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched the [existing issues](https://github.com/sekiro-9/astralis-ui/issues?q=is%3Aissue) and this hasn't been reported.
+          required: true
+        - label: I can reproduce it on the latest version of the package.
+          required: true
 
   - type: dropdown
     id: package
@@ -14,19 +27,26 @@ body:
       options:
         - astralis-ui
         - astralis-cli
+        - create-astralis
         - astralis-mcp
         - astralis-devtools
-        - create-astralis
         - Blocks
         - Docs site
     validations:
       required: true
 
   - type: input
+    id: component
+    attributes:
+      label: Component or command
+      description: Which component, block or command is affected, if any.
+      placeholder: "Select, hero-01, astralis init ..."
+
+  - type: input
     id: version
     attributes:
       label: Version
-      description: The package version (from your package.json or lockfile).
+      description: From your package.json or lockfile.
       placeholder: "0.8.0"
     validations:
       required: true
@@ -35,7 +55,7 @@ body:
     id: what-happened
     attributes:
       label: What happened
-      description: What you did, and what went wrong.
+      description: What you did, and what went wrong. Include any error message.
     validations:
       required: true
 
@@ -46,13 +66,19 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: reproduction-link
+    attributes:
+      label: Reproduction link
+      description: A repository, StackBlitz or CodeSandbox that shows the problem.
+      placeholder: "https://stackblitz.com/edit/..."
+
   - type: textarea
     id: reproduction
     attributes:
-      label: Reproduction
+      label: Reproduction code
       description: |
-        The smallest code that shows the problem, or a link to a repository or sandbox.
-        For a component bug, `npx astralis-cli report <file> --out snapshot.json` captures the components in a file; attach the snapshot here.
+        Or paste the smallest code that shows it. For a component bug, `npx astralis-cli report <file> --out snapshot.json` captures the components in a file; attach the snapshot here.
       render: tsx
 
   - type: input
