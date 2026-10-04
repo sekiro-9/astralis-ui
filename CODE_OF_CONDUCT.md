@@ -2,43 +2,105 @@
 
 ## Our pledge
 
-We want Astralis UI to be a welcoming project for everyone, whatever their
-experience, background or identity. Everyone who takes part, in issues, pull
-requests, discussions or anywhere else the project lives, agrees to help keep
-it that way.
+We want taking part in Astralis UI to be a harassment-free experience for
+everyone, regardless of age, body size, visible or invisible disability,
+ethnicity, sex characteristics, gender identity and expression, level of
+experience, education, socio-economic status, nationality, personal
+appearance, race, caste, colour, religion, or sexual identity and orientation.
 
-## What we expect
+We pledge to act and interact in ways that contribute to an open, welcoming,
+diverse, inclusive and healthy community.
 
-- Be respectful and patient, especially with people who are new.
-- Give and accept feedback on the work, never on the person.
-- Assume good intent, and ask before assuming.
-- Own your mistakes and help fix them.
+## Our standards
 
-## What is not acceptable
+Behaviour that builds a good community:
 
-- Harassment, insults or personal attacks.
-- Discriminatory jokes or language.
-- Sexualised language or imagery.
-- Publishing someone's private information without their permission.
-- Any other conduct that would be unwelcome in a professional setting.
+- Being kind and patient with other people, especially newcomers
+- Respecting differing opinions, viewpoints and experiences
+- Giving constructive feedback about the work, and accepting it gracefully
+- Owning our mistakes, apologising to those affected, and learning from them
+- Focusing on what is best for the project and the people who use it
 
-## Enforcement
+Behaviour that is not acceptable:
 
-The maintainer may edit or remove comments, commits, code and issues that
-break this code, and may block anyone from the project, temporarily or
-permanently, for behaviour they judge harmful.
+- Sexualised language or imagery, and unwelcome sexual attention or advances
+- Trolling, insulting or derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing someone's private information, such as a physical or email
+  address, without their explicit permission
+- Any other conduct that could reasonably be considered inappropriate in a
+  professional setting
 
-To report a problem, use the **Report content** option GitHub offers on any
-issue, pull request or comment, or contact the maintainer through their
-[GitHub profile](https://github.com/sekiro-9). Every report is reviewed and
-kept confidential.
+## Responsibilities
+
+The maintainer is responsible for clarifying and enforcing these standards,
+and will take appropriate and fair action in response to any behaviour they
+judge inappropriate, threatening, offensive or harmful.
+
+The maintainer may remove, edit or reject comments, commits, code, issues and
+other contributions that break this code, and will explain the reason when
+it is appropriate to do so.
 
 ## Scope
 
-This code applies in all project spaces, and when someone represents the
-project in public.
+This code applies in every project space: the repository, its issues, pull
+requests and discussions, the docs site's issue platform, and any other
+channel the project runs. It also applies when someone officially represents
+the project in public, for example by posting from an official account.
+
+## Reporting
+
+If you experience or witness unacceptable behaviour, report it to the
+maintainer at **sekiro9178@gmail.com**. You can also use the **Report content**
+option GitHub offers on any issue, pull request or comment.
+
+Every report is reviewed promptly and fairly, and you can expect an initial
+reply within a few days. The privacy and safety of the person reporting are
+respected throughout.
+
+## Enforcement
+
+The maintainer follows these guidelines when deciding the consequence of an
+action that breaks this code:
+
+### 1. Correction
+
+**Impact:** inappropriate language or other behaviour deemed unprofessional or
+unwelcome.
+
+**Consequence:** a private, written warning that explains the problem. A
+public apology may be requested.
+
+### 2. Warning
+
+**Impact:** a single serious incident, or a series of actions.
+
+**Consequence:** a warning with consequences for continued behaviour. No
+interaction with the people involved, including unsolicited interaction with
+those enforcing the code, for a stated period. This includes project spaces
+and outside channels such as social media. Breaking these terms may lead to a
+temporary or permanent ban.
+
+### 3. Temporary ban
+
+**Impact:** a serious breach of community standards, including sustained
+inappropriate behaviour.
+
+**Consequence:** a temporary ban from any interaction or public communication
+with the project for a stated period. Breaking these terms may lead to a
+permanent ban.
+
+### 4. Permanent ban
+
+**Impact:** a pattern of breaching community standards, including sustained
+inappropriate behaviour, harassment of an individual, or aggression toward or
+disparagement of groups of people.
+
+**Consequence:** a permanent ban from any public interaction with the project.
 
 ## Attribution
 
-Adapted from the [Contributor Covenant](https://www.contributor-covenant.org),
-version 2.1.
+This code of conduct is adapted from the
+[Contributor Covenant](https://www.contributor-covenant.org), version 2.1,
+and its enforcement guidelines follow the
+[Mozilla code of conduct enforcement ladder](https://github.com/mozilla/diversity).
