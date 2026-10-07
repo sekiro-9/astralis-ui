@@ -28,6 +28,7 @@ import {
   finishSignIn,
   issueFromSnapshot,
   issuesRepo,
+  newIssueUrl,
   startSignIn,
   tokenStore,
 } from "../lib/github.mjs";
@@ -167,6 +168,13 @@ export async function run(argv) {
   }
   if (values["dry-run"]) {
     info("dry run: nothing was sent.");
+    return;
+  }
+  if (values.link) {
+    // No sign-in: GitHub's own form, pre-filled, submitted in the browser.
+    ok("open this link to check the report on GitHub and submit it yourself:");
+    console.log(`  ${cyan(newIssueUrl(snapshot))}`);
+    console.log(dim("  Nothing is sent until you press Create on GitHub."));
     return;
   }
   const send = await confirm(`Open this as an issue on github.com/${issuesRepo()}?`, {

@@ -134,3 +134,20 @@ test("a snapshot too large for GitHub keeps everything but the raw JSON", () => 
   assert.match(body, /too large to include in full/);
   assert.match(body, /### Reproduction/);
 });
+
+test("a pre-filled new-issue link carries the report, and fits in a link however large the snapshot", async () => {
+  const { newIssueUrl } = await import("astralis-cli/github");
+  const url = new URL(newIssueUrl(SNAPSHOT));
+  assert.equal(url.origin + url.pathname, "https://github.com/sekiro-9/astralis-ui/issues/new");
+  assert.equal(url.searchParams.get("title"), "Card loses its border");
+  assert.match(url.searchParams.get("body"), /^### What happened\n\nNo border in dark mode/);
+  assert.match(url.searchParams.get("body"), /Match keys: afp[0-9a-f]{12} acmpcard<\/sub>$/);
+
+  const big = { ...SNAPSHOT, tree: Array.from({ length: 200 }, (_, i) => ({ component: "Text", props: { i }, children: [] })) };
+  const cut = newIssueUrl(big);
+  assert.ok(cut.length <= 8000, String(cut.length));
+  const body = new URL(cut).searchParams.get("body");
+  assert.match(body, /^### What happened/, "the words come first");
+  assert.match(body, /does not fit in a link/);
+  assert.match(body, /Match keys: /, "the keys survive, so a later report can still find it");
+});

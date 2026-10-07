@@ -140,6 +140,7 @@ Report a problem to the Astralis maintainers, with a snapshot built from your so
 | `--dry-run` | Print the snapshot and send nothing. |
 | `--add-to <issue>` | Add the report to this existing issue instead of opening a new one. |
 | `--new` | Open a new issue without checking for an existing one. |
+| `--link` | Print a link to GitHub's own new-issue form, filled in, instead of signing in; you submit it there. |
 | `--sign-out` | Forget the saved GitHub sign-in, and do nothing else. |
 | `--spec <path>` | Build against this system-spec.json. Default: the installed astralis-ui's. |
 

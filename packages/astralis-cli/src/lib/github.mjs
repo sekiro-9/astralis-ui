@@ -29,6 +29,8 @@ const web = () => process.env.ASTRALIS_GITHUB_URL || "https://github.com";
 const api = () => process.env.ASTRALIS_GITHUB_API_URL || "https://api.github.com";
 /** GitHub refuses an issue body longer than this. */
 const MAX_BODY = 65536;
+/** The longest new-issue link GitHub and browsers reliably take. */
+const MAX_URL = 8000;
 
 /** The app's client ID; ASTRALIS_GITHUB_CLIENT_ID overrides it, for testing against another app. */
 export const clientId = () => process.env.ASTRALIS_GITHUB_CLIENT_ID || GITHUB_CLIENT_ID;
@@ -256,6 +258,29 @@ const fence = (lang, text) => {
  * A screenshot is never in the body (GitHub's API cannot attach images).
  */
 export function issueFromSnapshot(snapshot) {
+  return composeIssue(snapshot, {
+    fits: (body) => body.length <= MAX_BODY,
+    tooLarge: "_The snapshot was too large to include in full._",
+  });
+}
+
+/**
+ * GitHub's own new-issue form for a snapshot, pre-filled: the way to report
+ * without signing in to the app, since the reporter submits it on github.com
+ * as themselves. A link holds about 8 kB, so the snapshot's JSON is the first
+ * thing left out, then the body is cut; the report's words always come first.
+ */
+export function newIssueUrl(snapshot) {
+  const base = `https://github.com/${issuesRepo()}/issues/new`;
+  const url = (title, body) => `${base}?${new URLSearchParams({ title, body })}`;
+  const { title, body } = composeIssue(snapshot, {
+    fits: (text) => url(snapshot.description?.title ?? "", text).length <= MAX_URL,
+    tooLarge: "_The full snapshot does not fit in a link: attach the file from Download, or send from the DevTools signed in._",
+  });
+  return url(title, body);
+}
+
+function composeIssue(snapshot, { fits, tooLarge }) {
   const d = snapshot.description ?? {};
   const lib = snapshot.library ?? {};
   const env = snapshot.environment ?? {};
@@ -294,8 +319,16 @@ export function issueFromSnapshot(snapshot) {
   const { screenshot: _shot, ...rest } = snapshot;
   const json = `<details>\n<summary>Issue snapshot (${snapshot.format})</summary>\n\n${fence("json", JSON.stringify(rest, null, 2))}\n\n</details>`;
   let body = [...parts, json, footer].join("\n\n");
-  if (body.length > MAX_BODY) body = [...parts, "_The snapshot was too large to include in full._", footer].join("\n\n");
-  if (body.length > MAX_BODY) body = `${body.slice(0, MAX_BODY - 200)}\n\n_Cut to fit GitHub's limit._\n\n${footer}`;
+  if (!fits(body)) body = [...parts, tooLarge, footer].join("\n\n");
+  if (!fits(body)) {
+    // Cut the words, keeping the note and the footer, with its match keys, whole.
+    const whole = parts.join("\n\n");
+    let keep = whole.length;
+    do {
+      keep = Math.floor(keep * 0.85);
+      body = `${whole.slice(0, keep)}…\n\n${tooLarge}\n\n${footer}`;
+    } while (!fits(body) && keep > 100);
+  }
   return { title: (d.title ?? "").trim().slice(0, LIMITS.title), body };
 }
 

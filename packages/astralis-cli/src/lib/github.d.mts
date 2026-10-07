@@ -68,3 +68,5 @@ export function matchKeys(snapshot: Snapshot): { fingerprint: string | null; com
 export function findSimilar(token: string, snapshot: Snapshot, options?: FetchOptions): Promise<{ duplicates: IssueSummary[]; related: IssueSummary[] }>;
 /** The comment a snapshot becomes when it is added to an existing issue. */
 export function commentFromSnapshot(snapshot: Snapshot): string;
+/** GitHub's own new-issue form, pre-filled with the report: for reporting without signing in. At most about 8 kB. */
+export function newIssueUrl(snapshot: Snapshot): string;

@@ -173,6 +173,7 @@ export const COMMANDS = [
       { name: "dry-run", type: "boolean", description: "Print the snapshot and send nothing." },
       { name: "add-to", type: "string", arg: "issue", description: "Add the report to this existing issue instead of opening a new one." },
       { name: "new", type: "boolean", description: "Open a new issue without checking for an existing one." },
+      { name: "link", type: "boolean", description: "Print a link to GitHub's own new-issue form, filled in, instead of signing in; you submit it there." },
       { name: "sign-out", type: "boolean", description: "Forget the saved GitHub sign-in, and do nothing else." },
       {
         name: "spec",

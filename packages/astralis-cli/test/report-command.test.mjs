@@ -321,6 +321,24 @@ test("a failed search does not stop the report", async () => {
   }
 });
 
+test("--link prints GitHub's own form, filled in, and signs in to nothing", async () => {
+  const p = project();
+  const config = join(p.dir, ".config");
+  try {
+    const result = await runCli(["report", "app/page.tsx", "--title", "Card loses its border", "--link", "--yes", "--spec", SPEC], {
+      cwd: p.dir,
+      env: { ASTRALIS_CONFIG_DIR: config, ASTRALIS_GITHUB_API_URL: "http://127.0.0.1:9", ASTRALIS_GITHUB_URL: "http://127.0.0.1:9" },
+    });
+    assert.equal(result.code, 0, result.output);
+    const link = result.stdout.match(/https:\/\/github\.com\/sekiro-9\/astralis-ui\/issues\/new\?\S+/)[0];
+    assert.equal(new URL(link).searchParams.get("title"), "Card loses its border");
+    assert.match(new URL(link).searchParams.get("body"), /### Reproduction/);
+    assert.equal(existsSync(join(config, "github.json")), false, "no sign-in");
+  } finally {
+    p.cleanup();
+  }
+});
+
 test("--sign-out forgets the saved sign-in", async () => {
   const p = project();
   const config = join(p.dir, ".config");
