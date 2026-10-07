@@ -5,11 +5,17 @@ export const metadata = {
 
 # DevTools
 
-A development overlay for your app. A button in the corner of the page opens
-three tabs: **Inspect** tells you what any Astralis component on the page is,
-**Findings** shows the validator's findings for your project, live, as you
-save, and **Report** sends a problem to the Astralis maintainers with the
-evidence they need to reproduce it.
+A development overlay for your app. A small launcher sits on the page, and
+you can drag it anywhere. It opens a panel with five screens:
+
+- **Home:** what is on the page at a glance, with a card for each screen.
+- **Components:** every Astralis component on the page. Each one opens a page
+  of its own with its props, how it reaches the browser, and the findings
+  about it.
+- **Findings:** what the validator says is broken, live, as you save.
+- **Recommendations:** what works but could be better.
+- **Report:** a problem sent to the Astralis maintainers with the evidence
+  they need to reproduce it.
 
 It runs in development only. A production build contains none of it.
 
@@ -83,15 +89,37 @@ export default defineConfig({
 });
 ```
 
-## Inspect
+## Shortcuts
 
-Press **Pick a component**, hover the page, and click. Clicks while picking go
-to the DevTools, not to your app, so a link does not navigate and a trigger
-does not open its menu. Press `Esc` to stop.
+| Keys | What it does |
+|---|---|
+| `Shift` `Alt` `A` | Open the DevTools on Home, or close them |
+| `Shift` `Alt` `C` | Pick a component on the page, then open its page |
+| `Esc` | Stop picking, or close the panel from inside it |
 
-For the component you pick you see:
+On a Mac, `Alt` is `Option`. The launcher's crosshair button picks too.
+
+## Picking a component
+
+Press `Shift` `Alt` `C` or the crosshair, hover the page, and click. The panel
+steps aside while you pick, and clicks go to the DevTools, not to your app, so
+a link does not navigate and a trigger does not open its menu. Press `Esc` to
+stop.
+
+## Components
+
+The Components screen lists the Astralis components on the page, grouped by
+kind, with how many of each there are. A coloured dot says how each reaches
+the browser, and a count shows the findings and recommendations about it.
+Pointing at a row outlines that component on the page. A kind with several
+on the page expands to list them, each with its text and first props.
+
+A component's page shows:
 
 - **Its name,** as you would write it: `Card.Body`, not `div`.
+- **The findings and recommendations about it.** The validator names the
+  component, attribute and value each finding is on, so when the page gives
+  this very component that value the finding is marked **This one**.
 - **The props it was given:** variant, size, colour scheme and style props,
   including responsive values such as `p={{ base: "4", md: "8" }}`. Children,
   text, links and event handlers are never shown.
@@ -106,20 +134,22 @@ For the component you pick you see:
   A Vite app renders everything in the browser, so there the label tells you
   what the component would ship in a server-rendered app.
 
-- **A link to its documentation.**
-- **What it sits inside:** the Astralis components around it, each one click
-  away.
+- **Where it sits:** the Astralis components around it and inside it, each
+  one click away, a **Locate on page** button, and a link to its
+  documentation.
 
 When one component renders through another onto the same element, you see the
 whole chain. A `Modal.Trigger` wrapping a `Button` shows as
 `Modal.Trigger → Button`, with each one's props.
 
-## Findings
+## Findings and recommendations
 
-The Findings tab lists every error and warning `astralis validate` would report
-for your project, with file, line and rule. It updates as you save, usually in
-well under a second. The badge on the button counts the errors, or the warnings
-when there are no errors.
+**Findings** lists the errors `astralis validate` would report for your
+project: things that render wrong or not at all. **Recommendations** lists its
+warnings: things that work but could be better. Each shows the file, line,
+rule and, when the page has it, the component it is on, one click away. Both
+update as you save, usually in well under a second. The badge on the launcher
+counts the errors, or the recommendations when there are no errors.
 
 On Next.js, the files that render the page you are looking at (its `page`
 file and every `layout` and `template` above it) are listed first, under **This
@@ -127,9 +157,9 @@ page**.
 
 ## Report
 
-When something in Astralis looks wrong, pick the component it is in and press
-**Report a problem here**, or open the **Report** tab. Write a title and, if you
-like, what happened and what you expected. The tab builds an issue snapshot:
+When something in Astralis looks wrong, open the component's page and press
+**Report a problem**, or open the **Report** screen and pick it. Write a title and, if you
+like, what happened and what you expected. The screen builds an issue snapshot:
 
 - the Astralis components under the one you picked, each with the props it was
   given (only those the spec describes; never links, image sources or event
@@ -180,6 +210,11 @@ above; on Vite it is dev-server middleware, fed by Vite's own file watcher. It
 validates your `.tsx` and `.jsx` files against the installed astralis-ui's
 [system spec](/docs/ai-agents), re-validates each file when you save it, and
 streams the findings to the overlay.
+
+The overlay brings its own look: the Astralis brand and fonts, embedded in the
+package and drawn in a shadow root, so it loads nothing from the network and
+your app's styles never reach it, nor its styles your app. It remembers where
+you left the launcher, and whether the panel was open.
 
 ## Privacy and security
 

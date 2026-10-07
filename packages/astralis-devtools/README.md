@@ -1,21 +1,29 @@
 # astralis-devtools
 
-A development overlay for [Astralis UI](https://astralis-ui.com). A
-button in the corner of your page opens three tabs:
+A development overlay for [Astralis UI](https://astralis-ui.com). A small
+launcher, which you can drag anywhere on the page, opens a panel with five
+screens:
 
-- **Inspect.** Pick any Astralis component on the page and see its name, the
-  props it was given, how it reaches the browser (Server Component, client
-  island or Client Component) and a link to its documentation. This includes
+- **Home.** What is on the page at a glance.
+- **Components.** Every Astralis component on the page, grouped by kind. Each
+  opens a page of its own: its name, the props it was given, how it reaches
+  the browser (Server Component, client island or Client Component), where it
+  sits, a link to its documentation, and the findings about it. This includes
   Server Components, which React DevTools cannot see because they never
   hydrate.
-- **Findings.** The findings of `astralis validate` for your whole project,
-  kept current as you save. On Next.js, the files that render the current page
-  are listed first.
+- **Findings.** What `astralis validate` says is broken in your project, kept
+  current as you save. On Next.js, the files that render the current page are
+  listed first.
+- **Recommendations.** The validator's warnings: what works but could be
+  better.
 - **Report.** Send a problem to the Astralis maintainers as an issue snapshot:
   the components under the one you picked with their props, the versions in
   use and the validator's findings. You see the exact JSON first, page text is
   replaced by placeholders unless you include it, and nothing is sent until
   you press Send.
+
+`Shift+Alt+A` opens and closes it. `Shift+Alt+C` picks a component on the page
+and opens its page.
 
 It runs in development only. Production builds contain none of it, and the
 library's production HTML carries no DevTools attributes.
