@@ -3,7 +3,7 @@ import { Alert, DataList, Heading, Text } from "astralis-ui";
 
 import { CodeBlock } from "@/modules/docs/code-block";
 import { plural } from "@/lib/issues/format";
-import type { ReproCheck } from "@/server/repro";
+import type { ReproCheck } from "@/lib/issues/repro";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

@@ -1,63 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { NativeSelect } from "astralis-ui";
+import { Search } from "lucide-react";
+import { Button, Icon, Input, InputGroup, NativeSelect } from "astralis-ui";
 
-import { filtersHref, type IssueFilters } from "@/lib/issues/filters";
-import { SEVERITIES, SEVERITY_LABELS } from "@/lib/issues/model";
+import { filtersHref, type IssueFilters, type Label } from "@/lib/issues/github";
 
-interface FilterBarProps {
-  filters: IssueFilters;
-  components: string[];
-  rules: string[];
-}
-
-/** Component, rule and severity filters; each change is a new URL, so a filtered list can be shared. */
-export function FilterBar({ filters, components, rules }: FilterBarProps) {
+/** Search and a label filter; each change is a new URL, so a filtered list can be shared. */
+export function FilterBar({ filters, labels }: { filters: IssueFilters; labels: Label[] }) {
   const router = useRouter();
-  const set = (patch: Partial<IssueFilters>) => router.push(filtersHref({ ...filters, ...patch }), { scroll: false });
+  const go = (patch: Partial<IssueFilters>) => router.push(filtersHref({ ...filters, page: 1, ...patch }), { scroll: false });
 
   return (
     <div className="flex flex-wrap gap-2">
-      <NativeSelect
-        size="sm"
-        aria-label="Component"
-        value={filters.component ?? ""}
-        onChange={(e) => set({ component: e.target.value || null })}
-        className="w-44"
+      <form
+        role="search"
+        className="flex min-w-0 flex-1 gap-2 sm:max-w-md"
+        onSubmit={(event) => {
+          event.preventDefault();
+          const q = String(new FormData(event.currentTarget).get("q") ?? "").trim();
+          go({ q: q || null });
+        }}
       >
-        <option value="">All components</option>
-        {components.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </NativeSelect>
-      <NativeSelect
-        size="sm"
-        aria-label="Rule"
-        value={filters.rule ?? ""}
-        onChange={(e) => set({ rule: e.target.value || null })}
-        className="w-52"
-      >
-        <option value="">All rules</option>
-        {rules.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </NativeSelect>
-      <NativeSelect
-        size="sm"
-        aria-label="Severity"
-        value={filters.severity ?? ""}
-        onChange={(e) => set({ severity: (e.target.value || null) as IssueFilters["severity"] })}
-        className="w-40"
-      >
-        <option value="">Any severity</option>
-        {SEVERITIES.map((s) => (
-          <option key={s} value={s}>
-            {SEVERITY_LABELS[s]}
+        <InputGroup prefix={<Icon as={Search} size="xs" />} className="flex-1">
+          <Input size="sm" name="q" type="search" defaultValue={filters.q ?? ""} placeholder="Search issues, or a component like Card" aria-label="Search issues" />
+        </InputGroup>
+        <Button type="submit" size="sm" variant="outline" colorScheme="gray">
+          Search
+        </Button>
+      </form>
+      <NativeSelect size="sm" aria-label="Label" value={filters.label ?? ""} onChange={(e) => go({ label: e.target.value || null })} className="w-48">
+        <option value="">All labels</option>
+        {labels.map((label) => (
+          <option key={label.name} value={label.name}>
+            {label.name}
           </option>
         ))}
       </NativeSelect>

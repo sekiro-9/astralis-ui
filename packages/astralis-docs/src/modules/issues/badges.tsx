@@ -1,45 +1,32 @@
 import { Badge } from "astralis-ui";
 
-import {
-  type IssueStatus,
-  type Severity,
-  SEVERITY_LABELS,
-  STATUS_LABELS,
-} from "@/lib/issues/model";
+import type { IssueState, Label } from "@/lib/issues/github";
 
-type Scheme = "blue" | "purple" | "teal" | "orange" | "yellow" | "green" | "gray" | "red";
-
-const STATUS_SCHEMES: Record<IssueStatus, Scheme> = {
-  new: "blue",
-  triaged: "purple",
-  accepted: "teal",
-  in_progress: "orange",
-  fix_in_review: "yellow",
-  fixed: "green",
-  released: "green",
-  declined: "gray",
-  duplicate: "gray",
+const STATES: Record<IssueState, { label: string; scheme: "green" | "purple" | "gray" }> = {
+  open: { label: "Open", scheme: "green" },
+  done: { label: "Closed", scheme: "purple" },
+  "not-planned": { label: "Not planned", scheme: "gray" },
 };
 
-export function StatusBadge({ status }: { status: IssueStatus }) {
+export function StateBadge({ state }: { state: IssueState }) {
+  const { label, scheme } = STATES[state];
   return (
-    <Badge variant={status === "released" ? "solid" : "subtle"} colorScheme={STATUS_SCHEMES[status]}>
-      {STATUS_LABELS[status]}
+    <Badge variant="subtle" colorScheme={scheme}>
+      {label}
     </Badge>
   );
 }
 
-const SEVERITY_SCHEMES: Record<Severity, Scheme> = {
-  critical: "red",
-  high: "orange",
-  normal: "gray",
-  low: "gray",
-};
-
-export function SeverityBadge({ severity }: { severity: Severity }) {
+/**
+ * A GitHub label, in its own colour. The colour is a dot rather than the
+ * fill, so a pale or dark label reads the same in light and dark mode; it is
+ * an inline style because it is data, not a class the CSS build can know.
+ */
+export function LabelTag({ label }: { label: Label }) {
   return (
-    <Badge variant={severity === "critical" ? "solid" : "outline"} colorScheme={SEVERITY_SCHEMES[severity]}>
-      {SEVERITY_LABELS[severity]}
-    </Badge>
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-stroke-base px-2 py-0.5 text-xs text-label-muted">
+      <span aria-hidden className="size-2 rounded-full" style={{ backgroundColor: `#${label.color}` }} />
+      {label.name}
+    </span>
   );
 }

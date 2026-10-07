@@ -12,7 +12,7 @@ export interface ReproCheck {
   source: string;
   errors: Finding[];
   warnings: Finding[];
-  /** The astralis-ui version whose spec the platform checked against. */
+  /** The astralis-ui version whose spec the site checked against. */
   checkedWith: string;
 }
 

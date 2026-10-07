@@ -21,7 +21,5 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.ts"],
-    // The issue platform's database tests need Postgres: `pnpm test:db`.
-    exclude: ["src/**/*.db.test.ts"],
   },
 });

@@ -1,28 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GitPullRequest, Inbox, MessageSquareWarning } from "lucide-react";
-import { Alert, Button, Card, EmptyState, Heading, Icon, Text } from "astralis-ui";
+import { ExternalLink, GitPullRequest, Inbox, MessageSquareWarning } from "lucide-react";
+import { Button, Card, EmptyState, Heading, Icon, Text } from "astralis-ui";
 
-import { filtersHref, parseFilters, type StatusFilter } from "@/lib/issues/filters";
-import { AccountBar } from "@/modules/issues/account-bar";
+import { CONTRIBUTOR_LABELS, filtersHref, parseFilters, REPO_URL, type StatusFilter } from "@/lib/issues/github";
+import { listIssues, listLabels } from "@/lib/issues/fetch";
 import { FilterBar } from "@/modules/issues/filter-bar";
 import { IssueList } from "@/modules/issues/issue-list";
-import { NotConfigured } from "@/modules/issues/not-configured";
-import { canSignIn, currentUser } from "@/server/auth";
-import { isConfigured } from "@/server/db/client";
-import { filterOptions, listIssues } from "@/server/issues";
 
 export const metadata: Metadata = {
   title: "Issues & Contributions",
   description:
-    "Problems reported from applications built with Astralis, with the evidence attached, and the fixes contributors can take on.",
+    "Problems reported from applications built with Astralis, with the evidence attached, and the fixes contributors can take on. Read from GitHub.",
 };
 
 const STATUS_TABS: { value: StatusFilter; label: string }[] = [
   { value: "open", label: "Open" },
   { value: "contributors", label: "Open to contributors" },
-  { value: "fixed", label: "Fixed" },
-  { value: "released", label: "Released" },
+  { value: "closed", label: "Closed" },
   { value: "all", label: "All" },
 ];
 
@@ -36,10 +31,11 @@ function Intro() {
         </Card.Header>
         <Card.Body>
           <Text size="sm" color="muted" lineHeight="relaxed">
-            In your app, open the Astralis DevTools, pick the component and use the Report tab, or run{" "}
+            In your app, open the Astralis DevTools, pick the component and use Report, or run{" "}
             <code className="font-mono text-xs">npx astralis report</code> on the files involved. The report
-            carries the library version, the component tree and the validator&apos;s findings, and nothing is
-            sent until you have read it. You sign in with GitHub here to submit it.
+            becomes a GitHub issue, opened from your own account, with the library version, the component tree,
+            the validator&apos;s findings and a reproduction. Nothing is sent until you have read it, and if the
+            problem is already reported you can add to that issue instead.
           </Text>
         </Card.Body>
         <Card.Footer>
@@ -55,14 +51,17 @@ function Intro() {
         </Card.Header>
         <Card.Body>
           <Text size="sm" color="muted" lineHeight="relaxed">
-            Issues the maintainers open to contributors are listed under Open to contributors, each with a
-            reproduction file to start from. A fix arrives as a pull request to astralis-ui, and a maintainer
-            merges it only after the library build, the tests and the validator all pass.
+            Issues the maintainers label {CONTRIBUTOR_LABELS.map((l) => `“${l}”`).join(" or ")} are open to anyone,
+            each with a reproduction to start from. A fix arrives as a pull request to astralis-ui, and it is
+            merged only after the library build, the tests and the validator all pass.
           </Text>
         </Card.Body>
-        <Card.Footer>
+        <Card.Footer className="flex flex-wrap gap-2">
           <Button as={Link} href="/issues?status=contributors" size="sm" variant="outline" colorScheme="gray">
             Open to contributors
+          </Button>
+          <Button as="a" href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noreferrer" size="sm" variant="text" colorScheme="gray">
+            Contributing guide
           </Button>
         </Card.Footer>
       </Card>
@@ -90,47 +89,28 @@ function StatusTabs({ current, href }: { current: StatusFilter; href: (status: S
 }
 
 export default async function IssuesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const params = await searchParams;
-  const header = (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="max-w-3xl">
-        <Heading as="h1" size="3xl" weight="semibold" letterSpacing="tight">
-          Issues &amp; Contributions
-        </Heading>
-        <Text color="muted" lineHeight="relaxed" mt="3">
-          Problems met in applications built with Astralis, each reported with the evidence to reproduce it.
-          The code, pull requests and checks live on GitHub; this is where reports arrive, are grouped and are
-          routed to whoever fixes them.
-        </Text>
-      </div>
-      {isConfigured() && <AccountBar user={await currentUser()} canSignIn={canSignIn()} returnTo="/issues" />}
-    </header>
-  );
-
-  if (!isConfigured()) {
-    return (
-      <div className="flex flex-col gap-10">
-        {header}
-        <NotConfigured />
-      </div>
-    );
-  }
-
-  const filters = parseFilters(params);
-  const page = Math.max(1, Math.min(1000, Number(params.page) || 1));
-  const [{ issues, more }, options] = await Promise.all([listIssues(filters, page), filterOptions()]);
-  const filtered = filters.component || filters.rule || filters.severity;
+  const filters = parseFilters(await searchParams);
+  const [{ issues, more }, labels] = await Promise.all([listIssues(filters), listLabels()]);
+  const filtered = Boolean(filters.label || filters.q);
 
   return (
     <div className="flex flex-col gap-10">
-      {header}
-      {params.account === "deleted" && (
-        <Alert status="success" variant="subtle">
-          <Alert.Description>
-            Your account is deleted. Your reports and comments stay with their issues, shown as from a deleted user.
-          </Alert.Description>
-        </Alert>
-      )}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-3xl">
+          <Heading as="h1" size="3xl" weight="semibold" letterSpacing="tight">
+            Issues &amp; Contributions
+          </Heading>
+          <Text color="muted" lineHeight="relaxed" mt="3">
+            Problems met in applications built with Astralis, each reported with the evidence to reproduce it,
+            and the fixes anyone can take on. The issues live on GitHub; this page reads them.
+          </Text>
+        </div>
+        <Button as="a" href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer" size="sm" variant="outline" colorScheme="gray" className="shrink-0">
+          View on GitHub
+          <Icon as={ExternalLink} size="xs" />
+        </Button>
+      </header>
+
       <Intro />
 
       <section className="flex flex-col gap-4" aria-labelledby="issues-heading">
@@ -138,8 +118,8 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
           Issues
         </Heading>
         <div className="flex flex-col gap-3">
-          <StatusTabs current={filters.status} href={(status) => filtersHref({ ...filters, status })} />
-          <FilterBar filters={filters} components={options.components} rules={options.rules} />
+          <StatusTabs current={filters.status} href={(status) => filtersHref({ ...filters, status, page: 1 })} />
+          <FilterBar filters={filters} labels={labels} />
         </div>
 
         {issues.length > 0 ? (
@@ -149,15 +129,17 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
             <EmptyState.Indicator>
               <Inbox />
             </EmptyState.Indicator>
-            <EmptyState.Title>{filtered ? "No issues match these filters" : "Nothing here yet"}</EmptyState.Title>
+            <EmptyState.Title>{filtered ? "No issues match" : "Nothing here yet"}</EmptyState.Title>
             <EmptyState.Description>
               {filtered
-                ? "Try another component, rule or severity, or clear the filters."
-                : "Issues appear here once someone submits a report from the DevTools or the CLI."}
+                ? "Try other words or another label, or clear the filters."
+                : filters.status === "contributors"
+                  ? "No issue is open to contributors right now."
+                  : "Issues appear here once someone reports a problem from the DevTools, the CLI or GitHub."}
             </EmptyState.Description>
             {filtered && (
               <EmptyState.Actions>
-                <Button as={Link} href={filtersHref({ ...filters, component: null, rule: null, severity: null })} size="sm" variant="outline" colorScheme="gray">
+                <Button as={Link} href={filtersHref({ status: filters.status })} size="sm" variant="outline" colorScheme="gray">
                   Clear filters
                 </Button>
               </EmptyState.Actions>
@@ -165,17 +147,17 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
           </EmptyState>
         )}
 
-        {(page > 1 || more) && (
+        {(filters.page > 1 || more) && (
           <div className="flex justify-between">
-            {page > 1 ? (
-              <Button as={Link} href={filtersHref(filters, page - 1)} size="sm" variant="text" colorScheme="gray">
+            {filters.page > 1 ? (
+              <Button as={Link} href={filtersHref({ ...filters, page: filters.page - 1 })} size="sm" variant="text" colorScheme="gray">
                 Newer
               </Button>
             ) : (
               <span />
             )}
             {more && (
-              <Button as={Link} href={filtersHref(filters, page + 1)} size="sm" variant="text" colorScheme="gray">
+              <Button as={Link} href={filtersHref({ ...filters, page: filters.page + 1 })} size="sm" variant="text" colorScheme="gray">
                 Older
               </Button>
             )}
