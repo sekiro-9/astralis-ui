@@ -427,6 +427,43 @@ details.json-box[open] summary .icon { transform: rotate(90deg); }
 .report-status.failed { color: var(--error); }
 .report-status.sent { color: var(--ok); }
 
+/* ---- GitHub ------------------------------------------------------------------- */
+
+.small { font-size: 12px; }
+.account { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.account-name { font: 600 14px/1.3 var(--display); }
+.account-error { margin-top: 6px; font-size: 12px; color: var(--error); }
+.account-actions { display: flex; flex-direction: column; gap: 6px; }
+.gh-avatar {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; flex: none;
+  font: 600 15px/1 var(--display); color: var(--brand-ink); background: linear-gradient(180deg, var(--brand-2), var(--brand));
+}
+.gh-avatar.muted-avatar { color: var(--text); background: var(--bg-3); border: 1px solid var(--line-2); }
+.gh-avatar .icon { width: 18px; height: 18px; }
+.account.pending { align-items: stretch; border-color: var(--brand-line); background: linear-gradient(180deg, var(--brand-soft), transparent 70%), var(--bg-1); }
+.device-code {
+  margin: 6px 0 8px; font: 600 28px/1 var(--mono); letter-spacing: 0.12em; color: var(--brand-2);
+  text-shadow: 0 0 24px rgb(234 179 8 / 0.35); user-select: all;
+}
+.waiting { gap: 8px; font-size: 12px; color: var(--muted); }
+.spinner { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--brand); animation: spin 0.8s linear infinite; }
+.spinning svg { animation: spin 0.8s linear infinite; }
+.issue-row {
+  display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; color: inherit; text-decoration: none;
+  transition: background 140ms var(--ease);
+}
+.issue-row + .issue-row { border-top: 1px solid var(--line); }
+.issue-row:hover { background: rgb(255 255 255 / 0.03); }
+.issue-row .state { width: 16px; height: 16px; margin-top: 1px; }
+.issue-row.open .state { color: var(--ok); }
+.issue-row.done .state { color: #c4a5ff; }
+.issue-row.skipped .state { color: var(--faint); }
+.issue-title { font-weight: 500; line-height: 1.4; }
+.issue-meta { margin-top: 2px; font-size: 12px; color: var(--faint); }
+.issue-row .go { width: 14px; height: 14px; color: var(--faint); opacity: 0; transition: opacity 140ms; }
+.issue-row:hover .go { opacity: 1; color: var(--brand); }
+button.link { font: inherit; padding: 0; }
+
 /* ---- picking ------------------------------------------------------------------- */
 
 .highlight {

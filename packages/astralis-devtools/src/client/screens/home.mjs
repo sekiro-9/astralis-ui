@@ -32,6 +32,7 @@ export function homeScreen(app) {
         element.className = `tile ${tone}`.trim();
         sub.textContent = text;
         if (!value) return;
+        value.hidden = number === undefined;
         if (typeof number !== "number") value.textContent = "–";
         else if (shown === null) countUp(value, number);
         else value.textContent = String(number);
@@ -42,8 +43,7 @@ export function homeScreen(app) {
   const components = tile("components", ICONS.components, "Components", true);
   const errorsTile = tile("findings", ICONS.findings, "Findings", true);
   const warningsTile = tile("recommendations", ICONS.recommendations, "Recommendations", true);
-  const reportTile = tile("report", ICONS.report, "Report a problem", false);
-  reportTile.set(null, "Send a snapshot of a component");
+  const reportTile = tile("report", ICONS.report, "Report a problem", true);
 
   function update() {
     const { state } = app;
@@ -56,6 +56,14 @@ export function homeScreen(app) {
     ]
       .filter(Boolean)
       .join("  ·  ");
+
+    const issues = state.issues.list;
+    if (state.github?.login && issues) {
+      const open = issues.filter((i) => i.state === "open").length;
+      reportTile.set(open, `Your issues: ${open} open, ${issues.length - open} closed`);
+    } else {
+      reportTile.set(undefined, state.github?.login ? `Signed in as ${state.github.login}` : "Open a GitHub issue with the evidence");
+    }
 
     const kinds = new Set(state.instances.map((i) => i.name)).size;
     components.set(state.instances.length, state.instances.length ? `${plural(kinds, "kind")} on this page` : "None on this page yet");

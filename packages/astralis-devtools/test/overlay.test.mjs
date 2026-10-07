@@ -26,6 +26,8 @@ let requests;
 let routeFiles;
 let posts;
 let submitResult;
+let github;
+let issues;
 let opened;
 
 class FakeEventSource {
@@ -55,7 +57,13 @@ function setup() {
   routeFiles = ["app/about/page.tsx", "app/layout.tsx"];
   posts = [];
   opened = [];
-  submitResult = { ok: true, body: { url: "https://astralis-ui.com/issues/new?draft=d1" } };
+  submitResult = { ok: true, body: { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" } };
+  github = { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null };
+  issues = [
+    { number: 12, title: "Card loses its border", state: "open", stateReason: null, url: "https://github.com/sekiro-9/astralis-ui/issues/12", comments: 2, labels: ["bug"], createdAt: "2026-10-01T00:00:00Z", updatedAt: new Date().toISOString() },
+    { number: 9, title: "Tabs panel unreachable", state: "closed", stateReason: "completed", url: "https://github.com/sekiro-9/astralis-ui/issues/9", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
+    { number: 7, title: "Wish", state: "closed", stateReason: "not_planned", url: "https://github.com/sekiro-9/astralis-ui/issues/7", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
+  ];
   const { window } = dom;
   window.open = (url) => opened.push(url);
   Object.assign(globalThis, {
@@ -77,6 +85,14 @@ function setup() {
           const problems = sent.description.title.trim() ? [] : ["description.title is required (at most 200 characters)"];
           return { ok: true, status: 200, json: async () => ({ snapshot, problems }) };
         }
+        if (path === "github/sign-in") {
+          github = { ...github, pending: { userCode: "WDJB-MJHT", verificationUri: "https://github.com/login/device", expiresAt: Date.now() + 900_000 } };
+          return { ok: true, status: 200, json: async () => github };
+        }
+        if (path === "github/sign-out") {
+          github = { ...github, login: null, pending: null };
+          return { ok: true, status: 200, json: async () => github };
+        }
         return { ok: submitResult.ok, status: submitResult.ok ? 200 : 502, json: async () => submitResult.body };
       }
       const body = path === "spec"
@@ -85,7 +101,11 @@ function setup() {
           ? { library: { version: "0.8.0" }, framework: { name: "next", version: "16.3.3" }, react: "19.2.8" }
           : path.startsWith("route-files")
             ? { path: decodeURIComponent(path.split("=")[1]), files: routeFiles }
-            : null;
+            : path === "github"
+              ? github
+              : path === "github/issues"
+                ? { issues }
+                : null;
       return { ok: body !== null, json: async () => body };
     },
   });
@@ -112,6 +132,11 @@ const click = (element) => element.dispatchEvent(new dom.window.MouseEvent("clic
 const move = (element) => element.dispatchEvent(new dom.window.MouseEvent("pointermove", { bubbles: true }));
 const key = (init) => document.dispatchEvent(new dom.window.KeyboardEvent("keydown", { bubbles: true, ...init }));
 const openPanel = () => click($(".launcher-button.mark"));
+/** Mount afresh, after a test changes what the stubbed bridge answers. */
+const remount = () => {
+  unmount();
+  unmount = mountOverlay({ framework: "next" });
+};
 
 const FINDINGS = {
   version: 2,
@@ -472,7 +497,7 @@ test("the report shows the exact snapshot and cannot be sent without a title", a
   assert.equal(snap.body.include.console, false);
   assert.match($(".json").textContent, /"format": "astralis-snapshot\/1"/);
   assert.match($(".problems").textContent, /title is required/);
-  assert.equal(button("Send report").disabled, true);
+  assert.equal(button("Open issue on GitHub").disabled, true);
 });
 
 test("editing the form re-assembles the snapshot, and streamed findings do not wipe it", async () => {
@@ -485,7 +510,7 @@ test("editing the form re-assembles the snapshot, and streamed findings do not w
   await settle();
   assert.equal(posts.at(-1).body.description.title, "Card loses its border");
   assert.equal($(".problems").children.length, 0);
-  assert.equal(button("Send report").disabled, false);
+  assert.equal(button("Open issue on GitHub").disabled, false);
 
   const includeText = $$(".toggle input")[0];
   includeText.checked = true;
@@ -502,27 +527,27 @@ test("the form keeps its input across screens", async () => {
   assert.equal($(".field").value, "Kept");
 });
 
-test("Send posts exactly the snapshot shown and opens the draft", async () => {
+test("Send opens exactly the snapshot shown as a GitHub issue, and shows it", async () => {
   await reportOn("text");
   typeInto($(".field"), "Card loses its border");
   await settle();
   const shown = JSON.parse($(".json").textContent);
-  click(button("Send report"));
+  click(button("Open issue on GitHub"));
   await settle();
   const submitted = posts.find((p) => p.path === "submit");
   assert.deepEqual(submitted.body, shown);
-  assert.deepEqual(opened, ["https://astralis-ui.com/issues/new?draft=d1"]);
-  assert.match($(".report-status").textContent, /Draft created/);
+  assert.deepEqual(opened, ["https://github.com/sekiro-9/astralis-ui/issues/12"]);
+  assert.match($(".report-status").textContent, /Opened #12 on GitHub\. View it\./);
 });
 
 test("a failed send says so and keeps Copy and Download", async () => {
-  submitResult = { ok: false, body: { error: "Could not reach the Astralis issue platform at https://x (fetch failed)." } };
+  submitResult = { ok: false, body: { error: "Could not reach GitHub (fetch failed)." } };
   await reportOn("text");
   typeInto($(".field"), "t");
   await settle();
-  click(button("Send report"));
+  click(button("Open issue on GitHub"));
   await settle();
-  assert.match($(".report-status").textContent, /Could not reach the Astralis issue platform.*Nothing was sent/);
+  assert.match($(".report-status").textContent, /Could not reach GitHub.*Nothing was sent/);
   assert.equal(button("Copy JSON").disabled, false);
   assert.equal(button("Download").disabled, false);
   assert.deepEqual(opened, []);
@@ -541,4 +566,62 @@ test("console errors are counted, and sent only when ticked", async () => {
   await settle();
   assert.equal(posts.at(-1).body.include.console, true);
   assert.deepEqual(posts.at(-1).body.console, ["Failed at /_next/app.js"]);
+});
+
+/* ---- GitHub ------------------------------------------------------------------------ */
+
+test("signed in: the account shows who, and Your issues lists each issue with where it stands", async () => {
+  openPanel();
+  click(nav("report"));
+  await tick();
+  assert.match($(".account").textContent, /^Ssam/);
+  click($('.segmented [data-tab="issues"]'));
+  await tick();
+  assert.match($('.segmented [data-tab="issues"]').textContent, /Your issues \(3\)/);
+  const rows = $$(".issue-row");
+  assert.deepEqual(rows.map((r) => r.className), ["issue-row open", "issue-row done", "issue-row skipped"]);
+  assert.match(rows[0].textContent, /Card loses its border#12 · Open · updated just now · 2 comments/);
+  assert.match(rows[1].textContent, /Closed, done/);
+  assert.match(rows[2].textContent, /Closed, not planned/);
+  assert.equal(rows[0].getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/12");
+  click(nav("home"));
+  assert.match($('.tile[data-screen="report"]').textContent, /^1Report a problemYour issues: 1 open, 2 closed/);
+});
+
+test("signed out: sending waits for a sign-in, which shows a code to enter on GitHub", async (t) => {
+  github = { ...github, login: null };
+  remount();
+  await reportOn("text");
+  assert.equal(button("Open issue on GitHub").disabled, true);
+  assert.match($(".account").textContent, /Sign in to report/);
+  click(button("Sign in with GitHub"));
+  await tick();
+  await tick();
+  assert.equal($(".device-code").textContent, "WDJB-MJHT");
+  assert.equal($(".account .btn.primary").getAttribute("href"), "https://github.com/login/device");
+  assert.match($(".account").textContent, /Waiting for you to enter it/);
+
+  // GitHub accepts the code; the overlay sees it on its next look at the bridge.
+  github = { ...github, login: "sam", pending: null };
+  await new Promise((done) => setTimeout(done, 2100));
+  assert.match($(".account").textContent, /sam/);
+  assert.ok(requests.includes("/api/astralis-devtools/github/issues"), "the issues load once signed in");
+  typeInto($(".field"), "Card loses its border");
+  await settle();
+  assert.equal(button("Open issue on GitHub").disabled, false);
+
+  click(button("Sign out"));
+  await tick();
+  await tick();
+  assert.match($(".account").textContent, /Sign in to report/);
+});
+
+test("when GitHub sign-in is not set up, Report says how to report by hand", async () => {
+  github = { configured: false, repo: "sekiro-9/astralis-ui", login: null, pending: null, error: null };
+  remount();
+  openPanel();
+  click(nav("report"));
+  await tick();
+  assert.match($(".notice").textContent, /not set up in this version/);
+  assert.equal($(".notice a").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/new");
 });

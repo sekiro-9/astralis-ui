@@ -1,19 +1,17 @@
 import {
-  ISSUES_ORIGIN,
   LIMITS,
   SNAPSHOT_FORMAT,
   checkSnapshot,
   cleanConsoleMessage,
   cleanRoute,
   narrowTree,
-  submitDraft,
 } from "astralis-cli/snapshot";
 
 /* The bridge's half of an issue snapshot. The page sends what only the page
    knows (the component tree, the browser, the reporter's words); the bridge
    adds what only the dev server knows (versions, the spec's hash, the
    validator's findings) and checks the whole. Nothing here makes a network
-   request except submit(), which runs only when the reporter confirms. */
+   request; github.mjs sends a snapshot once the reporter confirms. */
 
 const shortString = (value, max) => (typeof value === "string" && value.trim() ? value.trim().slice(0, max) : undefined);
 
@@ -70,9 +68,4 @@ export function assembleSnapshot(bridge, input = {}) {
     description,
   };
   return { snapshot, problems: checkSnapshot(snapshot) };
-}
-
-/** Send a snapshot the reporter confirmed. Resolves to the draft's URL. */
-export function submit(snapshot, { origin = process.env.ASTRALIS_ISSUES_URL || ISSUES_ORIGIN, fetchImpl } = {}) {
-  return submitDraft(snapshot, { origin, ...(fetchImpl ? { fetchImpl } : {}) });
 }

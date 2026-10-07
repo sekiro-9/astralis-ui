@@ -1,10 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { handle, isLocal } from "../src/bridge/http.mjs";
+import { GitHubSession } from "../src/bridge/github.mjs";
 import { GET, POST } from "../src/next/route.mjs";
-import { createServer } from "node:http";
 import { specHash } from "../src/bridge/project.mjs";
-import { fixtureProject, INVALID_PAGE, manualWatch, SPEC_TEXT, VALID_PAGE } from "./helpers.mjs";
+import { fixtureProject, INVALID_PAGE, manualWatch, SPEC_TEXT, until, VALID_PAGE } from "./helpers.mjs";
 
 const request = (path, { host = "localhost:3000", origin = null, method = "GET", signal } = {}) => {
   const headers = { host };
@@ -36,7 +36,7 @@ test("refuses other machines and other sites", async () => {
     assert.equal((await handle(request("findings", { host: "192.168.1.20:3000" }), p.options)).status, 403);
     assert.equal((await handle(request("findings", { origin: "https://evil.example" }), p.options)).status, 403);
     assert.equal((await handle(request("findings", { method: "PUT" }), p.options)).status, 405);
-    assert.equal((await handle(request("findings", { method: "POST" }), p.options)).status, 404, "POST is for snapshot and submit only");
+    assert.equal((await handle(request("findings", { method: "POST" }), p.options)).status, 404, "POST is for snapshots, submitting and signing in only");
   } finally {
     p.cleanup();
   }
@@ -186,52 +186,137 @@ test("POST takes JSON only, within a size limit, and only on the snapshot routes
   }
 });
 
-test("POST submit forwards the confirmed snapshot to the platform and returns the draft's address", async () => {
-  const p = project();
-  let received = null;
-  const server = createServer((req, res) => {
-    let body = "";
-    req.on("data", (c) => (body += c));
-    req.on("end", () => {
-      received = { path: req.url, body: JSON.parse(body) };
-      res.writeHead(201, { "content-type": "application/json" });
-      res.end(JSON.stringify({ id: "d1", url: "/issues/new?draft=d1" }));
-    });
-  });
-  await new Promise((done) => server.listen(0, "127.0.0.1", done));
-  const before = process.env.ASTRALIS_ISSUES_URL;
-  process.env.ASTRALIS_ISSUES_URL = `http://127.0.0.1:${server.address().port}`;
-  try {
-    const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
-    const response = await handle(post("submit", snapshot), p.options);
-    assert.equal(response.status, 200);
-    assert.equal((await response.json()).url, `${process.env.ASTRALIS_ISSUES_URL}/issues/new?draft=d1`);
-    assert.equal(received.path, "/api/issues/drafts");
-    assert.deepEqual(received.body, snapshot, "exactly the snapshot the reporter saw");
+/* ---- GitHub ------------------------------------------------------------------ */
 
-    const invalid = await handle(post("submit", { ...snapshot, extra: 1 }), p.options);
-    assert.equal(invalid.status, 502);
-    assert.match((await invalid.json()).error, /not valid/);
+process.env.ASTRALIS_GITHUB_CLIENT_ID = "Iv1.test";
+
+/** A sign-in kept in memory, standing in for the user's config file. */
+const memoryStore = (saved = null) => ({ file: "memory", read: () => saved, write: (value) => (saved = { ...value, savedAt: "now" }), clear: () => (saved = null) });
+
+/** A GitHub that answers by path, recording what it was sent. */
+function fakeGitHub(routes) {
+  const calls = [];
+  const fetchImpl = async (url, init = {}) => {
+    const path = new URL(url).pathname;
+    calls.push({ path, method: init.method ?? "GET", auth: init.headers?.authorization ?? null, body: init.body ?? null });
+    const reply = typeof routes[path] === "function" ? routes[path](init) : routes[path];
+    if (!reply) return new Response(JSON.stringify({ message: "Not Found" }), { status: 404 });
+    return new Response(JSON.stringify(reply.body ?? reply), { status: reply.status ?? 200 });
+  };
+  return { calls, fetchImpl };
+}
+
+test("GitHub status tells the page who is signed in, never the token", async () => {
+  const p = project();
+  const github = new GitHubSession({ store: memoryStore({ token: "tok-secret", login: "sam" }) });
+  try {
+    const response = await handle(request("github"), { ...p.options, github });
+    const text = await response.text();
+    assert.deepEqual(JSON.parse(text), { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null });
+    assert.doesNotMatch(text, /tok-secret/);
   } finally {
-    if (before === undefined) delete process.env.ASTRALIS_ISSUES_URL;
-    else process.env.ASTRALIS_ISSUES_URL = before;
-    server.close();
     p.cleanup();
   }
 });
 
-test("POST submit explains an unreachable platform", async () => {
+test("signing in shows a code, the bridge polls GitHub, and the sign-in is saved", async () => {
   const p = project();
-  const before = process.env.ASTRALIS_ISSUES_URL;
-  process.env.ASTRALIS_ISSUES_URL = "http://127.0.0.1:9";
+  let polls = 0;
+  const { fetchImpl } = fakeGitHub({
+    "/login/device/code": { device_code: "dev", user_code: "WDJB-MJHT", verification_uri: "https://github.com/login/device", expires_in: 900, interval: 0 },
+    "/login/oauth/access_token": () => (polls++ === 0 ? { error: "authorization_pending" } : { access_token: "tok-new" }),
+    "/user": { login: "sam" },
+  });
+  const store = memoryStore();
+  const github = new GitHubSession({ store, fetchImpl, sleep: async () => {} });
+  try {
+    const started = await (await handle(post("github/sign-in", {}), { ...p.options, github })).json();
+    assert.equal(started.login, null);
+    assert.equal(started.pending.userCode, "WDJB-MJHT");
+    assert.equal("deviceCode" in started.pending, false, "the device code stays in the bridge");
+    await until(() => store.read() !== null);
+    assert.deepEqual((await (await handle(request("github"), { ...p.options, github })).json()).login, "sam");
+    assert.equal(store.read().token, "tok-new");
+
+    const out = await (await handle(post("github/sign-out", {}), { ...p.options, github })).json();
+    assert.equal(out.login, null);
+    assert.equal(store.read(), null);
+  } finally {
+    p.cleanup();
+  }
+});
+
+test("a declined sign-in is reported once it ends", async () => {
+  const p = project();
+  const { fetchImpl } = fakeGitHub({
+    "/login/device/code": { device_code: "dev", user_code: "C-1", verification_uri: "https://github.com/login/device", expires_in: 900, interval: 0 },
+    "/login/oauth/access_token": { error: "access_denied" },
+  });
+  const github = new GitHubSession({ store: memoryStore(), fetchImpl, sleep: async () => {} });
+  try {
+    await handle(post("github/sign-in", {}), { ...p.options, github });
+    await until(() => github.status().error !== null);
+    const status = await (await handle(request("github"), { ...p.options, github })).json();
+    assert.match(status.error, /declined/);
+    assert.equal(status.pending, null);
+  } finally {
+    p.cleanup();
+  }
+});
+
+test("POST submit opens the confirmed snapshot as an issue from the reporter's account", async () => {
+  const p = project();
+  const { calls, fetchImpl } = fakeGitHub({
+    "/repos/sekiro-9/astralis-ui/issues": { status: 201, body: { number: 12, html_url: "https://github.com/sekiro-9/astralis-ui/issues/12" } },
+  });
+  const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
   try {
     const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
-    const response = await handle(post("submit", snapshot), p.options);
-    assert.equal(response.status, 502);
-    assert.match((await response.json()).error, /Could not reach the Astralis issue platform/);
+    const response = await handle(post("submit", snapshot), { ...p.options, github });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" });
+    const sent = JSON.parse(calls[0].body);
+    assert.equal(calls[0].auth, "Bearer tok");
+    assert.equal(sent.title, snapshot.description.title);
+    assert.match(sent.body, /### Reproduction/);
+
+    const invalid = await handle(post("submit", { ...snapshot, extra: 1 }), { ...p.options, github });
+    assert.equal(invalid.status, 400);
+    assert.match((await invalid.json()).error, /not valid/);
   } finally {
-    if (before === undefined) delete process.env.ASTRALIS_ISSUES_URL;
-    else process.env.ASTRALIS_ISSUES_URL = before;
+    p.cleanup();
+  }
+});
+
+test("POST submit asks for a sign-in first, and forgets a token GitHub revoked", async () => {
+  const p = project();
+  const { fetchImpl } = fakeGitHub({ "/repos/sekiro-9/astralis-ui/issues": { status: 401, body: { message: "Bad credentials" } } });
+  try {
+    const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
+    const none = await handle(post("submit", snapshot), { ...p.options, github: new GitHubSession({ store: memoryStore(), fetchImpl }) });
+    assert.equal(none.status, 401);
+    assert.match((await none.json()).error, /Sign in with GitHub first/);
+
+    const store = memoryStore({ token: "old", login: "sam" });
+    const revoked = await handle(post("submit", snapshot), { ...p.options, github: new GitHubSession({ store, fetchImpl }) });
+    assert.equal(revoked.status, 401);
+    assert.equal(store.read(), null);
+  } finally {
+    p.cleanup();
+  }
+});
+
+test("GET github/issues lists the reporter's issues", async () => {
+  const p = project();
+  const { calls, fetchImpl } = fakeGitHub({
+    "/repos/sekiro-9/astralis-ui/issues": [{ number: 4, title: "Card", state: "open", html_url: "u4", comments: 1, labels: [], created_at: "a", updated_at: "b" }],
+  });
+  const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
+  try {
+    const { issues } = await (await handle(request("github/issues"), { ...p.options, github })).json();
+    assert.deepEqual(issues.map((i) => [i.number, i.state]), [[4, "open"]]);
+    assert.equal(calls[0].auth, "Bearer tok");
+  } finally {
     p.cleanup();
   }
 });

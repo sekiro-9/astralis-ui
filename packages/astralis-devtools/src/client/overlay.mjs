@@ -21,8 +21,9 @@ import { STYLES } from "./styles.mjs";
                       browser, and the findings about it
      Findings         the validator's errors, live: what renders wrong
      Recommendations  the validator's warnings: what works but could be better
-     Report           an issue snapshot of one component, shown in full before
-                      anything is sent
+     Report           a problem opened as a GitHub issue from the reporter's own
+                      account, shown in full before anything is sent, and the
+                      issues they have opened so far
 
    Shift+Alt+A opens and closes it. Shift+Alt+C picks a component on the page
    and opens its page. Plain DOM in a shadow root, so it needs no framework and
@@ -34,6 +35,8 @@ const FONTS_ID = "astralis-devtools-fonts";
 const ROUTE_POLL_MS = 1000;
 const SCAN_DEBOUNCE_MS = 200;
 const PANEL_GAP = 10;
+/** How often a waiting sign-in is checked. The bridge polls GitHub; this asks the bridge. */
+const SIGN_IN_POLL_MS = 2000;
 const EDGE = 12;
 
 const NAV = [
@@ -77,6 +80,9 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     route: location.pathname,
     routeFiles: [],
     instances: [],
+    github: null, // the bridge's GitHub status: { configured, repo, login, pending, error }
+    issues: { list: null, loading: false, error: null },
+    reportTab: "new",
     report: {
       title: "",
       happened: "",
@@ -196,6 +202,12 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
         return finding.prop !== undefined && finding.prop in props && String(props[finding.prop]) === String(finding.value);
       });
       return exact ?? same[0] ?? null;
+    },
+    github: {
+      reload: () => loadGitHub(),
+      signIn: () => postGitHub("github/sign-in"),
+      signOut: () => postGitHub("github/sign-out"),
+      loadIssues: () => loadIssues(),
     },
     statusPill() {
       const label = { live: "Validator live", connecting: "Connecting…", unreachable: "Bridge offline" }[state.bridge];
@@ -425,6 +437,57 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     });
     cleanups.push(() => events.close());
   }
+
+  /* ---- GitHub -------------------------------------------------------------------------- */
+
+  let signInPoll = null;
+  cleanups.push(() => clearTimeout(signInPoll));
+
+  function setGitHub(status) {
+    const before = state.github?.login ?? null;
+    state.github = status;
+    if (status.login !== before) {
+      state.issues = { list: null, loading: false, error: null };
+      if (status.login) loadIssues();
+    }
+    clearTimeout(signInPoll);
+    if (status.pending) signInPoll = setTimeout(loadGitHub, SIGN_IN_POLL_MS);
+    refresh("github");
+  }
+
+  function loadGitHub() {
+    return getJson("github")
+      .then((status) => status && setGitHub(status))
+      .catch(() => {});
+  }
+
+  async function postGitHub(path) {
+    try {
+      const response = await fetch(`${base}/${path}`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
+      setGitHub(result);
+    } catch (error) {
+      setGitHub({ ...(state.github ?? { configured: true, repo: null, login: null, pending: null }), error: error.message });
+    }
+  }
+
+  async function loadIssues() {
+    state.issues = { ...state.issues, loading: true, error: null };
+    refresh("github");
+    try {
+      const response = await fetch(`${base}/github/issues`, { cache: "no-store" });
+      const result = await response.json();
+      if (response.status === 401) return loadGitHub();
+      if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
+      state.issues = { list: result.issues, loading: false, error: null };
+    } catch (error) {
+      state.issues = { ...state.issues, loading: false, error: error.message };
+    }
+    refresh("github");
+  }
+
+  loadGitHub();
 
   function loadRouteFiles() {
     if (framework !== "next") return;

@@ -17,10 +17,12 @@ drag anywhere on the page opens a panel with five screens.
 - **Findings** and **Recommendations.** The errors and the warnings of
   `astralis validate` for the project, kept current as you save. On Next.js,
   the files that render the current page are listed first.
-- **Report.** Send a problem to the maintainers as an issue snapshot of the
-  picked component. You see the exact JSON first, page text is replaced by
-  placeholders unless you include it, and nothing is sent until you press
-  Send.
+- **Report.** Open a problem as a GitHub issue from your own account, with an
+  issue snapshot of the picked component and a reproduction. You see the
+  exact JSON first, page text is replaced by placeholders unless you include
+  it, and nothing is sent until you press Send. Sign-in is a code entered on
+  github.com; the token stays with the dev server. **Your issues** lists the
+  issues you have opened and where each stands.
 
 `Shift+Alt+A` opens and closes it, and `Shift+Alt+C` picks a component on the
 page. It wears the Astralis brand, with its fonts embedded, and needs no

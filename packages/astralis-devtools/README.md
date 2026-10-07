@@ -16,11 +16,13 @@ screens:
   listed first.
 - **Recommendations.** The validator's warnings: what works but could be
   better.
-- **Report.** Send a problem to the Astralis maintainers as an issue snapshot:
-  the components under the one you picked with their props, the versions in
-  use and the validator's findings. You see the exact JSON first, page text is
+- **Report.** Open a problem as a GitHub issue on the Astralis repository,
+  from your own account, with an issue snapshot: the components under the one
+  you picked with their props, the versions in use, the validator's findings
+  and a small reproduction. You see the exact JSON first, page text is
   replaced by placeholders unless you include it, and nothing is sent until
-  you press Send.
+  you press Send. **Your issues** lists the issues you have opened and where
+  each stands.
 
 `Shift+Alt+A` opens and closes it. `Shift+Alt+C` picks a component on the page
 and opens its page.
@@ -73,7 +75,7 @@ re-validates each file when you save it. It answers requests from your own
 machine only. On Next.js it is the route above, and it returns 404 in
 production. On Vite it is dev-server middleware that `vite build` never loads.
 
-The overlay talks only to your own dev server. The one request that leaves your machine is a report you have read and sent, which the bridge forwards to the Astralis issue platform.
+The overlay talks only to your own dev server. The bridge talks to GitHub only for you: to sign you in with a code (through the Astralis DevTools GitHub App, which can only read and write issues on the Astralis repository), to open a report you have read and sent, and, while you are signed in, to list your issues. The token is kept in a file in your user config directory that only you can read, never in the page, and `astralis report` shares it.
 
 ## License
 

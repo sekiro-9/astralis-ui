@@ -1,20 +1,26 @@
 import { bridgeFor } from "./bridge.mjs";
-import { assembleSnapshot, submit } from "./snapshot.mjs";
+import { githubSession } from "./github.mjs";
+import { assembleSnapshot } from "./snapshot.mjs";
 
 /* The bridge over HTTP, in web-standard Request/Response so the Next.js
    route handler and the Vite middleware share it. Mounted at BASE_PATH:
 
      GET  info          versions of astralis-ui (with the spec's SHA-256), the framework and React
-     GET  spec          the installed system spec, for the Inspect panel
+     GET  spec          the installed system spec, for the component pages
      GET  findings      the validator's findings for the project
      GET  events        the same findings as a server-sent event stream, re-sent on every change
      GET  route-files   ?path=/about: the files that render that page (Next.js)
      POST snapshot      the page's part of an issue snapshot in; the complete snapshot out
-     POST submit        a snapshot the reporter confirmed, forwarded to the issue platform
+     POST submit        a snapshot the reporter confirmed, opened as a GitHub issue
+     GET  github        the GitHub sign-in: set up or not, who, and a code to enter
+     POST github/sign-in   start signing in with a code (the bridge polls GitHub)
+     POST github/sign-out  forget the saved sign-in
+     GET  github/issues    the issues the signed-in user opened on the Astralis repository
 
    It answers the local machine only, and nothing at all in production. The
    POST routes take JSON only: a page on another site cannot send that type
-   without a preflight the bridge never grants. */
+   without a preflight the bridge never grants. The GitHub token never leaves
+   the bridge: the page sees the login, never the token. */
 
 export const BASE_PATH = "/api/astralis-devtools";
 
@@ -117,20 +123,32 @@ async function readJson(request) {
   }
 }
 
-async function handlePost(bridge, path, request) {
-  if (path !== "snapshot" && path !== "submit") return json({ error: "Not found." }, 404);
-  if (bridge.problem) return json({ error: bridge.problem }, 409);
+/** A GitHub failure as a response: 401 when the reporter has to sign in (again). */
+const githubFailure = (error) =>
+  json({ error: error.message, code: error.code ?? "github" }, error.code === "signed-out" ? 401 : error.code === "invalid" ? 400 : 502);
+
+const POSTS = new Set(["snapshot", "submit", "github/sign-in", "github/sign-out"]);
+
+async function handlePost(bridge, path, request, github) {
+  if (!POSTS.has(path)) return json({ error: "Not found." }, 404);
   const read = await readJson(request);
   if (read instanceof Response) return read;
+  try {
+    if (path === "github/sign-in") return json(await github.signIn());
+    if (path === "github/sign-out") return json(github.signOut());
+  } catch (error) {
+    return githubFailure(error);
+  }
+  if (bridge.problem) return json({ error: bridge.problem }, 409);
   if (path === "snapshot") return json(assembleSnapshot(bridge, read.body));
   try {
-    return json({ url: await submit(read.body) });
+    return json(await github.submit(read.body));
   } catch (error) {
-    return json({ error: error.message }, 502);
+    return githubFailure(error);
   }
 }
 
-export async function handle(request, { root = process.cwd(), framework, watch } = {}) {
+export async function handle(request, { root = process.cwd(), framework, watch, github = githubSession() } = {}) {
   if (process.env.NODE_ENV === "production") return new Response(null, { status: 404 });
   if (!isLocal(request)) return json({ error: "The Astralis DevTools bridge answers this machine only." }, 403);
   if (request.method !== "GET" && request.method !== "POST") return json({ error: "Method not allowed." }, 405);
@@ -138,7 +156,7 @@ export async function handle(request, { root = process.cwd(), framework, watch }
   const bridge = bridgeFor(root, framework, { watch });
   await bridge.start();
   const url = new URL(request.url);
-  if (request.method === "POST") return handlePost(bridge, route(url), request);
+  if (request.method === "POST") return handlePost(bridge, route(url), request, github);
 
   switch (route(url)) {
     case "info":
@@ -153,6 +171,14 @@ export async function handle(request, { root = process.cwd(), framework, watch }
       return json(bridge.findings());
     case "events":
       return eventStream(bridge, request.signal);
+    case "github":
+      return json(github.status());
+    case "github/issues":
+      try {
+        return json({ issues: await github.issues() });
+      } catch (error) {
+        return githubFailure(error);
+      }
     case "route-files":
       return json({ path: url.searchParams.get("path") ?? "/", files: bridge.routeFiles(url.searchParams.get("path") ?? "/") });
     default:
