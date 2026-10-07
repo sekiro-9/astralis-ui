@@ -4,8 +4,9 @@
    The same astralis-snapshot/1 the DevTools build from a page, built here
    from the JSX of the files that show the problem: the astralis-ui
    components with their literal props, the validator's findings for those
-   files, and the versions installed. It prints the exact JSON and sends it
-   to the Astralis issue platform only when the reporter confirms.
+   files, and the versions installed. It prints the exact JSON and opens it
+   as a GitHub issue, from the reporter's own account, only when they
+   confirm. The first time, they sign in with a code on github.com.
    ========================================================================== */
 
 import { createHash } from "node:crypto";
@@ -18,7 +19,8 @@ import { loadSpec } from "../lib/spec-load.mjs";
 import { detectFramework, readPackageJson } from "../lib/detect.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
 import { treeFromSource } from "../lib/report-tree.mjs";
-import { SNAPSHOT_FORMAT, ISSUES_ORIGIN, LIMITS, checkSnapshot, submitDraft } from "../lib/snapshot.mjs";
+import { SNAPSHOT_FORMAT, LIMITS, checkSnapshot } from "../lib/snapshot.mjs";
+import { createIssue, finishSignIn, issueFromSnapshot, issuesRepo, startSignIn, tokenStore } from "../lib/github.mjs";
 
 /** The nearest node_modules/<name>/package.json above `root`: its version, or null. */
 function installedVersion(root, name) {
@@ -65,11 +67,41 @@ function describe(values) {
   return description;
 }
 
+/** Sign in with GitHub's device flow, in the terminal, and save the sign-in. */
+async function signIn(store) {
+  let flow;
+  try {
+    flow = await startSignIn();
+  } catch (error) {
+    fail(`${error.message} Nothing was sent. ${cyan("--out snapshot.json")} saves the snapshot to attach by hand.`);
+  }
+  console.log("");
+  console.log(`  Sign in to GitHub: open ${cyan(flow.verificationUri)} and enter ${bold(flow.userCode)}`);
+  console.log(dim(`  The Astralis DevTools app can only read and write issues on ${issuesRepo()}.`));
+  console.log("");
+  try {
+    const signedIn = await finishSignIn(flow);
+    store.write(signedIn);
+    ok(`signed in as ${bold(signedIn.login)}`);
+    return signedIn;
+  } catch (error) {
+    fail(`${error.message} Nothing was sent.`);
+  }
+}
+
 export async function run(argv) {
   const args = parseCommandArgs(commandNamed("report"), argv);
   if (!args) return;
   const { values, positionals } = args;
   const cwd = process.cwd();
+  if (values["sign-out"]) {
+    const store = tokenStore();
+    const saved = store.read();
+    store.clear();
+    if (saved) ok(`signed out of GitHub (${saved.login}). The app's access ends when you revoke it at github.com/settings/applications.`);
+    else info("not signed in to GitHub.");
+    return;
+  }
   if (positionals.length === 0) {
     fail(`Name the files that show the problem: ${cyan("astralis report app/page.tsx")}.`);
   }
@@ -127,20 +159,31 @@ export async function run(argv) {
     info("dry run: nothing was sent.");
     return;
   }
-  const send = await confirm("Send this snapshot to the Astralis issue platform?", {
+  const send = await confirm(`Open this as an issue on github.com/${issuesRepo()}?`, {
     hint: `Pass --yes to send, or ${cyan("--out snapshot.json")} to save it instead.`,
   });
   if (!send) {
     info("nothing was sent.");
     return;
   }
-  const origin = process.env.ASTRALIS_ISSUES_URL || ISSUES_ORIGIN;
-  let url;
+  const store = tokenStore();
+  let signedIn = store.read() ?? (await signIn(store));
+  const issue = issueFromSnapshot(snapshot);
+  let created;
   try {
-    url = await submitDraft(snapshot, { origin });
+    created = await createIssue(signedIn.token, issue);
   } catch (error) {
-    fail(`${error.message} Nothing was sent. ${cyan("--out snapshot.json")} saves the snapshot to attach by hand.`);
+    if (error.code !== "signed-out") {
+      fail(`${error.message} Nothing was sent. ${cyan("--out snapshot.json")} saves the snapshot to attach by hand.`);
+    }
+    // The saved sign-in was revoked: sign in again, once.
+    store.clear();
+    signedIn = await signIn(store);
+    try {
+      created = await createIssue(signedIn.token, issue);
+    } catch (again) {
+      fail(`${again.message} Nothing was sent.`);
+    }
   }
-  ok(`draft created: ${cyan(url)}`);
-  console.log(dim("  Open it to sign in with GitHub, check it and submit the issue."));
+  ok(`issue #${created.number} opened as ${signedIn.login}: ${cyan(created.url)}`);
 }

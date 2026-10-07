@@ -12,8 +12,6 @@ export const LIMITS: {
   title: number;
   body: number;
 };
-export const ISSUES_ORIGIN: string;
-export const DRAFTS_PATH: string;
 
 export type ClientTier = "none" | "leaf" | "required";
 export type PropValue = string | number | boolean | { [key: string]: PropValue };
@@ -65,8 +63,3 @@ export function cleanConsoleMessage(message: unknown, origin?: string): string;
 export function checkSnapshot(value: unknown): string[];
 /** The snapshot's tree as a minimal repro.tsx. */
 export function toRepro(snapshot: Snapshot): string;
-/** Post a valid snapshot as a draft; resolves to the draft's page URL. */
-export function submitDraft(
-  snapshot: Snapshot,
-  options?: { origin?: string; fetchImpl?: typeof fetch; timeoutMs?: number },
-): Promise<string>;

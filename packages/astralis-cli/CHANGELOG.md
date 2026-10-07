@@ -16,8 +16,11 @@ The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
 - **`astralis report <files...>`** builds an issue snapshot of the Astralis
   components in the files you name (their props, parts and the validator's
   findings, with your text replaced by placeholders), prints the exact JSON,
-  and sends it to the maintainers only when you confirm. `--out` writes it to
-  a file instead and sends nothing.
+  and, only when you confirm, opens it as a GitHub issue from your own
+  account, signing you in with a code the first time. `--out` writes it to a
+  file instead and sends nothing; `--sign-out` forgets the sign-in.
+- **`astralis-cli/github`**: the GitHub sign-in, the saved token and the
+  issues, shared with the Astralis DevTools.
 - **`astralis init --ci`** pins astralis-cli, adds a `validate` script and
   writes a GitHub Actions workflow that checks every pull request.
   `validate --format github` annotates the pull request's lines.

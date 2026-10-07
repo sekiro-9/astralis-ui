@@ -138,9 +138,12 @@ Report a problem to the Astralis maintainers, with a snapshot built from your so
 | `--no-findings` | Leave out the validator's findings for these files. |
 | `--out <file>` | Write the snapshot to a file instead of sending it. |
 | `--dry-run` | Print the snapshot and send nothing. |
+| `--sign-out` | Forget the saved GitHub sign-in, and do nothing else. |
 | `--spec <path>` | Build against this system-spec.json. Default: the installed astralis-ui's. |
 
 It prints the exact JSON first and sends nothing until you confirm; --yes confirms without asking.
+
+It opens a GitHub issue from your own account. The first time, you sign in with a code on github.com.
 
 Only literal props are recorded, and only those the spec describes; links, sources and handlers never are.
 

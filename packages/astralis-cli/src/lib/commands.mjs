@@ -171,6 +171,7 @@ export const COMMANDS = [
       { name: "no-findings", type: "boolean", description: "Leave out the validator's findings for these files." },
       { name: "out", type: "string", arg: "file", description: "Write the snapshot to a file instead of sending it." },
       { name: "dry-run", type: "boolean", description: "Print the snapshot and send nothing." },
+      { name: "sign-out", type: "boolean", description: "Forget the saved GitHub sign-in, and do nothing else." },
       {
         name: "spec",
         type: "string",
@@ -181,6 +182,7 @@ export const COMMANDS = [
     ],
     notes: [
       "It prints the exact JSON first and sends nothing until you confirm; --yes confirms without asking.",
+      "It opens a GitHub issue from your own account. The first time, you sign in with a code on github.com.",
       "Only literal props are recorded, and only those the spec describes; links, sources and handlers never are.",
     ],
     examples: [

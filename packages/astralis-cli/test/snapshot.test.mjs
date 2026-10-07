@@ -12,7 +12,6 @@ import {
   describedProps,
   narrowProps,
   narrowTree,
-  submitDraft,
   toRepro,
 } from "astralis-cli/snapshot";
 import { prepareSpec, validateSource } from "astralis-cli/validate";
@@ -145,34 +144,6 @@ test("routes and console messages are cleaned before they can leave", () => {
   );
   assert.equal(cleanConsoleMessage("at /home/sam/work/app/components/nav.tsx:9"), "at app/components/nav.tsx:9");
   assert.equal(cleanConsoleMessage("x".repeat(600)).length, 500);
-});
-
-test("submitDraft posts the snapshot and returns the draft's address", async () => {
-  const calls = [];
-  const fetchImpl = async (url, init) => {
-    calls.push({ url, init });
-    return new Response(JSON.stringify({ id: "d1", url: "/issues/new?draft=d1" }), { status: 201 });
-  };
-  const url = await submitDraft(snapshot(), { origin: "https://issues.example", fetchImpl });
-  assert.equal(url, "https://issues.example/issues/new?draft=d1");
-  assert.equal(calls[0].url, "https://issues.example/api/issues/drafts");
-  assert.equal(calls[0].init.headers["content-type"], "application/json");
-  assert.deepEqual(JSON.parse(calls[0].init.body), snapshot());
-});
-
-test("submitDraft explains each way sending can fail, and never sends an invalid snapshot", async () => {
-  let called = false;
-  await assert.rejects(submitDraft(snapshot({ format: "x" }), { fetchImpl: async () => (called = true) }), /not valid/);
-  assert.equal(called, false);
-  await assert.rejects(
-    submitDraft(snapshot(), { origin: "https://down.example", fetchImpl: async () => { throw new TypeError("fetch failed"); } }),
-    /Could not reach the Astralis issue platform at https:\/\/down\.example \(fetch failed\)/,
-  );
-  await assert.rejects(
-    submitDraft(snapshot(), { fetchImpl: async () => new Response(JSON.stringify({ error: "too large" }), { status: 413 }) }),
-    /did not accept the draft: too large/,
-  );
-  await assert.rejects(submitDraft(snapshot(), { fetchImpl: async () => new Response("{}", { status: 201 }) }), /returned no address/);
 });
 
 test("narrowTree narrows every component, whatever built the tree", () => {

@@ -39,6 +39,10 @@
     "./snapshot": {
       "types": "./src/lib/snapshot.d.mts",
       "default": "./src/lib/snapshot.mjs"
+    },
+    "./github": {
+      "types": "./src/lib/github.d.mts",
+      "default": "./src/lib/github.mjs"
     }
   },
   "files": [

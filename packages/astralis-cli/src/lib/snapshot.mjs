@@ -1,8 +1,8 @@
 /* ==========================================================================
    Issue snapshots (format astralis-snapshot/1): the unit of evidence in the
    feedback loop. Built by the DevTools from a rendered page and by
-   `astralis report` from source files; checked here before anything is sent,
-   and again by the issue platform when it arrives.
+   `astralis report` from source files, and checked here before anything is
+   sent. github.mjs turns one into a GitHub issue.
 
    Pure JavaScript with no Node built-ins, so the same code runs in the
    browser overlay, the dev-server bridge, the CLI and the platform.
@@ -23,10 +23,6 @@ export const LIMITS = {
   title: 200,
   body: 4000,
 };
-
-/** Where drafts go unless a caller says otherwise (ASTRALIS_ISSUES_URL in Node). */
-export const ISSUES_ORIGIN = "https://astralis-ui.com";
-export const DRAFTS_PATH = "/api/issues/drafts";
 
 /* ---- names and the spec -------------------------------------------------------- */
 
@@ -372,42 +368,4 @@ export function toRepro(snapshot) {
     "}",
     "",
   ].join("\n");
-}
-
-/* ---- sending ---------------------------------------------------------------------- */
-
-/**
- * Post a checked snapshot to the issue platform as a draft. Resolves to the
- * draft's page URL; rejects with a message a person can act on.
- */
-export async function submitDraft(snapshot, { origin = ISSUES_ORIGIN, fetchImpl = globalThis.fetch, timeoutMs = 15000 } = {}) {
-  const problems = checkSnapshot(snapshot);
-  if (problems.length) throw new Error(`The snapshot is not valid: ${problems.join("; ")}`);
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  let response;
-  try {
-    response = await fetchImpl(new URL(DRAFTS_PATH, origin).toString(), {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(snapshot),
-      signal: controller.signal,
-    });
-  } catch (error) {
-    throw new Error(`Could not reach the Astralis issue platform at ${origin} (${error.name === "AbortError" ? "timed out" : error.message}).`);
-  } finally {
-    clearTimeout(timer);
-  }
-  let body = null;
-  try {
-    body = await response.json();
-  } catch {
-    // no JSON body
-  }
-  if (!response.ok) {
-    const reason = body?.error ?? `${response.status} ${response.statusText}`.trim();
-    throw new Error(`The issue platform did not accept the draft: ${reason}.`);
-  }
-  if (!body?.url) throw new Error("The issue platform accepted the draft but returned no address for it.");
-  return new URL(body.url, origin).toString();
 }
