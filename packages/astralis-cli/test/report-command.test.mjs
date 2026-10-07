@@ -96,9 +96,10 @@ test("--out writes the snapshot and sends nothing", async () => {
  * the user, and the issues endpoint. `pending` is how many polls answer
  * "authorization_pending" before the token is granted.
  */
-async function fakeGitHub({ pending = 1, revoked = [] } = {}) {
+async function fakeGitHub({ pending = 1, revoked = [], duplicates = [], related = [], searchFails = false } = {}) {
   const seen = [];
   const issues = [];
+  const comments = [];
   let polls = 0;
   const server = createServer((req, res) => {
     let body = "";
@@ -117,6 +118,16 @@ async function fakeGitHub({ pending = 1, revoked = [] } = {}) {
       }
       if (revoked.includes(req.headers.authorization)) return send(401, { message: "Bad credentials" });
       if (req.url === "/user") return send(200, { login: "sam" });
+      if (req.url.startsWith("/search/issues")) {
+        if (searchFails) return send(403, { message: "API rate limit exceeded" });
+        const q = new URL(req.url, "http://x").searchParams.get("q");
+        return send(200, { items: / afp[0-9a-f]{12}$/.test(q) ? duplicates : / is:open acmp\w+$/.test(q) ? related : [] });
+      }
+      const comment = req.url.match(/^\/repos\/sekiro-9\/astralis-ui\/issues\/(\d+)\/comments$/);
+      if (comment && req.method === "POST") {
+        comments.push({ issue: Number(comment[1]), body: JSON.parse(body).body });
+        return send(201, { html_url: `https://github.com/sekiro-9/astralis-ui/issues/${comment[1]}#issuecomment-1` });
+      }
       if (req.url === "/repos/sekiro-9/astralis-ui/issues" && req.method === "POST") {
         const issue = JSON.parse(body);
         issues.push(issue);
@@ -130,6 +141,7 @@ async function fakeGitHub({ pending = 1, revoked = [] } = {}) {
   return {
     seen,
     issues,
+    comments,
     env: (configDir) => ({
       ASTRALIS_GITHUB_URL: url,
       ASTRALIS_GITHUB_API_URL: url,
@@ -205,6 +217,104 @@ test("a revoked sign-in is replaced once, then the issue is opened", async () =>
     assert.match(result.stdout, /enter WDJB-MJHT/);
     assert.equal(github.issues.length, 1);
     assert.equal(github.seen.filter((r) => r.path.endsWith("/issues")).at(-1).auth, "Bearer tok-new");
+  } finally {
+    await github.close();
+    p.cleanup();
+  }
+});
+
+const ISSUE_3 = { number: 3, title: "Card variant glass is not reported", state: "open", html_url: "https://github.com/sekiro-9/astralis-ui/issues/3", comments: 1, labels: [] };
+const ISSUE_5 = { number: 5, title: "Card padding in dark mode", state: "open", html_url: "https://github.com/sekiro-9/astralis-ui/issues/5", comments: 0, labels: [] };
+
+test("the issue carries the keys a later report is matched on", async () => {
+  const p = project();
+  const github = await fakeGitHub();
+  const config = join(p.dir, ".config");
+  savedSignIn(config);
+  try {
+    await runCli(["report", "app/page.tsx", "--title", "t", "--yes", "--spec", SPEC], { cwd: p.dir, env: github.env(config) });
+    assert.match(github.issues[0].body, /Match keys: afp[0-9a-f]{12} acmpcard<\/sub>$/);
+    const searches = github.seen.filter((r) => r.path.startsWith("/search/issues")).map((r) => new URL(r.path, "http://x").searchParams.get("q"));
+    assert.deepEqual(searches.map((q) => q.replace(/afp[0-9a-f]{12}/, "afp…")).sort(), [
+      "repo:sekiro-9/astralis-ui is:issue afp…",
+      "repo:sekiro-9/astralis-ui is:issue is:open acmpcard",
+    ]);
+  } finally {
+    await github.close();
+    p.cleanup();
+  }
+});
+
+test("a likely duplicate is offered, and choosing it adds the report to that issue", async () => {
+  const p = project();
+  const github = await fakeGitHub({ duplicates: [ISSUE_3], related: [ISSUE_5] });
+  const config = join(p.dir, ".config");
+  savedSignIn(config);
+  try {
+    const result = await runCli(["report", "app/page.tsx", "--title", "Card loses its border", "--happened", "No border", "--expected", "A border", "--spec", SPEC], {
+      cwd: p.dir,
+      env: github.env(config),
+      input: "y\n1\n",
+    });
+    assert.equal(result.code, 0, result.output);
+    assert.match(result.stdout, /open issues about the same component:\n\s+#5 Card padding in dark mode/);
+    assert.match(result.stdout, /This may already be reported:\n\s+#3 Card variant glass is not reported/);
+    assert.equal(github.issues.length, 0, "no second issue");
+    assert.equal(github.comments[0].issue, 3);
+    assert.match(github.comments[0].body, /^\*\*Another report of this problem:\*\* Card loses its border\n\n### What happened\n\nNo border/);
+    assert.match(result.stdout, /report added to issue #3 as sam/);
+  } finally {
+    await github.close();
+    p.cleanup();
+  }
+});
+
+test("with --yes a new issue is opened, and the possible duplicates are listed to check", async () => {
+  const p = project();
+  const github = await fakeGitHub({ duplicates: [ISSUE_3] });
+  const config = join(p.dir, ".config");
+  savedSignIn(config);
+  try {
+    const result = await runCli(["report", "app/page.tsx", "--title", "t", "--yes", "--spec", SPEC], { cwd: p.dir, env: github.env(config) });
+    assert.equal(result.code, 0, result.output);
+    assert.match(result.stdout, /#3 Card variant glass is not reported/);
+    assert.match(result.stdout, /pass --add-to 3 to add your report/);
+    assert.equal(github.issues.length, 1);
+  } finally {
+    await github.close();
+    p.cleanup();
+  }
+});
+
+test("--add-to adds to that issue without searching, and --new opens one without searching", async () => {
+  const p = project();
+  const github = await fakeGitHub({ duplicates: [ISSUE_3] });
+  const config = join(p.dir, ".config");
+  savedSignIn(config);
+  try {
+    const added = await runCli(["report", "app/page.tsx", "--title", "t", "--add-to", "#7", "--yes", "--spec", SPEC], { cwd: p.dir, env: github.env(config) });
+    assert.equal(added.code, 0, added.output);
+    assert.equal(github.comments[0].issue, 7);
+    const opened = await runCli(["report", "app/page.tsx", "--title", "t", "--new", "--yes", "--spec", SPEC], { cwd: p.dir, env: github.env(config) });
+    assert.equal(opened.code, 0, opened.output);
+    assert.equal(github.issues.length, 1);
+    assert.equal(github.seen.some((r) => r.path.startsWith("/search/issues")), false);
+  } finally {
+    await github.close();
+    p.cleanup();
+  }
+});
+
+test("a failed search does not stop the report", async () => {
+  const p = project();
+  const github = await fakeGitHub({ searchFails: true });
+  const config = join(p.dir, ".config");
+  savedSignIn(config);
+  try {
+    const result = await runCli(["report", "app/page.tsx", "--title", "t", "--yes", "--spec", SPEC], { cwd: p.dir, env: github.env(config) });
+    assert.equal(result.code, 0, result.output);
+    assert.match(result.stdout, /could not check for an existing issue \(GitHub refused the request: API rate limit exceeded\.\); opening a new one/);
+    assert.equal(github.issues.length, 1);
   } finally {
     await github.close();
     p.cleanup();

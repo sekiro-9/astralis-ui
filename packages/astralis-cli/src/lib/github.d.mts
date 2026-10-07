@@ -59,3 +59,12 @@ export function createIssue(token: string, issue: { title: string; body: string 
 export function listIssues(token: string, login: string, options?: FetchOptions): Promise<IssueSummary[]>;
 /** The title and Markdown body of the issue a snapshot becomes. */
 export function issueFromSnapshot(snapshot: Snapshot): { title: string; body: string };
+
+/** Add a report to an existing issue, as a comment. */
+export function commentOnIssue(token: string, number: number, body: string, options?: FetchOptions): Promise<{ number: number; url: string }>;
+/** The words a report's issue carries so a later search can find it: the same problem, and the same component. */
+export function matchKeys(snapshot: Snapshot): { fingerprint: string | null; component: string | null };
+/** Issues that may already report this: the same fingerprint, and other open issues about the same component. */
+export function findSimilar(token: string, snapshot: Snapshot, options?: FetchOptions): Promise<{ duplicates: IssueSummary[]; related: IssueSummary[] }>;
+/** The comment a snapshot becomes when it is added to an existing issue. */
+export function commentFromSnapshot(snapshot: Snapshot): string;

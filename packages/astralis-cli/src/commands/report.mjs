@@ -12,7 +12,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { bold, cyan, dim, fail, info, ok, ask, isAssumeYes, confirm, posix } from "../lib/ui.mjs";
+import { bold, cyan, dim, fail, info, ok, warn, ask, isAssumeYes, confirm, select, posix } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { loadSpec } from "../lib/spec-load.mjs";
@@ -20,7 +20,17 @@ import { detectFramework, readPackageJson } from "../lib/detect.mjs";
 import { prepareSpec, validateSource } from "../lib/validate-core.mjs";
 import { treeFromSource } from "../lib/report-tree.mjs";
 import { SNAPSHOT_FORMAT, LIMITS, checkSnapshot } from "../lib/snapshot.mjs";
-import { createIssue, finishSignIn, issueFromSnapshot, issuesRepo, startSignIn, tokenStore } from "../lib/github.mjs";
+import {
+  commentFromSnapshot,
+  commentOnIssue,
+  createIssue,
+  findSimilar,
+  finishSignIn,
+  issueFromSnapshot,
+  issuesRepo,
+  startSignIn,
+  tokenStore,
+} from "../lib/github.mjs";
 
 /** The nearest node_modules/<name>/package.json above `root`: its version, or null. */
 function installedVersion(root, name) {
@@ -168,22 +178,72 @@ export async function run(argv) {
   }
   const store = tokenStore();
   let signedIn = store.read() ?? (await signIn(store));
-  const issue = issueFromSnapshot(snapshot);
-  let created;
-  try {
-    created = await createIssue(signedIn.token, issue);
-  } catch (error) {
-    if (error.code !== "signed-out") {
-      fail(`${error.message} Nothing was sent. ${cyan("--out snapshot.json")} saves the snapshot to attach by hand.`);
-    }
-    // The saved sign-in was revoked: sign in again, once.
-    store.clear();
-    signedIn = await signIn(store);
+  const keep = `Nothing was sent. ${cyan("--out snapshot.json")} saves the snapshot to attach by hand.`;
+  /** Run `work` signed in; a sign-in GitHub revoked is replaced, once. */
+  const asUser = async (work) => {
     try {
-      created = await createIssue(signedIn.token, issue);
-    } catch (again) {
-      fail(`${again.message} Nothing was sent.`);
+      return await work(signedIn.token);
+    } catch (error) {
+      if (error.code !== "signed-out") throw error;
+      store.clear();
+      signedIn = await signIn(store);
+      return work(signedIn.token);
     }
+  };
+
+  const target = await chooseTarget(values, () => asUser((token) => findSimilar(token, snapshot)));
+  try {
+    if (target) {
+      const added = await asUser((token) => commentOnIssue(token, target, commentFromSnapshot(snapshot)));
+      ok(`report added to issue #${added.number} as ${signedIn.login}: ${cyan(added.url)}`);
+    } else {
+      const created = await asUser((token) => createIssue(token, issueFromSnapshot(snapshot)));
+      ok(`issue #${created.number} opened as ${signedIn.login}: ${cyan(created.url)}`);
+    }
+  } catch (error) {
+    fail(`${error.message} ${keep}`);
   }
-  ok(`issue #${created.number} opened as ${signedIn.login}: ${cyan(created.url)}`);
+}
+
+const line = (issue) => `#${issue.number} ${issue.title} ${dim(`(${issue.state})`)}`;
+
+/**
+ * Where the report goes: an existing issue's number, or null for a new issue.
+ * --add-to and --new decide without searching. Otherwise the issues that may
+ * already report it are shown, and the reporter chooses; with --yes, a new
+ * issue is opened and the possible duplicates are listed for them to check.
+ */
+async function chooseTarget(values, searchSimilar) {
+  if (values["add-to"] !== undefined) {
+    const number = Number(String(values["add-to"]).replace(/^#/, ""));
+    if (!Number.isInteger(number) || number < 1) fail(`--add-to takes an issue number, like ${cyan("--add-to 12")}.`);
+    return number;
+  }
+  if (values.new) return null;
+  let similar;
+  try {
+    similar = await searchSimilar();
+  } catch (error) {
+    warn(`could not check for an existing issue (${error.message}); opening a new one.`);
+    return null;
+  }
+  const { duplicates, related } = similar;
+  if (related.length) {
+    info(`open issues about the same component:`);
+    for (const issue of related) console.log(`  ${line(issue)}  ${dim(issue.url)}`);
+  }
+  if (!duplicates.length) return null;
+  console.log("");
+  console.log(bold("This may already be reported:"));
+  for (const issue of duplicates) console.log(`  ${line(issue)}  ${dim(issue.url)}`);
+  if (isAssumeYes()) {
+    info(`opening a new issue; pass ${cyan(`--add-to ${duplicates[0].number}`)} to add your report to an existing one instead.`);
+    return null;
+  }
+  const choice = await select("Add your report to one of them, or open a new issue?", [
+    ...duplicates.slice(0, 3).map((issue) => ({ value: issue.number, label: `Add it to #${issue.number} ${issue.title}` })),
+    { value: 0, label: "Open a new issue" },
+  ]);
+  if (choice === null) fail("Choose one of the listed numbers. Nothing was sent.");
+  return choice || null;
 }

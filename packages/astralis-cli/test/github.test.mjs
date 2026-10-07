@@ -124,7 +124,7 @@ test("a snapshot becomes an issue: the reporter's words, where, findings, a repr
   assert.match(body, /- `invalid-recipe-value` app\/about\/page\.tsx:3:16: Card: "glass" is not a variant value/);
   assert.match(body, /```tsx\n[\s\S]*<Card variant="outline">/);
   assert.doesNotMatch(body, /base64/);
-  assert.match(body, /<sub>Reported with the Astralis DevTools\.<\/sub>$/);
+  assert.match(body, /<sub>Reported with the Astralis DevTools\. Match keys: afp[0-9a-f]{12} acmpcard<\/sub>$/);
 });
 
 test("a snapshot too large for GitHub keeps everything but the raw JSON", () => {

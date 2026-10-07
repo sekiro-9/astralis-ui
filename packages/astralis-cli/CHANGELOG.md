@@ -18,7 +18,9 @@ The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
   findings, with your text replaced by placeholders), prints the exact JSON,
   and, only when you confirm, opens it as a GitHub issue from your own
   account, signing you in with a code the first time. `--out` writes it to a
-  file instead and sends nothing; `--sign-out` forgets the sign-in.
+  file instead and sends nothing; `--sign-out` forgets the sign-in. It looks
+  for an issue that already reports the same problem first and offers to add
+  your report to it (`--add-to <issue>`, or `--new` to skip the check).
 - **`astralis-cli/github`**: the GitHub sign-in, the saved token and the
   issues, shared with the Astralis DevTools.
 - **`astralis init --ci`** pins astralis-cli, adds a `validate` script and

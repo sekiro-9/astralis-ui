@@ -12,6 +12,7 @@
    never reaches a web page: both run in Node and call GitHub themselves.
    ========================================================================== */
 
+import { createHash } from "node:crypto";
 import { chmodSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -176,23 +177,70 @@ export async function createIssue(token, { title, body }, { fetchImpl = globalTh
   return { number: issue.number, url: issue.html_url };
 }
 
+/** Add a report to an existing issue, as a comment. Resolves to { number, url }. */
+export async function commentOnIssue(token, number, body, { fetchImpl = globalThis.fetch } = {}) {
+  const comment = await call(fetchImpl, `${api()}/repos/${issuesRepo()}/issues/${number}/comments`, { method: "POST", token, body: { body } });
+  return { number, url: comment.html_url };
+}
+
+const summary = (issue) => ({
+  number: issue.number,
+  title: issue.title,
+  state: issue.state,
+  stateReason: issue.state_reason ?? null,
+  url: issue.html_url,
+  comments: issue.comments,
+  labels: (issue.labels ?? []).map((label) => (typeof label === "string" ? label : label.name)),
+  createdAt: issue.created_at,
+  updatedAt: issue.updated_at,
+});
+
 /** The issues `login` opened on the Astralis repository, most recently updated first. */
 export async function listIssues(token, login, { fetchImpl = globalThis.fetch } = {}) {
   const query = new URLSearchParams({ creator: login, state: "all", sort: "updated", per_page: "50" });
   const list = await call(fetchImpl, `${api()}/repos/${issuesRepo()}/issues?${query}`, { token });
-  return (list ?? [])
-    .filter((issue) => !issue.pull_request)
-    .map((issue) => ({
-      number: issue.number,
-      title: issue.title,
-      state: issue.state,
-      stateReason: issue.state_reason ?? null,
-      url: issue.html_url,
-      comments: issue.comments,
-      labels: (issue.labels ?? []).map((label) => (typeof label === "string" ? label : label.name)),
-      createdAt: issue.created_at,
-      updatedAt: issue.updated_at,
-    }));
+  return (list ?? []).filter((issue) => !issue.pull_request).map(summary);
+}
+
+/* ---- duplicates -------------------------------------------------------------------- */
+
+/**
+ * The keys a report is matched on, written into every issue it opens so
+ * GitHub's search can find them again. `fingerprint` is the same problem: the
+ * same component, the same rule codes in its findings, and the same minor
+ * version of astralis-ui. `component` is the same component, whatever else.
+ * Each is one word, so a search matches it exactly.
+ */
+export function matchKeys(snapshot) {
+  const component = snapshot.tree?.[0]?.component ?? null;
+  if (!component) return { fingerprint: null, component: null };
+  const codes = [...new Set((snapshot.findings ?? []).map((f) => f.code))].sort();
+  const minor = (snapshot.library?.version ?? "").split(".").slice(0, 2).join(".");
+  const hash = createHash("sha256").update(JSON.stringify([component, codes, minor])).digest("hex").slice(0, 12);
+  return { fingerprint: `afp${hash}`, component: `acmp${component.replace(/[^A-Za-z0-9]/g, "").toLowerCase()}` };
+}
+
+async function search(token, q, fetchImpl) {
+  const query = new URLSearchParams({ q: `repo:${issuesRepo()} is:issue ${q}`, sort: "updated", per_page: "10" });
+  const found = await call(fetchImpl, `${api()}/search/issues?${query}`, { token });
+  return (found?.items ?? []).filter((issue) => !issue.pull_request).map(summary);
+}
+
+/**
+ * Issues that may already report this problem. `duplicates`: the same
+ * fingerprint, open first. `related`: other open issues about the same
+ * component, at most three.
+ */
+export async function findSimilar(token, snapshot, { fetchImpl = globalThis.fetch } = {}) {
+  const keys = matchKeys(snapshot);
+  if (!keys.fingerprint) return { duplicates: [], related: [] };
+  const [duplicates, sameComponent] = await Promise.all([
+    search(token, keys.fingerprint, fetchImpl),
+    search(token, `is:open ${keys.component}`, fetchImpl),
+  ]);
+  duplicates.sort((a, b) => (a.state === b.state ? 0 : a.state === "open" ? -1 : 1));
+  const seen = new Set(duplicates.map((issue) => issue.number));
+  return { duplicates, related: sameComponent.filter((issue) => !seen.has(issue.number)).slice(0, 3) };
 }
 
 /* ---- a snapshot as an issue --------------------------------------------------------- */
@@ -241,11 +289,18 @@ export function issueFromSnapshot(snapshot) {
   if (snapshot.console?.length) parts.push("### Console errors", fence("text", snapshot.console.join("\n")));
   parts.push("### Reproduction", fence("tsx", toRepro(snapshot)));
 
-  const footer = `<sub>Reported with ${how}.</sub>`;
+  const keys = matchKeys(snapshot);
+  const footer = `<sub>Reported with ${how}.${keys.fingerprint ? ` Match keys: ${keys.fingerprint} ${keys.component}` : ""}</sub>`;
   const { screenshot: _shot, ...rest } = snapshot;
   const json = `<details>\n<summary>Issue snapshot (${snapshot.format})</summary>\n\n${fence("json", JSON.stringify(rest, null, 2))}\n\n</details>`;
   let body = [...parts, json, footer].join("\n\n");
   if (body.length > MAX_BODY) body = [...parts, "_The snapshot was too large to include in full._", footer].join("\n\n");
   if (body.length > MAX_BODY) body = `${body.slice(0, MAX_BODY - 200)}\n\n_Cut to fit GitHub's limit._\n\n${footer}`;
   return { title: (d.title ?? "").trim().slice(0, LIMITS.title), body };
+}
+
+/** A report added to an existing issue: the same content, marked as another report. */
+export function commentFromSnapshot(snapshot) {
+  const { title, body } = issueFromSnapshot(snapshot);
+  return `**Another report of this problem:** ${title}\n\n${body}`;
 }
