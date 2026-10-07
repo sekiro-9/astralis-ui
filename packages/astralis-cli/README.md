@@ -190,7 +190,8 @@ warnings never fail the run. `--json` prints one report:
       "file": "src/app/page.tsx",
       "errors": [
         { "code": "invalid-recipe-value", "file": "src/app/page.tsx", "line": 8, "column": 15,
-          "message": "Button: \"primary\" is not a variant value (valid: link, text, subtle, solid, surface, outline)" }
+          "message": "Button: \"primary\" is not a variant value (valid: link, text, subtle, solid, surface, outline)",
+          "component": "Button", "prop": "variant", "value": "primary" }
       ],
       "warnings": []
     }
@@ -198,7 +199,8 @@ warnings never fail the run. `--json` prints one report:
 }
 ```
 
-`results` lists only files with findings. The same checks are importable:
+`results` lists only files with findings. A finding on a component also names
+it, and the attribute and literal value when it is on one. The same checks are importable:
 `astralis-cli/validate` (Node, with spec lookup) and `astralis-cli/validate-core`
 (pure, browser-safe), both typed.
 

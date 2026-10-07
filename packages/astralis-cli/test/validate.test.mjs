@@ -462,3 +462,23 @@ test("a comment is not a child", () => {
   const r = validate(`<Link href="/">{/* later */}</Link>`, "Link");
   assert.deepEqual(codes(r.errors), ["missing-children"]);
 });
+
+test("a finding names the component, attribute and value it is on, as the page names them", () => {
+  const where = ({ component, prop, value }) => [component, prop, value];
+  const r = validate(`<Stack>
+    <Button variant="primary">Go</Button>
+    <Box p="8x" />
+    <CardBody>x</CardBody>
+    <Tabs defaultValue="a"><Tabs.List><Tabs.Trigger value="a">A</Tabs.Trigger><Tabs.Trigger value="b">B</Tabs.Trigger></Tabs.List><Tabs.Content value="a">x</Tabs.Content></Tabs>
+    <Image src="/x.png" />
+    <img src="/y.png" />
+  </Stack>`, "Stack, Box, Button, CardBody, Tabs, Image");
+  const byCode = Object.fromEntries([...r.errors, ...r.warnings].map((finding) => [finding.code, finding]));
+  assert.deepEqual(where(byCode["invalid-recipe-value"]), ["Button", "variant", "primary"]);
+  assert.deepEqual(where(byCode["channel-value-invalid"]), ["Box", "p", "8x"]);
+  assert.deepEqual(where(byCode["part-outside-root"]), ["Card.Body", undefined, undefined], "a flat part goes by its dotted name");
+  assert.deepEqual(where(byCode["tabs-value-mismatch"]), ["Tabs.Trigger", "value", "b"]);
+  const [onImage, onImg] = r.errors.filter((finding) => finding.code === "missing-alt");
+  assert.deepEqual(where(onImage), ["Image", undefined, undefined]);
+  assert.equal("component" in onImg, false, "a plain element is no component");
+});

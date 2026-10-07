@@ -31,6 +31,9 @@ The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
   imports, and reports a component left without the children its type
   requires.
 - Type declarations ship for the `validate` and `validate-core` exports.
+- A finding on a component names it, and the attribute and literal value it
+  is on (`component`, `prop`, `value`), so tools can point at the component on
+  the page.
 
 ### Changed
 

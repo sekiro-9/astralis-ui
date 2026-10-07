@@ -126,8 +126,15 @@ function createContext(prepared, filePath, opts) {
   const errors = [];
   const warnings = [];
   const report = (list, code, node, message) =>
-    list.push({ code, file: filePath, line: node?.loc?.start.line ?? 0, column: (node?.loc?.start.column ?? 0) + 1, message });
-  return {
+    list.push({
+      code,
+      file: filePath,
+      line: node?.loc?.start.line ?? 0,
+      column: (node?.loc?.start.column ?? 0) + 1,
+      message,
+      ...whereOf(ctx.at),
+    });
+  const ctx = {
     ...prepared,
     opts,
     errors,
@@ -138,8 +145,22 @@ function createContext(prepared, filePath, opts) {
     imported: new Map(), // local name -> astralis-ui export name
     ancestors: [], // JSX identities above the current node
     tabsStack: [], // open <Tabs> scopes
+    at: null, // the component, prop and literal value being checked, for findings to name
   };
+  return ctx;
 }
+
+/** A finding's optional component, prop and value: only the fields that are known. */
+function whereOf(at) {
+  if (!at?.component) return {};
+  const where = { component: at.component };
+  if (at.prop) where.prop = at.prop;
+  if (typeof at.value === "string" || typeof at.value === "number") where.value = at.value;
+  return where;
+}
+
+/** The name a component goes by on the page: "Card.Body" whether written <Card.Body> or <CardBody>. */
+const componentName = (identity) => (identity.owner ? `${identity.owner}.${identity.part}` : identity.specName);
 
 /* ---- rule: imports from astralis-ui ------------------------------------------- */
 
@@ -396,6 +417,8 @@ function resolveIdentity(ctx, node) {
 
 function analyzeOpening(ctx, node) {
   const identity = resolveIdentity(ctx, node);
+  const component = componentName(identity);
+  ctx.at = { component };
   const comp = identity.specName ? ctx.spec.components[identity.specName] : null;
   const allowed = {};
   if (comp) for (const g of comp.groups) Object.assign(allowed, ctx.spec.propGroups[g]);
@@ -408,6 +431,7 @@ function analyzeOpening(ctx, node) {
     if (attr.type === "JSXSpreadAttribute") { hasSpread = true; continue; }
     if (attr.name.type !== "JSXIdentifier") continue;
     const prop = attr.name.name;
+    ctx.at = { component, prop, value: attributeLiteral(attr.value) };
 
     if (prop === "className") checkClassName(ctx, attr);
     else if (prop === "style") checkStyle(ctx, attr);
@@ -420,6 +444,7 @@ function analyzeOpening(ctx, node) {
     else if (comp) checkComponentProp(ctx, identity, comp, allowed, attr, prop);
   }
 
+  ctx.at = { component };
   // Images need a text alternative: real <img>, or our Image wrapper (which
   // jsx-a11y can't know renders an img). A spread may carry alt, so it silences the claim.
   if ((identity.dom === "img" || identity.specName === "Image") && !hasSpread && !hasAlt && !hasAriaCover) {
@@ -473,7 +498,7 @@ function collectTabsValue(ctx, identity, node) {
   const attr = findAttribute(node, "value");
   const value = attr ? attributeLiteral(attr.value) : null;
   if (value === null) { scope.dynamic = true; return; }
-  (identity.part === "Trigger" ? scope.triggers : scope.contents).push({ value, node: attr });
+  (identity.part === "Trigger" ? scope.triggers : scope.contents).push({ value, node: attr, component: componentName(identity) });
 }
 
 function settleTabs(ctx, scope) {
@@ -482,15 +507,18 @@ function settleTabs(ctx, scope) {
   const triggerValues = new Set(scope.triggers.map((t) => t.value));
   const contentValues = new Set(scope.contents.map((c) => c.value));
   for (const t of scope.triggers) {
+    ctx.at = { component: t.component, prop: "value", value: t.value };
     if (!contentValues.has(t.value)) {
       ctx.error("tabs-value-mismatch", t.node, `Tabs trigger "${t.value}" has no matching content panel — clicking it shows nothing`);
     }
   }
   for (const c of scope.contents) {
+    ctx.at = { component: c.component, prop: "value", value: c.value };
     if (!triggerValues.has(c.value)) {
       ctx.warn("tabs-value-mismatch", c.node, `Tabs content "${c.value}" has no trigger — the panel is unreachable`);
     }
   }
+  ctx.at = { component: "Tabs", prop: "defaultValue", value: scope.defaultValue };
   if (scope.defaultValue !== null && !triggerValues.has(scope.defaultValue)) {
     ctx.error("tabs-value-mismatch", scope.node, `Tabs defaultValue "${scope.defaultValue}" matches no trigger`);
   }
@@ -505,9 +533,11 @@ function traverse(ctx, node) {
   if (node.type === "JSXElement") {
     const opening = node.openingElement;
     const identity = analyzeOpening(ctx, opening);
+    ctx.at = { component: componentName(identity) };
     checkAnatomy(ctx, identity, opening);
     checkRequiredChildren(ctx, identity, node);
     collectTabsValue(ctx, identity, opening);
+    ctx.at = null;
     if (identity.specName === "Tabs") {
       openTabsScope(ctx, opening);
       tabsPushed = true;
@@ -526,7 +556,10 @@ function traverse(ctx, node) {
     }
   }
 
-  if (tabsPushed) settleTabs(ctx, ctx.tabsStack.pop());
+  if (tabsPushed) {
+    settleTabs(ctx, ctx.tabsStack.pop());
+    ctx.at = null;
+  }
   if (pushed) ctx.ancestors.pop();
 }
 

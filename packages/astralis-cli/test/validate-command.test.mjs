@@ -52,8 +52,12 @@ test("--json prints one report with the documented shape", async () => {
     const [file] = report.results;
     assert.equal(file.file, "b.tsx");
     for (const finding of file.errors) {
-      assert.deepEqual(Object.keys(finding), ["code", "file", "line", "column", "message"]);
+      assert.deepEqual(Object.keys(finding).slice(0, 5), ["code", "file", "line", "column", "message"]);
     }
+    const variant = file.errors.find((finding) => finding.code === "invalid-recipe-value");
+    assert.deepEqual([variant.component, variant.prop, variant.value], ["Button", "variant", "primary"]);
+    const unknown = file.errors.find((finding) => finding.code === "unknown-import");
+    assert.equal("component" in unknown, false, "an import is on no component");
   } finally {
     project.cleanup();
   }

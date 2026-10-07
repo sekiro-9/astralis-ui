@@ -188,8 +188,10 @@ closed set, the nearest valid value.
 
 ### JSON output
 
-`--json` prints a single object. `results` lists only files with findings;
-every finding has the same five fields.
+`--json` prints a single object. `results` lists only files with findings.
+Every finding has `code`, `file`, `line`, `column` and `message`. A finding on
+a component also has `component`, and `prop` and `value` when it is on an
+attribute with a literal value.
 
 ```json
 {
@@ -206,7 +208,10 @@ every finding has the same five fields.
           "file": "src/app/page.tsx",
           "line": 8,
           "column": 15,
-          "message": "Button: \"primary\" is not a variant value (valid: link, text, subtle, solid, surface, outline)"
+          "message": "Button: \"primary\" is not a variant value (valid: link, text, subtle, solid, surface, outline)",
+          "component": "Button",
+          "prop": "variant",
+          "value": "primary"
         }
       ],
       "warnings": []

@@ -6,6 +6,12 @@ export interface Finding {
   line: number;
   column: number;
   message: string;
+  /** The astralis-ui component the finding is on, as the page names it ("Card.Body"); absent for imports and plain elements. */
+  component?: string;
+  /** The attribute the finding is on, when it is on one. */
+  prop?: string;
+  /** That attribute's literal value, when it is a literal. */
+  value?: string | number;
 }
 
 export interface ValidationResult {
