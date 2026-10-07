@@ -150,8 +150,9 @@ public names as `displayName` (it was `Tabs.Root` and so on).
   now land on the element they render.
 - **AstralisProvider** toggles `astralis-dark` on the document it renders
   into, so a provider in an iframe themes that frame.
-- **Image** forwards `id`, `data-*` and `aria-*` to its outermost element and
-  notices an image that loaded before React attached its listener.
+- **Image** forwards `id`, `data-*` and `aria-*` to its outermost element,
+  including the "Failed to load" fallback, and notices an image that loaded
+  before React attached its listener.
 - **Avatar** retries the image when `src` changes.
 - **NumberInput** fires only when a commit changes the value, and steps
   without floating-point drift.

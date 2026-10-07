@@ -110,6 +110,7 @@ export const ImageRoot = identify("Image", function ImageRoot({
         <>{fallback}</>
       ) : (
         <div
+          {...domProps("img")}
           className={[
             "astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2",
             "astralis:bg-surface-muted astralis:text-label-subtle",

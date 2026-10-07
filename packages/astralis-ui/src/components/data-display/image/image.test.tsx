@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Image } from "./index";
 
@@ -33,6 +33,15 @@ describe("Image forwards DOM props to its outermost element", () => {
     const outer = container.firstElementChild;
     expect(outer?.tagName).toBe("FIGURE");
     expect(outer?.getAttribute("data-node")).toBe("n3");
+  });
+
+  it("onto the fallback when a standalone image fails to load", () => {
+    const { container } = render(<Image src="/missing.png" alt="a" data-node="n4" />);
+    fireEvent.error(container.querySelector("img")!);
+    const outer = container.firstElementChild;
+    expect(outer?.tagName).toBe("DIV");
+    expect(outer?.textContent).toContain("Failed to load");
+    expect(outer?.getAttribute("data-node")).toBe("n4");
   });
 });
 
