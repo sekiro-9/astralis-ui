@@ -11,6 +11,7 @@ import {
   issuesRepo,
   listIssues,
   matchKeys,
+  newIssueUrl,
   startSignIn,
   tokenStore,
 } from "astralis-cli/github";
@@ -107,6 +108,13 @@ export class GitHubSession {
     const result = await this.#withToken(({ token }) => findSimilar(token, snapshot, { fetchImpl: this.fetchImpl }));
     this.searches.set(fingerprint, { at: Date.now(), result });
     return result;
+  }
+
+  /** GitHub's own form for the snapshot, filled in: reporting with no sign-in. Makes no request. */
+  link(snapshot) {
+    const problems = checkSnapshot(snapshot);
+    if (problems.length) throw new GitHubError("invalid", `The snapshot is not valid: ${problems.join("; ")}`);
+    return { url: newIssueUrl(snapshot) };
   }
 
   /**

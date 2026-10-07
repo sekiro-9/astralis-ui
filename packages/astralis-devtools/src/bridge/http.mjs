@@ -18,6 +18,7 @@ import { assembleSnapshot } from "./snapshot.mjs";
      POST github/sign-out  forget the saved sign-in
      GET  github/issues    the issues the signed-in user opened on the Astralis repository
      POST github/similar   a snapshot in; the issues that may already report it out
+     POST github/link      a snapshot in; GitHub's own new-issue form, filled in, out
 
    It answers the local machine only, and nothing at all in production. The
    POST routes take JSON only: a page on another site cannot send that type
@@ -129,7 +130,7 @@ async function readJson(request) {
 const githubFailure = (error) =>
   json({ error: error.message, code: error.code ?? "github" }, error.code === "signed-out" ? 401 : error.code === "invalid" ? 400 : 502);
 
-const POSTS = new Set(["snapshot", "submit", "github/sign-in", "github/sign-out", "github/similar"]);
+const POSTS = new Set(["snapshot", "submit", "github/sign-in", "github/sign-out", "github/similar", "github/link"]);
 
 async function handlePost(bridge, path, request, github, url) {
   if (!POSTS.has(path)) return json({ error: "Not found." }, 404);
@@ -139,6 +140,7 @@ async function handlePost(bridge, path, request, github, url) {
     if (path === "github/sign-in") return json(await github.signIn());
     if (path === "github/sign-out") return json(github.signOut());
     if (path === "github/similar") return json(await github.similar(read.body));
+    if (path === "github/link") return json(github.link(read.body));
   } catch (error) {
     return githubFailure(error);
   }

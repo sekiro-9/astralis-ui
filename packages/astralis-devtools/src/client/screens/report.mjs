@@ -141,6 +141,23 @@ function newReport(app) {
     notice("Saved astralis-snapshot.json.");
   }
 
+  /** Open GitHub's own form, filled in, to submit there: no sign-in. The page asks the bridge to build the link. */
+  async function openOnGitHub() {
+    try {
+      const response = await fetch(`${app.base}/github/link`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(r.snapshot) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
+      window.open(result.url, "_blank", "noopener");
+      notice(
+        r.screenshot
+          ? "GitHub's form is open in a new tab: check it, drop the screenshot in, and press Create."
+          : "GitHub's form is open in a new tab: check it and press Create.",
+      );
+    } catch (error) {
+      notice(`${error.message} Copy JSON or Download keeps the snapshot.`);
+    }
+  }
+
   /** GitHub's API cannot attach images, so a screenshot is saved for the reporter to drop into the issue. */
   function downloadScreenshot() {
     h("a", { href: r.screenshot, download: "astralis-screenshot.jpg" }).click();
@@ -188,6 +205,7 @@ function newReport(app) {
   const status = h("p", { class: "report-status" });
   const similar = h("div", {});
   const sendButton = h("button", { class: "btn primary", type: "button", onclick: () => send() }, icon(GITHUB_MARK), h("span", {}, "Open issue on GitHub"));
+  const linkButton = h("button", { class: "btn", type: "button", title: "Opens GitHub's own form, filled in; you submit it there. No sign-in.", onclick: openOnGitHub }, icon(ICONS.external), "Open on GitHub instead");
   const copyButton = h("button", { class: "btn", type: "button", onclick: copy }, icon(ICONS.copy), "Copy JSON");
   const downloadButton = h("button", { class: "btn", type: "button", onclick: download }, icon(ICONS.download), "Download");
 
@@ -208,7 +226,7 @@ function newReport(app) {
     problems,
     similar,
     h("details", { class: "json-box" }, h("summary", {}, icon(ICONS.chevron), "Exactly what will be sent"), preview),
-    h("div", { class: "row" }, sendButton, copyButton, downloadButton),
+    h("div", { class: "row" }, sendButton, linkButton, copyButton, downloadButton),
     status,
   );
 
@@ -267,6 +285,7 @@ function newReport(app) {
     const signedIn = Boolean(app.state.github?.login);
     sendButton.disabled = !signedIn || !r.snapshot || r.problems.length > 0 || r.status === "sending";
     sendButton.title = signedIn ? "" : "Sign in with GitHub first";
+    linkButton.disabled = !r.snapshot || r.problems.length > 0;
     copyButton.disabled = !r.snapshot;
     downloadButton.disabled = !r.snapshot;
     sendButton.lastChild.textContent = r.status === "sending" ? "Opening…" : "Open issue on GitHub";
@@ -313,9 +332,7 @@ function accountCard(app) {
     return h(
       "div",
       { class: "notice" },
-      "GitHub sign-in is not set up in this version of the DevTools. Copy or download the snapshot and open an issue at ",
-      h("a", { class: "link", href: `https://github.com/${repo}/issues/new`, target: "_blank", rel: "noreferrer" }, `github.com/${repo}`),
-      ".",
+      "GitHub sign-in is not set up in this version of the DevTools. Use Open on GitHub instead below: it fills in GitHub's own form, and you submit it there.",
     );
   }
   if (gh.login) {
@@ -372,7 +389,7 @@ function accountCard(app) {
       "div",
       { class: "grow" },
       h("div", { class: "account-name" }, "Sign in to report"),
-      h("div", { class: "muted small" }, `Issues open on ${repo} from your own account. The app can only read and write issues there.`),
+      h("div", { class: "muted small" }, `Issues open on ${repo} from your own account. The app can only read and write issues there. Or use Open on GitHub instead, with no sign-in.`),
       gh.error ? h("div", { class: "account-error" }, gh.error) : null,
     ),
     h("button", { class: "btn primary", type: "button", onclick: () => app.github.signIn() }, icon(GITHUB_MARK), "Sign in with GitHub"),

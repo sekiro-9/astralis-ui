@@ -83,6 +83,9 @@ function setup() {
       const path = url.replace("/api/astralis-devtools/", "");
       if (init.method === "POST") {
         const sent = JSON.parse(init.body);
+        if (path === "github/link") {
+          return { ok: true, status: 200, json: async () => ({ url: `https://github.com/sekiro-9/astralis-ui/issues/new?title=${encodeURIComponent(sent.description.title)}` }) };
+        }
         if (path === "github/similar") {
           searched.push(sent);
           return { ok: true, status: 200, json: async () => similar };
@@ -630,8 +633,7 @@ test("when GitHub sign-in is not set up, Report says how to report by hand", asy
   openPanel();
   click(nav("report"));
   await tick();
-  assert.match($(".notice").textContent, /not set up in this version/);
-  assert.equal($(".notice a").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/new");
+  assert.match($(".notice").textContent, /not set up in this version.*Open on GitHub instead/);
 });
 
 test("a likely duplicate is shown before sending, and the report can be added to it", async () => {
@@ -652,4 +654,18 @@ test("a likely duplicate is shown before sending, and the report can be added to
   assert.equal(posts.at(-1).path, "submit?addTo=3");
   assert.match($(".report-status").textContent, /Added your report to #3\. View it\./);
   assert.equal($(".similar"), null, "the suggestion goes once it is acted on");
+});
+
+test("Open on GitHub instead opens GitHub's own form, filled in, with no sign-in", async () => {
+  github = { ...github, login: null };
+  remount();
+  await reportOn("text");
+  typeInto($(".field"), "Border gone");
+  await settle();
+  assert.equal(button("Open issue on GitHub").disabled, true, "sending through the app needs a sign-in");
+  assert.equal(button("Open on GitHub instead").disabled, false, "the form does not");
+  click(button("Open on GitHub instead"));
+  await settle();
+  assert.deepEqual(opened, ["https://github.com/sekiro-9/astralis-ui/issues/new?title=Border%20gone"]);
+  assert.match($(".report-status").textContent, /GitHub's form is open in a new tab/);
 });

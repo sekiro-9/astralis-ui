@@ -22,7 +22,8 @@ drag anywhere on the page opens a panel with five screens.
   exact JSON first, page text is replaced by placeholders unless you include
   it, and nothing is sent until you press Send. Sign-in is a code entered on
   github.com; the token stays with the dev server. A likely duplicate is shown
-  before you send, and your report can be added to it instead. **Your issues**
+  before you send, and your report can be added to it instead. **Open on
+  GitHub instead** fills in GitHub's own form, with no sign-in. **Your issues**
   lists the issues you have opened and where each stands.
 
 `Shift+Alt+A` opens and closes it, and `Shift+Alt+C` picks a component on the

@@ -382,3 +382,18 @@ test("POST submit?addTo adds the report to that issue as a comment", async () =>
     p.cleanup();
   }
 });
+
+test("POST github/link builds GitHub's own form for the snapshot, signed in or not, without asking GitHub", async () => {
+  const p = project();
+  const github = new GitHubSession({ store: memoryStore(), fetchImpl: async () => assert.fail("no request") });
+  try {
+    const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
+    const { url } = await (await handle(post("github/link", snapshot), { ...p.options, github })).json();
+    const link = new URL(url);
+    assert.equal(link.origin + link.pathname, "https://github.com/sekiro-9/astralis-ui/issues/new");
+    assert.equal(link.searchParams.get("title"), snapshot.description.title);
+    assert.equal((await handle(post("github/link", { ...snapshot, extra: 1 }), { ...p.options, github })).status, 400);
+  } finally {
+    p.cleanup();
+  }
+});
