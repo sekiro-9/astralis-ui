@@ -58,8 +58,9 @@ Please give us the chance to release a fix before you share details publicly.
 
 - The published packages listed above.
 - The code in this repository that builds them.
-- The docs site at [astralis-ui.com](https://astralis-ui.com), including its
-  issue platform.
+- The docs site at [astralis-ui.com](https://astralis-ui.com).
+- The GitHub sign-in the DevTools and `astralis report` use, and how they keep
+  its token.
 
 **Out of scope**
 

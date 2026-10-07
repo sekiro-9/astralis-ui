@@ -44,8 +44,8 @@ it is appropriate to do so.
 ## Scope
 
 This code applies in every project space: the repository, its issues, pull
-requests and discussions, the docs site's issue platform, and any other
-channel the project runs. It also applies when someone officially represents
+requests and discussions, reports sent from the DevTools or the CLI, and any
+other channel the project runs. It also applies when someone officially represents
 the project in public, for example by posting from an official account.
 
 ## Reporting
