@@ -19,7 +19,7 @@ import { join } from "node:path";
 import { LIMITS, toRepro } from "./snapshot.mjs";
 
 /** The Astralis DevTools GitHub App. Public by design: the device flow has no secret. */
-export const GITHUB_CLIENT_ID = "";
+export const GITHUB_CLIENT_ID = "Iv23liqZqPWZWAsCwTUG";
 
 /** Where reports go. */
 export const ISSUES_REPO = "sekiro-9/astralis-ui";
@@ -32,8 +32,8 @@ const MAX_BODY = 65536;
 /** The longest new-issue link GitHub and browsers reliably take. */
 const MAX_URL = 8000;
 
-/** The app's client ID; ASTRALIS_GITHUB_CLIENT_ID overrides it, for testing against another app. */
-export const clientId = () => process.env.ASTRALIS_GITHUB_CLIENT_ID || GITHUB_CLIENT_ID;
+/** The app's client ID; ASTRALIS_GITHUB_CLIENT_ID overrides it (another app, or "" to switch sign-in off). */
+export const clientId = () => process.env.ASTRALIS_GITHUB_CLIENT_ID ?? GITHUB_CLIENT_ID;
 /** The repository; ASTRALIS_ISSUES_REPO overrides it, for testing against another repository. */
 export const issuesRepo = () => process.env.ASTRALIS_ISSUES_REPO || ISSUES_REPO;
 
