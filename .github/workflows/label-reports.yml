@@ -1,0 +1,33 @@
+name: Label reports
+
+# Issues opened from the Astralis DevTools or `astralis report` end with a
+# "Match keys" line. GitHub drops the labels a non-collaborator asks for, so
+# this labels them instead: devtools-report, to filter them, and needs triage,
+# like an issue from the issue forms.
+#
+# Nothing from the issue's text reaches a shell: the body is only tested in
+# the `if` expression, and the number comes from the event, not the body.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    if: contains(github.event.issue.body, 'Match keys:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label the report
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh label create devtools-report --repo "$REPO" --color FBCA04 \
+            --description "Reported from the Astralis DevTools or astralis report" 2>/dev/null || true
+          gh label create "needs triage" --repo "$REPO" --color D4C5F9 \
+            --description "Not yet looked at by a maintainer" 2>/dev/null || true
+          gh issue edit "$NUMBER" --repo "$REPO" --add-label "devtools-report,needs triage"
