@@ -339,3 +339,46 @@ test("the Next.js route answers POST as well, and nothing in production", async 
     p.cleanup();
   }
 });
+
+test("POST github/similar finds a likely duplicate and related issues, and searches once per problem", async () => {
+  const p = project();
+  const item = (number, title) => ({ number, title, state: "open", html_url: `u${number}`, comments: 0, labels: [] });
+  // The two searches differ only in their query: the fingerprint, or the component.
+  const searches = [];
+  const github = new GitHubSession({
+    store: memoryStore({ token: "tok", login: "sam" }),
+    fetchImpl: async (url, init) => {
+      const q = new URL(url).searchParams.get("q");
+      searches.push(q);
+      const items = / afp[0-9a-f]{12}$/.test(q) ? [item(3, "Same problem")] : [item(3, "Same problem"), item(5, "Same component")];
+      return new Response(JSON.stringify({ items }), { status: 200 });
+    },
+  });
+  try {
+    const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
+    const found = await (await handle(post("github/similar", snapshot), { ...p.options, github })).json();
+    assert.deepEqual(found.duplicates.map((i) => i.number), [3]);
+    assert.deepEqual(found.related.map((i) => i.number), [5], "a duplicate is not listed twice");
+    await handle(post("github/similar", { ...snapshot, description: { title: "edited" } }), { ...p.options, github });
+    assert.equal(searches.length, 2, "editing the words does not search again");
+  } finally {
+    p.cleanup();
+  }
+});
+
+test("POST submit?addTo adds the report to that issue as a comment", async () => {
+  const p = project();
+  const { calls, fetchImpl } = fakeGitHub({
+    "/repos/sekiro-9/astralis-ui/issues/3/comments": { status: 201, body: { html_url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-9" } },
+  });
+  const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
+  try {
+    const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
+    const response = await handle(post("submit?addTo=3", snapshot), { ...p.options, github });
+    assert.deepEqual(await response.json(), { number: 3, url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-9" });
+    assert.match(JSON.parse(calls[0].body).body, /^\*\*Another report of this problem:\*\*/);
+    assert.equal((await handle(post("submit?addTo=x", snapshot), { ...p.options, github })).status, 400);
+  } finally {
+    p.cleanup();
+  }
+});

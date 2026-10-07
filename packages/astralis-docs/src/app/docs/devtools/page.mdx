@@ -184,6 +184,17 @@ tree, and the snapshot itself. GitHub cannot take images through its API, so a
 screenshot stays with you: save it from the Report screen and drop it into the
 issue. **Copy JSON** and **Download** keep the snapshot without sending it.
 
+### Already reported?
+
+Before you send, the Report screen checks the repository for an issue that
+already reports the same problem: the same component, the same rule codes in
+its findings, and the same minor version of `astralis-ui`. If there is one, it
+shows it above the button, and **Add my report here** adds your report to that
+issue as a comment instead of opening a second one, which tells the
+maintainers the problem reaches more people. Other open issues about the same
+component are listed too. Every issue a report opens carries the short keys
+this match uses, so a later report can find it.
+
 ### Signing in
 
 The first time, press **Sign in with GitHub**. The Report screen shows a short

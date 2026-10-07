@@ -21,8 +21,9 @@ drag anywhere on the page opens a panel with five screens.
   issue snapshot of the picked component and a reproduction. You see the
   exact JSON first, page text is replaced by placeholders unless you include
   it, and nothing is sent until you press Send. Sign-in is a code entered on
-  github.com; the token stays with the dev server. **Your issues** lists the
-  issues you have opened and where each stands.
+  github.com; the token stays with the dev server. A likely duplicate is shown
+  before you send, and your report can be added to it instead. **Your issues**
+  lists the issues you have opened and where each stands.
 
 `Shift+Alt+A` opens and closes it, and `Shift+Alt+C` picks a component on the
 page. It wears the Astralis brand, with its fonts embedded, and needs no

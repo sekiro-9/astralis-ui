@@ -15,7 +15,7 @@ export function h(tag, attributes = {}, ...children) {
 }
 
 function append(element, children) {
-  for (const child of children.flat()) {
+  for (const child of children.flat(Infinity)) {
     if (child === null || child === undefined || child === false) continue;
     element.append(typeof child === "string" || typeof child === "number" ? String(child) : child);
   }

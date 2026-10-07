@@ -463,6 +463,17 @@ details.json-box[open] summary .icon { transform: rotate(90deg); }
 .issue-row .go { width: 14px; height: 14px; color: var(--faint); opacity: 0; transition: opacity 140ms; }
 .issue-row:hover .go { opacity: 1; color: var(--brand); }
 button.link { font: inherit; padding: 0; }
+.similar { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.similar.likely { border-color: var(--brand-line); background: linear-gradient(180deg, var(--brand-soft), transparent 80%), var(--bg-1); }
+.similar-head { display: flex; align-items: center; gap: 8px; font: 600 13.5px/1.3 var(--display); }
+.similar-head .icon { width: 15px; height: 15px; color: var(--brand); }
+.similar-head.quiet { margin-top: 4px; font: 600 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.similar-row { display: flex; align-items: center; gap: 10px; min-height: 34px; }
+.similar-row .state { width: 15px; height: 15px; }
+.similar-row .state.open { color: var(--ok); }
+.similar-row .state.closed { color: #c4a5ff; }
+.similar-title { color: var(--text); text-decoration: none; line-height: 1.35; }
+.similar-title:hover { color: var(--brand-2); }
 
 /* ---- picking ------------------------------------------------------------------- */
 

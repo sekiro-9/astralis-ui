@@ -2,14 +2,21 @@ import { checkSnapshot } from "astralis-cli/snapshot";
 import {
   GitHubError,
   clientId,
+  commentFromSnapshot,
+  commentOnIssue,
   createIssue,
+  findSimilar,
   finishSignIn,
   issueFromSnapshot,
   issuesRepo,
   listIssues,
+  matchKeys,
   startSignIn,
   tokenStore,
 } from "astralis-cli/github";
+
+/** How long a search for similar issues is reused: typing in the form must not search GitHub per keystroke. */
+const SIMILAR_TTL_MS = 60_000;
 
 /* The bridge's GitHub session: signing in with a code, the saved sign-in
    (shared with `astralis report`), and the reporter's issues. The token stays
@@ -23,6 +30,7 @@ export class GitHubSession {
     this.sleep = sleep;
     this.pending = null; // { userCode, verificationUri, expiresAt, controller }
     this.error = null; // the last sign-in's failure, shown once
+    this.searches = new Map(); // fingerprint -> { at, result }
   }
 
   /** What the page may know: whether sign-in is set up, who is signed in, and a sign-in under way. */
@@ -90,11 +98,31 @@ export class GitHubSession {
     return this.#withToken(({ token, login }) => listIssues(token, login, { fetchImpl: this.fetchImpl }));
   }
 
-  /** Open a confirmed snapshot as an issue. Resolves to { number, url }. */
-  submit(snapshot) {
+  /** Issues that may already report this snapshot's problem, searched once per fingerprint a minute. */
+  async similar(snapshot) {
+    const { fingerprint } = matchKeys(snapshot ?? {});
+    if (!fingerprint) return { duplicates: [], related: [] };
+    const cached = this.searches.get(fingerprint);
+    if (cached && Date.now() - cached.at < SIMILAR_TTL_MS) return cached.result;
+    const result = await this.#withToken(({ token }) => findSimilar(token, snapshot, { fetchImpl: this.fetchImpl }));
+    this.searches.set(fingerprint, { at: Date.now(), result });
+    return result;
+  }
+
+  /**
+   * Send a confirmed snapshot: a new issue, or, with `addTo`, a comment on
+   * that existing issue. Resolves to { number, url }.
+   */
+  submit(snapshot, { addTo = null } = {}) {
     const problems = checkSnapshot(snapshot);
     if (problems.length) return Promise.reject(new GitHubError("invalid", `The snapshot is not valid: ${problems.join("; ")}`));
-    return this.#withToken(({ token }) => createIssue(token, issueFromSnapshot(snapshot), { fetchImpl: this.fetchImpl }));
+    // What was sent changes what a search should find next.
+    this.searches.clear();
+    return this.#withToken(({ token }) =>
+      addTo
+        ? commentOnIssue(token, addTo, commentFromSnapshot(snapshot), { fetchImpl: this.fetchImpl })
+        : createIssue(token, issueFromSnapshot(snapshot), { fetchImpl: this.fetchImpl }),
+    );
   }
 }
 

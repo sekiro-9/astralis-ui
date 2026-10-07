@@ -28,6 +28,8 @@ let posts;
 let submitResult;
 let github;
 let issues;
+let similar;
+let searched;
 let opened;
 
 class FakeEventSource {
@@ -59,6 +61,8 @@ function setup() {
   opened = [];
   submitResult = { ok: true, body: { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" } };
   github = { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null };
+  similar = { duplicates: [], related: [] };
+  searched = [];
   issues = [
     { number: 12, title: "Card loses its border", state: "open", stateReason: null, url: "https://github.com/sekiro-9/astralis-ui/issues/12", comments: 2, labels: ["bug"], createdAt: "2026-10-01T00:00:00Z", updatedAt: new Date().toISOString() },
     { number: 9, title: "Tabs panel unreachable", state: "closed", stateReason: "completed", url: "https://github.com/sekiro-9/astralis-ui/issues/9", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
@@ -79,6 +83,10 @@ function setup() {
       const path = url.replace("/api/astralis-devtools/", "");
       if (init.method === "POST") {
         const sent = JSON.parse(init.body);
+        if (path === "github/similar") {
+          searched.push(sent);
+          return { ok: true, status: 200, json: async () => similar };
+        }
         posts.push({ path, body: sent });
         if (path === "snapshot") {
           const snapshot = { format: "astralis-snapshot/1", tree: sent.tree, description: sent.description, route: sent.route };
@@ -624,4 +632,24 @@ test("when GitHub sign-in is not set up, Report says how to report by hand", asy
   await tick();
   assert.match($(".notice").textContent, /not set up in this version/);
   assert.equal($(".notice a").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/new");
+});
+
+test("a likely duplicate is shown before sending, and the report can be added to it", async () => {
+  similar = {
+    duplicates: [{ number: 3, title: "Card loses its border", state: "open", url: "https://github.com/sekiro-9/astralis-ui/issues/3" }],
+    related: [{ number: 5, title: "Card padding", state: "open", url: "https://github.com/sekiro-9/astralis-ui/issues/5" }],
+  };
+  submitResult = { ok: true, body: { number: 3, url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1" } };
+  await reportOn("text");
+  typeInto($(".field"), "Border gone");
+  await settle();
+  assert.ok(searched.length >= 1, "the bridge was asked");
+  assert.match($(".similar").textContent, /This may already be reported/);
+  assert.match($(".similar").textContent, /#3 Card loses its border/);
+  assert.match($(".similar").textContent, /Open issues about Card\.Body#5 Card padding/);
+  click(button("Add my report here"));
+  await settle();
+  assert.equal(posts.at(-1).path, "submit?addTo=3");
+  assert.match($(".report-status").textContent, /Added your report to #3\. View it\./);
+  assert.equal($(".similar"), null, "the suggestion goes once it is acted on");
 });

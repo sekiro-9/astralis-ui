@@ -70,6 +70,7 @@ function newReport(app) {
       r.snapshot = result.snapshot;
       r.problems = result.problems;
       if (r.status === "notice") r.status = "idle";
+      checkSimilar(result.snapshot);
     } catch (error) {
       if (mine !== request) return;
       r.snapshot = null;
@@ -78,19 +79,36 @@ function newReport(app) {
     refresh();
   }
 
-  async function send() {
+  /** Issues that may already report this. The bridge searches GitHub once per problem, not per keystroke. */
+  async function checkSimilar(snapshot) {
+    if (!app.state.github?.login) return;
+    try {
+      const response = await fetch(`${app.base}/github/similar`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(snapshot) });
+      if (!response.ok) return;
+      r.similar = await response.json();
+    } catch {
+      return; // no check is no reason to stop a report
+    }
+    refresh();
+  }
+
+  /** Open a new issue, or, with `addTo`, add the report to that existing one. */
+  async function send(addTo = null) {
     if (!r.snapshot || r.problems.length) return;
     r.status = "sending";
     r.message = "";
     refresh();
     try {
-      const response = await fetch(`${app.base}/submit`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(r.snapshot) });
+      const where = addTo ? `submit?addTo=${addTo}` : "submit";
+      const response = await fetch(`${app.base}/${where}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(r.snapshot) });
       const result = await response.json();
       if (response.status === 401) app.github.reload();
       if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
       r.status = "sent";
       r.url = result.url;
       r.number = result.number;
+      r.added = Boolean(addTo);
+      r.similar = null;
       window.open(result.url, "_blank", "noopener");
       app.github.loadIssues();
     } catch (error) {
@@ -168,7 +186,8 @@ function newReport(app) {
   const preview = h("pre", { class: "json", "aria-label": "Snapshot JSON" });
   const problems = h("ul", { class: "problems" });
   const status = h("p", { class: "report-status" });
-  const sendButton = h("button", { class: "btn primary", type: "button", onclick: send }, icon(GITHUB_MARK), h("span", {}, "Open issue on GitHub"));
+  const similar = h("div", {});
+  const sendButton = h("button", { class: "btn primary", type: "button", onclick: () => send() }, icon(GITHUB_MARK), h("span", {}, "Open issue on GitHub"));
   const copyButton = h("button", { class: "btn", type: "button", onclick: copy }, icon(ICONS.copy), "Copy JSON");
   const downloadButton = h("button", { class: "btn", type: "button", onclick: download }, icon(ICONS.download), "Download");
 
@@ -187,10 +206,49 @@ function newReport(app) {
     field("What did you expect?", "expected", true, "What should have happened"),
     h("div", { class: "card", style: "padding:2px 14px" }, textToggle.row, findingsToggle.row, consoleToggle.row, h("div", { class: "switch-row", style: "cursor:default" }, h("span", {}, "Screenshot", h("small", {}, "Captured only when you ask. You add it to the issue yourself.")), shot)),
     problems,
+    similar,
     h("details", { class: "json-box" }, h("summary", {}, icon(ICONS.chevron), "Exactly what will be sent"), preview),
     h("div", { class: "row" }, sendButton, copyButton, downloadButton),
     status,
   );
+
+  /** The issues that may already report this, with a way to add to one instead of opening another. */
+  function similarCard() {
+    const found = r.similar;
+    if (!found || (!found.duplicates.length && !found.related.length)) return null;
+    const row = (issue, canAdd) =>
+      h(
+        "div",
+        { class: "similar-row" },
+        icon(issue.state === "closed" ? ICONS.issueClosed : ICONS.issueOpen, `icon state ${issue.state}`),
+        h(
+          "a",
+          { class: "grow similar-title", href: issue.url, target: "_blank", rel: "noreferrer" },
+          h("span", { class: "faint" }, `#${issue.number} `),
+          issue.title,
+        ),
+        canAdd
+          ? h("button", { class: "btn", type: "button", disabled: !r.snapshot || r.problems.length > 0 || r.status === "sending", onclick: () => send(issue.number) }, "Add my report here")
+          : null,
+      );
+    return h(
+      "div",
+      { class: `card similar${found.duplicates.length ? " likely" : ""}` },
+      found.duplicates.length
+        ? [
+            h("div", { class: "similar-head" }, icon(ICONS.copy), "This may already be reported"),
+            h("p", { class: "muted small" }, "Same component, same rule codes, same astralis-ui version. Adding your report to it tells the maintainers it happens to more people."),
+            found.duplicates.slice(0, 3).map((issue) => row(issue, true)),
+          ]
+        : null,
+      found.related.length
+        ? [
+            h("div", { class: "similar-head quiet" }, `Open issues about ${r.snapshot?.tree?.[0]?.component ?? "this component"}`),
+            found.related.map((issue) => row(issue, false)),
+          ]
+        : null,
+    );
+  }
 
   function refresh() {
     consoleToggle.text.textContent = `Include console errors (${app.consoleErrors.messages.length})`;
@@ -212,13 +270,14 @@ function newReport(app) {
     copyButton.disabled = !r.snapshot;
     downloadButton.disabled = !r.snapshot;
     sendButton.lastChild.textContent = r.status === "sending" ? "Opening…" : "Open issue on GitHub";
+    similar.replaceChildren(similarCard());
     status.className = `report-status ${r.status}`;
     status.replaceChildren(
       r.status === "sent"
         ? h(
             "span",
             {},
-            `Opened #${r.number} on GitHub. `,
+            r.added ? `Added your report to #${r.number}. ` : `Opened #${r.number} on GitHub. `,
             h("a", { class: "link", href: r.url, target: "_blank", rel: "noreferrer" }, "View it"),
             r.screenshot
               ? h("span", {}, ". GitHub cannot take images by API: ", h("button", { class: "link", type: "button", onclick: downloadScreenshot }, "save the screenshot"), " and drop it into the issue.")

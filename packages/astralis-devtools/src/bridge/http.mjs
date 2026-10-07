@@ -11,11 +11,13 @@ import { assembleSnapshot } from "./snapshot.mjs";
      GET  events        the same findings as a server-sent event stream, re-sent on every change
      GET  route-files   ?path=/about: the files that render that page (Next.js)
      POST snapshot      the page's part of an issue snapshot in; the complete snapshot out
-     POST submit        a snapshot the reporter confirmed, opened as a GitHub issue
+     POST submit        a snapshot the reporter confirmed, opened as a GitHub issue;
+                        ?addTo=12 adds it to that existing issue instead
      GET  github        the GitHub sign-in: set up or not, who, and a code to enter
      POST github/sign-in   start signing in with a code (the bridge polls GitHub)
      POST github/sign-out  forget the saved sign-in
      GET  github/issues    the issues the signed-in user opened on the Astralis repository
+     POST github/similar   a snapshot in; the issues that may already report it out
 
    It answers the local machine only, and nothing at all in production. The
    POST routes take JSON only: a page on another site cannot send that type
@@ -127,22 +129,25 @@ async function readJson(request) {
 const githubFailure = (error) =>
   json({ error: error.message, code: error.code ?? "github" }, error.code === "signed-out" ? 401 : error.code === "invalid" ? 400 : 502);
 
-const POSTS = new Set(["snapshot", "submit", "github/sign-in", "github/sign-out"]);
+const POSTS = new Set(["snapshot", "submit", "github/sign-in", "github/sign-out", "github/similar"]);
 
-async function handlePost(bridge, path, request, github) {
+async function handlePost(bridge, path, request, github, url) {
   if (!POSTS.has(path)) return json({ error: "Not found." }, 404);
   const read = await readJson(request);
   if (read instanceof Response) return read;
   try {
     if (path === "github/sign-in") return json(await github.signIn());
     if (path === "github/sign-out") return json(github.signOut());
+    if (path === "github/similar") return json(await github.similar(read.body));
   } catch (error) {
     return githubFailure(error);
   }
   if (bridge.problem) return json({ error: bridge.problem }, 409);
   if (path === "snapshot") return json(assembleSnapshot(bridge, read.body));
+  const addTo = url.searchParams.has("addTo") ? Number(url.searchParams.get("addTo")) : null;
+  if (addTo !== null && !(Number.isInteger(addTo) && addTo > 0)) return json({ error: "addTo takes an issue number." }, 400);
   try {
-    return json(await github.submit(read.body));
+    return json(await github.submit(read.body, { addTo }));
   } catch (error) {
     return githubFailure(error);
   }
@@ -156,7 +161,7 @@ export async function handle(request, { root = process.cwd(), framework, watch, 
   const bridge = bridgeFor(root, framework, { watch });
   await bridge.start();
   const url = new URL(request.url);
-  if (request.method === "POST") return handlePost(bridge, route(url), request, github);
+  if (request.method === "POST") return handlePost(bridge, route(url), request, github, url);
 
   switch (route(url)) {
     case "info":
