@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
-import { ok, warn, info, fail, bold, cyan, dim, ask, isAssumeYes, posix } from "../lib/ui.mjs";
+import { ok, warn, info, fail, bold, cyan, dim, ask, isAssumeYes, menu, posix, printBanner } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { runCommand, UnsafeArgumentError } from "../lib/run.mjs";
@@ -75,6 +75,11 @@ export function buildScaffoldCommand(
 }
 
 function promptFramework() {
+  const chosen = menu("Which framework?", [
+    { label: "Next.js", hint: "App Router; Server Components render with no library JavaScript" },
+    { label: "React (Vite)", hint: "A client-rendered single-page app" },
+  ]);
+  if (chosen !== null) return chosen === 0 ? "next" : "vite";
   const answer = ask(`${bold("Framework?")}  ${cyan("1")} Next.js   ${cyan("2")} React ${dim("(Vite)")}  `);
   if (answer === null) fail(`No framework chosen and no input to read — pass ${cyan("--framework next|vite")}.`);
   const choice = answer.toLowerCase();
@@ -85,6 +90,8 @@ function promptFramework() {
 
 /** create-vite's own language question; anything unrecognised, or no answer, means TypeScript. */
 function promptLanguage() {
+  const chosen = menu("Which language?", [{ label: "TypeScript", hint: "Recommended: the props are typed" }, { label: "JavaScript" }]);
+  if (chosen !== null) return chosen === 1 ? VITE_TEMPLATES.js : VITE_TEMPLATES.ts;
   const answer = ask(`${bold("Language?")}  ${cyan("1")} TypeScript   ${cyan("2")} JavaScript  `)?.toLowerCase();
   return answer === "2" || answer === "js" || answer === "javascript" ? VITE_TEMPLATES.js : VITE_TEMPLATES.ts;
 }
@@ -97,6 +104,7 @@ export async function run(argv) {
   const yes = isAssumeYes();
 
   if (!name) fail(`Name the project: ${cyan("astralis create <name>")}.`);
+  printBanner(`Creating ${name}`);
   if (!/^[a-z0-9@][a-z0-9-_.]*$/i.test(name)) fail(`"${name}" isn't a safe project name.`);
   if (existsSync(join(process.cwd(), name))) fail(`./${name} already exists.`);
 

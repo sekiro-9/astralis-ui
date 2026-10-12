@@ -29,6 +29,9 @@ The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
   `validate --format github` annotates the pull request's lines.
 - **`astralis init --devtools`** installs the Astralis DevTools and wires them
   into the root layout or `vite.config`. `create` adds them by default.
+- **A new look.** `create` and `init` open with a one-line header (name, version, what is
+  happening), and choices are arrow-key menus with a hint under each option (numbers work
+  too). Piped and CI runs keep the plain numbered prompts and no banner.
 - **One command table.** Every command has `--help`; `-y`/`--yes` takes the
   default answer to every prompt; `--debug` prints a stack trace; a mistyped
   command suggests the right one; and errors never print a raw stack trace.

@@ -17,41 +17,81 @@
  *
  * The prompt goes to stderr (inherited, so the user sees it); the answer goes
  * to stdout, which the parent pipes.
+ *
+ * MENU MODE (`--menu <json>`): an arrow-key menu, drawn on stderr, with the
+ * chosen index on stdout. Exit 3: not a terminal, so the parent falls back to
+ * a numbered prompt. Exit 130: cancelled (Ctrl+C or Esc). Raw mode and the
+ * console read thread end with this process, as above.
  */
 import { readSync } from "node:fs";
+import { emitKeypressEvents } from "node:readline";
+import { drawDone, drawOpen, press } from "./menu.mjs";
 
-const prompt = process.argv[2] ?? "";
-if (prompt) process.stderr.write(prompt);
+const ESC = "\u001b";
 
-const byte = Buffer.alloc(1);
-const bytes = [];
-const pause = new Int32Array(new SharedArrayBuffer(4));
-let atEof = false;
+if (process.argv[2] === "--menu") menu(JSON.parse(process.argv[3]));
+else line(process.argv[2] ?? "");
 
-while (true) {
-  let read;
-  try {
-    read = readSync(0, byte, 0, 1, null);
-  } catch (error) {
-    // Non-blocking stdin yields EAGAIN until data arrives: wait rather than spin.
-    if (error.code === "EAGAIN") {
-      Atomics.wait(pause, 0, 0, 20);
-      continue;
+function menu({ question, options, index = 0, color = true }) {
+  if (!process.stdin.isTTY || !process.stderr.isTTY) process.exit(3);
+  const out = process.stderr;
+  let state = { question, options, index, done: null };
+  let drawn = 0;
+  const draw = (lines) => {
+    // Back to the menu's first line and clear what was drawn, then draw again.
+    if (drawn) out.write(`${ESC}[${drawn}A${ESC}[0J`);
+    out.write(lines.join("\n") + "\n");
+    drawn = lines.length;
+  };
+  out.write(`${ESC}[?25l`); // hide the cursor while the menu is open
+  process.on("exit", () => out.write(`${ESC}[?25h`));
+  draw(drawOpen(state, { color }));
+  emitKeypressEvents(process.stdin);
+  process.stdin.setRawMode(true);
+  process.stdin.on("keypress", (_text, key) => {
+    state = press(state, key ?? {});
+    if (state.done === null) return draw(drawOpen(state, { color }));
+    draw(drawDone(state, { color }));
+    process.stdin.setRawMode(false);
+    if (state.done === "cancel") process.exit(130);
+    process.stdout.write(String(state.done));
+    process.exit(0);
+  });
+}
+
+function line(prompt) {
+  if (prompt) process.stderr.write(prompt);
+
+  const byte = Buffer.alloc(1);
+  const bytes = [];
+  const pause = new Int32Array(new SharedArrayBuffer(4));
+  let atEof = false;
+
+  while (true) {
+    let read;
+    try {
+      read = readSync(0, byte, 0, 1, null);
+    } catch (error) {
+      // Non-blocking stdin yields EAGAIN until data arrives: wait rather than spin.
+      if (error.code === "EAGAIN") {
+        Atomics.wait(pause, 0, 0, 20);
+        continue;
+      }
+      if (error.code === "EOF") {
+        atEof = true;
+        break;
+      }
+      throw error;
     }
-    if (error.code === "EOF") {
+    if (read === 0) {
       atEof = true;
       break;
     }
-    throw error;
+    if (byte[0] === 0x0a) break; // \n: the line is done
+    if (byte[0] === 0x0d) continue; // \r from CRLF
+    bytes.push(byte[0]);
   }
-  if (read === 0) {
-    atEof = true;
-    break;
-  }
-  if (byte[0] === 0x0a) break; // \n: the line is done
-  if (byte[0] === 0x0d) continue; // \r from CRLF
-  bytes.push(byte[0]);
-}
 
-if (atEof && bytes.length === 0) process.exit(3);
-process.stdout.write(Buffer.from(bytes).toString("utf8"));
+  if (atEof && bytes.length === 0) process.exit(3);
+  process.stdout.write(Buffer.from(bytes).toString("utf8"));
+}

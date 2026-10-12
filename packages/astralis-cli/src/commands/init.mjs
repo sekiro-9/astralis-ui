@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { readPackageJson, detectPackageManager, detectFramework, findEntryFile } from "../lib/detect.mjs";
 import { addImports, wrapJsx, addTagAttribute, insertAfterBodyTag, addStatementAfterImports, parses } from "../lib/edits.mjs";
-import { ok, warn, info, fail, bold, dim, cyan } from "../lib/ui.mjs";
+import { ok, warn, info, fail, bold, dim, cyan, printBanner } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
 import { commandNamed } from "../lib/commands.mjs";
 import { runCommand } from "../lib/run.mjs";
@@ -38,6 +38,7 @@ export async function run(argv, { nested = false, pm: givenPm } = {}) {
   const devtools = args.values.devtools;
   if (args.values.force && !ci) fail("--force only applies with --ci (it replaces an existing workflow).");
   const cwd = process.cwd();
+  if (!nested) printBanner(ci ? "Setting up validation in CI" : devtools ? "Adding the DevTools" : "Adding Astralis UI to this project");
 
   const pkg = readPackageJson(cwd);
   if (!pkg) fail("No package.json here — run `astralis init` from your project root.");
