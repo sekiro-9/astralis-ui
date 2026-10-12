@@ -7,6 +7,7 @@ import {
   Input,
   Stack,
   Text,
+  VStack,
 } from "astralis-ui";
 
 /* Blocks bundle no icon library — raw SVG through Icon's BYO path. */
@@ -61,9 +62,9 @@ export function Dashboard02() {
       {/* ---------------------------------------------------------------- */}
       {/* Icon rail                                                        */}
       {/* ---------------------------------------------------------------- */}
-      <Flex
+      <VStack
         as="aside"
-        direction="column"
+       
         alignItems="center"
         gap="4"
         w="16"
@@ -86,7 +87,7 @@ export function Dashboard02() {
           </Text>
         </Flex>
 
-        <Flex as="nav" aria-label="Sidebar" direction="column" alignItems="center" gap="1" flex="1">
+        <VStack as="nav" aria-label="Sidebar" alignItems="center" gap="1" flex="1">
           {rail.map((item) => (
             <Flex
               key={item.label}
@@ -109,15 +110,15 @@ export function Dashboard02() {
               <RailIcon path={item.icon} />
             </Flex>
           ))}
-        </Flex>
+        </VStack>
 
         <Avatar name="Ada Lovelace" size="sm" />
-      </Flex>
+      </VStack>
 
       {/* ---------------------------------------------------------------- */}
       {/* Main column                                                      */}
       {/* ---------------------------------------------------------------- */}
-      <Flex direction="column" alignItems="stretch" flex="1">
+      <VStack alignItems="stretch" flex="1">
         <Flex
           as="header"
           alignItems="center"
@@ -162,7 +163,7 @@ export function Dashboard02() {
             rounded="2xl"
           />
         </Box>
-      </Flex>
+      </VStack>
     </Flex>
   );
 }

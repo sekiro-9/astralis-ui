@@ -9,6 +9,7 @@ import {
   Link,
   Stack,
   Text,
+  VStack,
 } from "astralis-ui";
 
 const members = [
@@ -124,7 +125,7 @@ export function Team02() {
                 rounded="2xl"
                 p={{ base: "6", lg: "7" }}
               >
-                <Flex direction="column" alignItems="start" gap="4" h="full">
+                <VStack alignItems="start" gap="4" h="full">
                   <Flex alignItems="center" gap="4">
                     <Avatar name={member.name} size="lg" />
                     <Stack direction="vertical" gap="0.5">
@@ -146,7 +147,7 @@ export function Team02() {
                   </Box>
 
                   <SocialRow name={member.name} />
-                </Flex>
+                </VStack>
               </Box>
             ))}
           </Grid>

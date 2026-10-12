@@ -16,6 +16,7 @@ import {
   Kbd,
   Stack,
   Text,
+  VStack,
 } from "astralis-ui";
 
 /* Blocks bundle no icon library — raw SVG through Icon's BYO path. Swap these
@@ -127,7 +128,7 @@ function NavRow({ item }: { item: NavItem }) {
 /** The sidebar body, shared by the fixed rail and the mobile drawer. */
 function SidebarContent() {
   return (
-    <Flex direction="column" alignItems="stretch" h="full">
+    <VStack alignItems="stretch" h="full">
       {/* ---- Workspace ---- */}
       <Flex alignItems="center" gap="2.5" h="16" px="4" shrink="0">
         <Flex
@@ -191,7 +192,7 @@ function SidebarContent() {
           </Stack>
         </Flex>
       </Box>
-    </Flex>
+    </VStack>
   );
 }
 
@@ -259,7 +260,7 @@ export function Dashboard01() {
       {/* ---------------------------------------------------------------- */}
       {/* Main column                                                      */}
       {/* ---------------------------------------------------------------- */}
-      <Flex direction="column" alignItems="stretch" flex="1">
+      <VStack alignItems="stretch" flex="1">
         <Flex
           as="header"
           position="sticky"
@@ -334,7 +335,7 @@ export function Dashboard01() {
             <Box flex="1" minH="96" bg="subtle" rounded="xl" />
           </Stack>
         </Box>
-      </Flex>
+      </VStack>
     </Flex>
   );
 }

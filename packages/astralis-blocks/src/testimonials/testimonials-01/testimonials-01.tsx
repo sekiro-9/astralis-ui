@@ -8,6 +8,7 @@ import {
   Icon,
   Stack,
   Text,
+  VStack,
 } from "astralis-ui";
 
 const testimonials = [
@@ -124,7 +125,7 @@ export function Testimonials01() {
                 rounded="2xl"
                 p={{ base: "6", lg: "7" }}
               >
-                <Flex direction="column" alignItems="start" gap="5" h="full">
+                <VStack alignItems="start" gap="5" h="full">
                   <StarRow />
 
                   {/* flex="1" lives on the Box, not the Text — Text exposes only
@@ -154,7 +155,7 @@ export function Testimonials01() {
                       </Text>
                     </Stack>
                   </Flex>
-                </Flex>
+                </VStack>
               </Box>
             ))}
           </Grid>

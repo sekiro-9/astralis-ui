@@ -213,7 +213,8 @@
         "Input",
         "Kbd",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -240,7 +241,8 @@
         "Icon",
         "Input",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -269,7 +271,8 @@
         "Icon",
         "Separator",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -988,7 +991,8 @@
         "Icon",
         "Link",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -1044,7 +1048,8 @@
         "Heading",
         "Icon",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -1071,7 +1076,8 @@
         "Grid",
         "Heading",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     },
     {
@@ -1099,7 +1105,8 @@
         "Heading",
         "Icon",
         "Stack",
-        "Text"
+        "Text",
+        "VStack"
       ]
     }
   ]

@@ -7,6 +7,7 @@ import {
   Heading,
   Stack,
   Text,
+  VStack,
 } from "astralis-ui";
 
 const testimonials = [
@@ -81,7 +82,7 @@ export function Testimonials02() {
                 shadow="md"
                 p={{ base: "6", lg: "8" }}
               >
-                <Flex direction="column" alignItems="start" gap="5" h="full">
+                <VStack alignItems="start" gap="5" h="full">
                   {/* Attribution up top for this treatment. */}
                   <Flex as="figcaption" alignItems="center" gap="3">
                     <Avatar name={item.name} size="md" />
@@ -114,7 +115,7 @@ export function Testimonials02() {
                       {item.quote}
                     </Text>
                   </Box>
-                </Flex>
+                </VStack>
               </Box>
             ))}
           </Grid>
