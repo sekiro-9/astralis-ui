@@ -24,7 +24,7 @@ const FINDINGS = {
         { code: "invalid-recipe-value", line: 4, column: 3, message: "m", component: "Button", prop: "variant", value: "primary" },
         { code: "missing-alt", line: 6, column: 3, message: "m", component: "Image" },
       ],
-      warnings: [{ code: "paint-on-recipe", line: 5, column: 3, message: "m", component: "Button", prop: "bg", value: "red" }],
+      warnings: [{ code: "off-token-color", line: 5, column: 3, message: "m", component: "Button", prop: "bg", value: "red" }],
     },
     { file: "components/other.tsx", errors: [{ code: "invalid-recipe-value", line: 1, column: 1, message: "m", component: "Button", prop: "variant", value: "ghost2" }], warnings: [] },
   ],

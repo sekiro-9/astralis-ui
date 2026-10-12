@@ -159,7 +159,7 @@ const FINDINGS = {
     {
       file: "app/about/page.tsx",
       errors: [{ code: "invalid-recipe-value", line: 3, column: 16, message: 'Button: "primary" is not a variant value', component: "Button", prop: "variant", value: "primary" }],
-      warnings: [{ code: "paint-on-recipe", line: 7, column: 1, message: "Card owns its own bg", component: "Card", prop: "bg", value: "red" }],
+      warnings: [{ code: "prefer-vstack", line: 7, column: 1, message: "Flex direction=\"column\" is a VStack", component: "Flex", prop: "direction", value: "column" }],
     },
   ],
 };
@@ -256,7 +256,7 @@ test("Recommendations shows warnings only", async () => {
   await tick();
   assert.match($(".summary").textContent, /1Recommendationin 1 of 3 files checked/);
   assert.equal($$(".finding.error").length, 0);
-  assert.match(view(), /Card owns its own bg/);
+  assert.match(view(), /Flex direction="column" is a VStack/);
 });
 
 test("a clean project and a clean page say so", async () => {

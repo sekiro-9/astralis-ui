@@ -146,7 +146,9 @@ whole chain. A `Modal.Trigger` wrapping a `Button` shows as
 
 **Findings** lists the errors `astralis validate` would report for your
 project: things that render wrong or not at all. **Recommendations** lists its
-warnings: things that work but could be better. Each shows the file, line,
+warnings: things that work but could be better, such as a `Flex` column that
+is a `VStack`, a Button that shows only an icon and has no `aria-label`, or a
+raw colour where a theme token would follow dark mode. Each shows the file, line,
 rule and, when the page has it, the component it is on, one click away. Both
 update as you save, usually in well under a second. The badge on the launcher
 counts the errors, or the recommendations when there are no errors.

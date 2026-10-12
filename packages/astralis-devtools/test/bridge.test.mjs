@@ -36,6 +36,24 @@ test("validates every source file on start and reports only the files with findi
   }
 });
 
+test("raw colours are recommendations in the DevTools, though the CLI leaves them out by default", async () => {
+  const { bridge, done } = started({
+    "app/page.tsx": `import { Box } from "astralis-ui";
+export default function Page() {
+  return <Box bg="#ff0000">x</Box>;
+}
+`,
+  });
+  try {
+    await bridge.start();
+    const findings = bridge.findings();
+    assert.equal(findings.errors, 0);
+    assert.deepEqual(findings.results[0].warnings.map((w) => w.code), ["off-token-color"]);
+  } finally {
+    done();
+  }
+});
+
 test("a saved change is re-validated and every listener hears about it", async () => {
   const { bridge, watch, project, done } = started({ "app/page.tsx": VALID_PAGE });
   try {

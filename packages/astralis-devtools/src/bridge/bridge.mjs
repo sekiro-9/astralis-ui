@@ -94,7 +94,8 @@ export class Bridge {
     } catch {
       return this.results.delete(rel);
     }
-    const { errors, warnings } = validateSource(source, this.prepared, rel);
+    // Raw colours are advice here: the DevTools show them under Recommendations.
+    const { errors, warnings } = validateSource(source, this.prepared, rel, { strictTokens: true });
     this.results.set(rel, { errors, warnings });
     return true;
   }
