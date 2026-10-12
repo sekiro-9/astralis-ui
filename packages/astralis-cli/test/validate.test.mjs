@@ -28,7 +28,7 @@ const validate = (jsx, imports = "Box, Flex, Stack, Container, Card, CardBody, B
 const codes = (list) => list.map((i) => i.code);
 
 test("a clean composition passes", () => {
-  const r = validate(`<Flex direction="column" gap="4" p={{ base: "2", md: "8" }} bg="subtle" hover={{ bg: "muted" }}>
+  const r = validate(`<Flex direction="row" gap="4" p={{ base: "2", md: "8" }} bg="subtle" hover={{ bg: "muted" }}>
     <Text size="sm" color="brand">hi</Text>
     <Card w="full">ok</Card>
   </Flex>`);
@@ -145,10 +145,64 @@ test("rounded is a recipe prop on recipe components — no doctrine warning", ()
   assert.deepEqual(r.warnings, []);
 });
 
-test("paint on a recipe component warns with the doctrine", () => {
+test("paint on a recipe component does nothing, and says to use the recipe", () => {
   const r = validate(`<Button bg="red-500">x</Button>`);
-  assert.deepEqual(r.errors, []);
-  assert.equal(r.warnings[0].code, "paint-on-recipe");
+  assert.deepEqual(codes(r.errors), ["unknown-style-prop"]);
+  assert.match(r.errors[0].message, /Button does not take bg: it reaches the HTML as a stray attribute.*reach for variant, size or colorScheme/);
+});
+
+test("a style prop the component does not take is an error, a number or a string alike", () => {
+  const r = validate(`<Stack><Text p={12}>a</Text><Text p="4">b</Text></Stack>`, "Stack, Text");
+  assert.deepEqual(codes(r.errors), ["unknown-style-prop", "unknown-style-prop"]);
+  assert.match(r.errors[0].message, /Text does not take p.*Text takes text, placement props; put p on a Box around it/);
+  assert.deepEqual([r.errors[0].component, r.errors[0].prop, r.errors[0].value], ["Text", "p", "12"]);
+});
+
+test("a component's own prop under a style-prop name, and real HTML attributes, are not stray", () => {
+  const r = validate(`<Stack>
+    <Image src="/a.png" alt="a" aspectRatio="video" rounded="lg" />
+    <Marquee gap="4"><Marquee.Item>x</Marquee.Item></Marquee>
+    <Text width="10" color="muted">x</Text>
+  </Stack>`, "Stack, Image, Marquee, Text");
+  assert.deepEqual(codes(r.errors), []);
+});
+
+test("advice: a Flex column is a VStack", () => {
+  const r = validate(`<Flex direction="column" gap="4">x</Flex>`);
+  assert.deepEqual(codes(r.warnings), ["prefer-vstack"]);
+  assert.deepEqual([r.warnings[0].component, r.warnings[0].prop, r.warnings[0].value], ["Flex", "direction", "column"]);
+  const quiet = validate(`<Stack><Flex direction="row">x</Flex><Flex direction={{ base: "column", md: "row" }}>y</Flex></Stack>`);
+  assert.deepEqual(codes(quiet.warnings), [], "a row, or a responsive direction, is Flex's job");
+});
+
+test("advice: a Button that shows only an icon needs a name", () => {
+  const r = validate(`<Stack>
+    <Button><Icon as={X} /></Button>
+    <Button><Trash2 /></Button>
+    <Button leftIcon={<X />} />
+    <Button><svg /></Button>
+  </Stack>`, "Stack, Button, Icon");
+  const withIcons = validateSource(`import { Stack, Button, Icon } from "astralis-ui";
+import { Trash2, X } from "lucide-react";
+export const A = () => (<Stack>
+    <Button><Icon as={X} /></Button>
+    <Button><Trash2 /></Button>
+    <Button leftIcon={<X />} />
+    <Button><svg /></Button>
+  </Stack>);`, prepared, "a.tsx");
+  assert.deepEqual(codes(withIcons.warnings), ["icon-button-label", "icon-button-label", "icon-button-label", "icon-button-label"]);
+  assert.equal(codes(r.warnings).filter((c) => c === "icon-button-label").length, 3, "an unknown component is not assumed to be an icon");
+
+  const named = validateSource(`import { Stack, Button, Icon } from "astralis-ui";
+import { X } from "lucide-react";
+export const A = () => (<Stack>
+    <Button aria-label="Close"><Icon as={X} /></Button>
+    <Button title="Close"><X /></Button>
+    <Button leftIcon={<X />}>Close</Button>
+    <Button><X /> Close</Button>
+    <Button {...props}><X /></Button>
+  </Stack>);`, prepared, "b.tsx");
+  assert.deepEqual(codes(named.warnings), []);
 });
 
 test("Stack speaks the axis vocabulary, not flex's", () => {

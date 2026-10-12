@@ -156,11 +156,16 @@ failures are warnings unless you pass `--strict-contrast`.
 Checks your TSX and JSX against the machine-readable spec of the `astralis-ui`
 version you have installed. It catches what type-checks and still fails:
 components and compound parts that don't exist, prop values outside their
-token sets, `astralis:*` classes missing from the compiled CSS (they render as
+token sets, style props a component does not take (`<Text p="4">` pads
+nothing), `astralis:*` classes missing from the compiled CSS (they render as
 nothing), undeclared token variables, illegal breakpoint and state keys,
 compound parts outside their root, Tabs triggers with no panel, and
 accessibility mistakes such as misspelled `aria-*` attributes, invalid roles,
 and images with no `alt`.
+
+Warnings are advice, and never fail the run: a `Flex direction="column"` that
+is a `VStack`, a Button that shows only an icon and has no `aria-label`, and,
+with `--strict-tokens`, raw colours.
 
 ```bash
 npx astralis-cli validate              # the current directory

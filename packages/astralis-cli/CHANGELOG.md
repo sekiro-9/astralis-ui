@@ -40,6 +40,12 @@ The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
 - A finding on a component names it, and the attribute and literal value it
   is on (`component`, `prop`, `value`), so tools can point at the component on
   the page.
+- A style prop a component does not take, such as `p` on Text or `bg` on Card,
+  is an error (`unknown-style-prop`): it reached the HTML as a stray attribute
+  and changed nothing. This replaces the `paint-on-recipe` warning.
+- Two new warnings: a `Flex direction="column"` is a `VStack`
+  (`prefer-vstack`), and a Button that shows only an icon needs an
+  `aria-label` (`icon-button-label`).
 
 ### Changed
 

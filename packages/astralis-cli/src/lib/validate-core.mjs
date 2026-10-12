@@ -17,9 +17,15 @@
    - a var(--astralis-*) reference no stylesheet declares   (unknown-css-variable)
    - a prop its component deliberately types away           (excluded-prop)
    - a bare number where CSS needs a unit                   (bare-number-value)
-   - paint props on recipe components (doctrine, warn-only) (paint-on-recipe)
+   - a style prop the component does not take, which reaches the HTML as a
+     stray attribute and changes nothing                    (unknown-style-prop)
    - a component left empty that its type requires children for (missing-children):
      tsc catches it too, but agents and copied snippets produce code no one type-checks
+
+   And, as warnings (advice, which the DevTools show as recommendations):
+
+   - a Flex set to a column, which is a VStack              (prefer-vstack)
+   - a Button that shows only an icon and has no name       (icon-button-label)
 
    Dynamic expressions are skipped, not guessed at: this validator makes no
    claim it cannot decide statically. Components whose spec entry has no
@@ -35,14 +41,24 @@ import { checkRequiredChildren } from "./children-rule.mjs";
 const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 const CSS_VAR_REF = /var\((--astralis-[^,()\s]+)\)/g; // no-fallback form only
 
-/* Paint props that recipe components deliberately refuse — the "a component
-   owns how it looks" doctrine (utils/placement.ts). Warn-level while the
-   props manifest is partial. `rounded` is NOT here: like `size`, the name is
-   reused as a recipe prop (Button/Image radius scale, Tabs boolean). */
+/* Paint props that recipe components deliberately refuse: the "a component
+   owns how it looks" doctrine (utils/placement.ts). Given to one, they do
+   nothing, so the error points at variant and colorScheme instead. `rounded`
+   is NOT here: like `size`, the name is reused as a recipe prop (Button/Image
+   radius scale, Tabs boolean). */
 const DOCTRINE_PAINT_PROPS = new Set([
   "p", "px", "py", "pt", "pr", "pb", "pl",
   "bg", "borderColor", "shadow",
 ]);
+
+/* Style-prop names that are also real HTML attributes (img width, input size,
+   textarea wrap, font color, table border and align). On a component that
+   does not take them as style props they may still be meant for the element,
+   so they are never reported as stray. */
+const HTML_ATTRIBUTE_NAMES = new Set(["width", "height", "size", "color", "wrap", "align", "border"]);
+
+/* Packages whose components are icons, for the icon-only Button rule. */
+const ICON_PACKAGES = /^(lucide-react|react-icons(\/.*)?|@heroicons\/react(\/.*)?|@radix-ui\/react-icons|@tabler\/icons-react|@phosphor-icons\/react)$/;
 
 /** Precompute the lookup tables one spec produces. Reusable across files. */
 export function prepareSpec(spec) {
@@ -63,12 +79,17 @@ export function prepareSpec(spec) {
     statePayload[name] = spec.propGroups.box[name] ?? spec.propGroups.flex[name];
   }
 
+  // Every style-prop name any group defines: one a component does not take is stray.
+  const stylePropNames = new Set();
+  for (const group of Object.values(spec.propGroups)) for (const name of Object.keys(group)) stylePropNames.add(name);
+
   return {
     spec,
     classSet,
     varSet,
     channelVarSet,
     statePayload,
+    stylePropNames,
     // Container keys (@sm..@xl) are additive in the spec; older specs lack
     // them and older code must keep validating.
     bpKeys: new Set(["base", ...Object.keys(spec.breakpoints), ...Object.keys(spec.containerBreakpoints ?? {})]),
@@ -143,6 +164,7 @@ function createContext(prepared, filePath, opts) {
     warn: (code, node, message) => report(warnings, code, node, message),
     knownVar: (name) => prepared.varSet.has(name) || prepared.channelVarSet.has(name),
     imported: new Map(), // local name -> astralis-ui export name
+    iconLocals: new Set(), // local names of components from icon packages
     ancestors: [], // JSX identities above the current node
     tabsStack: [], // open <Tabs> scopes
     at: null, // the component, prop and literal value being checked, for findings to name
@@ -166,6 +188,10 @@ const componentName = (identity) => (identity.owner ? `${identity.owner}.${ident
 
 function collectImports(ctx, ast) {
   for (const node of ast.program.body) {
+    if (node.type === "ImportDeclaration" && ICON_PACKAGES.test(node.source.value)) {
+      for (const s of node.specifiers) ctx.iconLocals.add(s.local.name);
+      continue;
+    }
     if (node.type !== "ImportDeclaration" || node.source.value !== "astralis-ui") continue;
     for (const s of node.specifiers) {
       if (s.type !== "ImportSpecifier" || s.importKind === "type" || node.importKind === "type") continue;
@@ -362,11 +388,18 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
     }
     return;
   }
-  if (comp.groups.length === 1 && comp.groups[0] === "placement" && DOCTRINE_PAINT_PROPS.has(prop)) {
-    ctx.warn("paint-on-recipe", attr,
-      `${name} owns its own ${prop} — paint props stay off recipe components; reach for variant/size/colorScheme instead`);
+  // A style prop this component's type does not take at all: it is passed to
+  // the DOM, where it is a meaningless attribute. Only decided when the spec
+  // lists the component's own style-prop names (spec builds from Oct 2026).
+  if (comp.ownStyleProps && !comp.ownStyleProps.includes(prop) && ctx.stylePropNames.has(prop) && !HTML_ATTRIBUTE_NAMES.has(prop)) {
+    const recipe = comp.groups.length === 1 && comp.groups[0] === "placement" && DOCTRINE_PAINT_PROPS.has(prop);
+    ctx.error("unknown-style-prop", attr,
+      `${name} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing` +
+      (recipe
+        ? ` (${name} owns how it looks; reach for variant, size or colorScheme)`
+        : ` (${name} takes ${comp.groups.join(", ")} props; put ${prop} on a Box around it)`));
   }
-  // Anything else: DOM prop or open-typed — no claim.
+  // Anything else: DOM prop or open-typed, no claim.
 }
 
 /* ---- one element: identity, then every attribute ----------------------------- */
@@ -444,6 +477,15 @@ function analyzeOpening(ctx, node) {
     else if (comp) checkComponentProp(ctx, identity, comp, allowed, attr, prop);
   }
 
+  if (identity.specName === "Flex") {
+    const direction = findAttribute(node, "direction");
+    if (direction && attributeLiteral(direction.value) === "column") {
+      ctx.at = { component, prop: "direction", value: "column" };
+      ctx.warn("prefer-vstack", direction,
+        `Flex direction="column" is a VStack: VStack stacks its children with gap, and says what it is`);
+    }
+  }
+
   ctx.at = { component };
   // Images need a text alternative: real <img>, or our Image wrapper (which
   // jsx-a11y can't know renders an img). A spread may carry alt, so it silences the claim.
@@ -476,6 +518,30 @@ function checkAnatomy(ctx, identity, node) {
   // can't see whether a root wraps this component at its call sites.
   ctx.warn("part-outside-root", node,
     `${identity.display} sits outside a ${identity.owner} in this tree — legal only if a ${identity.owner} wraps this component where it's used`);
+}
+
+/* ---- advice: an icon-only Button needs a name ------------------------------------- */
+
+const isIconElement = (ctx, child) => {
+  if (child.type !== "JSXElement" || child.openingElement.name.type !== "JSXIdentifier") return false;
+  const local = child.openingElement.name.name;
+  return local === "svg" || ctx.imported.get(local) === "Icon" || ctx.iconLocals.has(local);
+};
+
+/** A Button whose only content is an icon, with nothing naming it for assistive technology. */
+function checkIconButton(ctx, identity, element) {
+  if (identity.specName !== "Button") return;
+  const opening = element.openingElement;
+  if (opening.attributes.some((a) => a.type === "JSXSpreadAttribute")) return;
+  const named = ["aria-label", "aria-labelledby", "title"].some((n) => findAttribute(opening, n));
+  if (named) return;
+  const children = element.children.filter((c) => !(c.type === "JSXText" && !c.value.trim()));
+  const iconProp = findAttribute(opening, "leftIcon") || findAttribute(opening, "rightIcon");
+  const iconOnly = children.length === 0 ? Boolean(iconProp) : children.length === 1 && isIconElement(ctx, children[0]);
+  if (!iconOnly) return;
+  ctx.at = { component: componentName(identity) };
+  ctx.warn("icon-button-label", opening,
+    `This Button shows only an icon, so screen readers announce it as just "button": give it aria-label="…"`);
 }
 
 /* ---- rule: Tabs triggers and panels must speak the same values ------------------ */
@@ -536,6 +602,7 @@ function traverse(ctx, node) {
     ctx.at = { component: componentName(identity) };
     checkAnatomy(ctx, identity, opening);
     checkRequiredChildren(ctx, identity, node);
+    checkIconButton(ctx, identity, node);
     collectTabsValue(ctx, identity, opening);
     ctx.at = null;
     if (identity.specName === "Tabs") {
