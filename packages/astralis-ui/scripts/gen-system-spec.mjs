@@ -209,6 +209,9 @@ for (const name of [...Object.keys(PRIMITIVE_GROUPS), ...PLACEMENT_ADOPTERS]) {
   if (!exportSet.has(name)) fail(`authored table names "${name}", which is not exported`);
 }
 
+/* Every style-prop name any group defines. */
+const allStyleProps = new Set(Object.values(propGroups).flatMap((group) => Object.keys(group)));
+
 /* The primitive whose own props define each group. */
 const GROUP_OWNERS = { box: "Box", flex: "Flex", flexItem: "FlexItem", grid: "Grid", gridItem: "GridItem", stack: "Stack", text: "Text" };
 
@@ -289,6 +292,11 @@ const components = Object.fromEntries(
     );
     const overrides = (redefined.get(name) ?? []).filter((prop) => inherited.has(prop) && !exclude.includes(prop));
     if (overrides.length) entry.overrides = overrides;
+    // Style-prop names the component's own type declares outside its groups
+    // (Image's aspectRatio, Marquee's gap): with this list the validator can
+    // tell a style prop the component ignores from one it takes as its own.
+    // Present, possibly empty, whenever the type was read.
+    if (accepted) entry.ownStyleProps = [...accepted].filter((prop) => allStyleProps.has(prop) && !groupProps.has(prop)).sort();
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what
     // actually exists at runtime. Some compounds also have flat exports

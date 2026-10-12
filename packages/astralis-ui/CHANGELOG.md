@@ -177,7 +177,8 @@ public names as `displayName` (it was `Tabs.Root` and so on).
 each component's required props and what it does with its children
 (measured, not authored), part exports, fuller anatomy, whether a DOM
 attribute reaches an element of the component's own, and the group props a
-component omits or redefines. `astralis validate` and the MCP server use all
+component omits or redefines, and the style-prop names a component takes as
+its own (`ownStyleProps`). `astralis validate` and the MCP server use all
 of it.
 
 ## 0.7.8 (2026-08-27, internal)
