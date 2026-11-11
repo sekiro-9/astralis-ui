@@ -289,7 +289,7 @@ function newReport(app) {
     copyButton.disabled = !r.snapshot;
     downloadButton.disabled = !r.snapshot;
     sendButton.lastChild.textContent = r.status === "sending" ? "Opening…" : "Open issue on GitHub";
-    similar.replaceChildren(similarCard());
+    similar.replaceChildren(...[similarCard()].filter(Boolean));
     status.className = `report-status ${r.status}`;
     status.replaceChildren(
       r.status === "sent"
