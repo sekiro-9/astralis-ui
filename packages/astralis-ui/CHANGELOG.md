@@ -6,6 +6,36 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
+## 0.9.0 (2026-11-19)
+
+### Added
+
+- **Animations as props.** `animation` plays an entrance once when a component
+  renders, and `reveal` plays it as the component scrolls into view. Eight
+  names: `fade-in`, `fade-up`, `fade-down`, `slide-left`, `slide-right`,
+  `scale-in`, `pop` and `blur-in`. `animationDuration` (`fast`, `normal`,
+  `slow`) and `animationDelay` (`75` to `1000` milliseconds) tune an
+  `animation`; the delay is how you stagger siblings. They are placement props,
+  so Box and every component with a recipe takes them, and they accept
+  responsive maps. All of it is CSS: the props work on Server Components and
+  add no client JavaScript. `reveal` uses scroll-driven animations (Chrome,
+  Edge, Safari); other browsers show the content without the animation.
+  Carousel keeps `animation` for its own slide transition.
+- **`DatePicker`.** A field that opens a Calendar in a popover to pick a date,
+  or a start and an end with `selectionMode="range"`. It takes `minDate`,
+  `maxDate` and `isDateUnavailable`, writes the date with `locale` and
+  `formatOptions`, submits an ISO date under `name`, and reads its label,
+  invalid and disabled state from a surrounding Field.
+- **A motion gate in the build.** The build now fails if any animation in the
+  stylesheet or in a component would still run for someone who asked their
+  device to reduce motion. Animations that convey state, such as a loader, are
+  listed in the gate with their reason.
+
+### Fixed
+
+- **Image's loading pulse stands down under reduced motion.** The motion gate
+  found it on its first run; Skeleton already did.
+
 ## 0.8.0 (2026-11-19)
 
 The first npm release since 0.7.1. It includes everything in the internal

@@ -6,6 +6,18 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
+## 0.5.1 (2026-11-19)
+
+Uses astralis-ui 0.9.0, whose specification adds the animation props, so
+`astralis validate` checks `animation`, `reveal`, `animationDuration` and
+`animationDelay` like any other closed set.
+
+### Fixed
+
+- **A component's own prop under a style prop's name keeps its own
+  vocabulary.** `<Carousel animation="fade-up">` is now an error: Carousel's
+  `animation` takes `slide` or `fade`, not the motion names.
+
 ## 0.5.0 (2026-11-19)
 
 The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
