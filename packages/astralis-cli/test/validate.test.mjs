@@ -536,3 +536,25 @@ test("a finding names the component, attribute and value it is on, as the page n
   assert.deepEqual(where(onImage), ["Image", undefined, undefined]);
   assert.equal("component" in onImg, false, "a plain element is no component");
 });
+
+test("motion props are closed sets on every component that takes placement", () => {
+  const ok = validate(`<Box animation="fade-up" animationDuration="slow" animationDelay="200">
+    <Card reveal="scale-in">x</Card>
+    <Text animation={{ base: "fade-in", md: "pop" }}>y</Text>
+  </Box>`);
+  assert.deepEqual(ok.errors, []);
+  assert.deepEqual(ok.warnings, []);
+
+  const bad = validate(`<Box animation="fad-up"><Text reveal="spin">y</Text><Card animationDelay="250">x</Card></Box>`);
+  assert.deepEqual(codes(bad.errors), ["invalid-keyword-value", "invalid-keyword-value", "invalid-keyword-value"]);
+  assert.match(bad.errors[0].message, /did you mean "fade-up"/);
+});
+
+test("a component's own prop under a style prop's name keeps its own vocabulary", () => {
+  const carousel = (animation) =>
+    validate(`<Carousel animation="${animation}"><Carousel.Track><Carousel.Slide>a</Carousel.Slide></Carousel.Track></Carousel>`, "Carousel");
+  assert.deepEqual(carousel("fade").errors, [], "Carousel's own value");
+  const wrong = carousel("fade-up").errors;
+  assert.deepEqual(codes(wrong), ["invalid-recipe-value"], "the motion name is not a Carousel animation");
+  assert.match(wrong[0].message, /valid: slide, fade/);
+});

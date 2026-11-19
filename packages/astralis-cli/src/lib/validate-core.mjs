@@ -367,14 +367,17 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
     ctx.error("excluded-prop", attr, `${name} has no "${prop}" prop${hint}`);
     return;
   }
-  // The component's own attribute under a style prop's name (Image's width): not a style prop.
-  if (comp.overrides?.includes(prop)) return;
-  if (ctx.stateProps.has(prop)) {
+  // The component's own attribute under a style prop's name (Image's width):
+  // not a style prop. One with a closed vocabulary of its own (Carousel's
+  // animation) is still judged, by the recipe rule below.
+  const overridden = comp.overrides?.includes(prop);
+  if (overridden && !comp.props?.[prop]) return;
+  if (!overridden && ctx.stateProps.has(prop)) {
     // Only Box-composing primitives resolve states; elsewhere no claim.
     if (comp.groups.includes("box")) checkStateValue(ctx, name, prop, attr.value);
     return;
   }
-  if (allowed[prop]) {
+  if (!overridden && allowed[prop]) {
     checkPropValue(ctx, name, prop, allowed[prop], attr.value, attr);
     return;
   }
