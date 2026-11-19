@@ -150,7 +150,7 @@ export const ImageRoot = identify("Image", function ImageRoot({
           "astralis:transition-opacity astralis:duration-200",
           fitClass,
           roundedClass,
-          isLoading && "astralis:animate-pulse astralis:bg-surface-muted",
+          isLoading && "astralis:animate-pulse astralis:motion-reduce:animate-none astralis:bg-surface-muted",
           placeholder === "blur" && isLoading && "astralis:blur-sm",
           !aspectRatio && previewClasses,
           aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,

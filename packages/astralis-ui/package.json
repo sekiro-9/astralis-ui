@@ -75,7 +75,7 @@
     "dev:css": "pnpm run gen:safelist && tailwindcss -w -i ./src/tailwind-entry.css -o ./dist/styles.css",
     "build": "pnpm run clean && pnpm run check:types && vite build && pnpm run build:subpath-types && node scripts/check-server-safe.mjs && pnpm run build:css && node scripts/check-exports.mjs",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs && node scripts/check-contrast.mjs && node scripts/gen-system-spec.mjs",
+    "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/check-css-coverage.mjs && node scripts/check-contrast.mjs && node scripts/check-motion.mjs && node scripts/gen-system-spec.mjs",
     "gen:spec": "node scripts/gen-system-spec.mjs",
     "test": "vitest run --project unit",
     "test:watch": "vitest --project unit",
