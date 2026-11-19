@@ -66,6 +66,13 @@ export const PLACEMENT_PROP_NAMES = [
   "bottom",
   "left",
   "zIndex",
+  // Motion — how it arrives on the page. Like placement, it is the
+  // composition's call: the same Card fades up in a hero and is still in a
+  // table. Carousel omits `animation` (its own slide/fade prop has the name).
+  "animation",
+  "reveal",
+  "animationDuration",
+  "animationDelay",
 ] as const;
 
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];

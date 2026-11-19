@@ -1,0 +1,229 @@
+/* ==========================================================================
+   ASTRALIS — MOTION PROPS (animation, reveal, animationDuration, animationDelay)
+   --------------------------------------------------------------------------
+   Pure CSS, so the props work on Server Components and ship no JavaScript.
+
+   Two rules hold for every utility here, and scripts/check-motion.mjs fails
+   the build if either is broken:
+
+   1. Each animation is declared inside `prefers-reduced-motion: no-preference`.
+      A user who asked for less motion gets the finished state, never the move.
+   2. Each keyframe set only describes the START. The end state is the
+      element's own style, so with the animation absent (reduced motion, or a
+      browser without scroll timelines) the content is simply there.
+
+   `animate-*` plays once when the element is rendered. `reveal-*` plays as
+   the element scrolls into view, on a view timeline; browsers without
+   `animation-timeline` skip the whole block and show the content.
+   ========================================================================== */
+
+@keyframes astralis-fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes astralis-fade-up {
+  from { opacity: 0; transform: translateY(1rem); }
+}
+
+@keyframes astralis-fade-down {
+  from { opacity: 0; transform: translateY(-1rem); }
+}
+
+@keyframes astralis-slide-left {
+  from { opacity: 0; transform: translateX(2rem); }
+}
+
+@keyframes astralis-slide-right {
+  from { opacity: 0; transform: translateX(-2rem); }
+}
+
+@keyframes astralis-scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+}
+
+@keyframes astralis-pop {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes astralis-blur-in {
+  from { opacity: 0; filter: blur(8px); }
+}
+
+/* ---- animation: plays once on render ----------------------------------- */
+
+@utility animate-fade-in {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-fade-in var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-fade-up {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-fade-up var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-fade-down {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-fade-down var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-slide-left {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-slide-left var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-slide-right {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-slide-right var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-scale-in {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-scale-in var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-pop {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-pop var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+@utility animate-blur-in {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: astralis-blur-in var(--astralis-motion-duration, 400ms) var(--astralis-easing-ease-out, ease-out) var(--astralis-motion-delay, 0ms) both;
+  }
+}
+
+/* ---- reveal: plays as the element scrolls into view --------------------- */
+
+@utility reveal-fade-in {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-fade-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-fade-up {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-fade-down {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-fade-down linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-slide-left {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-slide-left linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-slide-right {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-slide-right linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-scale-in {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-scale-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-pop {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-pop linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@utility reveal-blur-in {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: astralis-blur-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+/* ---- animationDuration and animationDelay ------------------------------- */
+
+@utility motion-duration-fast {
+  --astralis-motion-duration: 200ms;
+}
+
+@utility motion-duration-normal {
+  --astralis-motion-duration: 400ms;
+}
+
+@utility motion-duration-slow {
+  --astralis-motion-duration: 700ms;
+}
+
+@utility motion-delay-75 {
+  --astralis-motion-delay: 75ms;
+}
+
+@utility motion-delay-100 {
+  --astralis-motion-delay: 100ms;
+}
+
+@utility motion-delay-150 {
+  --astralis-motion-delay: 150ms;
+}
+
+@utility motion-delay-200 {
+  --astralis-motion-delay: 200ms;
+}
+
+@utility motion-delay-300 {
+  --astralis-motion-delay: 300ms;
+}
+
+@utility motion-delay-500 {
+  --astralis-motion-delay: 500ms;
+}
+
+@utility motion-delay-700 {
+  --astralis-motion-delay: 700ms;
+}
+
+@utility motion-delay-1000 {
+  --astralis-motion-delay: 1000ms;
+}

@@ -7,7 +7,9 @@ export type CarouselOrientation = "horizontal" | "vertical";
 export type CarouselIndicatorVariant = "dot" | "line" | "number";
 export type CarouselSize = "sm" | "md" | "lg";
 
-export interface CarouselProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
+// `animation` here is the slide transition (slide or fade), not the motion
+// placement prop of the same name, so the name goes to Carousel's own API.
+export interface CarouselProps extends ComponentPropsWithoutRef<"div">, Omit<PlacementProps, "animation"> {
   /** Active leading-slide index (controlled). */
   index?: number;
   /** Initial index when uncontrolled. @default 0 */

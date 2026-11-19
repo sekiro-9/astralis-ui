@@ -76,6 +76,12 @@ import {
   orderTypes,
   alignSelfTypes
 } from "../../../const/layout-mappings";
+import {
+  animationTypes,
+  revealTypes,
+  animationDurationTypes,
+  animationDelayTypes
+} from "../../../const/motion-mappings";
 
 /**
  * Single source of truth for Box's token maps. Shared by CVA (scalar resolution
@@ -155,6 +161,12 @@ export const boxVariantMap = {
     shrink: flexShrinkTypes,
     order: orderTypes,
     alignSelf: alignSelfTypes,
+    // Motion: how the element arrives. Pure CSS (theme/motion.css), so these
+    // work on Server Components, and every one stands down under reduced motion.
+    animation: animationTypes,
+    reveal: revealTypes,
+    animationDuration: animationDurationTypes,
+    animationDelay: animationDelayTypes,
 } as const;
 
 export const boxVariants = cva("", {
