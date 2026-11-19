@@ -8,6 +8,7 @@ export * from "./pin-input";
 export * from "./multi-select";
 export * from "./slider";
 export * from "./number-input";
+export * from "./date-picker";
 export * from "./combobox";
 
 export * from "./segmented-control";

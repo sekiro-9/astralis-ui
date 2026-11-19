@@ -40,6 +40,7 @@ import { ButtonGroup } from "./buttons/button-group";
 import { Marquee } from "./data-display/marquee";
 import { Calendar } from "./data-display/calendar";
 import { Combobox } from "./data-entry/combobox";
+import { DatePicker } from "./data-entry/date-picker";
 import { MultiSelect } from "./data-entry/multi-select";
 import { ThemeToggle } from "./buttons/theme-toggle";
 import { Image } from "./data-display/image";
@@ -112,6 +113,7 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Marquee", (p) => <Marquee {...p}><span>a</span></Marquee>],
   ["Calendar", (p) => <Calendar {...p} />],
   ["Combobox", (p) => <Combobox {...p} options={[]} />],
+  ["DatePicker", (p) => <DatePicker {...p} />],
   ["MultiSelect", (p) => <MultiSelect {...p} options={[]} />],
   ["Image", (p) => <Image {...p} src="x.png" alt="x" />],
   ["Toolbar", (p) => <Toolbar {...p} label="t"><button>a</button></Toolbar>],
