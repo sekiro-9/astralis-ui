@@ -138,6 +138,9 @@ import { ComboboxCustomValue } from "./combobox/combobox-custom-value";
 import { TextareaDemo } from "./textarea/textarea-demo";
 import { TextareaAutoGrow } from "./textarea/textarea-auto-grow";
 import { NumberInputDemo } from "./number-input/number-input-demo";
+import { DatePickerDemo } from "./date-picker/date-picker-demo";
+import { DatePickerRange } from "./date-picker/date-picker-range";
+import { DatePickerField } from "./date-picker/date-picker-field";
 import { LinkDemo } from "./link/link-demo";
 import { LinkLineClamp } from "./link/link-line-clamp";
 import { MenuDemo } from "./menu/menu-demo";
@@ -357,6 +360,9 @@ export const demos = {
   "textarea-demo": { component: TextareaDemo, file: "textarea/textarea-demo.tsx" },
   "textarea-auto-grow": { component: TextareaAutoGrow, file: "textarea/textarea-auto-grow.tsx" },
   "number-input-demo": { component: NumberInputDemo, file: "number-input/number-input-demo.tsx" },
+  "date-picker-demo": { component: DatePickerDemo, file: "date-picker/date-picker-demo.tsx" },
+  "date-picker-range": { component: DatePickerRange, file: "date-picker/date-picker-range.tsx" },
+  "date-picker-field": { component: DatePickerField, file: "date-picker/date-picker-field.tsx" },
   "link-demo": { component: LinkDemo, file: "link/link-demo.tsx" },
   "link-line-clamp": { component: LinkLineClamp, file: "link/link-line-clamp.tsx" },
   "menu-demo": { component: MenuDemo, file: "menu/menu-demo.tsx" },

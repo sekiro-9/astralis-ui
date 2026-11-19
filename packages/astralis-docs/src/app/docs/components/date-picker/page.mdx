@@ -1,0 +1,62 @@
+import { datePickerProps } from "@/modules/demos/date-picker/date-picker-props";
+
+export const metadata = {
+  title: "Date Picker",
+  description: "A field that opens a calendar to pick a date or a date range.",
+};
+
+# Date Picker
+
+A field that opens a calendar to pick a date or a date range.
+
+<ComponentPreview name="date-picker-demo" />
+
+## Import
+
+```tsx
+import { DatePicker } from "astralis-ui";
+```
+
+The field is a button that opens a [Calendar](/docs/components/calendar) in a
+popover. Picking a day sets the value and closes it. Because the value is
+always chosen from the calendar, it is always a real date: there is no typed
+text to parse or reject.
+
+## Range
+
+`selectionMode="range"` picks a start and an end. The calendar stays open
+after the first click and closes on the second.
+
+<ComponentPreview name="date-picker-range" />
+
+## Limits, format and forms
+
+`minDate`, `maxDate` and `isDateUnavailable` decide which days can be picked.
+`locale` and `formatOptions` decide how the date is written. `name` submits it
+with a form as an ISO date, such as `2026-11-19`, whatever the display format.
+Inside a [Field](/docs/components/field) the picker takes its label, invalid
+and disabled state from the field.
+
+<ComponentPreview name="date-picker-field" />
+
+## Props
+
+<PropsTable rows={datePickerProps} />
+
+DatePicker also takes the [placement props](/docs/style-props) (`w`, `maxW`,
+margins and the rest).
+
+## Keyboard
+
+| Key | Action |
+| --- | --- |
+| `Enter` / `Space` | Open the calendar; pick the focused day |
+| Arrow keys | Move by day and by week |
+| `Page Up` / `Page Down` | Previous / next month |
+| `Esc` | Close without changing the value |
+
+## Accessibility
+
+The field is a button with `aria-haspopup="dialog"` and `aria-expanded`. Focus
+moves into the calendar when it opens and returns to the field when it closes.
+Each day is announced with its full date in the picker's locale.

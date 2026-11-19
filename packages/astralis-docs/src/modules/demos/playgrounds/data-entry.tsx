@@ -3,6 +3,7 @@ import {
   Checkbox,
   CheckboxCard,
   Combobox,
+  DatePicker,
   Editable,
   Field,
   FileUpload,
@@ -24,6 +25,7 @@ import { calendarProps } from "../calendar/calendar-props";
 import { checkboxProps } from "../checkbox/checkbox-props";
 import { checkboxCardProps } from "../checkbox-card/checkbox-card-props";
 import { comboboxProps } from "../combobox/combobox-props";
+import { datePickerProps } from "../date-picker/date-picker-props";
 import { editableProps } from "../editable/editable-props";
 import { fieldProps } from "../field/field-props";
 import { fileUploadProps } from "../file-upload/file-upload-props";
@@ -118,6 +120,7 @@ export const dataEntryPlaygrounds = definePlaygrounds({
     rows: numberInputProps,
     baseProps: { defaultValue: 3 },
   },
+  "date-picker-demo": { tag: "DatePicker", component: asEntry(DatePicker), rows: datePickerProps },
   "pin-input-demo": { tag: "PinInput", component: asEntry(PinInput), rows: pinInputProps },
   "calendar-demo": { tag: "Calendar", component: asEntry(Calendar), rows: calendarProps },
   "field-demo": {

@@ -18,7 +18,7 @@ export function AnimationStagger() {
         {PLANS.map((plan) => (
           <Card key={plan.name} animation="fade-up" animationDuration="slow" animationDelay={plan.delay} variant="outline" flex="1">
             <Card.Body>
-              <Stack gap="2" align="start">
+              <Stack gap="2" alignItems="start">
                 <Badge variant="subtle">{plan.name}</Badge>
                 <Heading size="xl">{plan.price}</Heading>
                 <Text size="sm" color="muted">
