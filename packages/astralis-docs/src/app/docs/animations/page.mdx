@@ -1,0 +1,99 @@
+export const metadata = {
+  title: "Animations",
+  description: "Entrance and scroll animations as props: pure CSS, no client JavaScript, and they stand down for reduced motion.",
+};
+
+# Animations
+
+Two props animate any component as it arrives: `animation` plays once when it
+renders, and `reveal` plays as it scrolls into view. Both are pure CSS, so
+they work on Server Components and add no JavaScript to the page.
+
+## animation
+
+Pass the name of an entrance. It plays once, then the component is simply
+there.
+
+```tsx
+<Card animation="fade-up">…</Card>
+<Button animation="pop">Save</Button>
+```
+
+<ComponentPreview name="animation-entrance" />
+
+| Name | What it does |
+| --- | --- |
+| `fade-in` | Fades in |
+| `fade-up` · `fade-down` | Fades in while moving up or down |
+| `slide-left` · `slide-right` | Slides in from the side |
+| `scale-in` | Grows from slightly smaller |
+| `pop` | Scales in with a small overshoot |
+| `blur-in` | Sharpens from blurred |
+
+## reveal
+
+The same names, played as the component scrolls into view instead of on
+render.
+
+```tsx
+<Heading reveal="slide-left">Built for the server</Heading>
+```
+
+<ComponentPreview name="animation-reveal" />
+
+`reveal` uses CSS scroll-driven animations (`animation-timeline: view()`),
+which Chrome, Edge and Safari support. In a browser without them the content
+is shown without the animation; nothing is ever left hidden.
+
+## Duration and delay
+
+`animationDuration` takes `fast`, `normal` or `slow`. `animationDelay` takes
+`75`, `100`, `150`, `200`, `300`, `500`, `700` or `1000` (milliseconds), which
+is how you stagger siblings:
+
+```tsx
+<Card animation="fade-up" animationDelay="100" />
+<Card animation="fade-up" animationDelay="200" />
+<Card animation="fade-up" animationDelay="300" />
+```
+
+<ComponentPreview name="animation-stagger" />
+
+Both apply to `animation`. A `reveal` is tied to the scroll position, so it
+has no duration of its own.
+
+## Every component takes them
+
+The four props are placement props, so they work on Box and on every
+component with its own recipe (Card, Button, Text, Heading, Badge and the
+rest), and they accept [responsive maps](/docs/responsive):
+
+```tsx
+<Card animation={{ base: "fade-in", md: "fade-up" }} />
+```
+
+Carousel is the one exception for `animation`: there the name belongs to its
+own slide transition (`slide` or `fade`).
+
+## Reduced motion
+
+Some people turn on "reduce motion" on their device because movement on screen
+makes them unwell. Every animation here is declared inside
+`prefers-reduced-motion: no-preference`, so for those users the component
+appears in its final state with no movement.
+
+This is not left to care. The library's build runs a motion gate that reads
+the compiled stylesheet and the component source, and fails if any animation
+would still run under reduced motion. Animations that convey state rather than
+decoration, such as a loader saying work is in progress, are listed in the
+gate with their reason.
+
+## Checked by the validator
+
+The names are a closed set in the system specification, so a misspelling is an
+error in the terminal, in CI and for an AI assistant, with the nearest valid
+name suggested:
+
+```
+Box: "fad-up" is not a animation value — keyword props are closed sets (did you mean "fade-up"?)
+```

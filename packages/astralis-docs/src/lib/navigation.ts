@@ -30,6 +30,7 @@ export const navigation: NavGroup[] = [
       { title: "Colors", href: "/docs/colors" },
       { title: "Responsive Props", href: "/docs/responsive" },
       { title: "Style Props", href: "/docs/style-props" },
+      { title: "Animations", href: "/docs/animations" },
       { title: "Design Tokens", href: "/docs/tokens" },
     ],
   },

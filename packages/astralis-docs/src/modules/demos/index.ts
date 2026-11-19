@@ -23,6 +23,9 @@ import { BoxDemo } from "./box/box-demo";
 import { BoxStyleProps } from "./box/box-style-props";
 import { BoxResponsive } from "./box/box-responsive";
 import { BoxAs } from "./box/box-as";
+import { AnimationEntrance } from "./animations/animation-entrance";
+import { AnimationReveal } from "./animations/animation-reveal";
+import { AnimationStagger } from "./animations/animation-stagger";
 import { FlexDemo } from "./flex/flex-demo";
 import { FlexAlign } from "./flex/flex-align";
 import { FlexItem } from "./flex/flex-item";
@@ -239,6 +242,9 @@ export const demos = {
   "box-style-props": { component: BoxStyleProps, file: "box/box-style-props.tsx" },
   "box-responsive": { component: BoxResponsive, file: "box/box-responsive.tsx" },
   "box-as": { component: BoxAs, file: "box/box-as.tsx" },
+  "animation-entrance": { component: AnimationEntrance, file: "animations/animation-entrance.tsx" },
+  "animation-reveal": { component: AnimationReveal, file: "animations/animation-reveal.tsx" },
+  "animation-stagger": { component: AnimationStagger, file: "animations/animation-stagger.tsx" },
   "flex-demo": { component: FlexDemo, file: "flex/flex-demo.tsx" },
   "flex-align": { component: FlexAlign, file: "flex/flex-align.tsx" },
   "flex-item": { component: FlexItem, file: "flex/flex-item.tsx" },

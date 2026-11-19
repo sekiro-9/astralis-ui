@@ -32,4 +32,15 @@ export const placementProps: PropRow[] = [
     description:
       "Space between the component and its siblings. auto is the layout tool: ml=\"auto\" pushes a flex item to the far edge, mx=\"auto\" centres a fixed-width block.",
   },
+  {
+    prop: "animation · reveal",
+    type: `"fade-in" | "fade-up" | "fade-down" | "slide-left" | "slide-right" | "scale-in" | "pop" | "blur-in"`,
+    description:
+      "How the component arrives: animation plays once on render, reveal as it scrolls into view. Pure CSS, and still under reduced motion. See Animations.",
+  },
+  {
+    prop: "animationDuration · animationDelay",
+    type: `"fast" | "normal" | "slow" · "75" – "1000" (milliseconds)`,
+    description: "How long an animation takes, and how long it waits before starting, for staggering siblings.",
+  },
 ];
