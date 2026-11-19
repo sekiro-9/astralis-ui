@@ -6,7 +6,7 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
-## 0.8.0 (2026-10-01)
+## 0.8.0 (2026-11-19)
 
 The first npm release since 0.7.1. It includes everything in the internal
 versions 0.7.2 to 0.7.8 below: Server Components with zero client JavaScript,

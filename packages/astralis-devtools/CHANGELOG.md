@@ -2,7 +2,7 @@
 
 All notable changes to `astralis-devtools`.
 
-## 0.1.0 (2026-10-01)
+## 0.1.0 (2026-11-19)
 
 The first release: a development overlay for Astralis UI. A launcher you can
 drag anywhere on the page opens a panel with five screens.

@@ -3,7 +3,7 @@
 All notable changes to `astralis-mcp`. Under 0.x, a minor version may contain
 breaking changes; a patch never does.
 
-## 0.4.0 (2026-10-01)
+## 0.4.0 (2026-11-19)
 
 Requires Node `^22.18` or `>=24.11`.
 

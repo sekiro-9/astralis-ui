@@ -2,7 +2,7 @@
 
 All notable changes to `create-astralis`.
 
-## 0.1.1 (2026-10-01)
+## 0.1.1 (2026-11-19)
 
 - Uses astralis-cli 0.5.0, so new projects get the DevTools by default.
 - Requires Node `^22.18` or `>=24.11`.

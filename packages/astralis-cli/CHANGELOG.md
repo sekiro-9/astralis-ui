@@ -6,7 +6,7 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
-## 0.5.0 (2026-10-01)
+## 0.5.0 (2026-11-19)
 
 The first npm release since 0.4.0. It includes the internal versions 0.4.1 to
 0.4.4 below. Requires Node `^22.18` or `>=24.11`.
