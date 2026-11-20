@@ -1,4 +1,5 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { Box, Flex } from "astralis-ui";
 
 /**
  * The Astralis mark: four blocks, the last still being placed. Painted with
@@ -27,17 +28,26 @@ export function AstralisMark({ className = "size-6" }: { className?: string }) {
 
 export function Logo() {
   return (
-    <Link
-      href="/"
-      className="group flex items-center gap-2 text-label transition-opacity hover:opacity-80"
-    >
+    <Flex as={NextLink} href="/" alignItems="center" gap="2" color="base" className="group transition-opacity hover:opacity-80">
       <AstralisMark className="size-6" />
-      <span className="font-display text-[15px] font-semibold tracking-tight">
+      {/* 15px and 10px sit between the type scale's steps, so the wordmark's type is set with classes. */}
+      <Box as="span" className="font-display text-[15px] font-semibold tracking-tight">
         Astralis
-        <span className="ml-1.5 rounded-md border border-stroke-base bg-surface-subtle px-1.5 py-0.5 align-middle text-[10px] font-medium uppercase tracking-widest text-label-muted">
+        <Box
+          as="span"
+          ml="1.5"
+          px="1.5"
+          py="0.5"
+          rounded="md"
+          border="normal"
+          borderColor="base"
+          bg="subtle"
+          color="muted"
+          className="align-middle text-[10px] font-medium uppercase tracking-widest"
+        >
           UI
-        </span>
-      </span>
-    </Link>
+        </Box>
+      </Box>
+    </Flex>
   );
 }
