@@ -1,7 +1,8 @@
 "use client";
 
 import { useSelectedLayoutSegment } from "next/navigation";
-import { Link } from "astralis-ui";
+import { ExternalLink } from "lucide-react";
+import { Button } from "astralis-ui";
 
 /**
  * A link from a component page to the same component in the published
@@ -16,8 +17,18 @@ export function StorybookLink({ links }: { links: Record<string, string> }) {
   if (!href) return null;
 
   return (
-    <Link href={href} external size="sm" color="muted">
+    <Button
+      as="a"
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      size="xs"
+      variant="outline"
+      colorScheme="gray"
+      // Sized to the xs label; Icon's smallest step (16px) reads as larger than the text.
+      rightIcon={<ExternalLink size={12} aria-hidden="true" />}
+    >
       Storybook
-    </Link>
+    </Button>
   );
 }

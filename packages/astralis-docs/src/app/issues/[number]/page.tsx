@@ -133,8 +133,16 @@ export default async function IssuePage({ params }: Props) {
             </Heading>
             <Thread comments={issue.thread} />
             <div>
-              <Button as="a" href={issue.url} target="_blank" rel="noreferrer" size="sm" variant="outline" colorScheme="gray">
-                <Icon as={MessageSquarePlus} size="xs" />
+              <Button
+                as="a"
+                href={issue.url}
+                target="_blank"
+                rel="noreferrer"
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                leftIcon={<Icon as={MessageSquarePlus} size="xs" />}
+              >
                 Comment on GitHub
               </Button>
             </div>
@@ -189,9 +197,17 @@ export default async function IssuePage({ params }: Props) {
             </DataList.Item>
           </DataList>
           <Separator />
-          <Button as="a" href={issue.url} target="_blank" rel="noreferrer" size="sm" variant="outline" colorScheme="gray">
+          <Button
+            as="a"
+            href={issue.url}
+            target="_blank"
+            rel="noreferrer"
+            size="sm"
+            variant="outline"
+            colorScheme="gray"
+            rightIcon={<Icon as={ExternalLink} size="xs" />}
+          >
             View on GitHub
-            <Icon as={ExternalLink} size="xs" />
           </Button>
           <Text size="xs" color="muted" lineHeight="relaxed">
             Read from <a href={REPO_URL} className="underline" target="_blank" rel="noreferrer">GitHub</a>, refreshed every minute. Comments,

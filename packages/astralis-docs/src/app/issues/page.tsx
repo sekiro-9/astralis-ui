@@ -105,9 +105,18 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
             and the fixes anyone can take on. The issues live on GitHub; this page reads them.
           </Text>
         </div>
-        <Button as="a" href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer" size="sm" variant="outline" colorScheme="gray" className="shrink-0">
+        <Button
+          as="a"
+          href={`${REPO_URL}/issues`}
+          target="_blank"
+          rel="noreferrer"
+          size="sm"
+          variant="outline"
+          colorScheme="gray"
+          className="shrink-0"
+          rightIcon={<Icon as={ExternalLink} size="xs" />}
+        >
           View on GitHub
-          <Icon as={ExternalLink} size="xs" />
         </Button>
       </header>
 
