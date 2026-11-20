@@ -1,5 +1,7 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { Box, Flex, Stack, Text } from "astralis-ui";
 import { Logo } from "@/modules/site/logo";
+import { NavGroupLabel } from "@/modules/site/nav-item";
 import { GITHUB_URL } from "@/modules/site/nav-links";
 
 const columns = [
@@ -32,40 +34,57 @@ const columns = [
 
 export function Footer({ version }: { version: string }) {
   return (
-    <footer className="border-t border-stroke-base">
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-12 px-6 py-20 sm:flex-row sm:justify-between lg:px-12">
-        <div className="max-w-xs">
+    <Box as="footer" borderT="normal" borderColor="base">
+      <Flex
+        mx="auto"
+        maxW="7xl"
+        direction={{ base: "column", sm: "row" }}
+        justifyContent={{ sm: "between" }}
+        gap="12"
+        px={{ base: "6", lg: "12" }}
+        py="20"
+      >
+        <Box maxW="xs">
           <Logo />
-          <p className="mt-4 text-sm leading-relaxed text-label-muted">
+          <Text mt="4" size="sm" lineHeight="relaxed" color="muted">
             A React component library with a stellar finish: semantic tokens,
             runtime theming, zero build step.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-x-16 gap-y-10">
+          </Text>
+        </Box>
+        <Flex wrap="wrap" columnGap="16" rowGap="10">
           {columns.map((column) => (
-            <div key={column.title}>
-              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">
-                {column.title}
-              </p>
-              <ul className="space-y-2">
+            <Box key={column.title}>
+              <NavGroupLabel mb="3">{column.title}</NavGroupLabel>
+              <Stack as="ul" gap="2">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href} className="text-sm text-label-muted transition-colors hover:text-label">
-                      {link.label}
-                    </Link>
+                    {/* A Box, not Link: Link takes no hover colour. */}
+                    <Box as={NextLink} href={link.href} color="muted" hover={{ color: "base" }} className="transition-colors">
+                      <Text as="span" size="sm">
+                        {link.label}
+                      </Text>
+                    </Box>
                   </li>
                 ))}
-              </ul>
-            </div>
+              </Stack>
+            </Box>
           ))}
-        </div>
-      </div>
-      <div className="border-t border-stroke-base">
-        <div className="mx-auto flex max-w-screen-xl items-center justify-between px-6 py-6 text-xs text-label-subtle lg:px-12">
-          <span>© 2026 Astralis UI</span>
-          <span>astralis-ui v{version} · MIT</span>
-        </div>
-      </div>
-    </footer>
+        </Flex>
+      </Flex>
+      <Box borderT="normal" borderColor="base">
+        <Flex
+          mx="auto"
+          maxW="7xl"
+          alignItems="center"
+          justifyContent="between"
+          px={{ base: "6", lg: "12" }}
+          py="6"
+          color="subtle"
+        >
+          <Text as="span" size="xs">© 2026 Astralis UI</Text>
+          <Text as="span" size="xs">astralis-ui v{version} · MIT</Text>
+        </Flex>
+      </Box>
+    </Box>
   );
 }

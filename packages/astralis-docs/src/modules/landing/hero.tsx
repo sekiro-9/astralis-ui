@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import {
   useTheme,
   Button, Card, Stat, Badge, Avatar, Switch, Slider, Tag, HStack, VStack,
+  Box, Flex, Grid, Stack, Text,
 } from "astralis-ui";
 import { ArrowRight } from "lucide-react";
 import { CopyCommand } from "@/modules/docs/copy-command";
@@ -31,65 +32,117 @@ export function Hero() {
   const cardTransition = useEntranceTransition({ duration: 1, delay: 0.3, ease: EASE });
 
   return (
-    <section
+    <Flex
+      as="section"
+      position="relative"
+      alignItems="center"
+      overflow="hidden"
       // The header is h-14 (3.5rem): the hero fills the rest of the first screen,
       // up to 60rem so very tall monitors do not get a mostly empty hero.
-      className="relative isolate flex items-center overflow-hidden lg:min-h-[min(calc(100svh-3.5rem),60rem)]"
+      minH={{ lg: "min(calc(100svh - 3.5rem), 60rem)" }}
+      // Isolation has no prop.
+      className="isolate"
     >
-      <div aria-hidden="true" className="absolute inset-0 -z-10">
+      {/* A negative z-index is not one of zIndex's named levels. */}
+      <Box aria-hidden="true" position="absolute" inset="0" className="-z-10">
         <BrandScene fade="left" />
-        <div className="hero-veil absolute inset-0" />
-      </div>
+        <Box position="absolute" inset="0" className="hero-veil" />
+      </Box>
 
-      <div className="mx-auto grid w-full max-w-screen-xl items-center gap-16 px-6 py-12 lg:grid-cols-2 lg:px-14 lg:py-16">
-        <div className="flex min-w-0 flex-col items-start">
+      <Grid
+        mx="auto"
+        w="full"
+        maxW="7xl"
+        alignItems="center"
+        gap="16"
+        px={{ base: "6", lg: "14" }}
+        py={{ base: "12", lg: "16" }}
+        columns={{ lg: "2" }}
+      >
+        <Stack minW="0" alignItems="start">
           <Entrance delay={0}>
-            <h1 className="font-display text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-label min-[420px]:text-5xl sm:text-6xl">
+            {/* 2.6rem, the 420px step and the 1.02 leading sit off the type scale and its breakpoints. */}
+            <Box
+              as="h1"
+              color="base"
+              className="font-display text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-tight min-[420px]:text-5xl sm:text-6xl"
+            >
               Interfaces with a<br />
-              <span className="text-gradient">stellar finish</span>
-            </h1>
+              <Box as="span" className="text-gradient">stellar finish</Box>
+            </Box>
           </Entrance>
 
           <Entrance delay={0.08}>
-            <p className="mt-8 max-w-lg text-pretty text-base leading-relaxed text-label-muted">
+            <Text mt="8" maxW="lg" size="md" lineHeight="relaxed" color="muted" className="text-pretty">
               Accessible, themeable React components for crafting polished web apps and
               design systems. Server-first, built for the Next.js RSC
-            </p>
+            </Text>
           </Entrance>
 
           <Entrance delay={0.16}>
-            <div className="mt-10 flex flex-wrap items-center gap-2.5" role="group" aria-label="Try a brand color">
-              {swatches.map((swatch) => (
-                <button
-                  key={swatch.hex}
-                  type="button"
-                  aria-label={`Brand color ${swatch.name}`}
-                  aria-pressed={brand === swatch.hex}
-                  onClick={() => setBrand(swatch.hex)}
-                  className={`size-9 cursor-pointer rounded-full transition-all duration-200 hover:scale-115 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring ${
-                    brand === swatch.hex
-                      ? "scale-110 ring-2 ring-accent-ring ring-offset-2 ring-offset-surface"
-                      : "opacity-80 hover:opacity-100"
-                  }`}
-                  style={{ backgroundColor: swatch.hex }}
-                />
-              ))}
-              <label className="relative ml-1 flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-dashed border-stroke-base bg-surface/40 text-label-muted backdrop-blur transition-all duration-200 hover:scale-110 hover:text-label">
-                <span className="text-base leading-none">+</span>
-                <input
+            <Flex mt="10" wrap="wrap" alignItems="center" gap="2.5" role="group" aria-label="Try a brand color">
+              {swatches.map((swatch) => {
+                const selected = brand === swatch.hex;
+                return (
+                  <Box
+                    as="button"
+                    key={swatch.hex}
+                    type="button"
+                    aria-label={`Brand color ${swatch.name}`}
+                    aria-pressed={selected}
+                    onClick={() => setBrand(swatch.hex)}
+                    size="9"
+                    cursor="pointer"
+                    rounded="full"
+                    bg={swatch.hex}
+                    opacity={selected ? undefined : "0.8"}
+                    hover={selected ? undefined : { opacity: "1" }}
+                    // Scale, ring and focus outline have no props.
+                    className={`transition-all duration-200 hover:scale-115 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring ${
+                      selected ? "scale-110 ring-2 ring-accent-ring ring-offset-2 ring-offset-surface" : ""
+                    }`}
+                  />
+                );
+              })}
+              <Flex
+                as="label"
+                position="relative"
+                ml="1"
+                size="9"
+                cursor="pointer"
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+                rounded="full"
+                border="normal"
+                borderStyle="dashed"
+                borderColor="base"
+                color="muted"
+                hover={{ color: "base" }}
+                // A translucent surface, the blur and the scale have no props.
+                className="bg-surface/40 backdrop-blur transition-all duration-200 hover:scale-110"
+              >
+                <Text as="span" size="md" lineHeight="none">+</Text>
+                <Box
+                  as="input"
                   type="color"
                   value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBrand(e.target.value)}
                   aria-label="Pick a custom brand color"
-                  className="absolute inset-0 cursor-pointer opacity-0"
+                  position="absolute"
+                  inset="0"
+                  cursor="pointer"
+                  opacity="0"
                 />
-              </label>
-              <span className="ml-2 font-mono text-xs tabular-nums text-label-subtle">{brand}</span>
-            </div>
+              </Flex>
+              <Text as="span" ml="2" fontFamily="mono" size="xs" color="subtle" className="tabular-nums">
+                {brand}
+              </Text>
+            </Flex>
           </Entrance>
 
           <Entrance delay={0.24}>
-            <div className="mt-12 flex flex-wrap gap-4">
+            <Flex mt="12" wrap="wrap" gap="4">
               <Button as={Link} href="/docs" size="md" rounded="xl" rightIcon={<ArrowRight size={18} />}>
                 Get started
               </Button>
@@ -104,30 +157,41 @@ export function Hero() {
               >
                 Browse components
               </Button>
-            </div>
+            </Flex>
 
-            <div className="mt-6 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
-              <div className="shrink-0">
+            <Flex
+              mt="6"
+              direction={{ base: "column", sm: "row" }}
+              alignItems={{ base: "start", sm: "center" }}
+              gap={{ base: "2", sm: "3" }}
+            >
+              <Box shrink="0">
                 <CopyCommand command="npx astralis-cli create my-app" />
-              </div>
-              <span className="text-xs text-label-subtle sm:whitespace-nowrap">
+              </Box>
+              <Text as="span" size="xs" color="subtle" className="sm:whitespace-nowrap">
                 Scaffold your React project ·{" "}
-                <Link href="/docs/cli" className="underline underline-offset-2 hover:text-label-muted">
+                {/* A Box, not Link: Link takes no hover colour. The underline offset has no prop. */}
+                <Box as={Link} href="/docs/cli" hover={{ color: "muted" }} className="underline underline-offset-2">
                   How the CLI works
-                </Link>
-              </span>
-            </div>
+                </Box>
+              </Text>
+            </Flex>
           </Entrance>
-        </div>
+        </Stack>
 
         {/* Live composition: floats over the scene; every accent tracks the brand */}
+        {/*
+          * Not `<Box as={motion.div}>`: Box writes every prop into its dev-only
+          * data-astralis-props attribute, and `transition` differs between the
+          * server and a reduced-motion client, so hydration fails.
+          */}
         <motion.div
           className="relative lg:pl-6"
           initial={{ opacity: 0, y: 40, rotate: 1.5 }}
           animate={{ opacity: 1, y: 0, rotate: 0 }}
           transition={cardTransition}
         >
-          <div className="animate-float-slow">
+          <Box className="animate-float-slow">
             <Card variant="elevated" className="bg-raised/85 backdrop-blur-xl">
               <Card.Header extra={<Badge colorScheme="brand" variant="subtle">Live</Badge>}>
                 <Card.Title>Mission control</Card.Title>
@@ -167,21 +231,51 @@ export function Hero() {
                 </HStack>
               </Card.Footer>
             </Card>
-          </div>
+          </Box>
 
-          <div className="animate-float-slower absolute -left-8 -top-6 hidden lg:block">
-            <div className="rounded-2xl border border-stroke-base bg-raised/90 p-3 shadow-lg backdrop-blur">
+          {/*
+            * The float keyframes and the translucent, blurred surface have no props.
+            * `shadow-lg` stays a class: shadow="lg" is the library's token, which is
+            * far darker in dark mode than this soft Tailwind shadow.
+            */}
+          <Box
+            position="absolute"
+            left="-2rem"
+            top="-1.5rem"
+            display={{ base: "hidden", lg: "block" }}
+            className="animate-float-slower"
+          >
+            <Box rounded="2xl" border="normal" borderColor="base" p="3" className="bg-raised/90 shadow-lg backdrop-blur">
               <Tag colorScheme="brand" variant="solid" size="sm">Shipped ✦</Tag>
-            </div>
-          </div>
-          <div className="animate-float-slow absolute -bottom-8 -right-4 hidden lg:block" style={{ animationDelay: "1.6s" }}>
-            <div className="flex items-center gap-2.5 rounded-2xl border border-stroke-base bg-raised/90 px-4 py-3 shadow-lg backdrop-blur">
+            </Box>
+          </Box>
+          <Box
+            position="absolute"
+            bottom="-2rem"
+            right="-1rem"
+            display={{ base: "hidden", lg: "block" }}
+            className="animate-float-slow"
+            style={{ animationDelay: "1.6s" }}
+          >
+            <Flex
+              alignItems="center"
+              gap="2.5"
+              rounded="2xl"
+              border="normal"
+              borderColor="base"
+              px="4"
+              py="3"
+              className="bg-raised/90 shadow-lg backdrop-blur"
+            >
               <Avatar name="Nova Starling" size="xs" />
-              <span className="text-xs text-label-muted">Nova deployed <span className="font-medium text-accent-label">to production</span></span>
-            </div>
-          </div>
+              <Text as="span" size="xs" color="muted">
+                Nova deployed{" "}
+                <Text as="span" size="xs" weight="medium" color="brand-label">to production</Text>
+              </Text>
+            </Flex>
+          </Box>
         </motion.div>
-      </div>
-    </section>
+      </Grid>
+    </Flex>
   );
 }

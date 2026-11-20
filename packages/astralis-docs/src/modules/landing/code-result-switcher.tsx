@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Tabs, Text } from "astralis-ui";
+import { Box, Flex, Grid, Tabs, Text } from "astralis-ui";
 
 interface Panel {
   title: string;
@@ -18,6 +18,7 @@ export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
       rounded
       style={{ gap: "var(--astralis-spacing-6)" }}
     >
+      {/* Tabs.List takes no layout props. */}
       <Tabs.List aria-label="Examples" className="flex-wrap self-start">
         {panels.map((panel) => (
           <Tabs.Trigger key={panel.title} value={panel.title}>
@@ -30,15 +31,25 @@ export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
           no `contents` wrapper juggling `hidden` children to hold the layout. */}
       {panels.map((panel) => (
         <Tabs.Content key={panel.title} value={panel.title}>
-          <Text size="sm" color="muted" className="mb-4">
+          <Text size="sm" color="muted" mb="4">
             {panel.blurb}
           </Text>
-          <div className="grid gap-4 lg:grid-cols-2">
-            <div className="min-w-0 [&_figure]:h-full">{panel.code}</div>
-            <div className="preview-grid flex min-h-56 items-center justify-center rounded-xl border border-stroke-base p-8">
+          <Grid gap="4" columns={{ lg: "2" }}>
+            {/* Stretches the code block, which this file does not render, to the preview's height. */}
+            <Box minW="0" className="[&_figure]:h-full">{panel.code}</Box>
+            <Flex
+              minH="56"
+              alignItems="center"
+              justifyContent="center"
+              rounded="xl"
+              border="normal"
+              borderColor="base"
+              p="8"
+              className="preview-grid"
+            >
               {panel.preview}
-            </div>
-          </div>
+            </Flex>
+          </Grid>
         </Tabs.Content>
       ))}
     </Tabs>

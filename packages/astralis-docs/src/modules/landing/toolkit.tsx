@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Card, CardBody, Text } from "astralis-ui";
+import { Box, Card, CardBody, Flex, Grid, Stack, Text } from "astralis-ui";
 import { Bot, Bug, LayoutTemplate, MousePointerClick, Palette, TerminalSquare } from "lucide-react";
 import { Reveal } from "./reveal";
+import { SectionLead, SectionTitle } from "./section-title";
 
 export function Toolkit({ blocks }: { blocks: number }) {
   const tools = [
@@ -44,49 +45,61 @@ export function Toolkit({ blocks }: { blocks: number }) {
   ];
 
   return (
-    <section className="mx-auto max-w-screen-xl px-6 py-24 lg:px-12 lg:py-28">
+    <Box as="section" mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }} py={{ base: "24", lg: "28" }}>
       <Reveal>
-        <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
-          More than components
-        </h2>
-        <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
-          Everything around the library helps you go from idea to shipped page faster.
-        </p>
+        <SectionTitle>More than components</SectionTitle>
+        <SectionLead>Everything around the library helps you go from idea to shipped page faster.</SectionLead>
       </Reveal>
 
-      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <Grid mt="14" gap="5" columns={{ sm: "2", lg: "3" }}>
         {tools.map((tool, i) => (
           <Reveal key={tool.title} delay={i * 0.05} className="h-full">
-            <Link
+            <Box
+              as={Link}
               href={tool.href}
-              className="block h-full rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring"
+              display="block"
+              h="full"
+              rounded="3xl"
+              // A focus outline has no prop.
+              className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring"
             >
               <Card
                 variant="outline"
                 size="lg"
                 hoverable
-                className="h-full"
+                h="full"
+                // Card takes no radius or background prop.
                 style={{
                   borderRadius: "var(--astralis-border-radius-3xl)",
                   background: "var(--astralis-color-surface-subtle)",
                 }}
               >
-                <CardBody className="flex flex-col gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-xl bg-accent-subtle text-accent-label">
-                    <tool.icon size={18} aria-hidden="true" />
-                  </span>
-                  <h3 className="font-display mt-2 text-lg font-semibold tracking-tight text-label">
-                    {tool.title}
-                  </h3>
-                  <Text as="p" size="sm" color="muted" className="leading-relaxed">
-                    {tool.body}
-                  </Text>
+                <CardBody>
+                  <Stack gap="3">
+                    <Flex
+                      as="span"
+                      size="10"
+                      alignItems="center"
+                      justifyContent="center"
+                      rounded="xl"
+                      bg="brand-subtle"
+                      color="brand-label"
+                    >
+                      <tool.icon size={18} aria-hidden="true" />
+                    </Flex>
+                    <Text as="h3" mt="2" fontFamily="heading" size="lg" weight="semibold" letterSpacing="tight" color="base">
+                      {tool.title}
+                    </Text>
+                    <Text size="sm" color="muted" lineHeight="relaxed">
+                      {tool.body}
+                    </Text>
+                  </Stack>
                 </CardBody>
               </Card>
-            </Link>
+            </Box>
           </Reveal>
         ))}
-      </div>
-    </section>
+      </Grid>
+    </Box>
   );
 }

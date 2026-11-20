@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
-import { Stat } from "astralis-ui";
+import { Box, Grid, Stat } from "astralis-ui";
 import type { SiteStats } from "@/lib/site-stats";
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
@@ -47,9 +47,19 @@ export function StatsStrip({ stats }: { stats: SiteStats }) {
   ];
 
   return (
-    <section className="border-y border-stroke-base bg-surface-subtle/40">
-      <div className="mx-auto grid max-w-screen-xl grid-cols-2 gap-x-8 gap-y-10 px-6 py-16 md:grid-cols-4 lg:px-12 lg:py-20">
+    // A translucent surface has no prop.
+    <Box as="section" borderT="normal" borderB="normal" borderColor="base" className="bg-surface-subtle/40">
+      <Grid
+        mx="auto"
+        maxW="7xl"
+        columns={{ base: "2", md: "4" }}
+        columnGap="8"
+        rowGap="10"
+        px={{ base: "6", lg: "12" }}
+        py={{ base: "16", lg: "20" }}
+      >
         {numbers.map((item) => (
+          // Stat and its parts take no style props.
           <Stat
             key={item.label}
             align="center"
@@ -69,7 +79,7 @@ export function StatsStrip({ stats }: { stats: SiteStats }) {
             <Stat.Label>{item.label}</Stat.Label>
           </Stat>
         ))}
-      </div>
-    </section>
+      </Grid>
+    </Box>
   );
 }

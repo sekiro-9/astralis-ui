@@ -3,32 +3,41 @@
 import NextLink from "next/link";
 import {
   Marquee, Button, Badge, Tag, Avatar, Switch, Checkbox, ThemeToggle, Code, HStack, Link,
+  Box, Flex, Stack, Text,
 } from "astralis-ui";
 import { Reveal } from "./reveal";
+import { SectionLead } from "./section-title";
 
 /* Two opposing streams of real, rendered components. */
 export function Showcase({ components, version }: { components: number; version: string }) {
   return (
-    <section className="border-y border-stroke-base bg-surface-subtle/50 py-24 lg:py-28">
-      <div className="mx-auto max-w-screen-xl px-6 lg:px-12">
+    <Box
+      as="section"
+      borderT="normal"
+      borderB="normal"
+      borderColor="base"
+      py={{ base: "24", lg: "28" }}
+      // A translucent surface has no prop.
+      className="bg-surface-subtle/50"
+    >
+      <Box mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }}>
         <Reveal>
-          <div className="mb-14 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="font-display text-4xl font-semibold tracking-tight text-label">
+          <Flex mb="14" wrap="wrap" alignItems="end" justifyContent="between" gap="4">
+            <Box>
+              {/* Not SectionTitle: balancing this title would rewrap it on a phone. */}
+              <Text as="h2" fontFamily="heading" size="4xl" weight="semibold" letterSpacing="tight" color="base">
                 {components} components, all real
-              </h2>
-              <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
-                Nothing below is a screenshot. Hover to pause, then meet them in the docs.
-              </p>
-            </div>
-            <Link as={NextLink} href="/docs/components/button" variant="underline" className="text-sm font-medium">
+              </Text>
+              <SectionLead>Nothing below is a screenshot. Hover to pause, then meet them in the docs.</SectionLead>
+            </Box>
+            <Link as={NextLink} href="/docs/components/button" variant="underline" size="sm" weight="medium">
               Component docs →
             </Link>
-          </div>
+          </Flex>
         </Reveal>
-      </div>
+      </Box>
 
-      <div className="flex flex-col gap-6">
+      <Stack gap="6">
         <Marquee speed={38} gap="1.25rem" pauseOnHover gradient>
           <Marquee.Item><Button size="sm">Deploy</Button></Marquee.Item>
           <Marquee.Item><Tag colorScheme="purple" closable>Design</Tag></Marquee.Item>
@@ -62,7 +71,7 @@ export function Showcase({ components, version }: { components: number; version:
           <Marquee.Item><Button size="sm" variant="link">Read the changelog</Button></Marquee.Item>
           <Marquee.Item><Checkbox indeterminate size="sm">Select all</Checkbox></Marquee.Item>
         </Marquee>
-      </div>
-    </section>
+      </Stack>
+    </Box>
   );
 }

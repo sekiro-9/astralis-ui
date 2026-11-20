@@ -3,7 +3,9 @@ import path from "path";
 import { demos } from "@/modules/demos";
 import { CodeBlock } from "@/modules/docs/code-block";
 import { CodeResultSwitcher } from "./code-result-switcher";
+import { Box } from "astralis-ui";
 import { Reveal } from "./reveal";
+import { SectionLead, SectionTitle } from "./section-title";
 
 const examples = [
   { key: "field-error", title: "Forms", blurb: "One invalid flag restyles the field and swaps the message." },
@@ -29,20 +31,16 @@ export function CodeResult() {
   });
 
   return (
-    <section className="mx-auto max-w-screen-xl px-6 py-28 lg:px-12 lg:py-36">
+    <Box as="section" mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }} py={{ base: "28", lg: "36" }}>
       <Reveal>
-        <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
-          The code is the demo
-        </h2>
-        <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
-          Each snippet is the exact source of the preview beside it, as on every docs page.
-        </p>
+        <SectionTitle>The code is the demo</SectionTitle>
+        <SectionLead>Each snippet is the exact source of the preview beside it, as on every docs page.</SectionLead>
       </Reveal>
       <Reveal delay={0.1}>
-        <div className="mt-12">
+        <Box mt="12">
           <CodeResultSwitcher panels={panels} />
-        </div>
+        </Box>
       </Reveal>
-    </section>
+    </Box>
   );
 }

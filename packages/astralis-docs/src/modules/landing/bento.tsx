@@ -8,12 +8,17 @@ import {
   DataListItem,
   DataListLabel,
   DataListValue,
+  Box,
+  Flex,
+  Grid,
+  Stack,
   Link,
 } from "astralis-ui";
 import { CodeBlock } from "@/modules/docs/code-block";
 import type { SiteStats } from "@/lib/site-stats";
 import { BentoInteractive, BentoResponsiveCell, BentoSchemeCell } from "./bento-cells";
 import { Reveal } from "./reveal";
+import { SectionLead, SectionTitle } from "./section-title";
 
 /**
  * reports/bench-hydration.md, final table: gzipped First Load JS of one bench
@@ -65,6 +70,7 @@ function Cell({
       <CardHeader>
         {/* `style`, not a class: it has to beat Title's own text-base. */}
         <CardTitle style={{ fontSize: "var(--astralis-font-size-sm)" }}>{title}</CardTitle>
+        {/* Card's parts take no style props. */}
         <CardDescription className="mt-1">{body}</CardDescription>
       </CardHeader>
       {children && <CardBody className="flex min-h-0 flex-1 items-center">{children}</CardBody>}
@@ -75,17 +81,13 @@ function Cell({
 export function Bento({ stats }: { stats: SiteStats }) {
   // Live marketing grid: each cell is a real component painting from tokens.
   return (
-    <section className="mx-auto max-w-screen-xl px-6 py-24 lg:px-12 lg:py-28">
+    <Box as="section" mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }} py={{ base: "24", lg: "28" }}>
       <Reveal>
-        <h2 className="font-display text-balance text-4xl font-semibold tracking-tight text-label">
-          Built on tokens, not guesses
-        </h2>
-        <p className="mt-4 text-balance text-lg text-label-muted lg:whitespace-nowrap">
-          Every cell below is live: the same components and tokens you’d ship.
-        </p>
+        <SectionTitle>Built on tokens, not guesses</SectionTitle>
+        <SectionLead>Every cell below is live: the same components and tokens you’d ship.</SectionLead>
       </Reveal>
 
-      <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <Grid mt="14" gap="5" columns={{ sm: "2", lg: "4" }}>
         <Cell
           title="Dark mode built in"
           body="Semantic tokens flip with one class on the root. Flip it now:"
@@ -106,9 +108,10 @@ export function Bento({ stats }: { stats: SiteStats }) {
           title="Zero build step"
           body="Precompiled CSS. No plugins, no config: your bundler just serves a stylesheet."
         >
-          <div className="w-full font-mono text-[13px]">
+          {/* 13px sits off the type scale. */}
+          <Box w="full" className="font-mono text-[13px]">
             <CodeBlock code={`pnpm add astralis-ui`} lang="bash" />
-          </div>
+          </Box>
         </Cell>
 
         <Cell
@@ -125,24 +128,28 @@ export function Bento({ stats }: { stats: SiteStats }) {
           className="lg:col-span-2"
         >
           {/* Static markup on purpose: the cell about shipping no JS ships none. */}
-          <figure className="flex w-full flex-col gap-2 font-mono text-[12px]">
+          {/* 12px and 11px sit off the type scale, so the figure's type is set with classes. */}
+          <Stack as="figure" w="full" gap="2" className="font-mono text-[12px]">
             {BENCH.map((row) => (
-              <div key={row.name} className="flex items-center gap-2">
-                <span className="w-24 shrink-0 text-label-muted">{row.name}</span>
-                <span
-                  className={`h-2.5 rounded-full ${row.self ? "bg-brand-solid" : "bg-surface-muted"}`}
-                  style={{ width: `${(row.kb / BENCH_MAX) * 100}%` }}
+              <Flex key={row.name} alignItems="center" gap="2">
+                <Box as="span" w="24" shrink="0" color="muted">{row.name}</Box>
+                <Box
+                  as="span"
+                  h="2.5"
+                  rounded="full"
+                  bg={row.self ? "brand-solid" : "muted"}
+                  w={`${(row.kb / BENCH_MAX) * 100}%`}
                 />
-                <span className="shrink-0 text-label-muted">{row.kb.toFixed(1)} kB</span>
-              </div>
+                <Box as="span" shrink="0" color="muted">{row.kb.toFixed(1)} kB</Box>
+              </Flex>
             ))}
-            <figcaption className="mt-1 font-sans text-[11px] leading-snug text-label-subtle">
+            <Box as="figcaption" mt="1" color="subtle" className="font-sans text-[11px] leading-snug">
               Gzipped, over bare Next.js 16.3 and React 19.2, production build.{" "}
               <Link href={BENCH_URL} external colorScheme="gray" variant="underline">
                 Method and pages
               </Link>
-            </figcaption>
-          </figure>
+            </Box>
+          </Stack>
         </Cell>
 
         <Cell
@@ -152,7 +159,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
         >
           {/* Label/value pairs: DataList is exactly this, and it renders the
               proper <dl>/<dt>/<dd> the hand-rolled <ul> never did. */}
-          <DataList size="sm" className="w-full font-mono">
+          <DataList size="sm" w="full" className="font-mono">
             {tokenRows.map((row) => (
               <DataListItem
                 key={row.token}
@@ -164,20 +171,14 @@ export function Bento({ stats }: { stats: SiteStats }) {
                   {row.token}
                 </DataListLabel>
                 <DataListValue className="flex items-center gap-1.5" style={{ flex: "none" }}>
-                  <span
-                    className="size-3.5 rounded-full border border-stroke-base"
-                    style={{ backgroundColor: row.light }}
-                  />
-                  <span
-                    className="size-3.5 rounded-full border border-stroke-base"
-                    style={{ backgroundColor: row.dark }}
-                  />
+                  <Box as="span" size="3.5" rounded="full" border="normal" borderColor="base" bg={row.light} />
+                  <Box as="span" size="3.5" rounded="full" border="normal" borderColor="base" bg={row.dark} />
                 </DataListValue>
               </DataListItem>
             ))}
           </DataList>
         </Cell>
-      </div>
-    </section>
+      </Grid>
+    </Box>
   );
 }
