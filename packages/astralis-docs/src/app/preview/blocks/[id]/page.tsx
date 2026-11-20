@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Box, VStack } from "astralis-ui";
 import { blocks, type BlockId } from "astralis-blocks";
 
 /**
@@ -32,10 +33,10 @@ export default async function BlockPreviewPage({
   // to zero once the block outgrows the viewport, so tall blocks are unaffected.
   const placement =
     entry.meta.category === "navbar"
-      ? "mb-auto"
+      ? { mb: "auto" as const }
       : entry.meta.category === "footer"
-        ? "mt-auto"
-        : "my-auto";
+        ? { mt: "auto" as const }
+        : { my: "auto" as const };
 
   return (
     <>
@@ -57,11 +58,11 @@ export default async function BlockPreviewPage({
         block outgrows the viewport, whereas centred flex content overflows in
         both directions and clips its own top out of reach.
       */}
-      <div className="flex min-h-screen flex-col">
-        <div data-block-frame className={placement}>
+      <VStack minH="screen">
+        <Box data-block-frame {...placement}>
           <Block />
-        </div>
-      </div>
+        </Box>
+      </VStack>
     </>
   );
 }

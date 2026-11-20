@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Box } from "astralis-ui";
 
 /**
  * The canvas every thumbnail renders into, before being scaled to fit its card.
@@ -91,19 +92,28 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
   }, []);
 
   return (
-    <div
+    <Box
       ref={wrapperRef}
-      className="relative overflow-hidden bg-surface"
+      position="relative"
+      overflow="hidden"
+      bg="base"
+      // The frame's own ratio is not one of the aspectRatio tokens.
       style={{ aspectRatio: `${FRAME_WIDTH} / ${FRAME_HEIGHT}` }}
     >
-      <iframe
+      <Box
+        as="iframe"
         ref={frameRef}
         src={`/block-thumbs/${id}.html`}
         title={`${name} preview`}
         loading={eager ? "eager" : "lazy"}
         tabIndex={-1}
         scrolling="no"
-        className="pointer-events-none absolute left-0 top-0 origin-top-left border-0"
+        pointerEvents="none"
+        position="absolute"
+        left="0"
+        top="0"
+        // No prop sets a transform origin or removes a border.
+        className="origin-top-left border-0"
         style={{
           width: FRAME_WIDTH,
           height: FRAME_HEIGHT,
@@ -115,6 +125,6 @@ export function BlockThumbnail({ id, name, eager = false }: BlockThumbnailProps)
           visibility: scale && loaded ? "visible" : "hidden",
         }}
       />
-    </div>
+    </Box>
   );
 }

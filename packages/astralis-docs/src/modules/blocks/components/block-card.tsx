@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { Box, Card, Tag } from "astralis-ui";
+import { Box, Card, Stack, Tag } from "astralis-ui";
 import type { BlockSummary } from "@/lib/blocks";
 import { BlockThumbnail } from "./block-thumbnail";
 
@@ -23,30 +23,36 @@ interface BlockCardProps {
  */
 export function BlockCard({ block, eager, hidden }: BlockCardProps) {
   return (
-    <NextLink
+    <Box
+      as={NextLink}
       href={`/blocks/${block.id}`}
       hidden={hidden}
       // `hidden` also takes the card out of the tab order and the a11y tree,
       // so a filtered-out block is not reachable by keyboard.
-      className="group rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring"
+      rounded="lg"
+      // Box has no focus state.
+      className="group focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring"
     >
       {/* Card.Root has no padding of its own (it lives on Body), so the
           thumbnail sits flush to the clipped edges. */}
-      <Card variant="outline" size="sm" hoverable className="h-full">
+      <Card variant="outline" size="sm" hoverable h="full">
         <Box borderB="normal" borderColor="subtle">
           <BlockThumbnail id={block.id} name={block.name} eager={eager} />
         </Box>
 
         {/* Name and id only: the description lives on the detail page. A grid
             of thumbnails is scanned visually, and two lines of prose per tile
-            competed with the previews rather than adding to them. */}
-        <Card.Body className="flex flex-col items-start gap-2">
-          <Card.Title style={{ fontSize: "var(--astralis-font-size-sm)" }}>{block.name}</Card.Title>
-          <Tag size="sm" variant="subtle" colorScheme="gray">
-            {block.id}
-          </Tag>
+            competed with the previews rather than adding to them. Card.Body
+            takes no layout props, so the column is a Stack inside it. */}
+        <Card.Body>
+          <Stack alignItems="start" gap="2">
+            <Card.Title style={{ fontSize: "var(--astralis-font-size-sm)" }}>{block.name}</Card.Title>
+            <Tag size="sm" variant="subtle" colorScheme="gray">
+              {block.id}
+            </Tag>
+          </Stack>
         </Card.Body>
       </Card>
-    </NextLink>
+    </Box>
   );
 }

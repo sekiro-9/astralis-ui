@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Monitor, Tablet, Smartphone, ExternalLink } from "lucide-react";
-import { Button, Icon, Tabs } from "astralis-ui";
+import { Box, Button, Flex, Icon, Tabs } from "astralis-ui";
 
 const VIEWPORTS = [
   { id: "desktop", label: "Desktop", width: null, icon: Monitor },
@@ -100,13 +100,13 @@ export function BlockWorkbench({ id, name, code }: BlockWorkbenchProps) {
       size="sm"
       style={{ gap: "var(--astralis-spacing-3)" }}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <Flex wrap="wrap" alignItems="center" justifyContent="between" gap="3">
         <Tabs.List aria-label="Block view">
           <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
           <Tabs.Trigger value="code">Code</Tabs.Trigger>
         </Tabs.List>
 
-        <div className="flex items-center gap-1">
+        <Flex alignItems="center" gap="1">
           {VIEWPORTS.map((entry) => (
             <Button
               key={entry.id}
@@ -134,19 +134,33 @@ export function BlockWorkbench({ id, name, code }: BlockWorkbenchProps) {
           >
             <Icon as={ExternalLink} size="xs" />
           </Button>
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
       <Tabs.Content value="preview">
-        <div className="overflow-hidden rounded-xl border border-stroke-base bg-surface-subtle p-0 sm:p-4">
-          <iframe
+        <Box
+          overflow="hidden"
+          rounded="xl"
+          border="normal"
+          borderColor="base"
+          bg="subtle"
+          p={{ base: "0", sm: "4" }}
+        >
+          <Box
+            as="iframe"
             ref={frameRef}
             src={`/preview/blocks/${id}`}
             title={`${name} preview`}
-            className="mx-auto block w-full border-0 bg-surface transition-[width] duration-300 sm:rounded-lg"
+            display="block"
+            mx="auto"
+            w="full"
+            bg="base"
+            rounded={{ sm: "lg" }}
+            // No prop removes a border or sets a transition; the width eases between viewports.
+            className="border-0 transition-[width] duration-300"
             style={{ width: width ?? "100%", maxWidth: "100%", height }}
           />
-        </div>
+        </Box>
       </Tabs.Content>
 
       <Tabs.Content value="code">{code}</Tabs.Content>

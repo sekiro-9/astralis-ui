@@ -16,7 +16,9 @@ export function BackLink({ href, children }: { href: string; children: React.Rea
       href={href}
       variant="plain"
       colorScheme="gray"
-      className="flex w-fit items-center gap-1"
+      w="fit"
+      // Link takes no display or flex props.
+      className="flex items-center gap-1"
     >
       <Icon size="xs">
         <svg
