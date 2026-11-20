@@ -6,7 +6,7 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
-## 0.5.1 (2026-11-19)
+## 0.5.1 (2026-11-20)
 
 Uses astralis-ui 0.9.0, whose specification adds the animation props, so
 `astralis validate` checks `animation`, `reveal`, `animationDuration` and
