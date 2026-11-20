@@ -17,9 +17,6 @@ node_modules/
 # Internal audit/roadmap reports
 reports/
 
-# Scratch app used for side-by-side comparisons against Chakra
-chakra-app/
-
 # Generated from the blocks on every dev/build — thumbnails, and the public
 # block registry that `astralis add` fetches from.
 packages/astralis-docs/public/block-thumbs/

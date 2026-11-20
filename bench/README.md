@@ -24,8 +24,8 @@ real server-component boundaries should ship (close to) only the Menu's JS.
 - `pages/` — committed page sources, one per library flavor.
 - `measure.mjs` — committed. Runs `next build` in each app under `apps/` and
   extracts the route-table First Load JS numbers.
-- `apps/<lib>/` — gitignored generated Next apps (same policy as the root
-  `chakra-app/`): heavy competitor dependency trees never enter the repo.
+- `apps/<lib>/` — gitignored generated Next apps: heavy competitor
+  dependency trees never enter the repo.
   Each app's `src/app/page.tsx` is a copy of `pages/<lib>.tsx`.
 - `apps/baseline/` — a bare Next app with no component library: the framework
   floor. `apps/astralis` also carries an `/empty` route (layout + provider,
