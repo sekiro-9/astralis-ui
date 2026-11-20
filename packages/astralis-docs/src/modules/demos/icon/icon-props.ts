@@ -17,18 +17,15 @@ export const iconProps: PropRow[] = [
     type: `"xs" | "sm" | "md" | "lg" | "xl" | number`,
     default: `"md"`,
     description: "A size token, or an explicit size in pixels.",
-    control: { kind: "chips", options: ["xs", "sm", "md", "lg", "xl"] },
   },
   {
     prop: "color",
     type: "text color token | CSS color",
     description: "Omit it and the icon inherits the surrounding text color through currentColor.",
-    control: { kind: "chips", options: ["base", "muted", "subtle"] },
   },
   {
     prop: "strokeWidth",
     type: "number",
     description: "Passed to icon components drawn with strokes. Has no effect on raw svg children.",
-    control: { kind: "omit" },
   },
 ];

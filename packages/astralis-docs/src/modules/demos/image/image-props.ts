@@ -11,7 +11,6 @@ export const imageProps: PropRow[] = [
     prop: "aspectRatio",
     type: `"square" | "video" | "portrait" | "wide" | CSS ratio`,
     description: `Locks the frame to 1/1, 16/9, 3/4, 21/9, or any CSS ratio such as "4/3".`,
-    control: { kind: "chips", options: ["square", "video", "portrait", "wide"] },
   },
   {
     prop: "objectFit",
@@ -73,7 +72,6 @@ export const imageProps: PropRow[] = [
     prop: "ariaLabel",
     type: "string",
     description: "aria-label for the img element.",
-    control: { kind: "omit" },
   },
 ];
 

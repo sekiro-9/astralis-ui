@@ -21,7 +21,6 @@ export const codeBlockProps: PropRow[] = [
     prop: "code",
     type: "string",
     description: "The source. Code renders it when given no children, and CopyTrigger copies it.",
-    control: { kind: "omit" },
   },
 ];
 

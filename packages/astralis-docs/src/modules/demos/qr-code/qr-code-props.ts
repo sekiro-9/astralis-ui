@@ -6,7 +6,6 @@ export const qrCodeProps: PropRow[] = [
     prop: "value",
     type: "string",
     description: "The text or URL to encode. Required.",
-    control: { kind: "omit" },
   },
   {
     prop: "size",
@@ -18,7 +17,6 @@ export const qrCodeProps: PropRow[] = [
     prop: "pixelSize",
     type: "number",
     description: "Explicit size in pixels, overriding the preset.",
-    control: { kind: "omit" },
   },
   {
     prop: "errorLevel",
@@ -60,6 +58,5 @@ export const qrCodeProps: PropRow[] = [
     type: "string",
     default: `"qrcode"`,
     description: "File name for the download, without the extension.",
-    control: { kind: "omit" },
   },
 ];

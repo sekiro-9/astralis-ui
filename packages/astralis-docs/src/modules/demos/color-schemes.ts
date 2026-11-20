@@ -1,7 +1,7 @@
 import { COLOR_SCHEMES } from "astralis-ui/color-schemes";
 
 /**
- * The `colorScheme` palette for props tables and (later) playground controls.
+ * The `colorScheme` palette for props tables.
  *
  * Imported from the library's own `COLOR_SCHEMES`, not copied. Six props
  * modules each carried their own hand-written list and five had gone stale at
@@ -19,9 +19,7 @@ export type { ColorScheme } from "astralis-ui/color-schemes";
 
 /**
  * What a props table shows for a `colorScheme` row. Prose rather than the full
- * union: fifteen quoted literals in a table cell is unreadable, and the
- * playground will take its options from COLOR_SCHEMES itself, not from this
- * string. The count is derived, so a table can never claim a number it isn't
- * listing.
+ * union: fifteen quoted literals in a table cell is unreadable. The count is
+ * derived, so a table can never claim a number it isn't listing.
  */
 export const COLOR_SCHEME_TYPE = `all ${COLOR_SCHEMES.length} schemes`;

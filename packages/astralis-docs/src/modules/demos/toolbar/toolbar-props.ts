@@ -6,7 +6,6 @@ export const toolbarProps: PropRow[] = [
     prop: "label",
     type: "string",
     description: "Accessible name, set as aria-label. A toolbar without one is just a row of buttons.",
-    control: { kind: "omit" },
   },
   {
     prop: "orientation",

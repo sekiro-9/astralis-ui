@@ -6,7 +6,6 @@ export const fileUploadProps: PropRow[] = [
     prop: "accept",
     type: "string",
     description: `Native accept filter, such as "image/*,.pdf". The picker enforces it.`,
-    control: { kind: "omit" },
   },
   {
     prop: "multiple",
@@ -18,13 +17,11 @@ export const fileUploadProps: PropRow[] = [
     prop: "maxFiles",
     type: "number",
     description: "Cap on the number of kept files when multiple is set. Picks past it are rejected.",
-    control: { kind: "omit" },
   },
   {
     prop: "maxSize",
     type: "number",
     description: "Per-file size cap in bytes. Larger picks are rejected.",
-    control: { kind: "omit" },
   },
   {
     prop: "onFilesChange",

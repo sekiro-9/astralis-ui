@@ -53,7 +53,7 @@ links to the issues on GitHub.
 | `dev` | Generates block thumbnails, the public registry and the search index, then starts `next dev` |
 | `build` | The same generation, then `next build` |
 | `start` | Serves a production build |
-| `test` | Vitest over the site's pure logic: playground codegen, theme-builder seeds, the markdown twins, the landing numbers, and how the Issues page reads GitHub |
+| `test` | Vitest over the site's pure logic: theme-builder seeds, the markdown twins, the landing numbers, and how the Issues page reads GitHub |
 | `lint` | ESLint (Next's core-web-vitals and TypeScript configs) |
 | `gen:thumbs` | Server-renders every block into a standalone HTML thumbnail in `public/block-thumbs/` |
 | `gen:registry` | Copies the block registry from `astralis-blocks` into `public/r/` |
@@ -82,7 +82,6 @@ src/
                           links and llms.txt all read it
     docs-markdown.ts      MDX to plain markdown for the .md routes and llms files
     theme-builder.ts      the builder's presets, exports and seed sharing
-    playground/           prop controls and code generation for Playground tabs
     issues/               reading GitHub: the list's filters and search, a
                           report's snapshot out of its issue, the fetching
                           (server-only), and the repro.tsx check

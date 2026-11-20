@@ -7,7 +7,6 @@ export const copyButtonProps: PropRow[] = [
     prop: "value",
     type: "string",
     description: "The text written to the clipboard. Required.",
-    control: { kind: "omit" },
   },
   {
     prop: "children",

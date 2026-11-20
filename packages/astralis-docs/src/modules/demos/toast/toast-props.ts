@@ -17,7 +17,7 @@ export const toasterProps: PropRow[] = [
   },
 ];
 
-/** The options object `toast()` takes; not a component, so no playground. */
+/** The options object `toast()` takes. */
 export const toastOptionsProps: PropRow[] = [
   {
     prop: "title",

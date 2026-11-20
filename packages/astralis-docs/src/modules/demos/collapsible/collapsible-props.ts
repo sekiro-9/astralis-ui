@@ -12,7 +12,6 @@ export const collapsibleProps: PropRow[] = [
     prop: "name",
     type: "string",
     description: "Collapsibles sharing a name form a native exclusive group, where opening one closes the others.",
-    control: { kind: "omit" },
   },
 ];
 

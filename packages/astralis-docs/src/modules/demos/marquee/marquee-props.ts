@@ -49,7 +49,6 @@ export const marqueeProps: PropRow[] = [
     type: "string",
     default: "page background",
     description: "CSS color the edges fade into.",
-    control: { kind: "omit" },
   },
   {
     prop: "gradientWidth",
@@ -62,7 +61,6 @@ export const marqueeProps: PropRow[] = [
     type: "number",
     default: "0",
     description: "Loops before the strip stops. 0 loops forever.",
-    control: { kind: "omit" },
   },
 ];
 

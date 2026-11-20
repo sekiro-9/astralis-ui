@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * Tests for the docs site's pure logic — the playground's control derivation
- * and code generation.
+ * Tests for the docs site's pure logic: the navigation, the generated
+ * markdown, the props tables and the Issues page helpers.
  *
  * `node` environment on purpose: these modules are deliberately React-free, and
  * keeping them that way is what makes them cheap to test. If a test ever needs

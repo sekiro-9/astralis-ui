@@ -6,13 +6,10 @@ import { Tabs } from "astralis-ui";
 interface PreviewTabsProps {
   preview: ReactNode;
   code: ReactNode;
-  /** Live prop editor. Omitted for demos with no playground entry. The
-      trigger is then absent entirely rather than rendered empty. */
-  playground?: ReactNode;
   align?: "center" | "start";
 }
 
-export function PreviewTabs({ preview, code, playground, align = "center" }: PreviewTabsProps) {
+export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProps) {
   return (
     /* keepMounted: both panels stay mounted (hidden) so demo state survives a
        tab switch (the reason this was hand-rolled before Tabs had the prop). */
@@ -30,7 +27,6 @@ export function PreviewTabs({ preview, code, playground, align = "center" }: Pre
       <Tabs.List aria-label="Demo view" className="self-start">
         <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
         <Tabs.Trigger value="code">Code</Tabs.Trigger>
-        {playground && <Tabs.Trigger value="playground">Playground</Tabs.Trigger>}
       </Tabs.List>
 
       <Tabs.Content value="preview">
@@ -44,8 +40,6 @@ export function PreviewTabs({ preview, code, playground, align = "center" }: Pre
       </Tabs.Content>
 
       <Tabs.Content value="code">{code}</Tabs.Content>
-
-      {playground && <Tabs.Content value="playground">{playground}</Tabs.Content>}
     </Tabs>
   );
 }

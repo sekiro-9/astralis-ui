@@ -6,7 +6,6 @@ export const highlightProps: PropRow[] = [
     prop: "children",
     type: "string",
     description: "The plain text to scan. Required.",
-    control: { kind: "omit" },
   },
   {
     prop: "query",
@@ -29,6 +28,5 @@ export const highlightProps: PropRow[] = [
     prop: "markClassName",
     type: "string",
     description: "Extra class for each mark element.",
-    control: { kind: "omit" },
   },
 ];
