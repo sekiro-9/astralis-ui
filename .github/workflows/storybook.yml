@@ -38,6 +38,11 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Storybook's Vite build shares the library's config, whose declaration
+      # roll-up reads dist/index.d.ts, so the library is built first.
+      - name: Build library
+        run: pnpm --filter astralis-ui build
+
       - name: Build Storybook
         run: pnpm --filter astralis-ui build-storybook
 
