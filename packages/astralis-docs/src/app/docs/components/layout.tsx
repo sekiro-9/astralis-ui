@@ -1,10 +1,13 @@
+import path from "node:path";
 import { Flex } from "astralis-ui";
 import spec from "astralis-ui/system-spec.json";
 import { ClientTierBadge } from "@/modules/docs/client-tier-badge";
+import { StorybookLink } from "@/modules/docs/storybook-link";
+import { storybookLinks } from "@/lib/storybook";
 
 /**
- * Shared layout for every component page: injects the client/server badge in
- * one place. The slug→tier map is computed here (server) from the
+ * Shared layout for every component page: injects the client/server badge
+ * and the link to the component's Storybook page in one place. The slug→tier map is computed here (server) from the
  * build-emitted system spec, the same artifact `astralis validate` and the
  * MCP validate_code tool read, so the badge can't drift from what ships.
  * Only this tiny map crosses to the client; the active segment is read
@@ -24,10 +27,14 @@ for (const [name, entry] of Object.entries(components)) {
 // The Toast page documents the Toaster component.
 if (components.Toaster?.client) slugTiers.toast = components.Toaster.client;
 
+/** Docs slug to that component's page in the published Storybook, read from the library's stories. */
+const storybook = storybookLinks(path.join(process.cwd(), "..", "astralis-ui", "src", "components"));
+
 export default function ComponentsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Flex justifyContent="end" pt="4">
+      <Flex justifyContent="end" alignItems="center" gap="4" pt="4">
+        <StorybookLink links={storybook} />
         <ClientTierBadge tiers={slugTiers} />
       </Flex>
       {children}
