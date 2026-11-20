@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { Flex, Stack, Text } from "astralis-ui";
+import { NavGroupLabel } from "./nav-item";
 
 interface TocEntry {
   id: string;
@@ -66,31 +68,37 @@ export function Toc() {
   if (entries.length === 0) return null;
 
   return (
-    <nav aria-label="On this page" className="text-sm">
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">
-        On this page
-      </p>
-      <ul className="flex flex-col border-l border-stroke-base">
+    // Text, not a bare nav: the label's off-scale size keeps the line height it inherits from here.
+    <Text as="nav" size="sm" aria-label="On this page">
+      <NavGroupLabel mb="3">On this page</NavGroupLabel>
+      <Stack as="ul" borderL="normal" borderColor="base">
         {entries.map((entry) => {
           const active = entry.id === activeId;
           return (
             <li key={entry.id}>
-              <a
+              {/* Pulled 1px left so its own border lies over the list's rail. */}
+              <Flex
+                as="a"
                 href={`#${entry.id}`}
-                className={`-ml-px block border-l py-1 pr-2 transition-colors ${
-                  entry.level === 3 ? "pl-7" : "pl-4"
-                } ${
-                  active
-                    ? "border-accent font-medium text-accent-label"
-                    : "border-transparent text-label-muted hover:text-label"
-                }`}
+                ml="-1px"
+                borderL="normal"
+                // No borderColor token names the accent's solid role; "brand" is a step lighter.
+                borderColor={active ? "var(--astralis-color-accent-solid)" : "transparent"}
+                py="1"
+                pr="2"
+                pl={entry.level === 3 ? "7" : "4"}
+                color={active ? "brand-label" : "muted"}
+                hover={active ? undefined : { color: "base" }}
+                className="transition-colors"
               >
-                {entry.text}
-              </a>
+                <Text as="span" size="sm" weight={active ? "medium" : "normal"}>
+                  {entry.text}
+                </Text>
+              </Flex>
             </li>
           );
         })}
-      </ul>
-    </nav>
+      </Stack>
+    </Text>
   );
 }

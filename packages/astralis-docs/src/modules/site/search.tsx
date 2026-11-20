@@ -12,7 +12,21 @@ import {
   type ReactNode,
 } from "react";
 import { Search as SearchIcon } from "lucide-react";
-import { Button, Highlight, HStack, Icon, Input, Kbd, Modal, ScrollArea, Text } from "astralis-ui";
+import {
+  Box,
+  Button,
+  Flex,
+  Highlight,
+  HStack,
+  Icon,
+  Input,
+  Kbd,
+  Modal,
+  ScrollArea,
+  Stack,
+  Text,
+  VisuallyHidden,
+} from "astralis-ui";
 import { navigation } from "@/lib/navigation";
 
 /*
@@ -158,17 +172,21 @@ export function Search() {
           size="sm"
           aria-label="Search the docs"
           aria-keyshortcuts={apple ? "Meta+K" : "Control+K"}
+          // Kbd, Button and Text take no display prop, and Button no justifyContent, so those stay classes.
           rightIcon={
             <Kbd size="sm" className="hidden md:inline-flex">
               {apple ? "⌘K" : "Ctrl K"}
             </Kbd>
           }
-          className="justify-between md:w-56"
+          w={{ md: "56" }}
+          className="justify-between"
         >
-          <span className="flex items-center gap-2">
+          <Flex as="span" alignItems="center" gap="2">
             <Icon as={SearchIcon} size={14} />
-            <span className="hidden text-xs font-normal text-label-muted sm:inline">Search docs</span>
-          </span>
+            <Text as="span" size="xs" weight="normal" color="muted" className="hidden sm:inline">
+              Search docs
+            </Text>
+          </Flex>
         </Button>
       </Modal.Trigger>
 
@@ -250,7 +268,7 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
     <>
       <Modal.Title className="sr-only">Search the docs</Modal.Title>
 
-      <div className="border-b border-stroke-base p-3">
+      <Box borderB="normal" borderColor="base" p="3">
         <Input.Search
           value={query}
           onChange={(event) => search(event.target.value)}
@@ -265,17 +283,19 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
           autoComplete="off"
           spellCheck={false}
         />
-      </div>
+      </Box>
 
       <ScrollArea tabIndex={-1} style={{ maxHeight: "min(60vh, 32rem)" }}>
         {message && (
-          <Text size="sm" color="muted" className="px-5 py-8 text-center">
-            {message}
-          </Text>
+          <Box px="5" py="8">
+            <Text size="sm" color="muted" align="center">
+              {message}
+            </Text>
+          </Box>
         )}
 
         {hits.length > 0 && (
-          <ul id={listId} role="listbox" aria-label="Results" className="flex flex-col gap-0.5 p-2">
+          <Stack as="ul" id={listId} role="listbox" aria-label="Results" gap="0.5" p="2">
             {hits.map((hit, index) => (
               <li
                 key={hit.id}
@@ -284,23 +304,32 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
                 aria-selected={index === active}
                 onMouseMove={() => setActive(index)}
               >
-                <NextLink
+                <Stack
+                  as={NextLink}
                   href={hit.href}
                   tabIndex={-1}
                   onClick={onNavigate}
-                  className={`flex flex-col gap-1 rounded-lg px-3 py-2.5 transition-colors ${
-                    index === active ? "bg-accent-subtle" : ""
-                  }`}
+                  gap="1"
+                  rounded="lg"
+                  px="3"
+                  py="2.5"
+                  bg={index === active ? "brand-subtle" : undefined}
+                  className="transition-colors"
                 >
-                  <span className="flex items-baseline gap-2">
+                  <Flex as="span" alignItems="baseline" gap="2">
                     <Text as="span" size="sm" weight="medium">
                       {hit.title}
-                      {hit.heading && <span className="text-label-muted"> › {hit.heading}</span>}
+                      {hit.heading && (
+                        <Text as="span" size="sm" weight="medium" color="muted">
+                          {" "}
+                          › {hit.heading}
+                        </Text>
+                      )}
                     </Text>
-                    <Text as="span" size="xs" color="subtle" className="ml-auto shrink-0">
+                    <Text as="span" size="xs" color="subtle" ml="auto" shrink="0">
                       {hit.section}
                     </Text>
-                  </span>
+                  </Flex>
                   <Text as="span" size="xs" color="muted" lineClamp="2">
                     {hit.terms.length > 0 ? (
                       <Highlight query={hit.terms}>{hit.excerpt}</Highlight>
@@ -308,27 +337,30 @@ function SearchPanel({ onNavigate }: { onNavigate: () => void }) {
                       hit.excerpt
                     )}
                   </Text>
-                </NextLink>
+                </Stack>
               </li>
             ))}
-          </ul>
+          </Stack>
         )}
       </ScrollArea>
 
-      <p aria-live="polite" className="sr-only">
+      <VisuallyHidden aria-live="polite">
         {status === "ready" ? `${hits.length} result${hits.length === 1 ? "" : "s"}` : ""}
-      </p>
+      </VisuallyHidden>
 
-      <HStack gap="4" className="border-t border-stroke-base px-4 py-2.5 text-xs text-label-subtle">
+      <HStack gap="4" borderT="normal" borderColor="base" px="4" py="2.5" color="subtle">
         <HStack gap="1.5">
           <Kbd size="sm">↑</Kbd>
-          <Kbd size="sm">↓</Kbd> to move
+          <Kbd size="sm">↓</Kbd>
+          <Text as="span" size="xs">to move</Text>
         </HStack>
         <HStack gap="1.5">
-          <Kbd size="sm">Enter</Kbd> to open
+          <Kbd size="sm">Enter</Kbd>
+          <Text as="span" size="xs">to open</Text>
         </HStack>
         <HStack gap="1.5">
-          <Kbd size="sm">Esc</Kbd> to close
+          <Kbd size="sm">Esc</Kbd>
+          <Text as="span" size="xs">to close</Text>
         </HStack>
       </HStack>
     </>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Stack } from "astralis-ui";
 import { ThemeBuilder } from "@/modules/theme-builder";
 import { URL_PARAM, decodeSeed } from "@/lib/theme-builder";
 
@@ -24,8 +25,8 @@ export default async function ThemesPage({
   const initialSeed = typeof shared === "string" ? decodeSeed(shared) : {};
 
   return (
-    <main className="flex h-[calc(100vh-3.5rem)] min-h-0 flex-col p-4 lg:overflow-hidden lg:p-5">
+    <Stack as="main" h="calc(100vh - 3.5rem)" minH="0" p={{ base: "4", lg: "5" }} overflow={{ lg: "hidden" }}>
       <ThemeBuilder initialSeed={initialSeed} />
-    </main>
+    </Stack>
   );
 }

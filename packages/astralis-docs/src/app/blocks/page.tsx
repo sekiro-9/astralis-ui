@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Heading, Text } from "astralis-ui";
+import { Box, Heading, Stack, Text } from "astralis-ui";
 import { BlockGallery } from "@/modules/blocks";
 import { groupByCategory, listBlocks } from "@/lib/blocks";
 
@@ -13,8 +13,8 @@ export default function BlocksPage() {
   const all = listBlocks();
 
   return (
-    <div className="flex flex-col gap-8">
-      <header className="max-w-5xl">
+    <Stack gap="8">
+      <Box as="header" maxW="5xl">
         <Heading as="h1" size="3xl" weight="semibold" letterSpacing="tight">
           Blocks
         </Heading>
@@ -23,9 +23,9 @@ export default function BlocksPage() {
           aren&apos;t imported from a package: the CLI copies the source into your project,
           so you own the file and edit it like any other component.
         </Text>
-      </header>
+      </Box>
 
       <BlockGallery groups={groupByCategory(all)} all={all} />
-    </div>
+    </Stack>
   );
 }

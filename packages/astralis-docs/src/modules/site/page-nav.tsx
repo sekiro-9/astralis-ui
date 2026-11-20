@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Card, Icon, Text } from "astralis-ui";
+import { Card, Flex, Grid, Icon, Stack, Text } from "astralis-ui";
 import { navigation, type NavItem } from "@/lib/navigation";
 
 /** Every docs page in sidebar order. The Blocks gallery lives outside /docs, so the chain skips it. */
@@ -19,13 +19,21 @@ export function PageNav() {
   const next = pages[index + 1];
 
   return (
-    <nav
+    <Grid
+      as="nav"
       aria-label="Previous and next page"
-      className="mx-auto mt-16 grid max-w-3xl gap-4 border-t border-stroke-base pt-8 sm:grid-cols-2"
+      mx="auto"
+      mt="16"
+      maxW="3xl"
+      gap="4"
+      borderT="normal"
+      borderColor="base"
+      pt="8"
+      columns={{ sm: "2" }}
     >
       {previous && <PageLink item={previous} direction="previous" />}
       {next && <PageLink item={next} direction="next" />}
-    </nav>
+    </Grid>
   );
 }
 
@@ -33,26 +41,32 @@ function PageLink({ item, direction }: { item: NavItem; direction: "previous" | 
   const isNext = direction === "next";
 
   return (
-    <NextLink
+    <Grid.Item
+      as={NextLink}
       href={item.href}
       rel={isNext ? "next" : "prev"}
+      rounded="xl"
       // Pinned to the right column, so a lone Next link on the first page still reads as "forward".
-      className={`rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring ${
-        isNext ? "sm:col-start-2" : ""
-      }`}
+      colStart={isNext ? { sm: "2" } : undefined}
+      // outline is not a stateable prop, so the focus ring stays classes.
+      className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-ring"
     >
-      <Card variant="outline" size="sm" hoverable className="h-full">
-        <Card.Body className={`flex flex-col gap-1 ${isNext ? "items-end text-right" : "items-start"}`}>
-          <Text as="span" size="xs" color="muted" className="flex items-center gap-1">
-            {!isNext && <Icon as={ArrowLeft} size="xs" />}
-            {isNext ? "Next" : "Previous"}
-            {isNext && <Icon as={ArrowRight} size="xs" />}
-          </Text>
-          <Text as="span" size="sm" weight="medium">
-            {item.title}
-          </Text>
+      <Card variant="outline" size="sm" hoverable h="full">
+        <Card.Body>
+          <Stack gap="1" alignItems={isNext ? "end" : "start"}>
+            <Flex as="span" alignItems="center" gap="1" color="muted">
+              {!isNext && <Icon as={ArrowLeft} size="xs" />}
+              <Text as="span" size="xs">
+                {isNext ? "Next" : "Previous"}
+              </Text>
+              {isNext && <Icon as={ArrowRight} size="xs" />}
+            </Flex>
+            <Text as="span" size="sm" weight="medium" align={isNext ? "right" : undefined}>
+              {item.title}
+            </Text>
+          </Stack>
         </Card.Body>
       </Card>
-    </NextLink>
+    </Grid.Item>
   );
 }

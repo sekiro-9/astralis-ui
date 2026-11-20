@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { Badge } from "astralis-ui";
+import { Stack } from "astralis-ui";
 import { isNew, navigation } from "@/lib/navigation";
+import { NavGroupLabel, NavItem, NewBadge } from "./nav-item";
 
 export function Sidebar({ version }: { version: string }) {
   const pathname = usePathname();
@@ -34,40 +34,28 @@ export function Sidebar({ version }: { version: string }) {
   }, [pathname]);
 
   return (
-    <nav className="flex flex-col gap-7 pb-12" aria-label="Docs">
+    <Stack as="nav" gap="7" pb="12" aria-label="Docs">
       {navigation.map((group) => (
         <div key={group.title}>
-          <p className="mb-2 px-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">
-            {group.title}
-          </p>
-          <ul className="flex flex-col gap-px">
+          <NavGroupLabel px="2.5">{group.title}</NavGroupLabel>
+          <Stack as="ul" gap="1px">
             {group.items.map((item) => {
               const active = pathname === item.href;
               return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    ref={active ? activeLinkRef : undefined}
-                    aria-current={active ? "page" : undefined}
-                    className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
-                      active
-                        ? "bg-accent-subtle font-medium text-accent-label"
-                        : "text-label-muted hover:bg-surface-subtle hover:text-label"
-                    }`}
-                  >
-                    {item.title}
-                    {isNew(item, version) && (
-                      <Badge colorScheme="brand" size="xs" className="uppercase tracking-wider">
-                        new
-                      </Badge>
-                    )}
-                  </Link>
-                </li>
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  active={active}
+                  ref={active ? activeLinkRef : undefined}
+                  end={isNew(item, version) && <NewBadge />}
+                >
+                  {item.title}
+                </NavItem>
               );
             })}
-          </ul>
+          </Stack>
         </div>
       ))}
-    </nav>
+    </Stack>
   );
 }

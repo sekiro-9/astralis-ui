@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Icon, Separator, Tag, ThemeToggle } from "astralis-ui";
+import { Box, Button, Flex, Icon, Separator, Tag, Text, ThemeToggle } from "astralis-ui";
 import { GithubMark } from "./github-mark";
 import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
@@ -13,31 +13,36 @@ export function Header({ version }: { version: string }) {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stroke-base bg-surface/75 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 lg:px-8">
-        <div className="flex items-center gap-8">
+    // A translucent surface, the blur behind it and the z-index level have no props.
+    <Box as="header" position="sticky" top="0" borderB="normal" borderColor="base" className="z-50 bg-surface/75 backdrop-blur-xl">
+      <Flex mx="auto" h="14" maxW="96rem" alignItems="center" justifyContent="between" px={{ base: "4", lg: "8" }}>
+        <Flex alignItems="center" gap="8">
           <Logo />
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+          <Flex as="nav" display={{ base: "hidden", lg: "flex" }} alignItems="center" gap="1" aria-label="Main">
             {links.map((link) => {
               const active = link.isActive(pathname);
               return (
-                <Link
+                <Flex
+                  as={NextLink}
                   key={link.href}
                   href={link.href}
-                  className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm transition-colors ${
-                    active
-                      ? "text-label"
-                      : "text-label-muted hover:bg-surface-subtle hover:text-label"
-                  }`}
+                  rounded="lg"
+                  px="3"
+                  py="1.5"
+                  color={active ? "base" : "muted"}
+                  hover={active ? undefined : { bg: "subtle", color: "base" }}
+                  className="whitespace-nowrap transition-colors"
                 >
-                  {link.title}
-                </Link>
+                  <Text as="span" size="sm">
+                    {link.title}
+                  </Text>
+                </Flex>
               );
             })}
-          </nav>
-        </div>
+          </Flex>
+        </Flex>
 
-        <div className="flex items-center gap-2">
+        <Flex alignItems="center" gap="2">
           <Search />
           {/* Read from astralis-ui's package.json, not typed in. It read
               0.2.0 for two releases after the library moved on. */}
@@ -53,7 +58,9 @@ export function Header({ version }: { version: string }) {
             colorScheme="gray"
             size="sm"
             aria-label="Astralis on GitHub"
-            className="w-8 px-0"
+            w="8"
+            // Button takes no padding prop; the square icon button zeroes its own.
+            className="px-0"
           >
             <Icon size={18} color="brand-solid">
               <GithubMark />
@@ -63,12 +70,13 @@ export function Header({ version }: { version: string }) {
             orientation="vertical"
             h="4"
             alignSelf="center"
-            className="mx-1 hidden sm:block"
+            mx="1"
+            display={{ base: "hidden", sm: "block" }}
           />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
           <MobileNav version={version} />
-        </div>
-      </div>
-    </header>
+        </Flex>
+      </Flex>
+    </Box>
   );
 }

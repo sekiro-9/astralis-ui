@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { Badge, Button, Drawer, Icon } from "astralis-ui";
+import { Button, Drawer, Icon, Stack } from "astralis-ui";
 import { isNew, navigation } from "@/lib/navigation";
+import { NavGroupLabel, NavItem, NewBadge } from "./nav-item";
 import { navLinks } from "./nav-links";
 
 /**
@@ -41,6 +41,7 @@ export function MobileNav({ version }: { version: string }) {
           colorScheme="gray"
           size="sm"
           aria-label="Open navigation"
+          // Button takes no display prop.
           className="lg:hidden"
         >
           <Icon as={Menu} size="sm" />
@@ -54,61 +55,33 @@ export function MobileNav({ version }: { version: string }) {
         </Drawer.Header>
 
         <Drawer.Body>
-          <nav className="flex flex-col gap-7 pb-8" aria-label="Site">
-            <ul className="flex flex-col gap-px">
-              {navLinks.map((link) => {
-                const active = link.isActive(pathname);
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      aria-current={active ? "page" : undefined}
-                      className={`flex items-center rounded-lg px-2.5 py-2 text-sm transition-colors ${
-                        active
-                          ? "bg-accent-subtle font-medium text-accent-label"
-                          : "text-label-muted hover:bg-surface-subtle hover:text-label"
-                      }`}
-                    >
-                      {link.title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+          <Stack as="nav" gap="7" pb="8" aria-label="Site">
+            <Stack as="ul" gap="1px">
+              {navLinks.map((link) => (
+                <NavItem key={link.href} href={link.href} active={link.isActive(pathname)} py="2">
+                  {link.title}
+                </NavItem>
+              ))}
+            </Stack>
 
             {navigation.map((group) => (
               <div key={group.title}>
-                <p className="mb-2 px-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-label-subtle">
-                  {group.title}
-                </p>
-                <ul className="flex flex-col gap-px">
-                  {group.items.map((item) => {
-                    const active = pathname === item.href;
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          aria-current={active ? "page" : undefined}
-                          className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm transition-colors ${
-                            active
-                              ? "bg-accent-subtle font-medium text-accent-label"
-                              : "text-label-muted hover:bg-surface-subtle hover:text-label"
-                          }`}
-                        >
-                          {item.title}
-                          {isNew(item, version) && (
-                            <Badge colorScheme="brand" size="xs" className="uppercase tracking-wider">
-                              new
-                            </Badge>
-                          )}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <NavGroupLabel px="2.5">{group.title}</NavGroupLabel>
+                <Stack as="ul" gap="1px">
+                  {group.items.map((item) => (
+                    <NavItem
+                      key={item.href}
+                      href={item.href}
+                      active={pathname === item.href}
+                      end={isNew(item, version) && <NewBadge />}
+                    >
+                      {item.title}
+                    </NavItem>
+                  ))}
+                </Stack>
               </div>
             ))}
-          </nav>
+          </Stack>
         </Drawer.Body>
       </Drawer.Content>
     </Drawer>
