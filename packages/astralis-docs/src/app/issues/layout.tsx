@@ -1,3 +1,5 @@
+import { Box } from "astralis-ui";
+
 /**
  * The issues sit outside /docs, like the block gallery: their lists
  * and snapshots need more width than the docs article column. The container
@@ -8,5 +10,9 @@ export default function IssuesLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="mx-auto max-w-screen-xl px-6 py-12 lg:px-12 lg:py-16">{children}</main>;
+  return (
+    <Box as="main" mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }} py={{ base: "12", lg: "16" }}>
+      {children}
+    </Box>
+  );
 }

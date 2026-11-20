@@ -1,5 +1,5 @@
 import type { Snapshot } from "astralis-cli/snapshot";
-import { Alert, DataList, Heading, Text } from "astralis-ui";
+import { Alert, Box, DataList, Heading, Stack, Text } from "astralis-ui";
 
 import { CodeBlock } from "@/modules/docs/code-block";
 import { plural } from "@/lib/issues/format";
@@ -7,27 +7,27 @@ import type { ReproCheck } from "@/lib/issues/repro";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-3">
+    <Stack as="section" gap="3">
       <Heading as="h3" size="sm" weight="semibold">
         {title}
       </Heading>
       {children}
-    </section>
+    </Stack>
   );
 }
 
 function Findings({ findings }: { findings: NonNullable<Snapshot["findings"]> }) {
   return (
-    <ul className="flex flex-col gap-2">
+    <Stack as="ul" gap="2">
       {findings.map((f, i) => (
-        <li key={i} className="rounded-lg border border-stroke-base px-3 py-2">
-          <Text size="xs" color="muted" className="font-mono">
+        <Box as="li" key={i} px="3" py="2" rounded="lg" border="normal" borderColor="base">
+          <Text size="xs" color="muted" fontFamily="mono">
             {f.code} · {f.file}:{f.line}:{f.column}
           </Text>
           <Text size="sm">{f.message}</Text>
-        </li>
+        </Box>
       ))}
-    </ul>
+    </Stack>
   );
 }
 
@@ -55,7 +55,7 @@ function environmentRows(s: Snapshot): [string, string][] {
 export function SnapshotView({ snapshot, repro }: { snapshot: Snapshot; repro: ReproCheck }) {
   const findings = snapshot.findings ?? [];
   return (
-    <div className="flex flex-col gap-8">
+    <Stack gap="8">
       <Section title="Reproduction">
         <Text size="sm" color="muted">
           The reported component tree as a file that renders it. Page text the reporter did not share
@@ -76,13 +76,16 @@ export function SnapshotView({ snapshot, repro }: { snapshot: Snapshot; repro: R
               {repro.checkedWith}
             </Alert.Title>
             <Alert.Description>
-              <ul className="mt-1 flex flex-col gap-1">
+              <Stack as="ul" gap="1" mt="1">
                 {repro.errors.map((f, i) => (
-                  <li key={i}>
-                    <span className="font-mono text-xs">{f.code}</span> {f.message}
-                  </li>
+                  <Box as="li" key={i}>
+                    <Text as="span" fontFamily="mono" size="xs" color="inherit">
+                      {f.code}
+                    </Text>{" "}
+                    {f.message}
+                  </Box>
                 ))}
-              </ul>
+              </Stack>
             </Alert.Description>
           </Alert>
         )}
@@ -103,7 +106,11 @@ export function SnapshotView({ snapshot, repro }: { snapshot: Snapshot; repro: R
           {environmentRows(snapshot).map(([label, value]) => (
             <DataList.Item key={label}>
               <DataList.Label>{label}</DataList.Label>
-              <DataList.Value className="font-mono text-sm">{value}</DataList.Value>
+              <DataList.Value>
+                <Text as="span" fontFamily="mono" size="sm" color="inherit">
+                  {value}
+                </Text>
+              </DataList.Value>
             </DataList.Item>
           ))}
         </DataList>
@@ -111,23 +118,20 @@ export function SnapshotView({ snapshot, repro }: { snapshot: Snapshot; repro: R
 
       {snapshot.console && snapshot.console.length > 0 && (
         <Section title={`Console errors (${snapshot.console.length})`}>
-          <pre className="docs-scroll overflow-x-auto whitespace-pre-wrap rounded-xl border border-stroke-base bg-surface-subtle p-4 font-mono text-xs text-label">
-            {snapshot.console.join("\n\n")}
-          </pre>
+          <Box as="pre" p="4" rounded="xl" border="normal" borderColor="base" bg="subtle" overflowX="auto" className="docs-scroll whitespace-pre-wrap">
+            <Text as="span" fontFamily="mono" size="xs">
+              {snapshot.console.join("\n\n")}
+            </Text>
+          </Box>
         </Section>
       )}
 
       {snapshot.screenshot && (
         <Section title="Screenshot">
           {/* A data URL the schema allows only as PNG or JPEG; next/image has nothing to optimise. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={snapshot.screenshot}
-            alt="The page when the report was made"
-            className="max-w-full rounded-xl border border-stroke-base"
-          />
+          <Box as="img" src={snapshot.screenshot} alt="The page when the report was made" maxW="full" rounded="xl" border="normal" borderColor="base" />
         </Section>
       )}
-    </div>
+    </Stack>
   );
 }

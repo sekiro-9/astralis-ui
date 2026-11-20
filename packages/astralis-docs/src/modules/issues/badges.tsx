@@ -1,4 +1,4 @@
-import { Badge } from "astralis-ui";
+import { Badge, Box, Flex, Text } from "astralis-ui";
 
 import type { IssueState, Label } from "@/lib/issues/github";
 
@@ -20,13 +20,15 @@ export function StateBadge({ state }: { state: IssueState }) {
 /**
  * A GitHub label, in its own colour. The colour is a dot rather than the
  * fill, so a pale or dark label reads the same in light and dark mode; it is
- * an inline style because it is data, not a class the CSS build can know.
+ * passed as a raw value because it is data, not a token the CSS build can know.
  */
 export function LabelTag({ label }: { label: Label }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-stroke-base px-2 py-0.5 text-xs text-label-muted">
-      <span aria-hidden className="size-2 rounded-full" style={{ backgroundColor: `#${label.color}` }} />
-      {label.name}
-    </span>
+    <Flex as="span" display="inline-flex" alignItems="center" gap="1.5" px="2" py="0.5" rounded="full" border="normal" borderColor="base">
+      <Box as="span" aria-hidden size="2" rounded="full" bg={`#${label.color}`} />
+      <Text as="span" size="xs" color="muted">
+        {label.name}
+      </Text>
+    </Flex>
   );
 }

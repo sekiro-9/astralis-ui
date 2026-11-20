@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, MessageSquarePlus } from "lucide-react";
-import { Avatar, Button, DataList, Heading, Icon, Separator, Text } from "astralis-ui";
+import { Avatar, Box, Button, DataList, Flex, Grid, Heading, Icon, Link, Separator, Stack, Text } from "astralis-ui";
 
 import { getIssue, type IssueDetail, type Comment } from "@/lib/issues/fetch";
 import { formatDate, plural } from "@/lib/issues/format";
@@ -24,12 +24,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function Byline({ person, date }: { person: IssueDetail["author"]; date: string }) {
   return (
-    <div className="flex items-center gap-2">
+    <Flex alignItems="center" gap="2">
       <Avatar size="xs" src={person?.avatar} name={person?.login ?? "ghost"} />
       {person ? (
-        <a href={person.url} target="_blank" rel="noreferrer" className="text-sm font-medium text-label hover:underline">
+        <Link href={person.url} target="_blank" rel="noreferrer" size="sm" weight="medium" color="base">
           {person.login}
-        </a>
+        </Link>
       ) : (
         <Text as="span" size="sm" weight="medium">
           a deleted user
@@ -38,7 +38,7 @@ function Byline({ person, date }: { person: IssueDetail["author"]; date: string 
       <Text as="span" size="xs" color="muted">
         {formatDate(date)}
       </Text>
-    </div>
+    </Flex>
   );
 }
 
@@ -47,20 +47,20 @@ function Byline({ person, date }: { person: IssueDetail["author"]; date: string 
  * for its own pages; it is shown as given, never built from the raw text here.
  */
 function GitHubHtml({ html }: { html: string }) {
-  return <div className="gh-markdown" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <Box className="gh-markdown" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function Words({ label, text }: { label: string; text?: string }) {
   if (!text) return null;
   return (
-    <div className="flex flex-col gap-1">
+    <Stack gap="1">
       <Text size="sm" weight="semibold">
         {label}
       </Text>
       <Text size="sm" lineHeight="relaxed" className="whitespace-pre-wrap">
         {text}
       </Text>
-    </div>
+    </Stack>
   );
 }
 
@@ -73,14 +73,14 @@ function Thread({ comments }: { comments: Comment[] }) {
     );
   }
   return (
-    <ol className="flex flex-col gap-4">
+    <Stack as="ol" gap="4">
       {comments.map((comment) => (
-        <li key={comment.id} className="flex flex-col gap-3 rounded-xl border border-stroke-base p-4">
+        <Stack as="li" key={comment.id} gap="3" p="4" rounded="xl" border="normal" borderColor="base">
           <Byline person={comment.author} date={comment.createdAt} />
           <GitHubHtml html={comment.html} />
-        </li>
+        </Stack>
       ))}
-    </ol>
+    </Stack>
   );
 }
 
@@ -91,26 +91,32 @@ export default async function IssuePage({ params }: Props) {
   const snapshot = snapshotOf(issue.body);
 
   return (
-    <div className="flex flex-col gap-10">
-      <header className="flex flex-col gap-4">
-        <Link href="/issues" className="text-sm text-label-muted hover:text-label">
-          ← Issues &amp; Contributions
-        </Link>
+    <Stack gap="10">
+      <Stack as="header" gap="4">
+        {/* Link has no hover prop, and a hover class cannot outrank its colour prop, so the colours go on a Flex. */}
+        <Flex as={NextLink} href="/issues" alignSelf="start" color="muted" hover={{ color: "base" }} className="transition-colors">
+          <Text as="span" size="sm" color="inherit">
+            ← Issues &amp; Contributions
+          </Text>
+        </Flex>
         <Heading as="h1" size="2xl" weight="semibold" letterSpacing="tight">
           {issue.title}
-          <span className="ml-2 font-normal text-label-muted">#{issue.number}</span>
+          <Text as="span" size="2xl" weight="normal" color="muted" lineHeight="none" ml="2">
+            #{issue.number}
+          </Text>
         </Heading>
-        <div className="flex flex-wrap items-center gap-2">
+        <Flex wrap="wrap" alignItems="center" gap="2">
           <StateBadge state={issue.state} />
           <Text as="span" size="sm" color="muted">
             opened {formatDate(issue.createdAt)} by {issue.author?.login ?? "a deleted user"} · {plural(issue.comments, "comment")}
           </Text>
-        </div>
-      </header>
+        </Flex>
+      </Stack>
 
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className="flex min-w-0 flex-col gap-10">
-          <section className="flex flex-col gap-4">
+      {/* The track sizes are a class: Grid's columns prop counts equal columns, and this is one fluid and one fixed. */}
+      <Grid gap="10" className="lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <Stack gap="10" minW="0">
+          <Stack as="section" gap="4">
             <Byline person={issue.author} date={issue.createdAt} />
             {snapshot ? (
               <>
@@ -125,37 +131,36 @@ export default async function IssuePage({ params }: Props) {
                 No description.
               </Text>
             )}
-          </section>
+          </Stack>
 
-          <section className="flex flex-col gap-5" aria-labelledby="discussion">
+          <Stack as="section" gap="5" aria-labelledby="discussion">
             <Heading as="h2" id="discussion" size="lg" weight="semibold">
               Discussion
             </Heading>
             <Thread comments={issue.thread} />
-            <div>
-              <Button
-                as="a"
-                href={issue.url}
-                target="_blank"
-                rel="noreferrer"
-                size="sm"
-                variant="outline"
-                colorScheme="gray"
-                leftIcon={<Icon as={MessageSquarePlus} size="xs" />}
-              >
-                Comment on GitHub
-              </Button>
-            </div>
-          </section>
-        </div>
+            <Button
+              as="a"
+              href={issue.url}
+              target="_blank"
+              rel="noreferrer"
+              size="sm"
+              variant="outline"
+              colorScheme="gray"
+              alignSelf="start"
+              leftIcon={<Icon as={MessageSquarePlus} size="xs" />}
+            >
+              Comment on GitHub
+            </Button>
+          </Stack>
+        </Stack>
 
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
+        <Stack as="aside" gap="6" position={{ lg: "sticky" }} top={{ lg: "24" }} alignSelf={{ lg: "start" }}>
           <DataList>
             {issue.component && (
               <DataList.Item>
                 <DataList.Label>Component</DataList.Label>
                 <DataList.Value>
-                  <Link href={`/issues?status=all&q=${encodeURIComponent(issue.component)}`} className="font-mono text-sm hover:underline">
+                  <Link as={NextLink} href={`/issues?status=all&q=${encodeURIComponent(issue.component)}`} fontFamily="mono" size="sm" color="inherit">
                     {issue.component}
                   </Link>
                 </DataList.Value>
@@ -165,13 +170,13 @@ export default async function IssuePage({ params }: Props) {
               <DataList.Item>
                 <DataList.Label>Rules</DataList.Label>
                 <DataList.Value>
-                  <span className="flex min-w-0 flex-col gap-1">
+                  <Stack as="span" gap="1" minW="0">
                     {[...new Set(snapshot.findings.map((f) => f.code))].map((code) => (
-                      <span key={code} className="break-all font-mono text-xs">
+                      <Text as="span" key={code} fontFamily="mono" size="xs" color="inherit" className="break-all">
                         {code}
-                      </span>
+                      </Text>
                     ))}
-                  </span>
+                  </Stack>
                 </DataList.Value>
               </DataList.Item>
             )}
@@ -179,13 +184,13 @@ export default async function IssuePage({ params }: Props) {
               <DataList.Label>Labels</DataList.Label>
               <DataList.Value>
                 {issue.labels.length ? (
-                  <span className="flex flex-wrap gap-1.5">
+                  <Flex as="span" wrap="wrap" gap="1.5">
                     {issue.labels.map((label) => (
-                      <Link key={label.name} href={`/issues?status=all&label=${encodeURIComponent(label.name)}`}>
+                      <NextLink key={label.name} href={`/issues?status=all&label=${encodeURIComponent(label.name)}`}>
                         <LabelTag label={label} />
-                      </Link>
+                      </NextLink>
                     ))}
-                  </span>
+                  </Flex>
                 ) : (
                   "None yet"
                 )}
@@ -210,11 +215,11 @@ export default async function IssuePage({ params }: Props) {
             View on GitHub
           </Button>
           <Text size="xs" color="muted" lineHeight="relaxed">
-            Read from <a href={REPO_URL} className="underline" target="_blank" rel="noreferrer">GitHub</a>, refreshed every minute. Comments,
+            Read from <Link href={REPO_URL} target="_blank" rel="noreferrer" variant="underline" color="inherit">GitHub</Link>, refreshed every minute. Comments,
             labels and closing happen there.
           </Text>
-        </aside>
-      </div>
-    </div>
+        </Stack>
+      </Grid>
+    </Stack>
   );
 }

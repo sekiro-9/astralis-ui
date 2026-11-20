@@ -1,6 +1,6 @@
-import Link from "next/link";
+import NextLink from "next/link";
 import { MessageSquare } from "lucide-react";
-import { Avatar, Icon, Text } from "astralis-ui";
+import { Avatar, Flex, Icon, Link, Stack, Text } from "astralis-ui";
 
 import { formatDate } from "@/lib/issues/format";
 import type { IssueSummary } from "@/lib/issues/github";
@@ -9,37 +9,49 @@ import { LabelTag, StateBadge } from "./badges";
 
 export function IssueList({ issues }: { issues: IssueSummary[] }) {
   return (
-    <ul className="divide-y divide-stroke-base overflow-hidden rounded-xl border border-stroke-base">
+    <Stack as="ul" gap="0" rounded="xl" border="normal" borderColor="base" overflow="hidden" className="divide-y divide-stroke-base">
       {issues.map((issue) => (
-        <li key={issue.number} className="flex flex-col gap-2 px-4 py-3.5 transition-colors hover:bg-surface-subtle sm:flex-row sm:items-center sm:gap-4">
-          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <Link href={`/issues/${issue.number}`} className="font-medium text-label hover:underline">
+        <Flex
+          as="li"
+          key={issue.number}
+          direction={{ base: "column", sm: "row" }}
+          alignItems={{ sm: "center" }}
+          gap={{ base: "2", sm: "4" }}
+          px="4"
+          py="3.5"
+          hover={{ bg: "subtle" }}
+          className="transition-colors"
+        >
+          <Stack gap="1.5" minW="0" flex="1">
+            <Link as={NextLink} href={`/issues/${issue.number}`} weight="medium" color="base" alignSelf="start">
               {issue.title}
             </Link>
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <Text as="span" size="xs" color="muted" className="font-mono">
+            <Flex wrap="wrap" alignItems="center" columnGap="2" rowGap="1">
+              <Text as="span" size="xs" color="muted" fontFamily="mono">
                 #{issue.number}
                 {issue.component && ` · ${issue.component}`} · updated {formatDate(issue.updatedAt)}
               </Text>
               {issue.labels.map((label) => (
                 <LabelTag key={label.name} label={label} />
               ))}
-            </div>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
+            </Flex>
+          </Stack>
+          <Flex alignItems="center" gap="3" shrink="0">
             <StateBadge state={issue.state} />
-            <Text as="span" size="xs" color="muted" className="flex w-10 items-center justify-end gap-1 tabular-nums max-sm:justify-start">
+            <Flex as="span" w="10" alignItems="center" justifyContent={{ base: "start", sm: "end" }} gap="1" color="muted">
               {issue.comments > 0 && (
                 <>
                   <Icon as={MessageSquare} size="xs" aria-hidden />
-                  <span aria-label={`${issue.comments} comments`}>{issue.comments}</span>
+                  <Text as="span" size="xs" color="inherit" className="tabular-nums" aria-label={`${issue.comments} comments`}>
+                    {issue.comments}
+                  </Text>
                 </>
               )}
-            </Text>
+            </Flex>
             {issue.author && <Avatar size="xs" src={issue.author.avatar} name={issue.author.login} title={issue.author.login} />}
-          </div>
-        </li>
+          </Flex>
+        </Flex>
       ))}
-    </ul>
+    </Stack>
   );
 }
