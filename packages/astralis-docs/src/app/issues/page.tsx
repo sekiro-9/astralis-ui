@@ -103,7 +103,7 @@ function StatusTabs({ current, href }: { current: StatusFilter; href: (status: S
             hover={{ color: "base" }}
             className="whitespace-nowrap transition-colors"
           >
-            <Text as="span" size="sm" weight={active ? "medium" : "normal"} color="inherit">
+            <Text as="span" size="sm" weight={active ? "medium" : "normal"}>
               {tab.label}
             </Text>
           </Flex>

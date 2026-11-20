@@ -95,7 +95,7 @@ export default async function IssuePage({ params }: Props) {
       <Stack as="header" gap="4">
         {/* Link has no hover prop, and a hover class cannot outrank its colour prop, so the colours go on a Flex. */}
         <Flex as={NextLink} href="/issues" alignSelf="start" color="muted" hover={{ color: "base" }} className="transition-colors">
-          <Text as="span" size="sm" color="inherit">
+          <Text as="span" size="sm">
             ← Issues &amp; Contributions
           </Text>
         </Flex>
