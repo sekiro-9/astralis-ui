@@ -122,6 +122,8 @@ export const DatePicker = identify("DatePicker", function DatePicker({
           isDateUnavailable={isDateUnavailable}
           colorScheme={colorScheme}
           size="sm"
+          // The popover is the surface; a second bordered box inside it reads as a frame within a frame.
+          className="astralis:border-transparent astralis:bg-transparent astralis:p-0"
         />
         {clearable && value !== null && (
           <div className="astralis:mt-2 astralis:flex astralis:justify-end astralis:border-t astralis:border-stroke-subtle astralis:pt-2">
