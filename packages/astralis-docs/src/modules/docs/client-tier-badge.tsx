@@ -1,7 +1,7 @@
 "use client";
 
 import { useSelectedLayoutSegment } from "next/navigation";
-import { Badge, Tooltip } from "astralis-ui";
+import { Tag, Tooltip } from "astralis-ui";
 
 /**
  * The per-component client/server badge. Client-side only because a STATIC
@@ -31,9 +31,10 @@ export function ClientTierBadge({ tiers }: { tiers: Record<string, keyof typeof 
   return (
     <Tooltip>
       <Tooltip.Trigger>
-        <Badge colorScheme={scheme} variant="subtle">
+        {/* A Tag, like the version in the header: the site's markers have rounded corners, not pills. */}
+        <Tag colorScheme={scheme} variant="subtle">
           {text}
-        </Badge>
+        </Tag>
       </Tooltip.Trigger>
       <Tooltip.Content>{EXPLAIN[tier]}</Tooltip.Content>
     </Tooltip>
