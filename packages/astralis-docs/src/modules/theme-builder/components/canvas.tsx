@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Minus, Plus } from "lucide-react";
-import { Button, ButtonGroup, Icon, Tooltip } from "astralis-ui";
+import { Box, Button, ButtonGroup, Icon, Tooltip } from "astralis-ui";
 import { ARTBOARD_WIDTH, PreviewArtboard } from "./preview-artboard";
 
 const MIN_ZOOM = 0.25;
@@ -49,10 +49,23 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
   };
 
   return (
-    <div className="preview-grid relative min-h-0 overflow-hidden rounded-2xl border border-stroke-base max-lg:h-[70vh]">
-      <div
+    <Box
+      position="relative"
+      minH="0"
+      overflow="hidden"
+      rounded="2xl"
+      border="normal"
+      borderColor="base"
+      h={{ base: "70vh", lg: "auto" }}
+      className="preview-grid"
+    >
+      {/* No prop hides a scrollbar, so those two stay classes. */}
+      <Box
         ref={viewportRef}
-        className="absolute inset-0 overflow-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        position="absolute"
+        inset="0"
+        overflow="auto"
+        className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {/* "safe center": centers the page when it's smaller than the viewport,
             but never clips the top/left edge when it's larger (plain `center`
@@ -81,9 +94,20 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
             </div>
           </div>
         </div>
-      </div>
+      </Box>
 
-      <div className="absolute bottom-3 right-3 rounded-xl border border-stroke-base bg-surface/90 p-1 shadow-sm backdrop-blur">
+      <Box
+        position="absolute"
+        bottom="3"
+        right="3"
+        rounded="xl"
+        border="normal"
+        borderColor="base"
+        bg="color-mix(in oklab, var(--astralis-color-surface-base) 90%, transparent)"
+        p="1"
+        // No blur prop; the library's dark-mode shadow-sm is darker than this one.
+        className="shadow-sm backdrop-blur"
+      >
         <ButtonGroup size="sm" variant="text" colorScheme="gray" spacing="none">
           <Button
             aria-label="Zoom out"
@@ -94,7 +118,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
             <Tooltip.Trigger>
               {/* The readout is also the fit-to-width control, so it is a real
                   Button like its two siblings rather than a styled div. */}
-              <Button onClick={fitWidth} className="min-w-13 tabular-nums">
+              <Button onClick={fitWidth} minW="3.25rem" className="tabular-nums">
                 {Math.round(zoom * 100)}%
               </Button>
             </Tooltip.Trigger>
@@ -106,7 +130,7 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
             onClick={() => zoomTo(zoom + ZOOM_STEP)}
           />
         </ButtonGroup>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

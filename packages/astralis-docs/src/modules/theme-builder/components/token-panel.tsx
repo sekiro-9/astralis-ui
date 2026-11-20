@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Code, CodeBlock, Tabs, Text } from "astralis-ui";
+import { Button, Code, CodeBlock, Flex, Stack, Tabs, Text } from "astralis-ui";
 import { isDefaultState, type BuilderState } from "@/lib/theme-builder";
 import { useShikiHtml } from "@/lib/use-shiki";
 
@@ -26,7 +26,9 @@ function ExportView({ tab, source }: { tab: ExportTab; source: string }) {
 
   return (
     <>
-      <CodeBlock.Root variant="solid" size="sm" code={source} className="flex! h-full min-h-0 flex-col">
+      {/* CodeBlock has no display/direction props, and its Content no layout
+          props at all: those stay classes so the code area scrolls inside. */}
+      <CodeBlock.Root variant="solid" size="sm" code={source} h="full" minH="0" className="flex! flex-col">
         <CodeBlock.Header>
           <CodeBlock.Title>{tab.filename}</CodeBlock.Title>
           <CodeBlock.Control>
@@ -72,32 +74,44 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
 
   if (untouched) {
     return (
-      <aside className="flex min-h-0 flex-col gap-2 max-lg:h-[70vh]">
-        <div className="flex h-full min-h-0 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-stroke p-6 text-center">
-          <Text size="sm" weight="medium">
+      <Stack as="aside" minH="0" gap="2" h={{ base: "70vh", lg: "auto" }}>
+        <Stack
+          h="full"
+          minH="0"
+          alignItems="center"
+          justifyContent="center"
+          gap="2"
+          rounded="xl"
+          border="normal"
+          borderStyle="dashed"
+          borderColor="base"
+          p="6"
+        >
+          <Text size="sm" weight="medium" align="center">
             Everything is at the library defaults
           </Text>
-          <Text size="xs" color="subtle">
+          <Text size="xs" color="subtle" align="center">
             Change any token on the left and your custom tokens appear here, ready to copy.
           </Text>
-        </div>
-      </aside>
+        </Stack>
+      </Stack>
     );
   }
 
   return (
-    <aside className="flex min-h-0 flex-col max-lg:h-[70vh]">
+    <Stack as="aside" minH="0" h={{ base: "70vh", lg: "auto" }}>
       <Tabs
         value={tab}
         onValueChange={(value) => setTab(value as ExportTab["value"])}
         variant="segmented"
         size="sm"
-        /* Inline style so the override beats the root's own gap class:
-           value-utility classes no longer ship since the var-channel. */
-        className="min-h-0 flex-1"
+        minH="0"
+        flex="1"
+        /* Tabs has no gap prop; inline style so the override beats the root's
+           own gap class. */
         style={{ gap: "var(--astralis-spacing-2)" }}
       >
-        <div className="flex items-center justify-between gap-2">
+        <Flex alignItems="center" justifyContent="between" gap="2">
           <Tabs.List aria-label="Export format">
             {EXPORTS.map((item) => (
               <Tabs.Trigger key={item.value} value={item.value}>
@@ -108,14 +122,15 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
           <Button size="xs" variant="outline" colorScheme="gray" onClick={share}>
             {copied ? "Link copied" : "Share"}
           </Button>
-        </div>
+        </Flex>
 
         {EXPORTS.map((item) => (
+          // Tabs.Content takes no layout props.
           <Tabs.Content key={item.value} value={item.value} className="flex min-h-0 flex-col gap-2">
             <ExportView tab={item} source={item.value === "css" ? css : json} />
           </Tabs.Content>
         ))}
       </Tabs>
-    </aside>
+    </Stack>
   );
 }

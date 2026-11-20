@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, Button, Field, Heading, Input, Text } from "astralis-ui";
+import { Accordion, Box, Button, Field, Flex, Heading, Input, Stack, Text } from "astralis-ui";
 import type { ThemeSeed } from "astralis-ui/serialize";
 import {
   COLOR_CONTROLS,
@@ -45,24 +45,32 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
   });
 
   return (
-    <aside className="docs-scroll flex min-h-0 flex-col gap-2 overflow-y-auto pr-1 max-lg:max-h-96">
-      <div className="flex items-center justify-between">
+    <Stack
+      as="aside"
+      gap="2"
+      minH="0"
+      overflowY="auto"
+      pr="1"
+      maxH={{ base: "96", lg: "none" }}
+      className="docs-scroll"
+    >
+      <Flex alignItems="center" justifyContent="between">
         <Heading as="h2" size="sm">
           Theme Builder
         </Heading>
         <Button variant="text" colorScheme="gray" size="xs" onClick={reset}>
           Reset
         </Button>
-      </div>
+      </Flex>
 
-      {/* shrink-0: without it the flex column squeezes the accordion to fit
+      {/* shrink="0": without it the flex column squeezes the accordion to fit
           and the rail never overflows, so its scrollbar never engages. */}
-      <div className="shrink-0">
+      <Box shrink="0">
         <Accordion type="multiple" defaultValue={["color", "size"]}>
           <Accordion.Item value="color">
             <Accordion.Trigger>Color</Accordion.Trigger>
             <Accordion.Content>
-              <div className="flex flex-col gap-5 pb-2">
+              <Stack gap="5" pb="2">
                 {COLOR_CONTROLS.map((control) => (
                   <ColorControlRow
                     // Remount on reset so the local hex draft clears with it.
@@ -72,14 +80,14 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                     onChange={(hex) => setSeed(control.field, hex)}
                   />
                 ))}
-              </div>
+              </Stack>
             </Accordion.Content>
           </Accordion.Item>
 
           <Accordion.Item value="size">
             <Accordion.Trigger>Size</Accordion.Trigger>
             <Accordion.Content>
-              <div className="flex flex-col gap-6 pb-2">
+              <Stack gap="6" pb="2">
                 <ScaleControl
                   label="Radius"
                   info="Corner rounding across every component: buttons, cards, inputs, menus. A multiplier on the whole radius ramp, so the relationship between sm and 2xl is preserved."
@@ -99,15 +107,15 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                   max={1.25}
                   step={0.025}
                 />
-              </div>
+              </Stack>
             </Accordion.Content>
           </Accordion.Item>
 
           <Accordion.Item value="typography">
             <Accordion.Trigger>Typography</Accordion.Trigger>
             <Accordion.Content>
-              <div className="flex flex-col gap-5 pb-2">
-                <div className="flex flex-col gap-2">
+              <Stack gap="5" pb="2">
+                <Stack gap="2">
                   <Text size="sm" weight="medium">
                     Font pairing
                   </Text>
@@ -122,7 +130,7 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                       )
                     }
                   />
-                </div>
+                </Stack>
                 <Field>
                   <Field.Label>Heading font-family</Field.Label>
                   <Input
@@ -160,28 +168,29 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                   max={1.15}
                   step={0.0125}
                 />
-              </div>
+              </Stack>
             </Accordion.Content>
           </Accordion.Item>
 
           <Accordion.Item value="motion">
             <Accordion.Trigger>Motion</Accordion.Trigger>
             <Accordion.Content>
-              <div className="flex flex-col gap-2 pb-2">
-                <div className="flex items-center justify-between">
+              <Stack gap="2" pb="2">
+                <Flex alignItems="center" justifyContent="between">
                   <Text size="sm" weight="medium">
                     Speed
                   </Text>
+                  {/* No prop sets tabular figures. */}
                   <Text size="xs" color="subtle" className="tabular-nums">
                     {Math.round(200 * (seed.motionScale ?? 1))}ms moderate
                   </Text>
-                </div>
+                </Flex>
                 <PresetChips options={MOTION_PRESETS} {...scale("motionScale")} />
-              </div>
+              </Stack>
             </Accordion.Content>
           </Accordion.Item>
         </Accordion>
-      </div>
-    </aside>
+      </Box>
+    </Stack>
   );
 }

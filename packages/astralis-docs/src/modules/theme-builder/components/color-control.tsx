@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Text, Tooltip } from "astralis-ui";
+import { Box, Flex, Input, Stack, Text, Tooltip } from "astralis-ui";
 import type { ColorControl } from "@/lib/theme-builder";
 import { InfoPopover } from "./controls";
 
@@ -33,29 +33,36 @@ export function ColorControlRow({
     setDraft(hex ?? "");
   };
 
-  const circle = "size-7 cursor-pointer rounded-full border-2 transition-transform hover:scale-110";
-  const ring = (active: boolean) => (active ? "border-label" : "border-transparent");
+  // borderColor has no label-colour token, hence the raw variable.
+  const ring = (active: boolean) => (active ? "var(--astralis-color-label-base)" : "transparent");
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-0.5">
+    <Stack gap="2">
+      <Flex alignItems="center" gap="0.5">
         <Text size="sm" weight="medium">
           {label}
         </Text>
         <InfoPopover label={label} info={info} />
-      </div>
+      </Flex>
 
       {/* Tooltip, not `title`: the native one waits a second, ignores the theme
           and never appears on touch. The swatch's hex is worth more than that. */}
-      <div className="flex flex-wrap items-center gap-2 mb-2">
+      <Flex wrap="wrap" alignItems="center" gap="2" mb="2">
         <Tooltip>
           <Tooltip.Trigger>
-            <button
+            {/* No prop scales an element, so the hover grow stays a class. */}
+            <Box
+              as="button"
               type="button"
+              size="7"
+              cursor="pointer"
+              rounded="full"
+              border="moderate"
+              borderColor={ring(value === undefined)}
+              className="transition-transform hover:scale-110"
               aria-label={`${label} default`}
               aria-pressed={value === undefined}
               onClick={() => pick(undefined)}
-              className={`${circle} ${ring(value === undefined)}`}
               style={{ backgroundColor: defaultHex }}
             />
           </Tooltip.Trigger>
@@ -65,12 +72,18 @@ export function ColorControlRow({
         {presets.map((preset) => (
           <Tooltip key={preset.hex}>
             <Tooltip.Trigger>
-              <button
+              <Box
+                as="button"
                 type="button"
+                size="7"
+                cursor="pointer"
+                rounded="full"
+                border="moderate"
+                borderColor={ring(value === preset.hex)}
+                className="transition-transform hover:scale-110"
                 aria-label={`${label} ${preset.name}`}
                 aria-pressed={value === preset.hex}
                 onClick={() => pick(preset.hex)}
-                className={`${circle} ${ring(value === preset.hex)}`}
                 style={{ backgroundColor: preset.hex }}
               />
             </Tooltip.Trigger>
@@ -82,22 +95,36 @@ export function ColorControlRow({
 
         <Tooltip>
           <Tooltip.Trigger>
-            <label
-              className="relative size-7 cursor-pointer overflow-hidden rounded-full border border-stroke-base"
+            <Box
+              as="label"
+              position="relative"
+              size="7"
+              cursor="pointer"
+              overflow="hidden"
+              rounded="full"
+              border="normal"
+              borderColor="base"
               aria-label={`Custom ${label.toLowerCase()} color`}
+              // `bg` sets background-color, which cannot hold a gradient.
               style={{ background: "conic-gradient(red, yellow, lime, cyan, blue, magenta, red)" }}
             >
-              <input
+              {/* The library has no colour input, so this stays the native
+                  picker, invisible over the gradient circle. */}
+              <Box
+                as="input"
                 type="color"
                 value={value ?? defaultHex}
-                onChange={(e) => pick(e.target.value)}
-                className="absolute inset-0 cursor-pointer opacity-0"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => pick(e.target.value)}
+                position="absolute"
+                inset="0"
+                cursor="pointer"
+                opacity="0"
               />
-            </label>
+            </Box>
           </Tooltip.Trigger>
           <Tooltip.Content>Custom</Tooltip.Content>
         </Tooltip>
-      </div>
+      </Flex>
 
       {/* No Field wrapper: the title above already labels this control, so a
           Field with no Label/HelpText/error would be an empty box. */}
@@ -117,6 +144,6 @@ export function ColorControlRow({
         }}
         data-field={field}
       />
-    </div>
+    </Stack>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Info } from "lucide-react";
-import { Button, ButtonGroup, Icon, Popover, Slider, Text } from "astralis-ui";
+import { Button, ButtonGroup, Flex, Icon, Popover, Slider, Stack, Text } from "astralis-ui";
 
 /** Shared control primitives for the token rail. */
 
@@ -19,9 +19,10 @@ export function InfoPopover({ label, info }: { label: string; info: string }) {
           leftIcon={<Icon as={Info} size="xs" color="subtle" />}
           /* The 28px hit area is right; stretching a dense rail row by 8px is
              not, so the negative margin keeps the target without the height. */
-          className="-mt-0.5"
+          mt="-0.125rem"
         />
       </Popover.Trigger>
+      {/* Popover.Content takes no size props. */}
       <Popover.Content withArrow className="max-w-64">
         <Popover.Title>{label}</Popover.Title>
         <Popover.Description>{info}</Popover.Description>
@@ -50,7 +51,8 @@ export function PresetChips<T>({
 }) {
   return (
     // ButtonGroup is inline-flex, but as a flex item it blockifies and fills
-    // the rail, which is what lets flex-wrap actually break the row.
+    // the rail, which is what lets flex-wrap actually break the row. It has no
+    // `wrap` prop, so that stays a class.
     <ButtonGroup spacing="sm" className="flex-wrap">
       {options.map((option) => {
         const active = option.value === value;
@@ -93,20 +95,21 @@ export function ScaleControl({
   format?: (value: number) => string;
 }) {
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-0.5">
+    <Stack gap="2">
+      <Flex alignItems="center" justifyContent="between">
+        <Flex alignItems="center" gap="0.5">
           <Text size="sm" weight="medium">
             {label}
           </Text>
           {info && <InfoPopover label={label} info={info} />}
-        </div>
+        </Flex>
+        {/* No prop sets tabular figures. */}
         <Text size="xs" color="subtle" className="tabular-nums">
           {format ? format(value) : `×${value.toFixed(2)}`}
         </Text>
-      </div>
+      </Flex>
       <PresetChips options={presets} value={value} onChange={onChange} />
-      <Slider className="mt-3" value={value} onChange={onChange} min={min} max={max} step={step} aria-label={`${label} scale`} />
-    </div>
+      <Slider mt="3" value={value} onChange={onChange} min={min} max={max} step={step} aria-label={`${label} scale`} />
+    </Stack>
   );
 }

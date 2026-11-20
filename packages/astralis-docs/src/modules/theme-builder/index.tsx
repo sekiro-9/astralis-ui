@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { useTheme } from "astralis-ui";
+import { Grid, useTheme } from "astralis-ui";
 import { isEmptySeed, type ThemeSeed } from "astralis-ui/serialize";
 import {
   DEFAULT_STATE,
@@ -132,9 +132,17 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
   const json = useMemo(() => jsonExport(state), [state]);
 
   return (
-    // grid-rows-[minmax(0,1fr)] pins the single row to the container height:
+    // rows="1" (one minmax(0,1fr) track) pins the row to the container height:
     // without it the row grows with the rail's content and its scroll never engages.
-    <div className="grid min-h-0 flex-1 gap-4 lg:h-full lg:grid-cols-[280px_minmax(0,1fr)_320px] lg:grid-rows-[minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_340px]">
+    // The uneven column tracks stay classes: `columns` counts equal columns only.
+    <Grid
+      minH="0"
+      flex="1"
+      gap="4"
+      h={{ lg: "full" }}
+      rows={{ lg: "1" }}
+      className="lg:grid-cols-[280px_minmax(0,1fr)_320px] xl:grid-cols-[280px_minmax(0,1fr)_340px]"
+    >
       <ControlRail
         state={state}
         setState={update}
@@ -144,6 +152,6 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
       />
       <Canvas vars={vars} />
       <TokenPanel state={state} css={css} json={json} />
-    </div>
+    </Grid>
   );
 }

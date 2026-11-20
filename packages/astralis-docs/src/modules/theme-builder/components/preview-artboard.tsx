@@ -6,12 +6,15 @@ import {
   Avatar,
   Badge,
   Blockquote,
+  Box,
   Breadcrumb,
   Button,
   Card,
   Checkbox,
   Code,
   Field,
+  Flex,
+  Grid,
   Heading,
   Icon,
   Input,
@@ -22,6 +25,7 @@ import {
   Skeleton,
   Slider,
   Loader,
+  Stack,
   Stat,
   Steps,
   Switch,
@@ -39,12 +43,12 @@ export const ARTBOARD_WIDTH = 1080;
 
 function SheetSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-4">
-      <Text size="xs" color="subtle" className="font-medium uppercase tracking-wide">
+    <Stack as="section" gap="4">
+      <Text size="xs" color="subtle" weight="medium" casing="uppercase" letterSpacing="wide">
         {title}
       </Text>
       {children}
-    </section>
+    </Stack>
   );
 }
 
@@ -55,20 +59,28 @@ function SheetSection({ title, children }: { title: string; children: React.Reac
  */
 export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
   return (
-    <div
+    <Box
       data-theme-preview
       style={vars}
-      className="overflow-hidden rounded-2xl border border-stroke-base bg-surface shadow-lg"
+      overflow="hidden"
+      rounded="2xl"
+      border="normal"
+      borderColor="base"
+      bg="base"
+      // The library's dark-mode shadow-lg is several times darker than this one.
+      className="shadow-lg"
     >
       {/* App chrome */}
-      <div className="flex items-center justify-between border-b border-stroke-base px-6 py-3">
-        <div className="flex items-center gap-3">
-          <span className="size-6 rounded-lg bg-accent-solid" aria-hidden="true" />
+      <Flex alignItems="center" justifyContent="between" borderB="normal" borderColor="base" px="6" py="3">
+        <Flex alignItems="center" gap="3">
+          {/* bg-accent-solid is not a class the docs theme defines, so this
+              mark renders transparent; kept as found. */}
+          <Box as="span" size="6" rounded="lg" aria-hidden="true" className="bg-accent-solid" />
           <Heading as="h5" size="sm">
             Acme Cloud
           </Heading>
-        </div>
-        <div className="flex items-center gap-2">
+        </Flex>
+        <Flex alignItems="center" gap="2">
           <Button variant="text" colorScheme="gray" size="sm">
             Docs
           </Button>
@@ -77,12 +89,12 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
           </Button>
           <Button size="sm">Upgrade</Button>
           <Avatar name="Ada Lovelace" size="sm" />
-        </div>
-      </div>
+        </Flex>
+      </Flex>
 
-      <div className="flex flex-col gap-8 p-6">
+      <Stack gap="8" p="6">
         {/* -------- Page 1: a product dashboard -------- */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <Grid gap="6" columns={{ md: "2" }}>
           <Card variant="outline">
             <Card.Header extra={<Badge colorScheme="green">Live</Badge>}>
               <Card.Title>Monthly revenue</Card.Title>
@@ -97,9 +109,9 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                   12.4% from last month
                 </Stat.HelpText>
               </Stat>
-              <div className="mt-4">
+              <Box mt="4">
                 <Progress value={72} aria-label="Quota used" />
-              </div>
+              </Box>
             </Card.Body>
           </Card>
 
@@ -108,25 +120,25 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
               <Card.Title>Invite a teammate</Card.Title>
             </Card.Header>
             <Card.Body>
-              <div className="flex flex-col gap-4">
+              <Stack gap="4">
                 <Field>
                   <Field.Label>Email</Field.Label>
                   <Input placeholder="ada@example.com" />
                 </Field>
-                <div className="flex items-center justify-between">
+                <Flex alignItems="center" justifyContent="between">
                   <Checkbox defaultChecked>Send a copy to me</Checkbox>
                   <Switch defaultChecked aria-label="Admin access" />
-                </div>
-                <div className="flex gap-2">
+                </Flex>
+                <Flex gap="2">
                   <Button>Send invite</Button>
                   <Button variant="outline" colorScheme="gray">
                     Cancel
                   </Button>
-                </div>
-              </div>
+                </Flex>
+              </Stack>
             </Card.Body>
           </Card>
-        </div>
+        </Grid>
 
         <Alert status="info">
           <Alert.Title>Theme applied</Alert.Title>
@@ -134,9 +146,9 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
         </Alert>
 
         {/* -------- Page 2: one or two components from every category -------- */}
-        <div className="grid gap-x-8 gap-y-8 md:grid-cols-2">
+        <Grid gap="8" columns={{ md: "2" }}>
           <SheetSection title="Buttons">
-            <div className="flex flex-wrap items-center gap-2">
+            <Flex wrap="wrap" alignItems="center" gap="2">
               <Button>Solid</Button>
               <Button variant="subtle">Subtle</Button>
               <Button variant="outline">Outline</Button>
@@ -144,21 +156,21 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
               <Button colorScheme="red" variant="subtle">
                 Delete
               </Button>
-            </div>
+            </Flex>
           </SheetSection>
 
           <SheetSection title="Typography">
-            <div className="flex flex-col gap-2">
+            <Stack gap="2">
               <Heading size="md">The quick brown fox</Heading>
               <Text size="sm" color="muted">
                 Body text with <Code>inline code</Code> and a shortcut <Kbd>⌘K</Kbd>.
               </Text>
               <Blockquote cite="Ada Lovelace">That brain of mine is more than merely mortal.</Blockquote>
-            </div>
+            </Stack>
           </SheetSection>
 
           <SheetSection title="Data entry">
-            <div className="flex flex-col gap-4">
+            <Stack gap="4">
               <Radio.Group defaultValue="pro" aria-label="Plan">
                 <Radio value="free">Free</Radio>
                 <Radio value="pro">Pro</Radio>
@@ -166,11 +178,11 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
               </Radio.Group>
               <Slider defaultValue={40} aria-label="Volume" />
               <Textarea placeholder="Leave a note…" rows={2} />
-            </div>
+            </Stack>
           </SheetSection>
 
           <SheetSection title="Navigation">
-            <div className="flex flex-col gap-5">
+            <Stack gap="5">
               <Breadcrumb>
                 <Breadcrumb.Item>
                   <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
@@ -205,7 +217,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                   <Pagination.Next />
                 </Pagination.List>
               </Pagination>
-            </div>
+            </Stack>
           </SheetSection>
 
           <SheetSection title="Disclosure & tabs">
@@ -215,7 +227,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                 <Tabs.Trigger value="two">Second</Tabs.Trigger>
               </Tabs.List>
               <Tabs.Content value="one">
-                <div className="pt-3">
+                <Box pt="3">
                   <Accordion type="single" defaultValue="a" collapsible>
                     <Accordion.Item value="a">
                       <Accordion.Trigger>Semantic tokens</Accordion.Trigger>
@@ -228,30 +240,32 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                       <Accordion.Content>None: precompiled CSS.</Accordion.Content>
                     </Accordion.Item>
                   </Accordion>
-                </div>
+                </Box>
               </Tabs.Content>
               <Tabs.Content value="two">
-                <Text size="sm" color="muted" className="pt-3">
-                  Second panel.
-                </Text>
+                <Box pt="3">
+                  <Text size="sm" color="muted">
+                    Second panel.
+                  </Text>
+                </Box>
               </Tabs.Content>
             </Tabs>
           </SheetSection>
 
           <SheetSection title="Feedback">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
+            <Stack gap="4">
+              <Flex alignItems="center" gap="4">
                 <Loader size="sm" />
-                <Progress value={64} aria-label="Upload" className="flex-1" />
-              </div>
-              <div className="flex items-center gap-3">
+                <Progress value={64} aria-label="Upload" flex="1" />
+              </Flex>
+              <Flex alignItems="center" gap="3">
                 <Skeleton variant="circle" w="10" h="10" shrink="0" />
-                <div className="flex flex-1 flex-col gap-2">
+                <Stack flex="1" gap="2">
                   <Skeleton variant="text" w="3/4" />
                   <Skeleton variant="text" />
-                </div>
-              </div>
-            </div>
+                </Stack>
+              </Flex>
+            </Stack>
           </SheetSection>
 
           <SheetSection title="Data display">
@@ -280,12 +294,12 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
           </SheetSection>
 
           <SheetSection title="Timeline & tags">
-            <div className="flex flex-col gap-4">
-              <div className="flex gap-1.5">
+            <Stack gap="4">
+              <Flex gap="1.5">
                 <Tag colorScheme="brand">design</Tag>
                 <Tag colorScheme="teal">tokens</Tag>
                 <Tag colorScheme="gray">beta</Tag>
-              </div>
+              </Flex>
               <Timeline>
                 <Timeline.Item>
                   <Timeline.Indicator colorScheme="green">
@@ -313,15 +327,15 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
                   </Timeline.Content>
                 </Timeline.Item>
               </Timeline>
-            </div>
+            </Stack>
           </SheetSection>
-        </div>
+        </Grid>
 
         <Text size="xs" color="subtle">
           Overlay components (Modal, Drawer, Popover, Tooltip, Toast) render in portals outside
           this canvas. They use the same tokens.
         </Text>
-      </div>
-    </div>
+      </Stack>
+    </Box>
   );
 }
