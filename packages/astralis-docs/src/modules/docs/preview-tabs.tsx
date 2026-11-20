@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Tabs } from "astralis-ui";
+import { Flex, Tabs } from "astralis-ui";
 
 interface PreviewTabsProps {
   preview: ReactNode;
@@ -18,25 +18,34 @@ export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProp
       variant="segmented"
       size="sm"
       keepMounted
+      my="6"
       /* Inline style beats the root's own gap class (value utilities no
          longer ship since the var-channel). */
-      className="my-6"
       style={{ gap: "var(--astralis-spacing-3)" }}
     >
-      {/* self-start: the list is a segmented pill, not a full-width bar. */}
+      {/* self-start: the list is a segmented pill, not a full-width bar.
+          Tabs.List takes no alignSelf prop. */}
       <Tabs.List aria-label="Demo view" className="self-start">
         <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
         <Tabs.Trigger value="code">Code</Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content value="preview">
-        <div
-          className={`preview-grid flex min-h-44 flex-wrap gap-4 rounded-xl border border-stroke-base p-8 sm:p-10 ${
-            align === "center" ? "items-center justify-center" : "items-start justify-start"
-          }`}
+        <Flex
+          minH="44"
+          wrap="wrap"
+          gap="4"
+          rounded="xl"
+          border="normal"
+          borderColor="base"
+          p={{ base: "8", sm: "10" }}
+          alignItems={align === "center" ? "center" : "start"}
+          justifyContent={align === "center" ? "center" : "start"}
+          // The dot grid is a background image, which has no prop.
+          className="preview-grid"
         >
           {preview}
-        </div>
+        </Flex>
       </Tabs.Content>
 
       <Tabs.Content value="code">{code}</Tabs.Content>

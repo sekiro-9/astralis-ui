@@ -1,14 +1,18 @@
 import type { MDXComponents } from "mdx/types";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import React from "react";
-import Link from "next/link";
+import NextLink from "next/link";
 import type { BundledLanguage } from "shiki";
 // Flat parts by preference (compound `Table.*` dot-access also works
 // server-side since 0.7.2: the client-reference-stub problem this map used
 // to work around is gone).
 import {
   Blockquote,
+  Box,
   Code,
+  Link,
+  List,
+  ListItem,
   Separator,
   Table,
   TableBody,
@@ -16,6 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Text,
 } from "astralis-ui";
 import { CodeBlock } from "@/modules/docs/code-block";
 import { ComponentPreview } from "@/modules/docs/component-preview";
@@ -23,26 +28,74 @@ import { PropsTable } from "@/modules/docs/props-table";
 
 type HeadingProps = ComponentPropsWithoutRef<"h2">;
 
-/** Section heading with a hover anchor link (ids come from rehype-slug). */
-function AnchorHeading(Tag: "h2" | "h3", baseClassName: string) {
-  return function Heading({ id, children, ...props }: HeadingProps) {
-    return (
-      <Tag id={id} className={`group scroll-m-24 ${baseClassName}`} {...props}>
-        {children}
-        {id && (
-          <a
-            href={`#${id}`}
-            aria-label="Link to this section"
-            // The TOC reads heading text; the "#" is not part of it.
-            data-heading-anchor
-            className="ml-2 text-accent-label opacity-0 transition-opacity group-hover:opacity-100"
-          >
-            #
-          </a>
-        )}
-      </Tag>
-    );
-  };
+/*
+ * The headings are Text rather than Heading: Heading pins `lineHeight="tight"`,
+ * and these take each size's own line height, which no lineHeight token names.
+ */
+
+/** The "#" link a section heading reveals on hover (ids come from rehype-slug). */
+function HeadingAnchor({ id }: { id?: string }) {
+  if (!id) return null;
+  return (
+    <Link
+      href={`#${id}`}
+      aria-label="Link to this section"
+      // The TOC reads heading text; the "#" is not part of it.
+      data-heading-anchor
+      variant="plain"
+      // An explicit colour also turns off Link's hover colour shift.
+      color="brand-label"
+      ml="2"
+      // Link has no opacity prop, and the reveal follows the heading's hover.
+      className="opacity-0 transition-opacity group-hover:opacity-100"
+    >
+      #
+    </Link>
+  );
+}
+
+function H2({ id, children, ...props }: HeadingProps) {
+  return (
+    <Text
+      as="h2"
+      id={id}
+      fontFamily="heading"
+      size="xl"
+      weight="semibold"
+      letterSpacing="tight"
+      color="base"
+      mt="12"
+      mb="4"
+      // `group` drives the anchor's reveal. Text takes no scroll margin,
+      // padding or border props, so the rule above the section stays classes.
+      className="group scroll-m-24 border-t border-stroke-base pt-10"
+      {...props}
+    >
+      {children}
+      <HeadingAnchor id={id} />
+    </Text>
+  );
+}
+
+function H3({ id, children, ...props }: HeadingProps) {
+  return (
+    <Text
+      as="h3"
+      id={id}
+      fontFamily="heading"
+      size="md"
+      weight="semibold"
+      lineHeight="normal"
+      color="base"
+      mt="8"
+      mb="3"
+      className="group scroll-m-24"
+      {...props}
+    >
+      {children}
+      <HeadingAnchor id={id} />
+    </Text>
+  );
 }
 
 /**
@@ -62,35 +115,78 @@ function Pre({ children }: { children?: ReactNode }) {
   if (typeof code !== "string") return <pre>{children}</pre>;
 
   return (
-    <div className="my-6">
+    <Box my="6">
       <CodeBlock code={code} lang={lang} />
-    </div>
+    </Box>
   );
 }
 
+/*
+ * Prose links keep their accent colour on hover and shift only the underline,
+ * so the colour is set explicitly (which turns Link's own hover colour off)
+ * and the underline's colour and offset, which have no props, stay classes.
+ */
+const proseLinkClass =
+  "decoration-accent-stroke underline-offset-4 hover:decoration-accent-label";
+
 const components: MDXComponents = {
   h1: (props) => (
-    <h1 className="font-display text-3xl font-semibold tracking-tight text-label" {...props} />
+    <Text
+      as="h1"
+      fontFamily="heading"
+      size="3xl"
+      weight="semibold"
+      letterSpacing="tight"
+      color="base"
+      {...props}
+    />
   ),
-  h2: AnchorHeading("h2", "font-display mt-12 mb-4 border-t border-stroke-base pt-10 text-xl font-semibold tracking-tight text-label"),
-  h3: AnchorHeading("h3", "font-display mt-8 mb-3 text-base font-semibold text-label"),
+  h2: H2,
+  h3: H3,
   p: (props) => (
-    <p className="my-4 leading-7 text-label-muted [h1+&]:mt-3 [h1+&]:text-lg [h1+&]:text-label-muted" {...props} />
+    <Text
+      color="muted"
+      // The margin stays a class: the lead paragraph under the title and a
+      // paragraph inside a list item override it by selector, and a class
+      // cannot override a margin prop. 1.75rem is off the lineHeight scale.
+      className="my-4 leading-7 [h1+&]:mt-3 [h1+&]:text-lg"
+      {...props}
+    />
   ),
   a: ({ href = "", ...props }) => {
     const external = href.startsWith("http");
-    const className =
-      "font-medium text-accent-label underline decoration-accent-stroke underline-offset-4 transition-colors hover:decoration-accent-label";
     return external ? (
-      <a href={href} className={className} target="_blank" rel="noreferrer" {...props} />
+      <Link
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        variant="underline"
+        color="brand-label"
+        weight="medium"
+        className={proseLinkClass}
+        {...props}
+      />
     ) : (
-      <Link href={href} className={className} {...props} />
+      <Link
+        as={NextLink}
+        href={href}
+        variant="underline"
+        color="brand-label"
+        weight="medium"
+        className={proseLinkClass}
+        {...props}
+      />
     );
   },
-  ul: (props) => <ul className="my-4 list-disc space-y-2 pl-6 text-label-muted marker:text-label-subtle" {...props} />,
-  ol: (props) => <ol className="my-4 list-decimal space-y-2 pl-6 text-label-muted marker:text-label-subtle" {...props} />,
-  li: (props) => <li className="leading-7 [&>p]:my-0" {...props} />,
-  strong: (props) => <strong className="font-semibold text-label" {...props} />,
+  // List has no marker colour prop.
+  ul: (props) => <List my="4" color="muted" className="marker:text-label-subtle" {...props} />,
+  ol: (props) => (
+    <List as="ol" styleType="decimal" my="4" color="muted" className="marker:text-label-subtle" {...props} />
+  ),
+  // ListItem has no line-height prop, and a paragraph inside an item loses its margins by selector.
+  li: (props) => <ListItem className="leading-7 [&>p]:my-0" {...props} />,
+  // A Box, not a Text: Text always sets a font size, and bold text must keep the size of its sentence.
+  strong: (props) => <Box as="strong" color="base" className="font-semibold" {...props} />,
   /*
    * Prose primitives that map 1:1 onto library components. The docs page for
    * each of these documents the very component now rendering it: Code,
@@ -101,8 +197,8 @@ const components: MDXComponents = {
     <Code variant="outline" style={{ color: "var(--astralis-color-label-base)" }} {...props} />
   ),
   pre: Pre,
-  blockquote: (props) => <Blockquote className="my-6" {...props} />,
-  table: (props) => <Table variant="outline" className="docs-scroll my-6" {...props} />,
+  blockquote: (props) => <Blockquote my="6" {...props} />,
+  table: (props) => <Table variant="outline" my="6" className="docs-scroll" {...props} />,
   thead: (props) => <TableHeader {...props} />,
   tbody: (props) => <TableBody {...props} />,
   tr: (props) => <TableRow {...props} />,
@@ -114,7 +210,7 @@ const components: MDXComponents = {
       {...props}
     />
   ),
-  hr: () => <Separator className="my-10" />,
+  hr: () => <Separator my="10" />,
   // Docs building blocks available in every MDX page without imports.
   ComponentPreview,
   PropsTable,

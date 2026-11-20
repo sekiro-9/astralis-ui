@@ -15,7 +15,7 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
   return (
     /* Table brings its own overflow-x wrapper and, on `outline`, the rounded
        border, so the scroll container this used to hand-roll is gone. */
-    <Table variant="outline" className="docs-scroll my-6">
+    <Table variant="outline" my="6" className="docs-scroll">
       <Table.Header>
         <Table.Row>
           <Table.Head>Prop</Table.Head>
@@ -26,6 +26,7 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
       </Table.Header>
       <Table.Body>
         {rows.map((row) => (
+          // Table.Row and Table.Cell take no style props: alignment and cell widths stay classes.
           <Table.Row key={row.prop} className="align-top">
             <Table.Cell>
               {/* The accent tint has no Box token (bg/color are surface+label
