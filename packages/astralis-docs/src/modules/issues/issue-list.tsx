@@ -9,7 +9,7 @@ import { LabelTag, StateBadge } from "./badges";
 
 export function IssueList({ issues }: { issues: IssueSummary[] }) {
   return (
-    <Stack as="ul" gap="0" rounded="xl" border="normal" borderColor="base" overflow="hidden" className="divide-y divide-stroke-base">
+    <Stack as="ul" gap="0" rounded="xl" border="normal" borderColor="base" overflow="hidden" className="divide-y divide-stroke">
       {issues.map((issue) => (
         <Flex
           as="li"

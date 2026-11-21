@@ -67,7 +67,7 @@ function H2({ id, children, ...props }: HeadingProps) {
       mb="4"
       // `group` drives the anchor's reveal. Heading takes no scroll margin,
       // padding or border props, so the rule above the section stays classes.
-      className="group scroll-m-24 border-t border-stroke-base pt-10"
+      className="group scroll-m-24 border-t border-stroke pt-10"
       {...props}
     >
       {children}

@@ -61,7 +61,7 @@ function Cell({
     <Card
       variant="outline"
       size="lg"
-      className={`flex flex-col hover:-translate-y-1 hover:border-stroke-base hover:shadow-lg ${className}`}
+      className={`flex flex-col hover:-translate-y-1 hover:shadow-lg ${className}`}
       style={{
         borderRadius: "var(--astralis-border-radius-3xl)",
         background: "var(--astralis-color-surface-subtle)",
@@ -163,7 +163,7 @@ export function Bento({ stats }: { stats: SiteStats }) {
             {tokenRows.map((row) => (
               <DataListItem
                 key={row.token}
-                className="items-center justify-between border-b border-stroke-base pb-2 last:border-b-0 last:pb-0"
+                className="items-center justify-between border-b border-stroke pb-2 last:border-b-0 last:pb-0"
               >
                 {/* Overrides the horizontal Label's fixed w-40, which would crop
                     these long token names. */}

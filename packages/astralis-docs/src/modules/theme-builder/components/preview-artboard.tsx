@@ -73,9 +73,7 @@ export function PreviewArtboard({ vars }: { vars: Record<string, string> }) {
       {/* App chrome */}
       <Flex alignItems="center" justifyContent="between" borderB="normal" borderColor="base" px="6" py="3">
         <Flex alignItems="center" gap="3">
-          {/* bg-accent-solid is not a class the docs theme defines, so this
-              mark renders transparent; kept as found. */}
-          <Box as="span" size="6" rounded="lg" aria-hidden="true" className="bg-accent-solid" />
+          <Box as="span" size="6" rounded="lg" aria-hidden="true" bg="brand-solid" />
           <Heading as="h5" size="sm">
             Acme Cloud
           </Heading>

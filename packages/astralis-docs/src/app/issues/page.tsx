@@ -160,7 +160,7 @@ export default async function IssuesPage({ searchParams }: { searchParams: Promi
         {issues.length > 0 ? (
           <IssueList issues={issues} />
         ) : (
-          <EmptyState className="rounded-xl border border-dashed border-stroke-base py-12">
+          <EmptyState className="rounded-xl border border-dashed border-stroke py-12">
             <EmptyState.Indicator>
               <Inbox />
             </EmptyState.Indicator>

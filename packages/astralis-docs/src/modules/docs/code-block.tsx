@@ -46,10 +46,10 @@ export async function CodeBlock({ code, lang = "tsx", filename }: CodeBlockProps
       my="0"
       position="relative"
       // CodeBlock owns its paint, so its corners, border and surfaces take no props.
-      className="group rounded-xl border border-stroke-base bg-surface-subtle dark:bg-raised"
+      className="group rounded-xl border border-stroke bg-surface-subtle dark:bg-raised"
     >
       {filename && (
-        <CodeBlockHeader className="border-stroke-base py-2.5 font-normal text-label-muted">
+        <CodeBlockHeader className="border-stroke py-2.5 font-normal text-label-muted">
           <CodeBlockTitle>{filename}</CodeBlockTitle>
         </CodeBlockHeader>
       )}
@@ -62,7 +62,7 @@ export async function CodeBlock({ code, lang = "tsx", filename }: CodeBlockProps
         zIndex="lower"
         className="opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
       >
-        <CodeBlockCopyTrigger className="border border-stroke-base bg-surface text-label-muted hover:text-label" />
+        <CodeBlockCopyTrigger className="border border-stroke bg-surface text-label-muted hover:text-label" />
       </Box>
       <CodeBlockContent className="shiki docs-scroll p-4 text-[13px] leading-relaxed">
         <CodeBlockCode highlightedHtml={inner} />
