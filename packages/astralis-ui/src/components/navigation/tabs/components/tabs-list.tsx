@@ -18,6 +18,7 @@ import {
 } from "../tabs.styles";
 import { ChevronLeftIcon, ChevronRightIcon } from "../../../icon/internal-icons";
 import type { TabsListProps } from "../tabs.types";
+import { splitPlacement } from "../../../../utils/placement";
 import { identify } from "../../../../utils/dev-identity";
 
 /** How far one press of a scroll button travels: most of a screenful. */
@@ -43,8 +44,9 @@ export const TabsList = identify("Tabs.List", function TabsList({
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
   "aria-describedby": ariaDescribedBy,
-  ...rest
+  ...props
 }: TabsListProps) {
+  const { placementClass, rest } = splitPlacement(props);
   const { orientation, variant, rounded, value } = useTabsContext();
   const listRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState<CSSProperties>({ opacity: 0 });
@@ -144,7 +146,7 @@ export const TabsList = identify("Tabs.List", function TabsList({
       className={astralisMerge(
         tabsListVariants({ orientation, variant, rounded }),
         // Vertical has no wrapper, so the tablist is the root and takes these.
-        scrollable ? "" : className,
+        scrollable ? "" : astralisMerge(placementClass, className),
       )}
       {...(scrollable ? {} : rest)}
     >
@@ -162,7 +164,7 @@ export const TabsList = identify("Tabs.List", function TabsList({
   if (!scrollable) return tablist;
 
   return (
-    <div className={astralisMerge(tabsListWrapperVariants({ orientation }), className)} {...rest}>
+    <div className={astralisMerge(tabsListWrapperVariants({ orientation }), placementClass, className)} {...rest}>
       {overflow.start && (
         <button
           type="button"

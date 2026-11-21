@@ -2,16 +2,17 @@ import type { Ref } from "react";
 import { cardPadding } from "../card.styles";
 import type { CardHeaderProps } from "../card.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { identify } from "../../../../utils/dev-identity";
 
 export const CardHeader = identify("Card.Header", function CardHeader({
   extra,
   className = "",
-  style,
   children,
   ref,
-  ...rest
+  ...props
 }: CardHeaderProps & { ref?: Ref<HTMLDivElement> }) {
+  const { placementClass, rest } = splitPlacement(props);
   const hasExtra = extra !== undefined && extra !== null;
 
   return (
@@ -21,9 +22,9 @@ export const CardHeader = identify("Card.Header", function CardHeader({
         "astralis:flex astralis:items-start astralis:justify-between astralis:gap-3",
         hasExtra ? "astralis:border-b astralis:border-stroke-subtle" : "",
         cardPadding,
+        placementClass,
         className,
       )}
-      style={style}
       {...rest}
     >
       <div className="astralis:flex astralis:flex-col astralis:gap-1 astralis:min-w-0">{children}</div>

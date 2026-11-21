@@ -22,27 +22,31 @@ export interface TableProps extends HTMLAttributes<HTMLTableElement>, PlacementP
   className?: string;
 }
 
-export interface TableSectionProps extends HTMLAttributes<HTMLTableSectionElement> {
+export interface TableSectionProps extends HTMLAttributes<HTMLTableSectionElement>, PlacementProps {
   children: ReactNode;
   className?: string;
 }
 
-export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {
+export interface TableRowProps extends HTMLAttributes<HTMLTableRowElement>, PlacementProps {
   children: ReactNode;
   className?: string;
 }
 
-export interface TableHeadProps extends ThHTMLAttributes<HTMLTableCellElement> {
+export interface TableHeadProps extends ThHTMLAttributes<HTMLTableCellElement>, PlacementProps {
   children?: ReactNode;
   className?: string;
 }
 
-export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
+/** `width`/`height` stay the td's own HTML attributes, as they were before
+ *  cells took placement props; `w`/`h` are the style props. */
+export interface TableCellProps
+  extends TdHTMLAttributes<HTMLTableCellElement>,
+    Omit<PlacementProps, "width" | "height"> {
   children?: ReactNode;
   className?: string;
 }
 
-export interface TableCaptionProps extends HTMLAttributes<HTMLTableCaptionElement> {
+export interface TableCaptionProps extends HTMLAttributes<HTMLTableCaptionElement>, PlacementProps {
   placement?: "top" | "bottom";
   className?: string;
 }

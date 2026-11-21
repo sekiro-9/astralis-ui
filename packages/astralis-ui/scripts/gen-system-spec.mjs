@@ -462,17 +462,16 @@ for (const [name, entry] of Object.entries(components)) {
 }
 
 /* PLACEMENT_ADOPTERS is what placement-props.test.tsx renders, so it must
-   name every component the types give placement props, and only those. An
-   alias of a listed component (TagRoot is Tag) is the same function; a part
-   (Input.Password) is described by its own groups but is not on the list,
-   which names compounds and standalone components. */
+   name every component and part the types give placement props, and only
+   those. An alias of a listed component (TagRoot is Tag) is the same
+   function; a part is listed by its flat export (CardBody). */
 const adopters = new Set(PLACEMENT_ADOPTERS);
 for (const [name, entry] of Object.entries(components)) {
   const takesPlacement = entry.groups.includes("placement");
   const listedAs = [...adopters].find((listed) => rootExports[listed] === rootExports[name]);
   if (adopters.has(name) && !takesPlacement) {
     fail(`PLACEMENT_ADOPTERS names "${name}", whose type does not take every placement prop`);
-  } else if (takesPlacement && !listedAs && !entry.partOf) {
+  } else if (takesPlacement && !listedAs) {
     fail(`"${name}" takes placement props but is missing from PLACEMENT_ADOPTERS (utils/placement.ts) and its test`);
   }
 }

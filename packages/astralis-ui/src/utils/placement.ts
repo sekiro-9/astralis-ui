@@ -85,11 +85,11 @@ export const PLACEMENT_PROP_NAMES = [
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 
 /**
- * Every exported component that takes placement props, by its compound name
- * (TagRoot is Tag). Attached parts are not listed, except the standalone
- * inputs Input.Password and Input.Search, under their flat exports. The spec
- * generator fails the build when this list and the components' types
- * disagree, and placement-props.test.tsx fails when it renders fewer.
+ * Every exported component and part that takes placement props: components
+ * by their compound name (TagRoot is Tag), parts by their flat export
+ * (CardBody is Card.Body). The spec generator fails the build when this list
+ * and the components' types disagree, and placement-props.test.tsx fails
+ * when it renders fewer.
  */
 export const PLACEMENT_ADOPTERS = [
   "Accordion", "Alert", "Avatar", "Badge", "Breadcrumb", "Button", "ButtonGroup",
@@ -101,6 +101,14 @@ export const PLACEMENT_ADOPTERS = [
   "ScrollArea", "SegmentedControl", "Select", "Skeleton", "Slider", "Splitter", "Stat", "Steps",
   "Switch", "Table", "TableOfContents", "Tabs", "Tag", "Text", "ThemeToggle", "Timeline",
   "Toolbar",
+  // Parts. A compound's parent decides where each part sits (a Card.Body
+  // that fills the card, a Tabs.List aligned to the start); their look stays
+  // with the compound, so they take no paint props either.
+  "CardHeader", "CardTitle", "CardDescription", "CardBody", "CardFooter",
+  "CodeBlockContent", "DataListItem", "DataListLabel", "DataListValue", "PopoverContent",
+  "StatLabel", "StatValue", "StatHelpText", "StatIndicator",
+  "TableHeader", "TableBody", "TableFooter", "TableRow", "TableHead", "TableCell", "TableCaption",
+  "TabsList", "TabsContent",
 ] as const;
 
 const PLACEMENT_SET = new Set<string>(PLACEMENT_PROP_NAMES);

@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, HTMLAttributes, ReactNode, Ref } from "react";
 import type { SlotElement } from "../slot";
 import type { Side, Align } from "../../../hooks/use-anchor-position";
+import type { PlacementProps } from "../../../utils/placement";
 
 export interface PopoverProps {
   children: ReactNode;
@@ -26,7 +27,7 @@ export interface PopoverSlotProps extends Omit<HTMLAttributes<HTMLElement>, "chi
   ref?: Ref<HTMLElement>;
 }
 
-export interface PopoverContentProps extends ComponentPropsWithoutRef<"div"> {
+export interface PopoverContentProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   children: ReactNode;
   className?: string;
   /** Render the arrow pointing at the trigger. @default false */

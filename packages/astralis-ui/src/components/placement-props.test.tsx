@@ -10,6 +10,7 @@ import { CodeBlock } from "./typography/code-block";
 import { Table } from "./data-display/table";
 import { Steps } from "./navigation/steps";
 import { Tabs } from "./navigation/tabs";
+import { Popover } from "./overlay/popover";
 import { Tag } from "./data-display/tag";
 import { Skeleton } from "./feedback/skeleton";
 import { Loader } from "./feedback/loader";
@@ -91,7 +92,11 @@ import { AstralisProvider } from "../theme/provider";
  * returns the root function itself, so Steps and StepsRoot are one value and
  * only the compound name is exported.
  */
-const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactElement]> = [
+/** Where the placement lands, when it is not the first rendered element:
+ *  a part rendered inside its compound, or a portalled panel. */
+type Pick = (container: HTMLElement) => Element | null;
+
+const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactElement, Pick?]> = [
   ["Badge", (p) => <Badge {...p}>badge</Badge>],
   ["Kbd", (p) => <Kbd {...p}>K</Kbd>],
   ["Breadcrumb", (p) => <Breadcrumb {...p}><span>a</span></Breadcrumb>],
@@ -153,6 +158,32 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["CheckableTag", (p) => <CheckableTag {...p}>a</CheckableTag>],
   ["RangeSlider", (p) => <RangeSlider {...p} />],
   ["CopyButton", (p) => <CopyButton {...p} value="x" />],
+  ["CardHeader", (p) => <Card.Header {...p}>h</Card.Header>],
+  ["CardTitle", (p) => <Card.Title {...p}>t</Card.Title>],
+  ["CardDescription", (p) => <Card.Description {...p}>d</Card.Description>],
+  ["CardBody", (p) => <Card.Body {...p}>b</Card.Body>],
+  ["CardFooter", (p) => <Card.Footer {...p}>f</Card.Footer>],
+  ["CodeBlockContent", (p) => <CodeBlock.Content {...p}>x</CodeBlock.Content>],
+  ["DataListItem", (p) => <DataList.Item {...p}>i</DataList.Item>],
+  ["DataListLabel", (p) => <DataList.Label {...p}>l</DataList.Label>],
+  ["DataListValue", (p) => <DataList.Value {...p}>v</DataList.Value>],
+  ["StatLabel", (p) => <Stat.Label {...p}>l</Stat.Label>],
+  ["StatValue", (p) => <Stat.Value {...p}>v</Stat.Value>],
+  ["StatHelpText", (p) => <Stat.HelpText {...p}>h</Stat.HelpText>],
+  ["StatIndicator", (p) => <Stat.Indicator {...p}>i</Stat.Indicator>],
+  // Horizontal lists put placement on the scroll wrapper; vertical ones have
+  // none, so the tablist itself is the root.
+  ["TabsList", (p) => <Tabs defaultValue="a"><Tabs.List {...p}><Tabs.Trigger value="a">a</Tabs.Trigger></Tabs.List></Tabs>, (c) => c.firstElementChild!.firstElementChild],
+  ["TabsListVertical", (p) => <Tabs defaultValue="a" orientation="vertical"><Tabs.List {...p}><Tabs.Trigger value="a">a</Tabs.Trigger></Tabs.List></Tabs>, (c) => c.querySelector('[role="tablist"]')],
+  ["TabsContent", (p) => <Tabs defaultValue="a"><Tabs.Content {...p} value="a">c</Tabs.Content></Tabs>, (c) => c.querySelector('[role="tabpanel"]')],
+  ["PopoverContent", (p) => <Popover defaultOpen><Popover.Content {...p}>c</Popover.Content></Popover>, () => document.body.querySelector('[role="dialog"]')],
+  ["TableHeader", (p) => <table><Table.Header {...p}><tr><th>h</th></tr></Table.Header></table>, (c) => c.querySelector("thead")],
+  ["TableBody", (p) => <table><Table.Body {...p}><tr><td>b</td></tr></Table.Body></table>, (c) => c.querySelector("tbody")],
+  ["TableFooter", (p) => <table><Table.Footer {...p}><tr><td>f</td></tr></Table.Footer></table>, (c) => c.querySelector("tfoot")],
+  ["TableRow", (p) => <table><tbody><Table.Row {...p}><td>r</td></Table.Row></tbody></table>, (c) => c.querySelector("tr")],
+  ["TableHead", (p) => <table><thead><tr><Table.Head {...p}>h</Table.Head></tr></thead></table>, (c) => c.querySelector("th")],
+  ["TableCell", (p) => <table><tbody><tr><Table.Cell {...p}>c</Table.Cell></tr></tbody></table>, (c) => c.querySelector("td")],
+  ["TableCaption", (p) => <table><Table.Caption {...p}>c</Table.Caption></table>, (c) => c.querySelector("caption")],
 ];
 
 /** Adopters whose placement lands below the root, tested on their own below. */
@@ -163,10 +194,12 @@ it("renders every component PLACEMENT_ADOPTERS names", () => {
   expect(PLACEMENT_ADOPTERS.filter((name) => !rendered.has(name))).toEqual([]);
 });
 
-describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
+describe.each(ADOPTERS)("placement on %s", (name, render_, pick) => {
+  const rootOf = (container: HTMLElement) => (pick ? pick(container) : container.firstElementChild) as HTMLElement;
+
   it("resolves w and mt to channel classes + vars and keeps both off the DOM", () => {
     const { container } = render(render_({ w: "full", mt: "4" }));
-    const root = container.firstElementChild as HTMLElement;
+    const root = rootOf(container);
 
     expect([...root.classList]).toEqual(
       expect.arrayContaining(["astralis-w", "astralis-mt"]),
@@ -181,10 +214,12 @@ describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
     const { container } = render(
       render_({ position: "absolute", left: "4", top: "8" }),
     );
-    const root = container.firstElementChild as HTMLElement;
+    const root = rootOf(container);
 
+    // Popover.Content places itself: its own `fixed` survives the merge.
+    const position = name === "PopoverContent" ? "astralis:fixed" : "astralis:absolute";
     expect([...root.classList]).toEqual(
-      expect.arrayContaining(["astralis:absolute", "astralis-left", "astralis-top"]),
+      expect.arrayContaining([position, "astralis-left", "astralis-top"]),
     );
     expect(root.style.getPropertyValue("--astralis-left")).toBe("var(--astralis-spacing-4)");
     expect(root.style.getPropertyValue("--astralis-top")).toBe("var(--astralis-spacing-8)");
@@ -195,7 +230,7 @@ describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
 
   it("takes a responsive display that replaces the recipe's own display", () => {
     const { container } = render(render_({ display: { base: "hidden", lg: "inline-flex" } }));
-    const root = container.firstElementChild as HTMLElement;
+    const root = rootOf(container);
 
     expectDisplay(root, "hidden", "astralis:lg:inline-flex");
     expect(root.hasAttribute("display")).toBe(false);
@@ -312,6 +347,17 @@ describe("placement props on recipe components", () => {
     expectDisplay(container.querySelector("[data-card-size]")!, "hidden", "astralis:md:block");
     expectDisplay(toggle, "hidden", "astralis:md:inline-flex");
     expectDisplay(floating, "hidden", "astralis:md:inline-flex");
+  });
+
+  it("keeps a table cell's width and height as HTML attributes", () => {
+    const { container } = render(
+      <table><tbody><tr><Table.Cell width="120" height="40" w="32">c</Table.Cell></tr></tbody></table>,
+    );
+    const cell = container.querySelector("td")!;
+
+    expect(cell.getAttribute("width")).toBe("120");
+    expect(cell.getAttribute("height")).toBe("40");
+    expect(cell.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-32)");
   });
 
   it("gives Stat placement props", () => {

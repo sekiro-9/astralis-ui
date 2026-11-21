@@ -9,11 +9,13 @@ import { usePresence } from "../../../../hooks/use-presence";
 import { useDismiss } from "../../../../hooks/use-dismiss";
 import { useAnchorPosition } from "../../../../hooks/use-anchor-position";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { identify } from "../../../../utils/dev-identity";
 
 const DURATION = 160;
 
-export const PopoverContent = identify("Popover.Content", function PopoverContent({ children, className = "", withArrow = false, ...rest }: PopoverContentProps) {
+export const PopoverContent = identify("Popover.Content", function PopoverContent({ children, className = "", withArrow = false, ...props }: PopoverContentProps) {
+  const { placementClass, rest: { style, ...rest } } = splitPlacement(props);
   const {
     open, close, triggerRef, contentRef, arrowRef, contentId, titleId, descriptionId,
     hasTitle, hasDescription, side, align, sideOffset, alignOffset, avoidCollisions,
@@ -57,8 +59,12 @@ export const PopoverContent = identify("Popover.Content", function PopoverConten
         aria-describedby={hasDescription ? descriptionId : undefined}
         tabIndex={-1}
         data-side={resolvedSide}
-        style={{ left: x, top: y, transitionDuration: `${DURATION}ms` }}
+        style={{ left: x, top: y, transitionDuration: `${DURATION}ms`, ...style }}
         className={astralisMerge(
+          // Before the panel's own classes: the popover places itself, so its
+          // `fixed` and z-index beat `position`/`zIndex`, and its inline
+          // left/top beat those offsets. Size, margin, display and motion apply.
+          placementClass,
           popoverContentClasses,
           // `transition` (not -all): left/top must snap, never animate.
           "astralis:p-4 astralis:transition",

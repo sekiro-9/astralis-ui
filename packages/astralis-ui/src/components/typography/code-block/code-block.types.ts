@@ -52,7 +52,7 @@ export interface CodeBlockWindowControlsProps extends HTMLAttributes<HTMLSpanEle
   style?: CSSProperties;
 }
 
-export interface CodeBlockContentProps extends HTMLAttributes<HTMLPreElement> {
+export interface CodeBlockContentProps extends HTMLAttributes<HTMLPreElement>, PlacementProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;

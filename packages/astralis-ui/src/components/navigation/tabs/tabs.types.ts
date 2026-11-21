@@ -32,7 +32,7 @@ export interface TabsProps extends Omit<ComponentPropsWithoutRef<"div">, "onChan
   children: ReactNode;
 }
 
-export interface TabsListProps extends ComponentPropsWithoutRef<"div"> {
+export interface TabsListProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   children: ReactNode;
 }
 
@@ -43,7 +43,7 @@ export interface TabsTriggerProps extends Omit<ComponentPropsWithoutRef<"button"
   children: ReactNode;
 }
 
-export interface TabsContentProps extends ComponentPropsWithoutRef<"div"> {
+export interface TabsContentProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   /** Matches the trigger's `value`. */
   value: string;
   children: ReactNode;

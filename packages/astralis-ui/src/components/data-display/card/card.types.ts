@@ -29,7 +29,7 @@ export interface CardRootProps extends HTMLAttributes<HTMLDivElement>, Placement
   children?: ReactNode;
 }
 
-export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   /** Content rendered in the trailing slot (e.g. a button or link) */
   extra?: ReactNode;
   className?: string;
@@ -37,25 +37,25 @@ export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {
+export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement>, PlacementProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
 
-export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElement>, PlacementProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
 
-export interface CardBodyProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardBodyProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
 }
 
-export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
+export interface CardFooterProps extends HTMLAttributes<HTMLDivElement>, PlacementProps {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;

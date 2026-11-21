@@ -12,21 +12,21 @@ export interface DataListProps extends ComponentPropsWithoutRef<"dl">, Placement
   className?: string;
 }
 
-export interface DataListItemProps extends ComponentPropsWithoutRef<"div"> {
+export interface DataListItemProps extends ComponentPropsWithoutRef<"div">, PlacementProps {
   children: ReactNode;
   className?: string;
   /** The one-off escape hatch — always forwarded, always wins. */
   style?: CSSProperties;
 }
 
-export interface DataListLabelProps extends ComponentPropsWithoutRef<"dt"> {
+export interface DataListLabelProps extends ComponentPropsWithoutRef<"dt">, PlacementProps {
   children: ReactNode;
   className?: string;
   /** The one-off escape hatch — always forwarded, always wins. */
   style?: CSSProperties;
 }
 
-export interface DataListValueProps extends ComponentPropsWithoutRef<"dd"> {
+export interface DataListValueProps extends ComponentPropsWithoutRef<"dd">, PlacementProps {
   children: ReactNode;
   className?: string;
   /** The one-off escape hatch — always forwarded, always wins. */
