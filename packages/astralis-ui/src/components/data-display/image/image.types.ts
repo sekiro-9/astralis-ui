@@ -68,11 +68,11 @@ export interface ImageProps extends ImageOwnProps {
   srcset?: string;
   sizes?: string;
   /**
-   * What the frame shows while the image loads: "empty" a pulsing muted
+   * What the frame shows while the image loads: "empty" a muted
    * surface with a small image glyph ("blur" is kept as another name for
    * it), or a URL of a low-resolution version drawn behind the image.
    * With `as`, `placeholder` is that component's own (Next's "blur" with
-   * `blurDataURL`), and the pulsing surface shows only while it is unset or "empty".
+   * `blurDataURL`), and the loading surface shows only while it is unset or "empty".
    * @default "empty"
    */
   placeholder?: "blur" | "empty" | string;

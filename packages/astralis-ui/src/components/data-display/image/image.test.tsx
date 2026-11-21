@@ -288,7 +288,7 @@ describe("Image through an image component (as)", () => {
     expect(onError).toHaveBeenCalledOnce();
   });
 
-  it("hands placeholder to the component: its blur shows, with no pulsing surface beneath", () => {
+  it("hands placeholder to the component: its blur shows, with no loading surface beneath", () => {
     const { container } = render(
       <Image as={FrameworkImage} src="/a.jpg" alt="" width={40} height={40} placeholder="blur" blurDataURL="data:image/png;base64,AAAA" />,
     );

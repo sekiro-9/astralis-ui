@@ -47,7 +47,7 @@ export const imageProps: PropRow[] = [
     type: `"blur" | "empty" | URL`,
     default: `"empty"`,
     description:
-      "What the frame shows while the image loads: a pulsing muted surface with a small image glyph (\"empty\"; \"blur\" is another name for it), or a low-resolution image URL drawn behind the picture. The real src is always in the server HTML.",
+      "What the frame shows while the image loads: a muted surface with a small image glyph (\"empty\"; \"blur\" is another name for it), or a low-resolution image URL drawn behind the picture. The real src is always in the server HTML.",
   },
   {
     prop: "srcset / sizes",

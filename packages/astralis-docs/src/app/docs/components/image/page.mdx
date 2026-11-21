@@ -30,8 +30,8 @@ add `w` or `h`, responsive or not, and those size it instead, with `width` and
 ```
 
 The real `src` is in the server HTML, so the download starts before any
-JavaScript runs. Until it paints, the frame shows a pulsing muted surface with
-a small image glyph (the pulse stops under reduced motion), or the low-resolution URL
+JavaScript runs. Until it paints, the frame shows a muted surface with a small
+image glyph, or the low-resolution URL
 you pass as `placeholder`.
 
 ## With Next.js
@@ -39,7 +39,7 @@ you pass as `placeholder`.
 Pass Next's image component as `as`, and Image renders through it: Next does
 the resizing, the modern formats, `srcset`/`sizes` and the preload, and Image
 keeps its look (`rounded`, `objectFit`, `aspectRatio`), the placement props,
-the pulsing loading surface and the fallback when the picture fails. The
+the loading surface and the fallback when the picture fails. The
 library never imports `next`; it only takes the component you pass.
 
 ```tsx
@@ -55,7 +55,7 @@ With `as`, every prop Image does not own is the component's and goes to it:
 `src` (a static import too), `width`/`height`, `sizes`, `preload`/`priority`,
 `quality`, `fill`, `loading`. `placeholder` is also the component's, so
 `placeholder="blur"` with `blurDataURL` (or a static import) is Next's blur,
-and Image shows its own pulsing surface only while `placeholder` is unset or
+and Image shows its own loading surface only while `placeholder` is unset or
 `"empty"`. Image adds no `loading="lazy"` of its own here, so `preload` works.
 With `fill`, give `aspectRatio` (Image's frame is the positioned parent Next
 needs) or put it in a positioned parent yourself, and pass `sizes`.
