@@ -145,14 +145,14 @@ describe("identify", () => {
 
   it("names a Server Component with the props it was configured with", () => {
     render(
-      <Card variant="outline" p={{ base: "2", md: "4" }}>
+      <Card variant="outline" m={{ base: "2", md: "4" }}>
         <Card.Body>body</Card.Body>
       </Card>,
     );
     const body = screen.getByText("body");
     expect(body.getAttribute("data-astralis")).toBe("Card.Body");
     const card = body.closest('[data-astralis="Card"]');
-    expect(described(card)).toEqual([{ variant: "outline", p: { base: "2", md: "4" } }]);
+    expect(described(card)).toEqual([{ variant: "outline", m: { base: "2", md: "4" } }]);
   });
 
   it("names the parts an interactive overlay renders once it opens", async () => {
@@ -160,7 +160,7 @@ describe("identify", () => {
     render(
       <Modal>
         <Modal.Trigger>
-          <Button variant="ghost">Open</Button>
+          <Button variant="subtle">Open</Button>
         </Modal.Trigger>
         <Modal.Content>
           <Modal.Title>Layer</Modal.Title>
@@ -169,7 +169,7 @@ describe("identify", () => {
     );
     const trigger = screen.getByRole("button", { name: "Open" });
     expect(trigger.getAttribute("data-astralis")).toBe("Modal.Trigger Button");
-    expect(described(trigger)).toEqual([{}, { variant: "ghost" }]);
+    expect(described(trigger)).toEqual([{}, { variant: "subtle" }]);
 
     await user.click(trigger);
     await waitFor(() => expect(screen.getByText("Layer")).toBeInTheDocument());
