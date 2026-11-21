@@ -636,3 +636,9 @@ test("CSS-wide keywords: those a channel carries pass, the rest are errors", () 
   assert.match(bad.errors[0].message, /Box: w="inherit" cannot work: .*copy the nearest w set above.* It takes initial, unset$/);
   assert.match(bad.errors[4].message, /copy the nearest h set above/);
 });
+
+test("a style prop on a component that takes none says so in words", () => {
+  const r = validate(`<Textarea p="4" />`, "Textarea");
+  assert.deepEqual(codes(r.errors), ["unknown-style-prop"]);
+  assert.match(r.errors[0].message, /\(Textarea takes no style props; put p on a Box around it\)$/);
+});

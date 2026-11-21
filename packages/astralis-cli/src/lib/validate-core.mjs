@@ -464,7 +464,7 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
       `${name} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing` +
       (recipe
         ? ` (${name} owns how it looks; reach for variant, size or colorScheme)`
-        : ` (${name} takes ${comp.groups.join(", ")} props; put ${prop} on a Box around it)`));
+        : ` (${name} takes ${comp.groups.length ? `${comp.groups.join(", ")} props` : "no style props"}; put ${prop} on a Box around it)`));
   }
   // Anything else: DOM prop or open-typed, no claim.
 }
