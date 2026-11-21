@@ -134,5 +134,6 @@ test("annotations escape what GitHub's command syntax reserves", () => {
 
 test("annotation paths are relative to the repository, not the working directory", () => {
   assert.equal(repositoryPath("src/page.tsx", { cwd: "/repo/apps/web", workspace: "/repo" }), "apps/web/src/page.tsx");
-  assert.equal(repositoryPath("src/page.tsx", { cwd: "/repo", workspace: undefined }), "src/page.tsx");
+  // An empty string, not undefined: undefined falls back to GITHUB_WORKSPACE, which is set when this runs in Actions.
+  assert.equal(repositoryPath("src/page.tsx", { cwd: "/repo", workspace: "" }), "src/page.tsx");
 });
