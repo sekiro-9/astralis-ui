@@ -65,6 +65,7 @@
 @import "./theme/channels.css";
 @import "./theme/motion.css";
 @import "./components/data-display/image/image.css";
+@import "./components/disclosure/carousel/carousel.css";
 
 /* Auto-generated: forces sm/md/lg/xl variants for every token utility so the
    runtime responsive engine always resolves to real CSS. Regenerate via

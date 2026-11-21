@@ -11,9 +11,9 @@ export const carouselProps: PropRow[] = [
   },
   {
     prop: "slidesPerView",
-    type: "number",
+    type: "number | { base, sm, md, lg, xl }",
     default: "1",
-    description: "Visible slides; fractional values (1.5) peek the next slide.",
+    description: "Visible slides; fractional values (1.5) peek the next slide. A map sets it per breakpoint.",
   },
   {
     prop: "slidesToScroll",
@@ -23,9 +23,9 @@ export const carouselProps: PropRow[] = [
   },
   {
     prop: "slideGap",
-    type: "number",
+    type: "number | { base, sm, md, lg, xl }",
     default: "0",
-    description: "Pixel gap between slides.",
+    description: "Pixel gap between slides, or a map of pixel gaps per breakpoint.",
   },
   {
     prop: "loop",

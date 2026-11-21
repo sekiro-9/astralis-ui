@@ -41,6 +41,7 @@ export type {
   CarouselOrientation,
   CarouselIndicatorVariant,
   CarouselSize,
+  CarouselBreakpointMap,
   CarouselTrackProps,
   CarouselSlideProps,
   CarouselControlGroupProps,

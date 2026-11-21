@@ -15,7 +15,6 @@ export interface CarouselContextValue {
   /* layout */
   slidesPerView: number;
   slidesToScroll: number;
-  slideGap: number;
   orientation: CarouselOrientation;
   animation: CarouselAnimation;
   speed: number;
@@ -32,6 +31,10 @@ export interface CarouselContextValue {
   isPlaying: boolean;
   toggleAutoPlay: () => void;
 }
+
+/** The active per-view count and gap, set on the root by carousel.css. */
+export const PER_VIEW = "var(--astralis-carousel-per-view)";
+export const GAP = "var(--astralis-carousel-gap)";
 
 export const CarouselContext = createContext<CarouselContextValue | null>(null);
 

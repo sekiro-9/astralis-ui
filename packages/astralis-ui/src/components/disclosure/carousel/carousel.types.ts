@@ -1,11 +1,14 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef, ReactNode, CSSProperties } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
+import type { Breakpoint } from "../../../const/breakpoints";
 
 export type CarouselAnimation = "slide" | "fade";
 export type CarouselOrientation = "horizontal" | "vertical";
 export type CarouselIndicatorVariant = "dot" | "line" | "number";
 export type CarouselSize = "sm" | "md" | "lg";
+/** A number per viewport breakpoint; each holds upward until a wider key replaces it. */
+export type CarouselBreakpointMap = Partial<Record<"base" | Breakpoint, number>>;
 
 // `animation` here is the slide transition (slide or fade), not the motion
 // placement prop of the same name, so the name goes to Carousel's own API.
@@ -18,12 +21,14 @@ export interface CarouselProps extends ComponentPropsWithoutRef<"div">, Omit<Pla
   beforeChange?: (from: number, to: number) => void;
   afterChange?: (current: number) => void;
 
-  /** Slides visible at once. Fractional values (e.g. 1.2) peek the next slide. @default 1 */
-  slidesPerView?: number;
+  /** Slides visible at once. Fractional values (e.g. 1.2) peek the next slide.
+   *  Takes a breakpoint map (`{ base: 1, md: 2, lg: 3 }`), laid out by CSS so
+   *  the server's HTML is right at every width. @default 1 */
+  slidesPerView?: number | CarouselBreakpointMap;
   /** Slides advanced per Prev/Next/swipe step. @default 1 */
   slidesToScroll?: number;
-  /** Gap between slides, in pixels. @default 0 */
-  slideGap?: number;
+  /** Gap between slides, in pixels, or a breakpoint map of pixel values. @default 0 */
+  slideGap?: number | CarouselBreakpointMap;
 
   /** Wrap from last step to first (and back). @default false */
   loop?: boolean;

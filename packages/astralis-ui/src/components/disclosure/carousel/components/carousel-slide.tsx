@@ -2,11 +2,11 @@
 
 import type { CSSProperties } from "react";
 import type { CarouselSlideProps } from "../carousel.types";
-import { useCarousel, useCarouselItemIndex } from "../carousel.context";
+import { useCarousel, useCarouselItemIndex, GAP, PER_VIEW } from "../carousel.context";
 import { identify } from "../../../../utils/dev-identity";
 
 export const CarouselSlide = identify("Carousel.Slide", function CarouselSlide({ children, className = "", style: styleProp, ...rest }: CarouselSlideProps) {
-  const { index, slideCount, slidesPerView, slideGap, orientation, animation, speed, easing } = useCarousel();
+  const { index, slideCount, slidesPerView, orientation, animation, speed, easing } = useCarousel();
   const i = useCarouselItemIndex();
   const isVertical = orientation === "vertical";
 
@@ -40,7 +40,7 @@ export const CarouselSlide = identify("Carousel.Slide", function CarouselSlide({
   // slide: a flex item sized to show `slidesPerView` per view
   const scroll = Math.min(index, Math.max(0, slideCount - slidesPerView));
   const visible = i >= Math.floor(scroll) && i < scroll + slidesPerView;
-  const basis = `calc((100% - ${slidesPerView - 1} * ${slideGap}px) / ${slidesPerView})`;
+  const basis = `calc((100% - (${PER_VIEW} - 1) * ${GAP}) / ${PER_VIEW})`;
   const style: CSSProperties = {
     flex: `0 0 ${basis}`,
     ...(isVertical ? { minHeight: 0 } : { minWidth: 0 }),

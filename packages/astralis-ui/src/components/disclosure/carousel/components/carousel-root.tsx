@@ -10,6 +10,32 @@ import type { CarouselProps } from "../carousel.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { accentClass } from "../../../../const/color-schemes";
 import { identify } from "../../../../utils/dev-identity";
+import { useBreakpointValue, type BreakpointMap } from "../../../../hooks/use-breakpoint-value";
+import type { CarouselBreakpointMap } from "../carousel.types";
+import { BREAKPOINTS } from "../../../../const/breakpoints";
+
+const LAYOUT_KEYS = new Set<string>(["base", ...BREAKPOINTS]);
+
+function toBreakpointMap(value: number | CarouselBreakpointMap, fallback: number): BreakpointMap<number> & { base: number } {
+  return typeof value === "number" ? { base: value } : { ...value, base: value.base ?? fallback };
+}
+
+/** The classes and inline variables carousel.css turns into the active
+ *  `--astralis-carousel-per-view` and `--astralis-carousel-gap`. */
+function carouselLayoutVars(perView: BreakpointMap<number>, gap: BreakpointMap<number>) {
+  const classes: string[] = [];
+  const style: Record<string, string> = {};
+  const add = (slug: string, map: BreakpointMap<number>, unit: string) => {
+    for (const [key, value] of Object.entries(map)) {
+      if (value === undefined || !LAYOUT_KEYS.has(key)) continue;
+      classes.push(key === "base" ? `astralis-carousel-${slug}` : `astralis-carousel-${slug}-${key}`);
+      style[`--astralis-carousel-${slug}-${key}`] = `${value}${unit}`;
+    }
+  };
+  add("per-view", perView, "");
+  add("gap", gap, "px");
+  return { className: classes.join(" "), style };
+}
 
 export const CarouselRoot = identify("Carousel", function CarouselRoot({
   index: controlledIndex,
@@ -51,9 +77,22 @@ export const CarouselRoot = identify("Carousel", function CarouselRoot({
   const [hovered, setHovered] = useState(false);
   const paused = pauseOnHover && hovered;
 
+  // CSS lays the slides out per breakpoint; JS needs the active count only
+  // for paging, and reads it after mount.
+  const perViewMap = toBreakpointMap(slidesPerView, 1);
+  const gapMap = toBreakpointMap(slideGap, 0);
+  const layoutVars = carouselLayoutVars(perViewMap, gapMap);
+  const activePerView = useBreakpointValue(perViewMap);
+
   // `fade` only ever shows one slide; otherwise the last page starts here.
-  const perView = animation === "fade" ? 1 : slidesPerView;
+  const perView = animation === "fade" ? 1 : activePerView;
   const lastIndex = Math.max(0, Math.ceil(slideCount - perView));
+
+  // A wider viewport shows more per view, so the last page can start earlier
+  // than the current index; pull the index back so paging stays in step.
+  useEffect(() => {
+    if (slideCount > 0 && index > lastIndex) setIndex(lastIndex);
+  }, [slideCount, index, lastIndex, setIndex]);
 
   const afterTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   useEffect(() => {
@@ -117,12 +156,12 @@ export const CarouselRoot = identify("Carousel", function CarouselRoot({
   const ctx = useMemo(
     () => ({
       index, setIndex: goTo, slideCount, setSlideCount, lastIndex,
-      slidesPerView: perView, slidesToScroll, slideGap,
+      slidesPerView: perView, slidesToScroll,
       orientation, animation, speed, easing, size,
       loop, disabled, swipeable, draggable,
       isPlaying, toggleAutoPlay,
     }),
-    [index, goTo, slideCount, lastIndex, perView, slidesToScroll, slideGap,
+    [index, goTo, slideCount, lastIndex, perView, slidesToScroll,
      orientation, animation, speed, easing, size, loop, disabled, swipeable, draggable, isPlaying, toggleAutoPlay],
   );
 
@@ -145,10 +184,12 @@ export const CarouselRoot = identify("Carousel", function CarouselRoot({
           layout,
           "astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring",
           accentClass(colorScheme),
+          layoutVars.className,
           placementClass,
           className,
         )}
         {...domProps}
+        style={{ ...layoutVars.style, ...domProps.style }}
       >
         {children}
       </div>

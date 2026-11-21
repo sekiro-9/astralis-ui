@@ -80,6 +80,7 @@ import { CarouselDemo } from "./carousel/carousel-demo";
 import { CarouselAutoplay } from "./carousel/carousel-autoplay";
 import { CarouselMulti } from "./carousel/carousel-multi";
 import { CarouselFade } from "./carousel/carousel-fade";
+import { CarouselResponsive } from "./carousel/carousel-responsive";
 import { PaginationDemo } from "./pagination/pagination-demo";
 import { PaginationVariants } from "./pagination/pagination-variants";
 import { PaginationFull } from "./pagination/pagination-full";
@@ -304,6 +305,7 @@ export const demos = {
   "carousel-autoplay": { component: CarouselAutoplay, file: "carousel/carousel-autoplay.tsx" },
   "carousel-multi": { component: CarouselMulti, file: "carousel/carousel-multi.tsx" },
   "carousel-fade": { component: CarouselFade, file: "carousel/carousel-fade.tsx" },
+  "carousel-responsive": { component: CarouselResponsive, file: "carousel/carousel-responsive.tsx" },
   "pagination-demo": { component: PaginationDemo, file: "pagination/pagination-demo.tsx" },
   "pagination-variants": { component: PaginationVariants, file: "pagination/pagination-variants.tsx" },
   "pagination-full": { component: PaginationFull, file: "pagination/pagination-full.tsx" },

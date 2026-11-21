@@ -1,0 +1,26 @@
+/* Carousel `slidesPerView` and `slideGap`, responsive with no JavaScript.
+   The same shape as the channel rules (theme/channels.css): the root carries a
+   class per breakpoint it sets and the value in a matching inline variable,
+   and each rule copies that value into the active variable the track and the
+   slides compute their sizes from. So the server's HTML lays out correctly at
+   every width before hydration. Widths are breakpoints.ts's; the coverage gate
+   fails on any other. */
+.astralis-carousel-per-view { --astralis-carousel-per-view: var(--astralis-carousel-per-view-base); }
+.astralis-carousel-gap { --astralis-carousel-gap: var(--astralis-carousel-gap-base); }
+
+@media (min-width: 40rem) {
+  .astralis-carousel-per-view-sm { --astralis-carousel-per-view: var(--astralis-carousel-per-view-sm); }
+  .astralis-carousel-gap-sm { --astralis-carousel-gap: var(--astralis-carousel-gap-sm); }
+}
+@media (min-width: 48rem) {
+  .astralis-carousel-per-view-md { --astralis-carousel-per-view: var(--astralis-carousel-per-view-md); }
+  .astralis-carousel-gap-md { --astralis-carousel-gap: var(--astralis-carousel-gap-md); }
+}
+@media (min-width: 64rem) {
+  .astralis-carousel-per-view-lg { --astralis-carousel-per-view: var(--astralis-carousel-per-view-lg); }
+  .astralis-carousel-gap-lg { --astralis-carousel-gap: var(--astralis-carousel-gap-lg); }
+}
+@media (min-width: 80rem) {
+  .astralis-carousel-per-view-xl { --astralis-carousel-per-view: var(--astralis-carousel-per-view-xl); }
+  .astralis-carousel-gap-xl { --astralis-carousel-gap: var(--astralis-carousel-gap-xl); }
+}

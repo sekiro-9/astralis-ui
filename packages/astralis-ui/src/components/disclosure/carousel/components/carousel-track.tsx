@@ -2,7 +2,7 @@
 
 import { Children, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { CarouselTrackProps } from "../carousel.types";
-import { useCarousel, CarouselItemContext } from "../carousel.context";
+import { useCarousel, CarouselItemContext, GAP, PER_VIEW } from "../carousel.context";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { resolveServerChild } from "../../../../utils/resolve-server-child";
 import { identify } from "../../../../utils/dev-identity";
@@ -10,7 +10,7 @@ import { identify } from "../../../../utils/dev-identity";
 export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({ children, className = "", style, ...rest }: CarouselTrackProps) {
   const {
     index, setIndex, setSlideCount, slideCount,
-    slidesPerView, slidesToScroll, slideGap,
+    slidesPerView, slidesToScroll,
     orientation, animation, speed, easing, swipeable, draggable,
   } = useCarousel();
 
@@ -71,10 +71,13 @@ export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({
 
   /* slide: flex track translated by whole pages
      Step per slide is (100% + gap) / slidesPerView; the scroll position is
-     clamped to (slideCount - slidesPerView) so the final page sits flush. */
+     clamped to (slideCount - slidesPerView) so the final page sits flush.
+     The per-view count and gap in the CSS are the root's active variables
+     (carousel.css), so the layout is right at every width before hydration;
+     the JS count only clamps the scroll. */
   const maxScroll = Math.max(0, slideCount - slidesPerView);
   const scroll = Math.min(index, maxScroll);
-  const move = `calc(-1 * ${scroll} * (100% + ${slideGap}px) / ${slidesPerView})`;
+  const move = `calc(-1 * ${scroll} * (100% + ${GAP}) / ${PER_VIEW})`;
 
   return (
     <div
@@ -86,7 +89,7 @@ export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({
         aria-live="polite"
         className={`astralis:flex ${isVertical ? "astralis:flex-col astralis:h-full" : "astralis:flex-row astralis:w-full"}`}
         style={{
-          gap: slideGap ? `${slideGap}px` : undefined,
+          gap: GAP,
           transform: isVertical ? `translateY(${move})` : `translateX(${move})`,
           transitionProperty: "transform",
           transitionDuration: `${speed}ms`,

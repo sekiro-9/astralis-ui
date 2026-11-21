@@ -51,6 +51,15 @@ swipe this" cue there is.
 
 <ComponentPreview name="carousel-multi" />
 
+## Responsive slides per view
+
+`slidesPerView` and `slideGap` also take a breakpoint map. CSS lays the
+slides out per breakpoint, so the server's HTML is right at every width before
+any JavaScript runs; paging and the indicators follow the viewport after
+mount, including on resize. A map without `base` starts from 1 slide and no gap.
+
+<ComponentPreview name="carousel-responsive" />
+
 ## Fade
 
 `animation="fade"` cross-fades in place instead of translating the track,
