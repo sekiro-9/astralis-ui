@@ -36,6 +36,7 @@ const PKG = join(__dirname, "..");
 const { BREAKPOINTS, BREAKPOINT_WIDTHS } = await import(
   pathToFileURL(join(PKG, "dist", "const", "breakpoints.js")).href
 );
+const { INHERIT_CHANNEL_SLUGS } = await import(pathToFileURL(join(PKG, "dist", "const", "channel.js")).href);
 const STATES = ["hover", "focus-visible", "active"];
 const CONTAINER_WIDTHS = BREAKPOINT_WIDTHS;
 const CHANNEL_MAP_BRAND = Symbol.for("astralis.channel-map");
@@ -77,19 +78,28 @@ for (const bare of all) {
 /* ---- part 2: channel completeness -------------------------------------- */
 const slugs = collectChannelSlugs();
 
-for (const slug of slugs) {
-  if (!defined.has(`astralis-${slug}`)) missing.push(`astralis-${slug}  [channel base]`);
+// A paint slug's `inherit` token emits its own class at every one of those
+// places too (const/channel.ts, INHERIT_CHANNEL_SLUGS).
+const unknownInherit = [...INHERIT_CHANNEL_SLUGS].filter((slug) => !slugs.includes(slug));
+for (const slug of unknownInherit) missing.push(`${slug}  [INHERIT_CHANNEL_SLUGS names no channel slug]`);
+const channelFamilies = [
+  ...slugs.map((slug) => ({ base: slug, state: (s) => `${s}-${slug}` })),
+  ...[...INHERIT_CHANNEL_SLUGS].map((slug) => ({ base: `${slug}-inherit`, state: (s) => `${s}-${slug}-inherit` })),
+];
+
+for (const { base, state: stateName } of channelFamilies) {
+  if (!defined.has(`astralis-${base}`)) missing.push(`astralis-${base}  [channel base]`);
   for (const bp of BREAKPOINTS) {
-    if (!defined.has(`astralis-${slug}-${bp}`)) {
-      missing.push(`astralis-${slug}-${bp}  [channel breakpoint]`);
+    if (!defined.has(`astralis-${base}-${bp}`)) {
+      missing.push(`astralis-${base}-${bp}  [channel breakpoint]`);
     }
-    if (!defined.has(`astralis-${slug}-cq-${bp}`)) {
-      missing.push(`astralis-${slug}-cq-${bp}  [channel container variant]`);
+    if (!defined.has(`astralis-${base}-cq-${bp}`)) {
+      missing.push(`astralis-${base}-cq-${bp}  [channel container variant]`);
     }
   }
   for (const state of STATES) {
-    if (!defined.has(`astralis-${state}-${slug}`)) {
-      missing.push(`astralis-${state}-${slug}  [channel state]`);
+    if (!defined.has(`astralis-${stateName(state)}`)) {
+      missing.push(`astralis-${stateName(state)}  [channel state]`);
     }
   }
 }
@@ -172,6 +182,6 @@ if (missing.length) {
 
 console.log(
   `[astralis] css coverage: ${all.size} keyword base + ${responsive.size} responsive x ${BREAKPOINTS.length}` +
-    ` | ${slugs.length} channel slugs x (base + ${BREAKPOINTS.length} bp + ${STATES.length} states)` +
+    ` | ${slugs.length} channel slugs + ${INHERIT_CHANNEL_SLUGS.size} inherit x (base + ${BREAKPOINTS.length} bp + ${STATES.length} states)` +
     ` | ${tokenCount} tokens across ${valueMapCount} value maps all resolve`,
 );

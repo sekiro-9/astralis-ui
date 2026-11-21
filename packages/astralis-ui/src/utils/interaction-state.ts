@@ -33,6 +33,7 @@ import {
   CHANNEL_PROPS,
   channelVar,
   isChannelMap,
+  isInheritValue,
   resolveChannelToken,
 } from "../const/channel";
 
@@ -109,6 +110,10 @@ export function resolveStateStyles(state: StatePropName, styles: unknown): Resol
     const slug = (CHANNEL_PROPS as Record<string, string>)[prop];
     const css = resolveChannelToken(map, (styles as Record<string, string>)[prop], slug);
     if (css === undefined) continue;
+    if (isInheritValue(slug, css)) {
+      classes.push(`astralis-${variant}-${slug}-inherit`);
+      continue;
+    }
     classes.push(`astralis-${variant}-${slug}`);
     out.style[channelVar(slug, variant)] = css;
   }

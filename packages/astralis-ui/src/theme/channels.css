@@ -18,6 +18,8 @@
      breakpoint value. States do not compose with breakpoints.
    - Custom properties inherit, but a child only carries the channel class
      when it received the prop itself, so inherited values are inert.
+   - `inherit` on a paint prop has a rule of its own (.astralis-color-inherit):
+     a variable set to `inherit` inherits the variable, not the parent's colour.
    ========================================================================== */
 
 @layer channels {
@@ -83,8 +85,11 @@
 
   /* --- paint --- */
   .astralis-bg { background-color: var(--astralis-bg); }
+  .astralis-bg-inherit { background-color: inherit; }
   .astralis-color { color: var(--astralis-color); }
+  .astralis-color-inherit { color: inherit; }
   .astralis-border-color { border-color: var(--astralis-border-color); }
+  .astralis-border-color-inherit { border-color: inherit; }
   .astralis-shadow { box-shadow: var(--astralis-shadow); }
   .astralis-opacity { opacity: var(--astralis-opacity); }
 
@@ -137,8 +142,11 @@
     .astralis-basis-sm { flex-basis: var(--astralis-basis-sm); }
     .astralis-order-sm { order: var(--astralis-order-sm); }
     .astralis-bg-sm { background-color: var(--astralis-bg-sm); }
+    .astralis-bg-inherit-sm { background-color: inherit; }
     .astralis-color-sm { color: var(--astralis-color-sm); }
+    .astralis-color-inherit-sm { color: inherit; }
     .astralis-border-color-sm { border-color: var(--astralis-border-color-sm); }
+    .astralis-border-color-inherit-sm { border-color: inherit; }
     .astralis-shadow-sm { box-shadow: var(--astralis-shadow-sm); }
     .astralis-opacity-sm { opacity: var(--astralis-opacity-sm); }
   }
@@ -192,8 +200,11 @@
     .astralis-basis-md { flex-basis: var(--astralis-basis-md); }
     .astralis-order-md { order: var(--astralis-order-md); }
     .astralis-bg-md { background-color: var(--astralis-bg-md); }
+    .astralis-bg-inherit-md { background-color: inherit; }
     .astralis-color-md { color: var(--astralis-color-md); }
+    .astralis-color-inherit-md { color: inherit; }
     .astralis-border-color-md { border-color: var(--astralis-border-color-md); }
+    .astralis-border-color-inherit-md { border-color: inherit; }
     .astralis-shadow-md { box-shadow: var(--astralis-shadow-md); }
     .astralis-opacity-md { opacity: var(--astralis-opacity-md); }
   }
@@ -247,8 +258,11 @@
     .astralis-basis-lg { flex-basis: var(--astralis-basis-lg); }
     .astralis-order-lg { order: var(--astralis-order-lg); }
     .astralis-bg-lg { background-color: var(--astralis-bg-lg); }
+    .astralis-bg-inherit-lg { background-color: inherit; }
     .astralis-color-lg { color: var(--astralis-color-lg); }
+    .astralis-color-inherit-lg { color: inherit; }
     .astralis-border-color-lg { border-color: var(--astralis-border-color-lg); }
+    .astralis-border-color-inherit-lg { border-color: inherit; }
     .astralis-shadow-lg { box-shadow: var(--astralis-shadow-lg); }
     .astralis-opacity-lg { opacity: var(--astralis-opacity-lg); }
   }
@@ -302,8 +316,11 @@
     .astralis-basis-xl { flex-basis: var(--astralis-basis-xl); }
     .astralis-order-xl { order: var(--astralis-order-xl); }
     .astralis-bg-xl { background-color: var(--astralis-bg-xl); }
+    .astralis-bg-inherit-xl { background-color: inherit; }
     .astralis-color-xl { color: var(--astralis-color-xl); }
+    .astralis-color-inherit-xl { color: inherit; }
     .astralis-border-color-xl { border-color: var(--astralis-border-color-xl); }
+    .astralis-border-color-inherit-xl { border-color: inherit; }
     .astralis-shadow-xl { box-shadow: var(--astralis-shadow-xl); }
     .astralis-opacity-xl { opacity: var(--astralis-opacity-xl); }
   }
@@ -361,8 +378,11 @@
     .astralis-basis-cq-sm { flex-basis: var(--astralis-basis-cq-sm); }
     .astralis-order-cq-sm { order: var(--astralis-order-cq-sm); }
     .astralis-bg-cq-sm { background-color: var(--astralis-bg-cq-sm); }
+    .astralis-bg-inherit-cq-sm { background-color: inherit; }
     .astralis-color-cq-sm { color: var(--astralis-color-cq-sm); }
+    .astralis-color-inherit-cq-sm { color: inherit; }
     .astralis-border-color-cq-sm { border-color: var(--astralis-border-color-cq-sm); }
+    .astralis-border-color-inherit-cq-sm { border-color: inherit; }
     .astralis-shadow-cq-sm { box-shadow: var(--astralis-shadow-cq-sm); }
     .astralis-opacity-cq-sm { opacity: var(--astralis-opacity-cq-sm); }
   }
@@ -416,8 +436,11 @@
     .astralis-basis-cq-md { flex-basis: var(--astralis-basis-cq-md); }
     .astralis-order-cq-md { order: var(--astralis-order-cq-md); }
     .astralis-bg-cq-md { background-color: var(--astralis-bg-cq-md); }
+    .astralis-bg-inherit-cq-md { background-color: inherit; }
     .astralis-color-cq-md { color: var(--astralis-color-cq-md); }
+    .astralis-color-inherit-cq-md { color: inherit; }
     .astralis-border-color-cq-md { border-color: var(--astralis-border-color-cq-md); }
+    .astralis-border-color-inherit-cq-md { border-color: inherit; }
     .astralis-shadow-cq-md { box-shadow: var(--astralis-shadow-cq-md); }
     .astralis-opacity-cq-md { opacity: var(--astralis-opacity-cq-md); }
   }
@@ -471,8 +494,11 @@
     .astralis-basis-cq-lg { flex-basis: var(--astralis-basis-cq-lg); }
     .astralis-order-cq-lg { order: var(--astralis-order-cq-lg); }
     .astralis-bg-cq-lg { background-color: var(--astralis-bg-cq-lg); }
+    .astralis-bg-inherit-cq-lg { background-color: inherit; }
     .astralis-color-cq-lg { color: var(--astralis-color-cq-lg); }
+    .astralis-color-inherit-cq-lg { color: inherit; }
     .astralis-border-color-cq-lg { border-color: var(--astralis-border-color-cq-lg); }
+    .astralis-border-color-inherit-cq-lg { border-color: inherit; }
     .astralis-shadow-cq-lg { box-shadow: var(--astralis-shadow-cq-lg); }
     .astralis-opacity-cq-lg { opacity: var(--astralis-opacity-cq-lg); }
   }
@@ -526,8 +552,11 @@
     .astralis-basis-cq-xl { flex-basis: var(--astralis-basis-cq-xl); }
     .astralis-order-cq-xl { order: var(--astralis-order-cq-xl); }
     .astralis-bg-cq-xl { background-color: var(--astralis-bg-cq-xl); }
+    .astralis-bg-inherit-cq-xl { background-color: inherit; }
     .astralis-color-cq-xl { color: var(--astralis-color-cq-xl); }
+    .astralis-color-inherit-cq-xl { color: inherit; }
     .astralis-border-color-cq-xl { border-color: var(--astralis-border-color-cq-xl); }
+    .astralis-border-color-inherit-cq-xl { border-color: inherit; }
     .astralis-shadow-cq-xl { box-shadow: var(--astralis-shadow-cq-xl); }
     .astralis-opacity-cq-xl { opacity: var(--astralis-opacity-cq-xl); }
   }
@@ -580,8 +609,11 @@
   .astralis-hover-basis:hover { flex-basis: var(--astralis-basis-hover); }
   .astralis-hover-order:hover { order: var(--astralis-order-hover); }
   .astralis-hover-bg:hover { background-color: var(--astralis-bg-hover); }
+  .astralis-hover-bg-inherit:hover { background-color: inherit; }
   .astralis-hover-color:hover { color: var(--astralis-color-hover); }
+  .astralis-hover-color-inherit:hover { color: inherit; }
   .astralis-hover-border-color:hover { border-color: var(--astralis-border-color-hover); }
+  .astralis-hover-border-color-inherit:hover { border-color: inherit; }
   .astralis-hover-shadow:hover { box-shadow: var(--astralis-shadow-hover); }
   .astralis-hover-opacity:hover { opacity: var(--astralis-opacity-hover); }
 
@@ -633,8 +665,11 @@
   .astralis-focus-visible-basis:focus-visible { flex-basis: var(--astralis-basis-focus-visible); }
   .astralis-focus-visible-order:focus-visible { order: var(--astralis-order-focus-visible); }
   .astralis-focus-visible-bg:focus-visible { background-color: var(--astralis-bg-focus-visible); }
+  .astralis-focus-visible-bg-inherit:focus-visible { background-color: inherit; }
   .astralis-focus-visible-color:focus-visible { color: var(--astralis-color-focus-visible); }
+  .astralis-focus-visible-color-inherit:focus-visible { color: inherit; }
   .astralis-focus-visible-border-color:focus-visible { border-color: var(--astralis-border-color-focus-visible); }
+  .astralis-focus-visible-border-color-inherit:focus-visible { border-color: inherit; }
   .astralis-focus-visible-shadow:focus-visible { box-shadow: var(--astralis-shadow-focus-visible); }
   .astralis-focus-visible-opacity:focus-visible { opacity: var(--astralis-opacity-focus-visible); }
 
@@ -686,8 +721,11 @@
   .astralis-active-basis:active { flex-basis: var(--astralis-basis-active); }
   .astralis-active-order:active { order: var(--astralis-order-active); }
   .astralis-active-bg:active { background-color: var(--astralis-bg-active); }
+  .astralis-active-bg-inherit:active { background-color: inherit; }
   .astralis-active-color:active { color: var(--astralis-color-active); }
+  .astralis-active-color-inherit:active { color: inherit; }
   .astralis-active-border-color:active { border-color: var(--astralis-border-color-active); }
+  .astralis-active-border-color-inherit:active { border-color: inherit; }
   .astralis-active-shadow:active { box-shadow: var(--astralis-shadow-active); }
   .astralis-active-opacity:active { opacity: var(--astralis-opacity-active); }
 }

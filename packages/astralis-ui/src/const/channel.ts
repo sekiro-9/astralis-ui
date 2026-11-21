@@ -166,6 +166,20 @@ export const channelVar = (slug: string, suffix?: string): string =>
    validator) carries the exact same rule the runtime warning uses. */
 export const UNITLESS_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["order", "opacity"]);
 
+/* The paint channels whose `inherit` token gets a class of its own
+   (`.astralis-color-inherit { color: inherit }`) instead of riding the var.
+   A custom property cannot carry `inherit`: `--astralis-color: inherit` makes
+   the VARIABLE inherit, so the element would copy the nearest colour prop above
+   it and skip a parent coloured by a class or by its own hover state. */
+export const INHERIT_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["bg", "color", "border-color"]);
+
+/** The class for `inherit` on a paint channel: (`color`, `md`) -> `astralis-color-inherit-md`. */
+export const inheritClass = (slug: string, suffix?: string): string => channelClass(`${slug}-inherit`, suffix);
+
+/** True when a resolved channel value must use the `inherit` class instead of the var. */
+export const isInheritValue = (slug: string, css: string): boolean =>
+  css === "inherit" && INHERIT_CHANNEL_SLUGS.has(slug);
+
 /** `"37"`, `"-2.5"`, `".5"` — a number with no unit. */
 const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
 

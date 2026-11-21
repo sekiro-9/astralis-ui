@@ -35,7 +35,9 @@ import {
   channelClass,
   channelVar,
   containerSuffix,
+  inheritClass,
   isChannelMap,
+  isInheritValue,
   resolveChannelToken,
   type ContainerKey,
 } from "../const/channel";
@@ -176,29 +178,26 @@ export function resolveStyleProps(
     const slug = (CHANNEL_PROPS as Record<string, string | undefined>)[key];
     if (slug !== undefined && isChannelMap(maps[key])) {
       const map = maps[key];
+      const emit = (css: string, suffix?: string) => {
+        if (isInheritValue(slug, css)) {
+          classes.push(inheritClass(slug, suffix));
+          return;
+        }
+        classes.push(channelClass(slug, suffix));
+        style[channelVar(slug, suffix)] = css;
+      };
       if (isResponsiveObject(value)) {
         for (const bp in value) {
           const token = (value as Record<string, string>)[bp];
           const css = resolveChannelToken(map, token, slug);
           if (css === undefined) continue;
-          if (bp === "base") {
-            classes.push(channelClass(slug));
-            style[channelVar(slug)] = css;
-          } else if (BREAKPOINT_SET.has(bp)) {
-            classes.push(channelClass(slug, bp));
-            style[channelVar(slug, bp)] = css;
-          } else if (CONTAINER_KEY_SET.has(bp)) {
-            const suffix = containerSuffix(bp);
-            classes.push(channelClass(slug, suffix));
-            style[channelVar(slug, suffix)] = css;
-          }
+          if (bp === "base") emit(css);
+          else if (BREAKPOINT_SET.has(bp)) emit(css, bp);
+          else if (CONTAINER_KEY_SET.has(bp)) emit(css, containerSuffix(bp));
         }
       } else {
         const css = resolveChannelToken(map, value, slug);
-        if (css !== undefined) {
-          classes.push(channelClass(slug));
-          style[channelVar(slug)] = css;
-        }
+        if (css !== undefined) emit(css);
       }
       continue;
     }

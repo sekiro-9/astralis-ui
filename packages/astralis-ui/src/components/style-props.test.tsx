@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import type { CSSProperties } from "react";
-import { Box, Card, Flex, Grid, Stack, HStack, VStack } from "./index";
+import { Box, Card, Flex, Grid, Stack, HStack, Text, VStack } from "./index";
 
 /**
  * A guarantee that is easy to break silently, because breaking it still
@@ -371,6 +371,67 @@ describe("interaction-state props", () => {
 
     expect(classesOf(container)).toContain("astralis-hover-bg");
     expect(styleVarOf(container, "--astralis-bg-hover")).toBe("oklch(0.7 0.1 200)");
+  });
+});
+
+/*
+ * `inherit` cannot ride the channel variable: `--astralis-color: inherit`
+ * inherits the variable, so the element copied the nearest colour PROP above
+ * it, skipping a parent coloured by a class or by its own hover state. The
+ * keyword gets a class that sets the property itself, and no variable.
+ */
+describe("inherit on the paint props", () => {
+  const paint = [
+    ["color", "color"],
+    ["bg", "bg"],
+    ["borderColor", "border-color"],
+  ] as const;
+
+  for (const [prop, slug] of paint) {
+    it(`${prop}="inherit" sets the property to inherit, not the variable`, () => {
+      const { container } = render(<Box {...{ [prop]: "inherit" }} />);
+
+      expect(classesOf(container)).toContain(`astralis-${slug}-inherit`);
+      expect(classesOf(container)).not.toContain(`astralis-${slug}`);
+      expect(styleVarOf(container, `--astralis-${slug}`)).toBe("");
+    });
+
+    it(`${prop} takes inherit per breakpoint and container width`, () => {
+      const { container } = render(
+        <Box {...{ [prop]: { base: "inherit", md: "red", "@lg": "inherit" } }} />,
+      );
+
+      expect(classesOf(container)).toEqual(
+        expect.arrayContaining([`astralis-${slug}-inherit`, `astralis-${slug}-md`, `astralis-${slug}-inherit-cq-lg`]),
+      );
+      expect(styleVarOf(container, `--astralis-${slug}`)).toBe("");
+      expect(styleVarOf(container, `--astralis-${slug}-md`)).not.toBe("");
+      expect(styleVarOf(container, `--astralis-${slug}-cq-lg`)).toBe("");
+    });
+
+    it(`${prop} takes inherit inside a state`, () => {
+      const { container } = render(<Box {...{ [prop]: "red", hover: { [prop]: "inherit" } }} />);
+
+      expect(classesOf(container)).toEqual(
+        expect.arrayContaining([`astralis-${slug}`, `astralis-hover-${slug}-inherit`]),
+      );
+      expect(classesOf(container)).not.toContain(`astralis-hover-${slug}`);
+      expect(styleVarOf(container, `--astralis-${slug}-hover`)).toBe("");
+    });
+  }
+
+  it("reaches Text, where most inherit colours are written", () => {
+    const { container } = render(<Text color="inherit">x</Text>);
+
+    expect(classesOf(container)).toContain("astralis-color-inherit");
+    expect(styleVarOf(container, "--astralis-color")).toBe("");
+  });
+
+  it("keeps current and transparent on the variable, where they are correct", () => {
+    const { container } = render(<Box color="current" bg="transparent" />);
+
+    expect(styleVarOf(container, "--astralis-color")).toBe("currentColor");
+    expect(styleVarOf(container, "--astralis-bg")).toBe("transparent");
   });
 });
 

@@ -31,10 +31,14 @@ export async function loadSpec() {
   return { ...spec, contrastOn: math.contrastOn };
 }
 
-/** CHANNEL_PROPS and the breakpoint table. */
+/** CHANNEL_PROPS, the paint slugs with an `inherit` class, and the breakpoint table. */
 export async function loadLayout() {
   const [channel, breakpoints] = await loadTs("const/channel.ts", "const/breakpoints.ts");
-  return { CHANNEL_PROPS: channel.CHANNEL_PROPS, ...breakpoints };
+  return {
+    CHANNEL_PROPS: channel.CHANNEL_PROPS,
+    INHERIT_CHANNEL_SLUGS: channel.INHERIT_CHANNEL_SLUGS,
+    ...breakpoints,
+  };
 }
 
 /**
@@ -241,11 +245,16 @@ function channelSlugs(CHANNEL_PROPS) {
   }
 }
 
-export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
+export function channelsCss({ CHANNEL_PROPS, INHERIT_CHANNEL_SLUGS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
   channelSlugs(CHANNEL_PROPS);
   const all = CHANNEL_GROUPS.flatMap(([, slugs]) => Object.entries(slugs));
-  const rule = (indent, selector, props, v) =>
-    `${indent}${selector} { ${props.map((p) => `${p}: var(${v});`).join(" ")} }`;
+  const declare = (props, value) => props.map((p) => `${p}: ${value};`).join(" ");
+  // A paint slug's `inherit` rule follows its var rule in the same block, so it
+  // takes part in the same breakpoint and state order.
+  const rules = (indent, slug, props, { selector, v, inherit }) => [
+    `${indent}${selector} { ${declare(props, `var(${v})`)} }`,
+    ...(INHERIT_CHANNEL_SLUGS.has(slug) ? [`${indent}${inherit} { ${declare(props, "inherit")} }`] : []),
+  ];
 
   const lines = [
     banner("VAR-CHANNEL RULES", "src/const/channel.ts + src/const/breakpoints.ts", [
@@ -264,6 +273,8 @@ export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
       "  breakpoint value. States do not compose with breakpoints.",
       "- Custom properties inherit, but a child only carries the channel class",
       "  when it received the prop itself, so inherited values are inert.",
+      "- `inherit` on a paint prop has a rule of its own (.astralis-color-inherit):",
+      "  a variable set to `inherit` inherits the variable, not the parent's colour.",
     ]),
     "@layer channels {",
   ];
@@ -271,7 +282,9 @@ export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
   for (const [label, slugs] of CHANNEL_GROUPS) {
     lines.push(`  /* --- ${label} --- */`);
     for (const [slug, props] of Object.entries(slugs)) {
-      lines.push(rule("  ", `.astralis-${slug}`, props, `--astralis-${slug}`));
+      lines.push(...rules("  ", slug, props, {
+        selector: `.astralis-${slug}`, v: `--astralis-${slug}`, inherit: `.astralis-${slug}-inherit`,
+      }));
     }
     lines.push("");
   }
@@ -280,7 +293,9 @@ export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
     const width = BREAKPOINT_WIDTHS[bp];
     lines.push(`  /* ===== ${bp} (${width}) ===== */`, `  @media (min-width: ${width}) {`);
     for (const [slug, props] of all) {
-      lines.push(rule("    ", `.astralis-${slug}-${bp}`, props, `--astralis-${slug}-${bp}`));
+      lines.push(...rules("    ", slug, props, {
+        selector: `.astralis-${slug}-${bp}`, v: `--astralis-${slug}-${bp}`, inherit: `.astralis-${slug}-inherit-${bp}`,
+      }));
     }
     lines.push("  }", "");
   }
@@ -295,7 +310,9 @@ export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
     const width = BREAKPOINT_WIDTHS[bp];
     lines.push(`  /* ===== @${bp} (${width}) ===== */`, `  @container (min-width: ${width}) {`);
     for (const [slug, props] of all) {
-      lines.push(rule("    ", `.astralis-${slug}-cq-${bp}`, props, `--astralis-${slug}-cq-${bp}`));
+      lines.push(...rules("    ", slug, props, {
+        selector: `.astralis-${slug}-cq-${bp}`, v: `--astralis-${slug}-cq-${bp}`, inherit: `.astralis-${slug}-inherit-cq-${bp}`,
+      }));
     }
     lines.push("  }", "");
   }
@@ -303,7 +320,11 @@ export function channelsCss({ CHANNEL_PROPS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
   for (const state of STATES) {
     lines.push(`  /* ===== state: ${state} ===== */`);
     for (const [slug, props] of all) {
-      lines.push(rule("  ", `.astralis-${state}-${slug}:${state}`, props, `--astralis-${slug}-${state}`));
+      lines.push(...rules("  ", slug, props, {
+        selector: `.astralis-${state}-${slug}:${state}`,
+        v: `--astralis-${slug}-${state}`,
+        inherit: `.astralis-${state}-${slug}-inherit:${state}`,
+      }));
     }
     lines.push("");
   }
