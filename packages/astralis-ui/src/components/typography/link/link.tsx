@@ -7,6 +7,7 @@ import { textVariantMap } from "../text/text.styles";
 import { linkAccentColor, linkHoverColor, linkTypographyVariants, linkVariants } from "./link.styles";
 import type { LinkProps } from "./link.types";
 import { identify } from "../../../utils/dev-identity";
+import { textStates } from "../text/text-states";
 
 /** An inline text link: Text's typography, plus accent colouring and external handling. */
 export const Link = identify("Link", function Link<C extends ElementType = "a">({
@@ -30,6 +31,9 @@ export const Link = identify("Link", function Link<C extends ElementType = "a">(
   textDecoration,
   truncate,
   lineClamp,
+  hover,
+  focusVisible,
+  active,
   ...rest
 }: LinkProps<C>) {
   const { placementClass, rest: split } = splitPlacement(rest);
@@ -54,6 +58,7 @@ export const Link = identify("Link", function Link<C extends ElementType = "a">(
       textDecoration,
       truncate,
       lineClamp: truncate ? undefined : lineClamp,
+      ...textStates({ hover, focusVisible, active }),
     },
     { maps: textVariantMap, variants: linkTypographyVariants },
   );
@@ -65,9 +70,10 @@ export const Link = identify("Link", function Link<C extends ElementType = "a">(
         linkVariants({ variant }),
         // Only paint/shift colour when the colour is ours. With an explicit
         // `color` the resting accent and its hover shift both step aside —
-        // the affordance falls to `variant`'s underline.
+        // the affordance falls to `variant`'s underline. An explicit
+        // `hover={{ color }}` replaces just the shift.
         color === undefined ? linkAccentColor : "",
-        color === undefined ? linkHoverColor : "",
+        color === undefined && hover?.color === undefined ? linkHoverColor : "",
         accentClass(colorScheme),
         typography.className,
         placementClass, className,

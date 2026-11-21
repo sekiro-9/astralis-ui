@@ -87,3 +87,40 @@ describe("typography primitive behaviour kept through the migration", () => {
     expect(root.hasAttribute("styletype")).toBe(false);
   });
 });
+
+describe("state props on Text and Heading", () => {
+  it("hover, focusVisible and active resolve to state classes and vars, not DOM attributes", () => {
+    const { container } = render(
+      <Text as="span" color="muted" hover={{ color: "base" }} focusVisible={{ color: "red" }} active={{ mt: "1" }}>
+        t
+      </Text>,
+    );
+    const root = container.firstElementChild as HTMLElement;
+
+    expect([...root.classList]).toEqual(
+      expect.arrayContaining(["astralis-hover-color", "astralis-focus-visible-color", "astralis-active-mt"]),
+    );
+    expect(root.style.getPropertyValue("--astralis-color-hover")).toBe("var(--astralis-color-label-base)");
+    expect(root.style.getPropertyValue("--astralis-color-focus-visible")).toBe("var(--astralis-color-red-label)");
+    for (const attr of ["hover", "focusvisible", "active"]) expect(root.hasAttribute(attr)).toBe(false);
+    expect(root.classList.contains("astralis:transition-colors")).toBe(true);
+  });
+
+  it("a state carries only props Text takes: paint and padding are dropped", () => {
+    // @ts-expect-error bg is not a Text prop, so it is not a Text state either
+    const { container } = render(<Text hover={{ bg: "subtle", p: "4", color: "base" }}>t</Text>);
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root.classList.contains("astralis-hover-bg")).toBe(false);
+    expect(root.classList.contains("astralis-hover-p")).toBe(false);
+    expect(root.classList.contains("astralis-hover-color")).toBe(true);
+  });
+
+  it("Heading takes them through Text", () => {
+    const { container } = render(<Heading hover={{ color: "base" }}>h</Heading>);
+    const root = container.firstElementChild as HTMLElement;
+
+    expect(root.classList.contains("astralis-hover-color")).toBe(true);
+    expect(root.hasAttribute("hover")).toBe(false);
+  });
+});

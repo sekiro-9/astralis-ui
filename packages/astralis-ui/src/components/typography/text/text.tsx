@@ -5,6 +5,7 @@ import { astralisMerge } from "../../../utils/astralis-merge";
 import { resolveStyleProps } from "../../../utils/responsive";
 import { textVariants, textVariantMap } from "./text.styles";
 import { identify } from "../../../utils/dev-identity";
+import { textStates } from "./text-states";
 
 const DEFAULT_HEADING_SIZES: Record<string, TextSize> = {
   h1: "4xl",
@@ -45,6 +46,9 @@ const Text = identify("Text", function Text<C extends ElementType = "p">({
   paragraph = false,
   truncate = false,
   lineClamp,
+  hover,
+  focusVisible,
+  active,
   ...props
 }: TextProps<C>) {
   const Element: ElementType = paragraph ? "p" : (as ?? "p");
@@ -71,6 +75,7 @@ const Text = identify("Text", function Text<C extends ElementType = "p">({
       paragraph,
       truncate,
       lineClamp: truncate ? undefined : lineClamp,
+      ...textStates({ hover, focusVisible, active }),
     },
     { maps: textVariantMap, variants: textVariants },
   );

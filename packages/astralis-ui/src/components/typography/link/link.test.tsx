@@ -67,3 +67,28 @@ describe("Link external", () => {
     expect(getByRole("link").textContent).toBe("Docs");
   });
 });
+
+describe("Link state props", () => {
+  it("hover colour rides the state channel, not the DOM", () => {
+    const { container } = render(<Link href="#" color="muted" hover={{ color: "base" }}>x</Link>);
+    const a = container.querySelector("a")!;
+
+    expect(a.classList.contains("astralis-hover-color")).toBe(true);
+    expect(a.style.getPropertyValue("--astralis-color-hover")).toBe("var(--astralis-color-label-base)");
+    expect(a.hasAttribute("hover")).toBe(false);
+  });
+
+  it("an explicit hover colour replaces the accent hover shift, and only that", () => {
+    const { container } = render(<Link href="#" hover={{ color: "red" }}>x</Link>);
+
+    expect(cls(container)).not.toContain("astralis:hover:text-accent-solid");
+    expect(cls(container)).toContain("astralis:text-accent-label");
+    expect(cls(container)).toContain("astralis-hover-color");
+  });
+
+  it("a hover without a colour keeps the accent hover shift", () => {
+    const { container } = render(<Link href="#" hover={{ mt: "1" }}>x</Link>);
+
+    expect(cls(container)).toContain("astralis:hover:text-accent-solid");
+  });
+});

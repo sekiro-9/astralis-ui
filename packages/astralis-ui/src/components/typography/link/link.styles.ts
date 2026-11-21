@@ -24,7 +24,7 @@ export const linkVariants = cva(
   },
 );
 
-/** The colour shift on hover, opted out of when `color` is set explicitly. */
+/** The colour shift on hover, opted out of when `color` or `hover.color` is set explicitly. */
 export const linkHoverColor = "astralis:hover:text-accent-solid";
 
 /**

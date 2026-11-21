@@ -3,7 +3,7 @@ import type { ComponentPropsWithoutRef, ElementType, ReactNode, Ref } from "reac
 import type { ColorScheme } from "../../../const/color-schemes";
 import type { ResponsiveProp } from "../../../utils/responsive";
 import type { PlacementProps } from "../../../utils/placement";
-import type { TextLineClamp, TextStyleProps } from "../text/text.types";
+import type { TextLineClamp, TextStateProps, TextStyleProps } from "../text/text.types";
 import type { linkVariants } from "./link.styles";
 
 export type LinkVariant = NonNullable<VariantProps<typeof linkVariants>["variant"]>;
@@ -34,7 +34,8 @@ interface LinkCustomProps<C extends ElementType = "a"> {
 type LinkBaseProps<C extends ElementType = "a"> = LinkCustomProps<C> &
   VariantProps<typeof linkVariants> &
   PlacementProps &
-  TextStyleProps;
+  TextStyleProps &
+  TextStateProps;
 
 export type LinkProps<C extends ElementType = "a"> = LinkBaseProps<C> &
   Omit<ComponentPropsWithoutRef<C>, keyof LinkBaseProps<C>>;
