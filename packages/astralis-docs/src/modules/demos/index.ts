@@ -23,6 +23,7 @@ import { BoxDemo } from "./box/box-demo";
 import { BoxStyleProps } from "./box/box-style-props";
 import { BoxResponsive } from "./box/box-responsive";
 import { BoxAs } from "./box/box-as";
+import { BoxTransform } from "./box/box-transform";
 import { AnimationEntrance } from "./animations/animation-entrance";
 import { AnimationReveal } from "./animations/animation-reveal";
 import { AnimationStagger } from "./animations/animation-stagger";
@@ -257,6 +258,7 @@ export const demos = {
   "box-style-props": { component: BoxStyleProps, file: "box/box-style-props.tsx" },
   "box-responsive": { component: BoxResponsive, file: "box/box-responsive.tsx" },
   "box-as": { component: BoxAs, file: "box/box-as.tsx" },
+  "box-transform": { component: BoxTransform, file: "box/box-transform.tsx" },
   "animation-entrance": { component: AnimationEntrance, file: "animations/animation-entrance.tsx" },
   "animation-reveal": { component: AnimationReveal, file: "animations/animation-reveal.tsx" },
   "animation-stagger": { component: AnimationStagger, file: "animations/animation-stagger.tsx" },

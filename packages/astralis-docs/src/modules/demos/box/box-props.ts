@@ -76,6 +76,23 @@ export const boxProps: PropRow[] = [
       "How the element behaves as a child of a flex or grid parent. On Box, so any primitive can size itself without a Flex.Item wrapper.",
   },
   {
+    prop: "scale · translateX · translateY · rotate",
+    type: `"0"–"150" (percent) · spacing scale with negatives, "1/2", "full" · "0"–"180" (degrees) with negatives`,
+    description:
+      "Zoom, shift and turn the element without moving its neighbours. They compose with each other, are responsive, take any CSS value, and work inside hover, focusVisible and active.",
+  },
+  {
+    prop: "transformOrigin",
+    type: `"center" | "top" | "bottom" | "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right"`,
+    description: "The point scale and rotate work around.",
+  },
+  {
+    prop: "transition",
+    type: `"none" | "colors" | "transform" | "common"`,
+    description:
+      "Animates changes over 200 ms instead of snapping: transform for scale/translate/rotate, colors for paint, common for both plus opacity and shadow. With reduced motion the change applies at once.",
+  },
+  {
     prop: "container",
     type: "boolean",
     default: "false",

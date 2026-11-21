@@ -51,6 +51,24 @@ details.
 </Box>
 ```
 
+## Hover, press and transitions
+
+`scale`, `translateX`, `translateY` and `rotate` work in `hover`,
+`focusVisible` and `active` like any value prop, and `transition` makes the
+change animate. [Transforms and transitions](/docs/style-props#transforms-and-transitions)
+covers the details.
+
+<ComponentPreview name="box-transform" />
+
+```tsx
+<Box overflow="hidden" rounded="xl">
+  <Box transition="transform" hover={{ scale: "105" }}>
+    <Image src="/product.jpg" alt="" />
+  </Box>
+</Box>
+<Box transition="common" hover={{ translateY: "-1", shadow: "lg" }} active={{ scale: "95" }} />
+```
+
 ## Polymorphism
 
 `as` swaps the rendered element. Reach for it whenever the semantic element

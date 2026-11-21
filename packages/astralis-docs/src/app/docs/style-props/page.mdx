@@ -175,6 +175,38 @@ Three things to know:
 finite CSS vocabularies backed by build-time classes. An unknown value there
 resolves to nothing, exactly as before.
 
+## Transforms and transitions
+
+`scale`, `translateX`, `translateY` and `rotate` zoom, shift and turn an
+element without moving its neighbours. They are value props like `p`, so they
+are responsive and work inside `hover`, `focusVisible` and `active`. Add
+`transition` so the change animates instead of snapping:
+
+```tsx
+<Box overflow="hidden" rounded="xl">
+  <Box transition="transform" hover={{ scale: "105" }}>   {/* image zoom */}
+    <Image src="/product.jpg" alt="" />
+  </Box>
+</Box>
+<Box transition="common" hover={{ translateY: "-1", shadow: "lg" }} active={{ scale: "95" }} />
+```
+
+<ComponentPreview name="box-transform" />
+
+- **Scales**: `scale` in percent (`"105"`), translate on the spacing scale with
+  negatives (`"-1"` lifts 0.25rem) plus `"1/2"` and `"full"` of the element's
+  own size, `rotate` in degrees. Any CSS value works too (`scale="1.02"`,
+  `rotate="0.25turn"`).
+- **They compose.** Each prop sets its own CSS property (`scale`, `translate`,
+  `rotate`), not `transform`, so they add up with each other and with a
+  `transform` the element already has. On [Float](/docs/components/float),
+  `translateY` replaces only the vertical half of its centring.
+- **`transition`** is `none`, `colors`, `transform` or `common` (both, plus
+  opacity and shadow), over the library's standard 200 ms. With reduced motion
+  turned on, the hover or active value still applies, at once, without the move.
+- `transformOrigin` sets the point scale and rotate work around: `center`, a
+  side, or a corner (`"top-left"`).
+
 ## Escape hatches
 
 Arbitrary values cover most "outside the scale" needs. For everything else,
