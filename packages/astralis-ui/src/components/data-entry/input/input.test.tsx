@@ -101,6 +101,19 @@ describe("Input rounded", () => {
   });
 });
 
+describe("Input.Search button size", () => {
+  it.each([
+    ["sm", "astralis:h-8"],
+    ["md", "astralis:h-10"],
+    ["lg", "astralis:h-12"],
+  ] as const)("matches the input's height at size %s", (size, height) => {
+    render(<Input.Search aria-label="s" size={size} showSearchButton />);
+    const heights = (el: Element) => [...el.classList].filter((c) => /^astralis:h-\d/.test(c));
+    expect(heights(screen.getByRole("searchbox"))).toEqual([height]);
+    expect(heights(screen.getByRole("button", { name: "Search" }))).toEqual([height]);
+  });
+});
+
 describe("Input colorScheme", () => {
   it("scopes the accent channel only when a scheme is given", () => {
     const { rerender } = render(<Input aria-label="a" />);

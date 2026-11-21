@@ -62,6 +62,13 @@ export const inputEndRounded = {
   full: "astralis:rounded-r-full",
 } as const;
 
+/** Input.Search's attached button: the input's height and type size at each size. */
+export const inputSearchButtonSizes = {
+  sm: "astralis:h-8 astralis:px-3 astralis:text-xs",
+  md: "astralis:h-10 astralis:px-4 astralis:text-sm",
+  lg: "astralis:h-12 astralis:px-5 astralis:text-base",
+} as const;
+
 /** Input (single-line) — fixed heights per size. */
 export const inputVariants = cva(base, {
   variants: {
