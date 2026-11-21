@@ -13,13 +13,19 @@ export const linkProps: PropRow[] = [
     prop: "colorScheme",
     type: COLOR_SCHEME_TYPE,
     default: `"brand"`,
-    description: "Hue (via the accent channel).",
+    description: "Hue (via the accent channel). `inherit` uses the scheme of the section the link sits in.",
   },
   {
     prop: "external",
     type: `boolean`,
     default: `false`,
     description: "New tab + `rel=\"noopener noreferrer\"` + ↗ marker.",
+  },
+  {
+    prop: "hover · focusVisible · active",
+    type: `{ color, w, h, m*, inset… }`,
+    description:
+      "Styles for that state, same tokens as the base props: `hover={{ color: \"base\" }}`. A state carries only the props this component takes, so colour and the placement props, not paint or padding. An explicit hover colour replaces the accent hover shift.",
   },
   {
     prop: "lineClamp",

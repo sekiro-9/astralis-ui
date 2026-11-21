@@ -4,9 +4,9 @@ import type { PropRow } from "@/modules/docs/props-table";
 export const textProps: PropRow[] = [
   {
     prop: "size",
-    type: `"xs" – "9xl" (type scale)`,
+    type: `"xs" – "9xl" (type scale) | "inherit"`,
     default: `"md"`,
-    description: "Font size token.",
+    description: "Font size token. `inherit` takes the font size and line height of the parent, for a word set apart inside a sentence.",
   },
   {
     prop: "weight",
@@ -16,8 +16,13 @@ export const textProps: PropRow[] = [
   {
     prop: "color",
     type: `"base" | "muted" | "subtle" | "inverted" | status tokens | palette shades`,
-    default: `"base"`,
-    description: "Text color from semantic roles or raw palette shades.",
+    description: "Text color from semantic roles or raw palette shades. Left off, the text takes the colour of its parent.",
+  },
+  {
+    prop: "hover · focusVisible · active",
+    type: `{ color, w, h, m*, inset… }`,
+    description:
+      "Styles for that state, same tokens as the base props: `hover={{ color: \"base\" }}`. A state carries only the props this component takes, so colour and the placement props, not paint or padding.",
   },
   {
     prop: "align",

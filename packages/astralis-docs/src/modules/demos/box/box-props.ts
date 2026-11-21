@@ -1,4 +1,5 @@
 import type { PropRow } from "@/modules/docs/props-table";
+import { COLOR_SCHEME_TYPE } from "@/modules/demos/color-schemes";
 
 /**
  * Box exposes ~50 style props; documenting them as families keeps the table
@@ -75,6 +76,12 @@ export const boxProps: PropRow[] = [
     default: "false",
     description:
       "Makes this element the query container that descendants' @sm–@xl responsive keys measure against, instead of the viewport.",
+  },
+  {
+    prop: "colorScheme",
+    type: COLOR_SCHEME_TYPE,
+    description:
+      "Sets the accent hue for the section inside: any component in it given colorScheme=\"inherit\" takes this hue. Paints nothing itself, and is not responsive. On every layout primitive (Flex, Stack, Grid, Container…).",
   },
   {
     prop: "as",

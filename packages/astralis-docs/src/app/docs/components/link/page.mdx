@@ -58,3 +58,10 @@ surface the accent channel does not cover:
   <Link href="#" color="inverted" variant="hover">Readable on the inverted fill</Link>
 </Box>
 ```
+
+To change the colour on hover, give the state its own colour. It replaces the
+accent hover shift, and leaving `hover` off keeps the default behaviour:
+
+```jsx
+<Link href="#" color="muted" hover={{ color: "base" }}>Muted at rest, base on hover</Link>
+```

@@ -116,6 +116,30 @@ Available schemes: eleven hues (`brand`, `gray`, `red`, `orange`, `yellow`,
 (`error`, `warning`, `success`, `info`) that follow your theme's status
 colors.
 
+### Theming a section
+
+Every component keeps its own default scheme (a Badge is gray, a Button is
+brand), so a scheme set higher up does not repaint it. To theme a whole
+section, set `colorScheme` on the layout primitive around it (Box, Flex,
+Stack, Grid, Container…) and give the components inside
+`colorScheme="inherit"`: they apply no scheme of their own and take the
+section's. Sections nest, and the nearest one wins. With no section above
+it, `inherit` gives the theme's default, brand.
+
+```tsx
+<Stack colorScheme="red">
+  <Badge colorScheme="inherit">overdue</Badge>   {/* red */}
+  <Badge>draft</Badge>                            {/* still gray */}
+  <Button colorScheme="inherit">Pay now</Button> {/* red */}
+</Stack>
+```
+
+<ComponentPreview name="section-color-scheme" />
+
+A picker's list and a date picker's calendar open in a layer above the page,
+outside the section, so the cascade cannot reach them. With `inherit` they
+take the scheme in scope at the field when they open.
+
 ## Overriding tokens yourself
 
 Every token is a documented CSS variable, so your own stylesheet can retune

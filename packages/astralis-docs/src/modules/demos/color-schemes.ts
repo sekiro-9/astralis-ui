@@ -22,4 +22,4 @@ export type { ColorScheme } from "astralis-ui/color-schemes";
  * union: fifteen quoted literals in a table cell is unreadable. The count is
  * derived, so a table can never claim a number it isn't listing.
  */
-export const COLOR_SCHEME_TYPE = `all ${COLOR_SCHEMES.length} schemes`;
+export const COLOR_SCHEME_TYPE = `all ${COLOR_SCHEMES.length} schemes | "inherit"`;

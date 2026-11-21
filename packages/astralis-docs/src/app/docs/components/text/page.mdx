@@ -23,6 +23,14 @@ Thirteen steps from `xs` to `9xl`; the first eight cover almost all prose.
 
 <ComponentPreview name="text-sizes" align="start" />
 
+### Inheriting the size
+
+`size="inherit"` takes the font size and line height of the parent, for a word
+set apart inside a sentence. Without it a Text is `md`, whatever surrounds it.
+It works per breakpoint too: `size={{ base: "lg", md: "inherit" }}`.
+
+<ComponentPreview name="text-inherit" align="start" />
+
 ## Weights
 
 <ComponentPreview name="text-weights" align="start" />
@@ -39,6 +47,14 @@ on your side.
 Casing, tracking, decoration, family and the status colors compose freely.
 
 <ComponentPreview name="text-styling" align="start" />
+
+## Hover and focus
+
+`hover`, `focusVisible` and `active` take the same tokens as the base props, so
+a colour change on hover needs no wrapper. They carry `color` and the
+placement props; Heading and Link take them too.
+
+<ComponentPreview name="text-states" align="start" />
 
 ## Responsive
 

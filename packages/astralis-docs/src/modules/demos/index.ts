@@ -56,6 +56,8 @@ import { TextSizes } from "./text/text-sizes";
 import { TextWeights } from "./text/text-weights";
 import { TextTruncation } from "./text/text-truncation";
 import { TextStyling } from "./text/text-styling";
+import { TextInherit } from "./text/text-inherit";
+import { TextStates } from "./text/text-states";
 import { HeadingDemo } from "./heading/heading-demo";
 import { HeadingSizeOverride } from "./heading/heading-size-override";
 import { BlockquoteDemo } from "./blockquote/blockquote-demo";
@@ -188,6 +190,7 @@ import { QrCodeStates } from "./qr-code/qr-code-states";
 import { QuickStartForm } from "./foundations/quick-start-form";
 import { BrandTheming } from "./foundations/brand-theming";
 import { PaletteGrid } from "./foundations/palette-grid";
+import { SectionColorScheme } from "./foundations/section-color-scheme";
 import { SegmentedControlDemo } from "./segmented-control/segmented-control-demo";
 import { SegmentedControlSizes } from "./segmented-control/segmented-control-sizes";
 import { SegmentedControlFullWidth } from "./segmented-control/segmented-control-full-width";
@@ -283,6 +286,8 @@ export const demos = {
   "text-weights": { component: TextWeights, file: "text/text-weights.tsx" },
   "text-truncation": { component: TextTruncation, file: "text/text-truncation.tsx" },
   "text-styling": { component: TextStyling, file: "text/text-styling.tsx" },
+  "text-inherit": { component: TextInherit, file: "text/text-inherit.tsx" },
+  "text-states": { component: TextStates, file: "text/text-states.tsx" },
   "heading-demo": { component: HeadingDemo, file: "heading/heading-demo.tsx" },
   "heading-size-override": { component: HeadingSizeOverride, file: "heading/heading-size-override.tsx" },
   "blockquote-demo": { component: BlockquoteDemo, file: "blockquote/blockquote-demo.tsx" },
@@ -414,6 +419,7 @@ export const demos = {
   "qr-code-states": { component: QrCodeStates, file: "qr-code/qr-code-states.tsx" },
   "quick-start-form": { component: QuickStartForm, file: "foundations/quick-start-form.tsx" },
   "brand-theming": { component: BrandTheming, file: "foundations/brand-theming.tsx" },
+  "section-color-scheme": { component: SectionColorScheme, file: "foundations/section-color-scheme.tsx" },
   "palette-grid": { component: PaletteGrid, file: "foundations/palette-grid.tsx" },
   "segmented-control-demo": { component: SegmentedControlDemo, file: "segmented-control/segmented-control-demo.tsx" },
   "segmented-control-sizes": { component: SegmentedControlSizes, file: "segmented-control/segmented-control-sizes.tsx" },

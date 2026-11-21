@@ -10,7 +10,7 @@ export const headingProps: PropRow[] = [
   },
   {
     prop: "size",
-    type: `Text sizes`,
+    type: `Text sizes | "inherit"`,
     default: `per level`,
     description: "`h1` → `4xl`, `h2` → `3xl`, `h3` → `2xl`, `h4` → `xl`, `h5` → `lg`, `h6` → `md`.",
   },
@@ -19,5 +19,11 @@ export const headingProps: PropRow[] = [
     type: `Text weights`,
     default: `per level`,
     description: "Bold for h1–h3, semibold for h4–h6.",
+  },
+  {
+    prop: "hover · focusVisible · active",
+    type: `{ color, w, h, m*, inset… }`,
+    description:
+      "Styles for that state, same tokens as the base props: `hover={{ color: \"base\" }}`. A state carries only the props this component takes, so colour and the placement props, not paint or padding.",
   },
 ];
