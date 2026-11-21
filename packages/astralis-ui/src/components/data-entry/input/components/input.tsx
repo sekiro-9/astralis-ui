@@ -12,6 +12,7 @@ import { identify } from "../../../../utils/dev-identity";
 export const InputBase = identify("Input", function InputBase({
   size = "md",
   variant = "outline",
+  rounded,
   invalid: invalidProp,
   colorScheme,
   disabled: disabledProp,
@@ -43,7 +44,7 @@ export const InputBase = identify("Input", function InputBase({
       aria-required={isRequired || undefined}
       aria-readonly={isReadOnly || undefined}
       className={astralisMerge(
-        inputVariants({ size, variant, invalid: !!isInvalid }),
+        inputVariants({ size, variant, rounded, invalid: !!isInvalid }),
         colorScheme && accentClass(colorScheme),
         // Slot padding keys off the InputGroup wrapper's presence attributes.
         "astralis:[[data-inputgroup-prefix]_&]:pl-9 astralis:[[data-inputgroup-suffix]_&]:pr-9",

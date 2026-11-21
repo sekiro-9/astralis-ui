@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import type { KeyboardEvent, Ref } from "react";
 import { InputBase } from "./input";
+import { inputEndRounded } from "../input.styles";
 import { useFieldContext } from "../../field/field.context";
 import { useMergedRefs } from "../../../../utils/merge-refs";
 import type { InputSearchProps } from "../input.types";
@@ -68,7 +69,11 @@ export const InputSearch = identify("Input.Search", function InputSearch({
           type="button"
           disabled={!!isDisabled || !!isReadOnly}
           onClick={handleSearchClick}
-          className="astralis:h-10 astralis:shrink-0 astralis:rounded-r-lg astralis:bg-accent-solid astralis:px-4 astralis:text-sm astralis:font-medium astralis:text-accent-contrast astralis:transition-opacity astralis:hover:opacity-higher astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate"
+          className={astralisMerge(
+            "astralis:h-10 astralis:shrink-0 astralis:bg-accent-solid",
+            inputEndRounded[props.rounded ?? "lg"],
+            "astralis:px-4 astralis:text-sm astralis:font-medium astralis:text-accent-contrast astralis:transition-opacity astralis:hover:opacity-higher astralis:disabled:cursor-not-allowed astralis:disabled:opacity-moderate",
+          )}
         >
           Search
         </button>

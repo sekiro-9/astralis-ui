@@ -109,6 +109,7 @@ import { InputDemo } from "./input/input-demo";
 import { InputVariants } from "./input/input-variants";
 import { InputTypes } from "./input/input-types";
 import { InputGroupDemo } from "./input/input-group";
+import { InputRounded } from "./input/input-rounded";
 import { FieldDemo } from "./field/field-demo";
 import { FieldError } from "./field/field-error";
 import { CheckboxDemo } from "./checkbox/checkbox-demo";
@@ -331,6 +332,7 @@ export const demos = {
   "input-variants": { component: InputVariants, file: "input/input-variants.tsx" },
   "input-types": { component: InputTypes, file: "input/input-types.tsx" },
   "input-group": { component: InputGroupDemo, file: "input/input-group.tsx" },
+  "input-rounded": { component: InputRounded, file: "input/input-rounded.tsx" },
   "field-demo": { component: FieldDemo, file: "field/field-demo.tsx" },
   "field-error": { component: FieldError, file: "field/field-error.tsx" },
   "checkbox-demo": { component: CheckboxDemo, file: "checkbox/checkbox-demo.tsx" },

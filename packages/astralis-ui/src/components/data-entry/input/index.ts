@@ -24,4 +24,5 @@ export type {
   InputTextareaProps,
   InputSize,
   InputVariant,
+  InputRounded,
 } from "./input.types";

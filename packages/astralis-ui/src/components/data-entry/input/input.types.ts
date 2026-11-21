@@ -9,6 +9,7 @@ import type {
 
 export type InputSize = "sm" | "md" | "lg";
 export type InputVariant = "outline" | "filled" | "underline" | "unstyled";
+export type InputRounded = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -18,6 +19,10 @@ export interface InputProps extends Omit<
   size?: InputSize;
   /** Visual variant */
   variant?: InputVariant;
+  /** Corner radius, on Button's scale; `full` makes a pill. Unset, the variant
+   *  decides: `lg` on outline and filled, square on underline and unstyled.
+   *  @default "lg" */
+  rounded?: InputRounded;
   /** Marks the input as invalid. Can also be inherited from Field context */
   invalid?: boolean;
   /** Hue of the focus border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */

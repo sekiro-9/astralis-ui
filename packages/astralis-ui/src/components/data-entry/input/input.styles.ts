@@ -38,6 +38,30 @@ export const inputInvalidChrome = {
   unstyled: "",
 } as const;
 
+/** Corner radius, the same scale as Button's. No default: left unset, the
+ *  variant's own corners apply (`lg` on outline and filled, square on underline
+ *  and unstyled), and the other controls that call `inputVariants` are untouched. */
+export const inputRounded = {
+  none: "astralis:rounded-none",
+  sm: "astralis:rounded-sm",
+  md: "astralis:rounded-md",
+  lg: "astralis:rounded-lg",
+  xl: "astralis:rounded-xl",
+  "2xl": "astralis:rounded-2xl",
+  full: "astralis:rounded-full",
+} as const;
+
+/** The trailing corners of Input.Search's attached button, matching the input's. */
+export const inputEndRounded = {
+  none: "astralis:rounded-r-none",
+  sm: "astralis:rounded-r-sm",
+  md: "astralis:rounded-r-md",
+  lg: "astralis:rounded-r-lg",
+  xl: "astralis:rounded-r-xl",
+  "2xl": "astralis:rounded-r-2xl",
+  full: "astralis:rounded-r-full",
+} as const;
+
 /** Input (single-line) — fixed heights per size. */
 export const inputVariants = cva(base, {
   variants: {
@@ -47,6 +71,8 @@ export const inputVariants = cva(base, {
       lg: "astralis:h-12 astralis:px-4 astralis:text-base",
     },
     variant: inputVariantChrome,
+    // After `variant`, so an explicit radius replaces the chrome's in the merge.
+    rounded: inputRounded,
     invalid: { true: "", false: "" },
   },
   compoundVariants: [

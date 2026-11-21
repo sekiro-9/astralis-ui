@@ -15,6 +15,12 @@ export const inputProps: PropRow[] = [
     description: "Height and padding.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius, on Button's scale. Unset, underline and unstyled stay square. Also on Input.Password and Input.Search.",
+  },
+  {
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,

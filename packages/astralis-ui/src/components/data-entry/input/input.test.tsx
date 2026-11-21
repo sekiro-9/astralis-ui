@@ -66,6 +66,41 @@ describe.each([
   });
 });
 
+describe("Input rounded", () => {
+  const radii = (el: Element) => [...el.classList].filter((c) => /^astralis:rounded/.test(c));
+
+  it("keeps each variant's own corners when unset", () => {
+    const { rerender } = render(<Input aria-label="a" />);
+    expect(radii(screen.getByRole("textbox"))).toEqual(["astralis:rounded-lg"]);
+    rerender(<Input aria-label="a" variant="filled" />);
+    expect(radii(screen.getByRole("textbox"))).toEqual(["astralis:rounded-lg"]);
+    rerender(<Input aria-label="a" variant="underline" />);
+    expect(radii(screen.getByRole("textbox"))).toEqual(["astralis:rounded-none"]);
+  });
+
+  it("replaces the variant's radius with the one asked for", () => {
+    render(<Input aria-label="a" rounded="full" />);
+    expect(radii(screen.getByRole("textbox"))).toEqual(["astralis:rounded-full"]);
+  });
+
+  it("reaches the input inside Input.Password", () => {
+    const { container } = render(<Input.Password aria-label="p" rounded="full" />);
+    expect(radii(container.querySelector("input")!)).toEqual(["astralis:rounded-full"]);
+  });
+
+  it("squares Input.Search's joined corners and rounds its button to match", () => {
+    render(<Input.Search aria-label="s" rounded="full" showSearchButton />);
+    expect(radii(screen.getByRole("searchbox"))).toEqual(["astralis:rounded-full", "astralis:rounded-r-none"]);
+    expect(radii(screen.getByRole("button", { name: "Search" }))).toEqual(["astralis:rounded-r-full"]);
+  });
+
+  it("gives Input.Search's button the default corners when unset", () => {
+    render(<Input.Search aria-label="s" showSearchButton />);
+    expect(radii(screen.getByRole("searchbox"))).toEqual(["astralis:rounded-lg", "astralis:rounded-r-none"]);
+    expect(radii(screen.getByRole("button", { name: "Search" }))).toEqual(["astralis:rounded-r-lg"]);
+  });
+});
+
 describe("Input colorScheme", () => {
   it("scopes the accent channel only when a scheme is given", () => {
     const { rerender } = render(<Input aria-label="a" />);
