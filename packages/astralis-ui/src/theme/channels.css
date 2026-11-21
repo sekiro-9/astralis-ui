@@ -22,6 +22,9 @@
      (.astralis-color-inherit): a variable set to `inherit` inherits the variable.
    ========================================================================== */
 
+@property --tw-translate-x { syntax: "*"; inherits: false; initial-value: 0; }
+@property --tw-translate-y { syntax: "*"; inherits: false; initial-value: 0; }
+
 @layer channels {
   /* --- padding --- */
   .astralis-p { padding: var(--astralis-p); }
@@ -94,6 +97,12 @@
   .astralis-shadow { box-shadow: var(--astralis-shadow); }
   .astralis-opacity { opacity: var(--astralis-opacity); }
 
+  /* --- transform (the individual properties, which compose with each other and with `transform`) --- */
+  .astralis-scale { scale: var(--astralis-scale); }
+  .astralis-translate-x { --tw-translate-x: var(--astralis-translate-x); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-translate-y { --tw-translate-y: var(--astralis-translate-y); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-rotate { rotate: var(--astralis-rotate); }
+
   /* ===== sm (40rem) ===== */
   @media (min-width: 40rem) {
     .astralis-p-sm { padding: var(--astralis-p-sm); }
@@ -151,6 +160,10 @@
     .astralis-border-color-inherit-sm { border-color: inherit; }
     .astralis-shadow-sm { box-shadow: var(--astralis-shadow-sm); }
     .astralis-opacity-sm { opacity: var(--astralis-opacity-sm); }
+    .astralis-scale-sm { scale: var(--astralis-scale-sm); }
+    .astralis-translate-x-sm { --tw-translate-x: var(--astralis-translate-x-sm); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-sm { --tw-translate-y: var(--astralis-translate-y-sm); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-sm { rotate: var(--astralis-rotate-sm); }
   }
 
   /* ===== md (48rem) ===== */
@@ -210,6 +223,10 @@
     .astralis-border-color-inherit-md { border-color: inherit; }
     .astralis-shadow-md { box-shadow: var(--astralis-shadow-md); }
     .astralis-opacity-md { opacity: var(--astralis-opacity-md); }
+    .astralis-scale-md { scale: var(--astralis-scale-md); }
+    .astralis-translate-x-md { --tw-translate-x: var(--astralis-translate-x-md); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-md { --tw-translate-y: var(--astralis-translate-y-md); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-md { rotate: var(--astralis-rotate-md); }
   }
 
   /* ===== lg (64rem) ===== */
@@ -269,6 +286,10 @@
     .astralis-border-color-inherit-lg { border-color: inherit; }
     .astralis-shadow-lg { box-shadow: var(--astralis-shadow-lg); }
     .astralis-opacity-lg { opacity: var(--astralis-opacity-lg); }
+    .astralis-scale-lg { scale: var(--astralis-scale-lg); }
+    .astralis-translate-x-lg { --tw-translate-x: var(--astralis-translate-x-lg); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-lg { --tw-translate-y: var(--astralis-translate-y-lg); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-lg { rotate: var(--astralis-rotate-lg); }
   }
 
   /* ===== xl (80rem) ===== */
@@ -328,6 +349,10 @@
     .astralis-border-color-inherit-xl { border-color: inherit; }
     .astralis-shadow-xl { box-shadow: var(--astralis-shadow-xl); }
     .astralis-opacity-xl { opacity: var(--astralis-opacity-xl); }
+    .astralis-scale-xl { scale: var(--astralis-scale-xl); }
+    .astralis-translate-x-xl { --tw-translate-x: var(--astralis-translate-x-xl); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-xl { --tw-translate-y: var(--astralis-translate-y-xl); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-xl { rotate: var(--astralis-rotate-xl); }
   }
 
   /* Container keys (@sm..@xl): the same widths, resolved against the nearest
@@ -391,6 +416,10 @@
     .astralis-border-color-inherit-cq-sm { border-color: inherit; }
     .astralis-shadow-cq-sm { box-shadow: var(--astralis-shadow-cq-sm); }
     .astralis-opacity-cq-sm { opacity: var(--astralis-opacity-cq-sm); }
+    .astralis-scale-cq-sm { scale: var(--astralis-scale-cq-sm); }
+    .astralis-translate-x-cq-sm { --tw-translate-x: var(--astralis-translate-x-cq-sm); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-cq-sm { --tw-translate-y: var(--astralis-translate-y-cq-sm); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-cq-sm { rotate: var(--astralis-rotate-cq-sm); }
   }
 
   /* ===== @md (48rem) ===== */
@@ -450,6 +479,10 @@
     .astralis-border-color-inherit-cq-md { border-color: inherit; }
     .astralis-shadow-cq-md { box-shadow: var(--astralis-shadow-cq-md); }
     .astralis-opacity-cq-md { opacity: var(--astralis-opacity-cq-md); }
+    .astralis-scale-cq-md { scale: var(--astralis-scale-cq-md); }
+    .astralis-translate-x-cq-md { --tw-translate-x: var(--astralis-translate-x-cq-md); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-cq-md { --tw-translate-y: var(--astralis-translate-y-cq-md); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-cq-md { rotate: var(--astralis-rotate-cq-md); }
   }
 
   /* ===== @lg (64rem) ===== */
@@ -509,6 +542,10 @@
     .astralis-border-color-inherit-cq-lg { border-color: inherit; }
     .astralis-shadow-cq-lg { box-shadow: var(--astralis-shadow-cq-lg); }
     .astralis-opacity-cq-lg { opacity: var(--astralis-opacity-cq-lg); }
+    .astralis-scale-cq-lg { scale: var(--astralis-scale-cq-lg); }
+    .astralis-translate-x-cq-lg { --tw-translate-x: var(--astralis-translate-x-cq-lg); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-cq-lg { --tw-translate-y: var(--astralis-translate-y-cq-lg); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-cq-lg { rotate: var(--astralis-rotate-cq-lg); }
   }
 
   /* ===== @xl (80rem) ===== */
@@ -568,6 +605,10 @@
     .astralis-border-color-inherit-cq-xl { border-color: inherit; }
     .astralis-shadow-cq-xl { box-shadow: var(--astralis-shadow-cq-xl); }
     .astralis-opacity-cq-xl { opacity: var(--astralis-opacity-cq-xl); }
+    .astralis-scale-cq-xl { scale: var(--astralis-scale-cq-xl); }
+    .astralis-translate-x-cq-xl { --tw-translate-x: var(--astralis-translate-x-cq-xl); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-translate-y-cq-xl { --tw-translate-y: var(--astralis-translate-y-cq-xl); translate: var(--tw-translate-x) var(--tw-translate-y); }
+    .astralis-rotate-cq-xl { rotate: var(--astralis-rotate-cq-xl); }
   }
 
   /* ===== state: hover ===== */
@@ -626,6 +667,10 @@
   .astralis-hover-border-color-inherit:hover { border-color: inherit; }
   .astralis-hover-shadow:hover { box-shadow: var(--astralis-shadow-hover); }
   .astralis-hover-opacity:hover { opacity: var(--astralis-opacity-hover); }
+  .astralis-hover-scale:hover { scale: var(--astralis-scale-hover); }
+  .astralis-hover-translate-x:hover { --tw-translate-x: var(--astralis-translate-x-hover); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-hover-translate-y:hover { --tw-translate-y: var(--astralis-translate-y-hover); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-hover-rotate:hover { rotate: var(--astralis-rotate-hover); }
 
   /* ===== state: focus-visible ===== */
   .astralis-focus-visible-p:focus-visible { padding: var(--astralis-p-focus-visible); }
@@ -683,6 +728,10 @@
   .astralis-focus-visible-border-color-inherit:focus-visible { border-color: inherit; }
   .astralis-focus-visible-shadow:focus-visible { box-shadow: var(--astralis-shadow-focus-visible); }
   .astralis-focus-visible-opacity:focus-visible { opacity: var(--astralis-opacity-focus-visible); }
+  .astralis-focus-visible-scale:focus-visible { scale: var(--astralis-scale-focus-visible); }
+  .astralis-focus-visible-translate-x:focus-visible { --tw-translate-x: var(--astralis-translate-x-focus-visible); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-focus-visible-translate-y:focus-visible { --tw-translate-y: var(--astralis-translate-y-focus-visible); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-focus-visible-rotate:focus-visible { rotate: var(--astralis-rotate-focus-visible); }
 
   /* ===== state: active ===== */
   .astralis-active-p:active { padding: var(--astralis-p-active); }
@@ -740,4 +789,8 @@
   .astralis-active-border-color-inherit:active { border-color: inherit; }
   .astralis-active-shadow:active { box-shadow: var(--astralis-shadow-active); }
   .astralis-active-opacity:active { opacity: var(--astralis-opacity-active); }
+  .astralis-active-scale:active { scale: var(--astralis-scale-active); }
+  .astralis-active-translate-x:active { --tw-translate-x: var(--astralis-translate-x-active); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-active-translate-y:active { --tw-translate-y: var(--astralis-translate-y-active); translate: var(--tw-translate-x) var(--tw-translate-y); }
+  .astralis-active-rotate:active { rotate: var(--astralis-rotate-active); }
 }

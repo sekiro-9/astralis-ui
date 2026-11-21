@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ASTRALIS — MOTION PROPS (animation, reveal, animationDuration, animationDelay)
+   ASTRALIS — MOTION PROPS (animation, reveal, animationDuration, animationDelay, transition)
    --------------------------------------------------------------------------
    Pure CSS, so the props work on Server Components and ship no JavaScript.
 
@@ -357,4 +357,38 @@
 
 @utility motion-distance-xl {
   --astralis-motion-distance: 3;
+}
+
+/* ---- transition: which changes animate ----------------------------------
+   The library's standard 200 ms (--astralis-duration-moderate) on the curve
+   every library transition uses. The property list is
+   declared only under `no-preference`, so with reduced motion a hover or
+   active value still applies, at once, without the move. */
+
+@utility motion-transition-none {
+  transition-property: none;
+}
+
+@utility motion-transition-colors {
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: color, background-color, border-color;
+    transition-duration: var(--astralis-duration-moderate);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@utility motion-transition-transform {
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: transform, translate, scale, rotate;
+    transition-duration: var(--astralis-duration-moderate);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@utility motion-transition-common {
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform, translate, scale, rotate;
+    transition-duration: var(--astralis-duration-moderate);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }

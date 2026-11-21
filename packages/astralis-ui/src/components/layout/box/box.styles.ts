@@ -85,6 +85,13 @@ import {
   animationDistanceTypes,
   revealModeTypes
 } from "../../../const/motion-mappings";
+import {
+  scaleTypes,
+  translateTypes,
+  rotateTypes,
+  transformOriginTypes,
+  transitionTypes
+} from "../../../const/transform-mappings";
 
 /**
  * Single source of truth for Box's token maps. Shared by CVA (scalar resolution
@@ -173,6 +180,13 @@ export const boxVariantMap = {
     animationDelay: animationDelayTypes,
     animationDistance: animationDistanceTypes,
     revealMode: revealModeTypes,
+    // Transform: channel props, so hover/focusVisible/active can change them.
+    scale: scaleTypes,
+    translateX: translateTypes,
+    translateY: translateTypes,
+    rotate: rotateTypes,
+    transformOrigin: transformOriginTypes,
+    transition: transitionTypes,
 } as const;
 
 export const boxVariants = cva("", {

@@ -104,6 +104,8 @@ const SLUG_VALUE_TYPES = {
   shadow: "shadow",
   opacity: "number",
   order: "integer",
+  scale: "scale",
+  rotate: "angle",
 };
 
 /** One prop's spec entry. Channel routing mirrors the engine: registered

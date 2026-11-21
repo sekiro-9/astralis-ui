@@ -187,6 +187,16 @@ export function breakpointsCss({ BREAKPOINTS, BREAKPOINT_WIDTHS }) {
 
 /* ---- channels.css ------------------------------------------------------- */
 
+/** A declaration written as is, rather than as `property: var(slug var)`. */
+const TRANSLATE_PAIR = "translate: var(--tw-translate-x) var(--tw-translate-y)";
+
+/* Non-inheriting, starting at 0: a child's translateY must not pick up its
+   parent's x. Tailwind registers the same two when a translate utility is
+   used; this keeps the props working when none is. */
+const TRANSLATE_PROPERTIES = ["--tw-translate-x", "--tw-translate-y"].map(
+  (name) => `@property ${name} { syntax: "*"; inherits: false; initial-value: 0; }`,
+);
+
 /**
  * The CSS each channel slug writes, in cascade order: within a group the
  * shorthand comes first so a longhand set on the same element wins.
@@ -227,6 +237,15 @@ const CHANNEL_GROUPS = [
     bg: ["background-color"], color: ["color"], "border-color": ["border-color"],
     shadow: ["box-shadow"], opacity: ["opacity"],
   }],
+  // One `translate` takes both axes, so each axis sets its own variable and
+  // writes the pair. They are Tailwind's variables, so an axis the prop does
+  // not set keeps a translate utility's value (Float's centring).
+  ["transform (the individual properties, which compose with each other and with `transform`)", {
+    scale: ["scale"],
+    "translate-x": ["--tw-translate-x", TRANSLATE_PAIR],
+    "translate-y": ["--tw-translate-y", TRANSLATE_PAIR],
+    rotate: ["rotate"],
+  }],
 ];
 
 const STATES = ["hover", "focus-visible", "active"];
@@ -248,7 +267,7 @@ function channelSlugs(CHANNEL_PROPS) {
 export function channelsCss({ CHANNEL_PROPS, INHERIT_CHANNEL_SLUGS, BREAKPOINTS, BREAKPOINT_WIDTHS }) {
   channelSlugs(CHANNEL_PROPS);
   const all = CHANNEL_GROUPS.flatMap(([, slugs]) => Object.entries(slugs));
-  const declare = (props, value) => props.map((p) => `${p}: ${value};`).join(" ");
+  const declare = (props, value) => props.map((p) => (p.includes(":") ? `${p};` : `${p}: ${value};`)).join(" ");
   // A slug's `inherit` rule follows its var rule in the same block, so it
   // takes part in the same breakpoint and state order.
   const rules = (indent, slug, props, { selector, v, inherit }) => [
@@ -276,6 +295,8 @@ export function channelsCss({ CHANNEL_PROPS, INHERIT_CHANNEL_SLUGS, BREAKPOINTS,
       "- `inherit` on bg, color, borderColor and rounded has a rule of its own",
       "  (.astralis-color-inherit): a variable set to `inherit` inherits the variable.",
     ]),
+    ...TRANSLATE_PROPERTIES,
+    "",
     "@layer channels {",
   ];
 

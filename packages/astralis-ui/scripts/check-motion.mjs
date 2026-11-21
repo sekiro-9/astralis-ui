@@ -14,6 +14,10 @@
    - ESSENTIAL: it conveys state rather than decoration (a loader says
      "working"), listed below with its reason. WCAG 2.3.3 exempts these.
 
+   The `transition` prop's classes (`motion-transition-*`) must declare their
+   transition-property inside the same no-preference block, so a hover or
+   active value applies at once under reduced motion.
+
    Scroll timelines and scroll triggers must also sit inside an @supports
    guard for their feature, so a browser without them shows the content.
 
@@ -45,7 +49,7 @@ const REDUCE_CLASS = "astralis:motion-reduce:animate-none";
 const READS_PREFERENCE = /usePrefersReducedMotion|prefers-reduced-motion/;
 
 const failures = [];
-const counts = { safe: 0, paired: 0, essential: 0 };
+const counts = { safe: 0, paired: 0, essential: 0, transitions: 0 };
 
 /* ---- 1. the compiled stylesheet ------------------------------------------ */
 
@@ -90,6 +94,15 @@ const unescape = (selector) => selector.replace(/\\/g, "");
 const needsPairing = new Map();
 
 for (const rule of styleRules(css)) {
+  // The `transition` prop: a hover or active value must apply at once, not
+  // move, for someone who asked for less motion.
+  if (rule.selector.includes("motion-transition-")) {
+    const property = rule.body.match(/(?:^|;)\s*transition-property\s*:\s*([^;]+)/);
+    if (property && property[1].trim() !== "none") {
+      if (rule.context.some((at) => /prefers-reduced-motion\s*:\s*no-preference/.test(at))) counts.transitions++;
+      else failures.push(`${unescape(rule.selector)}: the transition prop animates under reduced motion. Declare it inside @media (prefers-reduced-motion: no-preference).`);
+    }
+  }
   for (const decl of rule.body.split(";")) {
     // A scroll timeline or trigger outside its @supports guard would apply in
     // a browser that cannot run it, and a reveal there must simply show.
@@ -150,10 +163,11 @@ for (const { file, text } of sources) {
 
 /* ---- 3. the motion props must exist, and be safe -------------------------- */
 
-for (const cls of ["animate-fade-in", "reveal-fade-in"]) {
+for (const cls of ["animate-fade-in", "reveal-fade-in", "motion-transition-transform"]) {
   if (!css.includes(`.astralis\\:${cls}`)) failures.push(`motion prop class "astralis:${cls}" is missing from the stylesheet`);
 }
 if (counts.safe === 0) failures.push("no animation is declared inside prefers-reduced-motion: no-preference");
+if (counts.transitions === 0) failures.push("no transition prop class is declared inside prefers-reduced-motion: no-preference");
 
 if (failures.length) {
   console.error(`\n[astralis] motion gate FAILED (${failures.length}):`);
@@ -164,5 +178,5 @@ if (failures.length) {
 
 console.log(
   `[astralis] motion: ${counts.safe} animations stand down under reduced motion, ${counts.paired} paired with a reduced-motion rule, ` +
-    `${counts.essential} essential (they convey state)`,
+    `${counts.essential} essential (they convey state); ${counts.transitions} transition-prop rules stand down under reduced motion`,
 );

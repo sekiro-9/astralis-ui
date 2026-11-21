@@ -82,6 +82,11 @@ export const CHANNEL_PROPS = {
   borderColor: "border-color",
   shadow: "shadow",
   opacity: "opacity",
+  // Transform (the individual properties, so they compose)
+  scale: "scale",
+  translateX: "translate-x",
+  translateY: "translate-y",
+  rotate: "rotate",
 } as const;
 
 export type ChannelPropName = keyof typeof CHANNEL_PROPS;
@@ -164,7 +169,10 @@ export const channelVar = (slug: string, suffix?: string): string =>
    length, color, or shadow, where `p="37"` is almost certainly a typo'd token
    or a missing unit. Exported so the system spec (and therefore the
    validator) carries the exact same rule the runtime warning uses. */
-export const UNITLESS_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["order", "opacity"]);
+export const UNITLESS_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["order", "opacity", "scale"]);
+
+/* The unit a bare number most likely lacks, where it is not a length. */
+const BARE_NUMBER_UNIT: Readonly<Record<string, string>> = { rotate: "deg" };
 
 /* The channels whose `inherit` gets a class of its own
    (`.astralis-color-inherit { color: inherit }`) instead of riding the var.
@@ -251,7 +259,7 @@ export function resolveChannelToken(
   if (process.env.NODE_ENV !== "production") {
     if (BARE_NUMBER.test(token) && !UNITLESS_CHANNEL_SLUGS.has(slug)) {
       console.warn(
-        `[astralis-ui] ${slug}="${token}" is not a token, and a bare number is not valid CSS for this property — did you mean a token, or "${token}px"? Passing it through as-is.`,
+        `[astralis-ui] ${slug}="${token}" is not a token, and a bare number is not valid CSS for this property — did you mean a token, or "${token}${BARE_NUMBER_UNIT[slug] ?? "px"}"? Passing it through as-is.`,
       );
     }
   }
