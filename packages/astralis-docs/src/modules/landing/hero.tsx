@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   useTheme,
   Button, Card, Stat, Badge, Avatar, Switch, Slider, Tag, HStack, VStack,
-  Box, Flex, Grid, Stack, Text,
+  Box, Flex, Grid, Link as AstralisLink, Stack, Text,
 } from "astralis-ui";
 import { ArrowRight } from "lucide-react";
 import { CopyCommand } from "@/modules/docs/copy-command";
@@ -170,10 +170,9 @@ export function Hero() {
               </Box>
               <Text as="span" size="xs" color="subtle" className="sm:whitespace-nowrap">
                 Scaffold your React project ·{" "}
-                {/* A Box, not Link: Link takes no hover colour. The underline offset has no prop. */}
-                <Box as={Link} href="/docs/cli" hover={{ color: "muted" }} className="underline underline-offset-2">
+                <AstralisLink as={Link} href="/docs/cli" color="subtle" hover={{ color: "muted" }} variant="underline">
                   How the CLI works
-                </Box>
+                </AstralisLink>
               </Text>
             </Flex>
           </Entrance>

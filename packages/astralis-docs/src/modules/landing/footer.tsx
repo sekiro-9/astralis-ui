@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { Box, Flex, Stack, Text } from "astralis-ui";
+import { Box, Flex, Link, Stack, Text } from "astralis-ui";
 import { Logo } from "@/modules/site/logo";
 import { NavGroupLabel } from "@/modules/site/nav-item";
 import { GITHUB_URL } from "@/modules/site/nav-links";
@@ -58,12 +58,9 @@ export function Footer({ version }: { version: string }) {
               <Stack as="ul" gap="2">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    {/* A Box, not Link: Link takes no hover colour. */}
-                    <Box as={NextLink} href={link.href} color="muted" hover={{ color: "base" }} className="transition-colors">
-                      <Text as="span" size="sm">
-                        {link.label}
-                      </Text>
-                    </Box>
+                    <Link as={NextLink} href={link.href} size="sm" color="muted" hover={{ color: "base" }} variant="plain">
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </Stack>
