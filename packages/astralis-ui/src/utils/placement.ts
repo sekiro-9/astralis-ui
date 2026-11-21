@@ -78,16 +78,21 @@ export const PLACEMENT_PROP_NAMES = [
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 
 /**
- * Every exported component that takes placement props. The system spec
- * advertises exactly this list, and placement-props.test.tsx must cover it.
+ * Every exported component that takes placement props, by its compound name
+ * (TagRoot is Tag; parts such as Input.Password are not listed). The spec
+ * generator fails the build when this list and the components' types
+ * disagree, and placement-props.test.tsx fails when it renders fewer.
  */
 export const PLACEMENT_ADOPTERS = [
   "Accordion", "Alert", "Avatar", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-  "Calendar", "Card", "Carousel", "Checkbox", "CodeBlock", "Combobox", "DataList", "DatePicker",
-  "Field", "Heading", "Highlight", "Icon", "Image", "Input", "Kbd", "Link", "Loader", "Marquee",
-  "MultiSelect", "NumberInput", "Pagination", "PinInput", "Progress", "QrCode", "Radio",
-  "ScrollArea", "Skeleton", "Slider", "Splitter", "Steps", "Switch", "Table",
-  "TableOfContents", "Tabs", "Tag", "Text", "Timeline", "Toolbar",
+  "Calendar", "Card", "Carousel", "CheckableTag", "Checkbox", "CheckboxCard", "CodeBlock",
+  "Collapsible", "Combobox", "CopyButton", "DataList", "DatePicker", "Editable", "EmptyState",
+  "Field", "FileUpload", "FloatingButton", "Heading", "Highlight", "Icon", "Image", "Input",
+  "Kbd", "Link", "Loader", "Marquee", "MultiSelect", "NativeSelect", "NumberInput",
+  "Pagination", "PinInput", "Progress", "QrCode", "Radio", "RadioCard", "RangeSlider", "Rating",
+  "ScrollArea", "SegmentedControl", "Select", "Skeleton", "Slider", "Splitter", "Stat", "Steps",
+  "Switch", "Table", "TableOfContents", "Tabs", "Tag", "Text", "ThemeToggle", "Timeline",
+  "Toolbar",
 ] as const;
 
 const PLACEMENT_SET = new Set<string>(PLACEMENT_PROP_NAMES);

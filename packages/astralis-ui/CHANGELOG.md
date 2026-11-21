@@ -6,6 +6,37 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
+## Unreleased
+
+### Added
+
+- **Prop documentation in the system spec.** Each component entry in
+  `system-spec.json` carries `propDocs`: for each of its own props, a short
+  `description` and its `default`, plus `deprecated` where a prop is. They
+  are read at build time from the library's JSDoc; a default the JSDoc does
+  not state is taken from the component's code when the code states it
+  plainly (a destructuring default, the recipe's default variant, or a value
+  set before the rest of the props are passed on). Parts with no export of
+  their own (`Menu.Item`) are documented on their owner as `partPropDocs`,
+  and style props once, as a `description` on their entry in `propGroups`.
+  Tools such as the DevTools can now explain a prop without the docs site.
+
+### Fixed
+
+- **The validator checks style-prop values on every component that takes
+  them.** List, List.Item, Code, Separator and Blockquote take every box prop,
+  and Stat, Select, NativeSelect, Collapsible, EmptyState, CheckboxCard,
+  RadioCard, Editable, FileUpload, Rating, SegmentedControl, CheckableTag,
+  RangeSlider, CopyButton, ThemeToggle and FloatingButton take the placement
+  props, but the spec gave them no prop groups, so `<List p="37">` and
+  `<Stat position="floaty">` passed. A component's groups are now read off its
+  type, and the build fails when a component takes a group's props without
+  being described by it.
+- **List's `styleType` and `spacing`, Separator's `orientation` and
+  `variant`, and the other responsive props a component owns are in the
+  spec** (Blockquote and Code `variant`, Float `placement`, AspectRatio
+  `ratio`, Stat `size` and `align`), so their values are checked too.
+
 ## 0.9.0 (2026-11-20)
 
 ### Added

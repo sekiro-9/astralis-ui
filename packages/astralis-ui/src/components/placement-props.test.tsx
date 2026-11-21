@@ -48,6 +48,20 @@ import { Toolbar } from "./buttons/toolbar";
 import { ScrollArea } from "./layout/scroll-area";
 import { Splitter } from "./layout/splitter";
 import { TableOfContents } from "./navigation/table-of-contents";
+import { NativeSelect } from "./data-entry/native-select";
+import { Collapsible } from "./disclosure/collapsible";
+import { EmptyState } from "./feedback/empty-state";
+import { CheckboxCard } from "./data-entry/checkbox-card";
+import { RadioCard } from "./data-entry/radio-card";
+import { Editable } from "./data-entry/editable";
+import { FileUpload } from "./data-entry/file-upload";
+import { Rating } from "./data-entry/rating";
+import { SegmentedControl } from "./data-entry/segmented-control";
+import { CheckableTag } from "./data-display/tag";
+import { RangeSlider } from "./data-entry/slider";
+import { CopyButton } from "./buttons/copy-button";
+import { FloatingButton } from "./buttons/floating-button";
+import { PLACEMENT_ADOPTERS } from "../utils/placement";
 import { AstralisProvider } from "../theme/provider";
 
 /**
@@ -69,8 +83,9 @@ import { AstralisProvider } from "../theme/provider";
  *
  * Table-driven rather than one test each: the wiring is identical everywhere,
  * so what matters is that no component is missed and none of them leaks a
- * placement key onto the DOM. A component added to the rule and left out of
- * this table is the failure this cannot catch, so the list is kept in step
+ * placement key onto the DOM. The spec build fails when a component's type
+ * takes placement props and PLACEMENT_ADOPTERS does not name it, and the test
+ * after this table fails when the table renders fewer than that list.
  * Each entry names the COMPOUND export, which is the root — Object.assign
  * returns the root function itself, so Steps and StepsRoot are one value and
  * only the compound name is exported.
@@ -120,7 +135,29 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["ScrollArea", (p) => <ScrollArea {...p}>a</ScrollArea>],
   ["Splitter", (p) => <Splitter {...p}><Splitter.Panel>a</Splitter.Panel><Splitter.Handle /><Splitter.Panel>b</Splitter.Panel></Splitter>],
   ["TableOfContents", (p) => <TableOfContents {...p} items={[]} />],
+  ["Stat", (p) => <Stat {...p}><StatLabel>a</StatLabel></Stat>],
+  ["Select", (p) => <Select {...p} options={[]} />],
+  ["NativeSelect", (p) => <NativeSelect {...p}><option>a</option></NativeSelect>],
+  ["Collapsible", (p) => <Collapsible {...p}>a</Collapsible>],
+  ["EmptyState", (p) => <EmptyState {...p}>a</EmptyState>],
+  ["CheckboxCard", (p) => <CheckboxCard {...p}>a</CheckboxCard>],
+  ["RadioCard", (p) => <RadioCard {...p} value="a">a</RadioCard>],
+  ["Editable", (p) => <Editable {...p}><Editable.Preview /></Editable>],
+  ["FileUpload", (p) => <FileUpload {...p}><FileUpload.Dropzone>a</FileUpload.Dropzone></FileUpload>],
+  ["Rating", (p) => <Rating {...p} />],
+  ["SegmentedControl", (p) => <SegmentedControl {...p}><SegmentedControl.Item value="a">a</SegmentedControl.Item></SegmentedControl>],
+  ["CheckableTag", (p) => <CheckableTag {...p}>a</CheckableTag>],
+  ["RangeSlider", (p) => <RangeSlider {...p} />],
+  ["CopyButton", (p) => <CopyButton {...p} value="x" />],
 ];
+
+/** Adopters whose placement lands below the root, tested on their own below. */
+const TESTED_APART = ["Card", "ThemeToggle", "FloatingButton"];
+
+it("renders every component PLACEMENT_ADOPTERS names", () => {
+  const rendered = new Set([...ADOPTERS.map(([name]) => name), ...TESTED_APART]);
+  expect(PLACEMENT_ADOPTERS.filter((name) => !rendered.has(name))).toEqual([]);
+});
 
 describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
   it("resolves w and mt to channel classes + vars and keeps both off the DOM", () => {
@@ -253,6 +290,23 @@ describe("placement props on recipe components", () => {
     expect(button.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
     expect(button.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
     expect(button.hasAttribute("w")).toBe(false);
+  });
+
+  it("forwards placement through FloatingButton to the Button it renders", () => {
+    // Its root is the fixed-position wrapper; `position` is its own prop, so
+    // only size and margin are checked here.
+    const { container } = render(
+      <AstralisProvider>
+        <FloatingButton aria-label="Add" w="full" mt="4">+</FloatingButton>
+      </AstralisProvider>,
+    );
+    const button = container.querySelector("button")!;
+
+    expect([...button.classList]).toEqual(
+      expect.arrayContaining(["astralis-w", "astralis-mt"]),
+    );
+    expect(button.style.getPropertyValue("--astralis-mt")).toBe("var(--astralis-spacing-4)");
+    expect(button.hasAttribute("mt")).toBe(false);
   });
 
   it("passes an aria-label through to Select's combobox", () => {

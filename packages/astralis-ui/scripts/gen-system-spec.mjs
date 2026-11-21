@@ -16,10 +16,17 @@
      silently does nothing, which is precisely what a validator must catch;
    - declared CSS variables from the token stylesheets.
 
-   Two lists are authored: PRIMITIVE_GROUPS here, and PLACEMENT_ADOPTERS in
-   utils/placement.ts, which placement-props.test.tsx covers. Both are
-   drift-checked against the real export list — an entry that stops existing
-   fails this script, not the consumer.
+   A component's style-prop groups are read off its type: one that accepts
+   every box prop has `box`, one that accepts every placement prop has
+   `placement`. Two lists are still authored and both are drift-checked here:
+   PRIMITIVE_GROUPS, for the primitives whose groups prop names alone cannot
+   tell apart (Stack and Flex accept the same names), and PLACEMENT_ADOPTERS in
+   utils/placement.ts, which placement-props.test.tsx renders. A component
+   that accepts a group's props but is not described by it, or a listed
+   name that stops existing or stops accepting them, fails this script.
+
+   Prop documentation (propDocs, partPropDocs, and `description` on group
+   props) comes from the library's JSDoc and component code: prop-docs.mjs.
 
    Runs at the end of build:css, after the coverage gate has proven the CSS
    is total, so the spec can only ever describe a verified build.
@@ -29,7 +36,8 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 import { buildGraph, classifyClient, exportsOf } from "./module-graph.mjs";
-import { extractComponentTypes } from "./extract-literal-props.mjs";
+import { extractComponentTypes, UNDOCUMENTED_PROPS } from "./extract-literal-props.mjs";
+import { extractSourceDefaults } from "./prop-docs.mjs";
 import { measureContent } from "./measure-content.mjs";
 import { loadTs } from "./load-ts.mjs";
 
@@ -182,11 +190,12 @@ const componentNames = Object.keys(rootExports)
   })
   .sort();
 
-/* Style-prop surfaces per component. Components in neither table get []:
-   they take no style-prop group. Their own props are listed under `props`
-   (closed vocabularies) and `scalarProps` (booleans, open strings, numbers). */
+/* Groups that cannot be read off the type by prop names: Stack accepts the
+   flex names with its own direction vocabulary, and Heading takes the text
+   group less `paragraph`. Every other component's groups are derived
+   (groupsOf); a derived component that accepts a group these tables do not
+   give it fails the build. */
 const PRIMITIVE_GROUPS = {
-  Box: ["box"],
   Flex: ["box", "flex"],
   FlexItem: ["box", "flexItem"],
   Grid: ["box", "grid"],
@@ -194,10 +203,6 @@ const PRIMITIVE_GROUPS = {
   Stack: ["box", "stack"],
   HStack: ["box", "stack"],
   VStack: ["box", "stack"],
-  Center: ["box"],
-  Container: ["box"],
-  AspectRatio: ["box"],
-  Float: ["box"],
   Text: ["text", "placement"],
   Heading: ["text", "placement"],
   Link: ["text", "placement"],
@@ -236,13 +241,43 @@ const clientTiers = classifyClient(distGraph, join(PKG, "dist"));
    unions. See extract-literal-props.mjs for the selection rule. */
 const {
   literal: literalProps,
+  responsive: responsiveProps,
   scalar: scalarProps,
   required: requiredProps,
   propNames,
   redefined,
   needsChildren,
+  ownProps,
+  docs: propJsDocs,
+  partOwnProps,
+  partDocs: partJsDocs,
   exports: entryExports,
-} = extractComponentTypes(join(PKG, "dist", "index.d.ts"));
+} = extractComponentTypes(join(PKG, "dist", "index.d.ts"), {
+  responsiveKeys: new Set(["base", ...Object.keys(breakpoints), ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)]),
+});
+
+/* Group membership read off the type: a group is accepted when the type
+   takes every one of its props (a prop the component redefines still counts:
+   it is listed under `overrides`). Long spellings ride along with the short. */
+const shortPropsOf = (group) => Object.keys(propGroups[group]).filter((prop) => !propGroups[group][prop].short);
+const acceptsGroup = (name, group) => {
+  const accepted = propNames.get(name);
+  return accepted !== undefined && shortPropsOf(group).every((prop) => accepted.has(prop));
+};
+const groupsOf = (name) =>
+  PRIMITIVE_GROUPS[name] ?? (acceptsGroup(name, "box") ? ["box"] : acceptsGroup(name, "placement") ? ["placement"] : []);
+/** Whether `groups` already describe every prop of `group`. */
+const covers = (groups, group) =>
+  groups.some((g) => g === group || shortPropsOf(group).every((prop) => prop in propGroups[g]));
+
+for (const name of componentNames) {
+  const groups = groupsOf(name);
+  for (const group of Object.keys(propGroups)) {
+    if (acceptsGroup(name, group) && !covers(groups, group)) {
+      fail(`${name} accepts every ${group} prop but its spec groups are [${groups.join(", ")}]: add it to PRIMITIVE_GROUPS`);
+    }
+  }
+}
 
 /* Category, read off the module that DEFINES each export: the source tree is
    already grouped (components/data-entry/input/...), so the directory is the
@@ -257,17 +292,71 @@ const categoryOf = (name) => {
   return match ? match[1] : undefined;
 };
 
+/* Prop documentation. Attached parts with no export of their own (Menu.Item)
+   have no entry to carry theirs, so their owner carries it as partPropDocs. */
+const dotParts = new Map();
+for (const name of componentNames) {
+  const root = rootExports[name];
+  const parts = Object.keys(root ?? {}).filter(
+    (part) => /^[A-Z]/.test(part) && root[part] !== root && !componentNames.some((other) => rootExports[other] === root[part]),
+  );
+  if (parts.length) dotParts.set(name, parts);
+}
+const codeDefaults = extractSourceDefaults(join(PKG, "src", "index.ts"), componentNames, dotParts);
+const docCoverage = { props: 0, described: 0, defaults: 0 };
+const defaultConflicts = [];
+/** Coverage counts each component once, not once per alias (TagRoot is Tag). */
+const firstOfIdentity = (name) => componentNames.find((other) => rootExports[other] === rootExports[name]) === name;
+const unquote = (text) => text.replace(/^["'`](.*)["'`]$/, "$1");
+
+/** A JSDoc default written on another component's props type (MenuProps,
+ *  inherited by ContextMenu) describes that component, which `self` may
+ *  wrap with a different value. */
+const isForeignDefault = (typeName, self) => {
+  const base = typeName.replace(/(?:Custom|Base|Own)?Props$/, "");
+  return base in rootExports && rootExports[base] !== self;
+};
+
+/** JSDoc first; a default only the code states fills in. Only the library's
+ *  own props are documented: a DOM attribute the code presets (`role`,
+ *  `type="button"`) is plumbing. `skip` is the group props, documented once
+ *  on the group instead. */
+function docsFor(label, self, { own, jsdoc = {}, defaults = {}, skip, count }) {
+  const out = {};
+  for (const prop of own) {
+    if (skip.has(prop) || UNDOCUMENTED_PROPS.has(prop)) continue;
+    const { declaredIn, ...doc } = jsdoc[prop] ?? {};
+    if (declaredIn && isForeignDefault(declaredIn, self)) delete doc.default;
+    const fromCode = defaults[prop];
+    if (fromCode !== undefined && doc.default === undefined) doc.default = fromCode;
+    else if (fromCode !== undefined && unquote(doc.default) !== unquote(fromCode)) {
+      defaultConflicts.push(`${label}.${prop}: JSDoc says ${doc.default}, the code ${fromCode}`);
+    }
+    if (count) {
+      docCoverage.props += 1;
+      if (doc.description) docCoverage.described += 1;
+      if (doc.default !== undefined) docCoverage.defaults += 1;
+    }
+    if (Object.keys(doc).length) out[prop] = doc;
+  }
+  return out;
+}
+
 const components = Object.fromEntries(
   componentNames.map((name) => {
-    const groups = PRIMITIVE_GROUPS[name] ?? (PLACEMENT_ADOPTERS.includes(name) ? ["placement"] : []);
+    const groups = groupsOf(name);
     const entry = { groups };
     const client = clientTiers.get(name);
     if (client) entry.client = client;
     else fail(`component "${name}" missing from the dist client classification`);
     const category = categoryOf(name);
     if (category) entry.category = category;
-    const props = literalProps.get(name);
-    if (props) entry.props = props;
+    const groupProps = new Set(groups.flatMap((group) => Object.keys(propGroups[group])));
+    // A responsive vocabulary outside the groups is the component's own
+    // (List styleType, Separator orientation); inside them, the group's.
+    const ownResponsive = Object.entries(responsiveProps.get(name) ?? {}).filter(([prop]) => !groupProps.has(prop));
+    const props = { ...literalProps.get(name), ...Object.fromEntries(ownResponsive) };
+    if (Object.keys(props).length) entry.props = props;
     const scalars = scalarProps.get(name);
     if (scalars) entry.scalarProps = scalars;
     // Props the types make mandatory, by the kind of value each takes. A
@@ -278,10 +367,9 @@ const components = Object.fromEntries(
     // Kept out of `required`, which lists the props a builder can fill in:
     // children are composed, not typed into a field.
     if (needsChildren.has(name)) entry.requiresChildren = true;
-    // The groups are assigned by table, so reconcile them with the component's
-    // real type: a group prop the type omits (Heading's paragraph) is excluded,
-    // and one the component redefines (Image's intrinsic width) is its own.
-    const groupProps = new Set(groups.flatMap((group) => Object.keys(propGroups[group])));
+    // Reconcile the groups with the component's real type: a group prop the
+    // type omits (Heading's paragraph) is excluded, and one the component
+    // redefines (Image's intrinsic width) is its own.
     const accepted = propNames.get(name);
     const omitted = accepted ? [...groupProps].filter((prop) => !accepted.has(prop)) : [];
     const exclude = [...new Set([...(EXCLUDED_PROPS[name] ?? []), ...omitted])];
@@ -304,6 +392,27 @@ const components = Object.fromEntries(
     // list is the only truth for dot-access.
     const parts = Object.keys(rootExports[name] ?? {}).filter((k) => /^[A-Z]/.test(k));
     if (parts.length) entry.parts = parts;
+    const skip = new Set([...groupProps].filter((prop) => !overrides.includes(prop)));
+    const propDocs = docsFor(name, rootExports[name], {
+      own: ownProps.get(name) ?? [],
+      jsdoc: propJsDocs.get(name),
+      defaults: codeDefaults.components.get(name),
+      skip,
+      count: firstOfIdentity(name),
+    });
+    if (Object.keys(propDocs).length) entry.propDocs = propDocs;
+    const partPropDocs = {};
+    for (const part of dotParts.get(name) ?? []) {
+      const docs = docsFor(`${name}.${part}`, rootExports[name][part], {
+        own: partOwnProps.get(name)?.[part] ?? [],
+        jsdoc: partJsDocs.get(name)?.[part],
+        defaults: codeDefaults.parts.get(name)?.[part],
+        skip: new Set(),
+        count: firstOfIdentity(name),
+      });
+      if (Object.keys(docs).length) partPropDocs[part] = docs;
+    }
+    if (Object.keys(partPropDocs).length) entry.partPropDocs = partPropDocs;
     return [name, entry];
   }),
 );
@@ -319,6 +428,22 @@ for (const [name, entry] of Object.entries(components)) {
     if (components[flat] && rootExports[flat] === rootExports[name][part]) {
       components[flat].partOf = name;
     }
+  }
+}
+
+/* PLACEMENT_ADOPTERS is what placement-props.test.tsx renders, so it must
+   name every component the types give placement props, and only those. An
+   alias of a listed component (TagRoot is Tag) is the same function; a part
+   (Input.Password) is described by its own groups but is not on the list,
+   which names compounds and standalone components. */
+const adopters = new Set(PLACEMENT_ADOPTERS);
+for (const [name, entry] of Object.entries(components)) {
+  const takesPlacement = entry.groups.includes("placement");
+  const listedAs = [...adopters].find((listed) => rootExports[listed] === rootExports[name]);
+  if (adopters.has(name) && !takesPlacement) {
+    fail(`PLACEMENT_ADOPTERS names "${name}", whose type does not take every placement prop`);
+  } else if (takesPlacement && !listedAs && !entry.partOf) {
+    fail(`"${name}" takes placement props but is missing from PLACEMENT_ADOPTERS (utils/placement.ts) and its test`);
   }
 }
 
@@ -421,6 +546,18 @@ for (const [owner, parts] of measured.needsRoot) {
   }
 }
 
+/* Style props are documented once, on their group, from the JSDoc of the
+   primitive that defines the group (placement is Box's subset). A long
+   spelling shares its short form's description. */
+for (const [group, props] of Object.entries(propGroups)) {
+  const owner = GROUP_OWNERS[group] ?? (group === "placement" ? "Box" : null);
+  const ownerDocs = owner ? propJsDocs.get(owner) ?? {} : {};
+  for (const [prop, spec] of Object.entries(props)) {
+    const description = ownerDocs[spec.short ?? prop]?.description;
+    if (description) props[prop] = { ...spec, description };
+  }
+}
+
 /* ---- class inventory (same extraction as the coverage gate) --------------- */
 const css = readFileSync(join(PKG, "dist", "styles.css"), "utf8");
 const classSet = new Set();
@@ -489,5 +626,8 @@ const tokenCount = Object.values(propGroups)
 console.log(
   `[astralis] system spec: ${componentNames.length} components | ` +
     `${Object.keys(propGroups).length} prop groups, ${tokenCount} tokens | ` +
-    `${classes.length} classes | ${cssVariables.length} variables -> dist/system-spec.json`,
+    `${classes.length} classes | ${cssVariables.length} variables | ` +
+    `${docCoverage.described}/${docCoverage.props} own props described, ${docCoverage.defaults} with a default ` +
+    `-> dist/system-spec.json`,
 );
+for (const conflict of new Set(defaultConflicts)) console.warn(`[astralis] prop default disagrees: ${conflict}`);
