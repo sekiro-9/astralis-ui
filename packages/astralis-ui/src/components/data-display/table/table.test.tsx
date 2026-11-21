@@ -73,6 +73,24 @@ describe("Table data attributes", () => {
     expect(thead).toContain("astralis:[[data-table-sticky]_&]:sticky");
   });
 
+  it("scrolls sideways in every variant, the outline one included", () => {
+    for (const variant of ["line", "outline"] as const) {
+      const { container, unmount } = render(
+        <Table variant={variant}>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>a</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>,
+      );
+      const classes = container.firstElementChild!.className.split(" ");
+      expect(classes, variant).toContain("astralis:overflow-x-auto");
+      expect(classes.filter((c) => /^astralis:overflow-(hidden|clip|auto|visible|scroll)$/.test(c)), variant).toEqual([]);
+      unmount();
+    }
+  });
+
   it("parts outside any root render with md defaults instead of throwing", () => {
     // The context version threw here; the CSS version degrades to md quietly,
     // matching Card's long-standing contract.

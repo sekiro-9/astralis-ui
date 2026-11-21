@@ -13,8 +13,10 @@ export const TableRoot = identify("Table", function TableRoot({
   className = "",
   ...rest
 }: TableProps) {
+  // No overflow class here: the root's `overflow-x-auto` already clips to the
+  // rounded corners, and an `overflow-hidden` would replace it in the merge.
   const outer = variant === "outline"
-    ? "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-hidden"
+    ? "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg"
     : "";
 
   const { placementClass, placementStyle, rest: domProps } = splitPlacement(rest);
