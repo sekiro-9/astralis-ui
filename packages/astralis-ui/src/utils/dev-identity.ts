@@ -1,4 +1,7 @@
 import { createElement, type ElementType } from "react";
+import { BREAKPOINTS } from "../const/breakpoints";
+import { CONTAINER_BREAKPOINT_WIDTHS } from "../const/channel";
+import { isStateProp } from "./interaction-state";
 
 /**
  * Development builds name every component on the element it renders, so a
@@ -52,15 +55,23 @@ function isLeaf(value: unknown): value is Leaf {
   return typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value));
 }
 
-/** A responsive map or a state object ({ base, md } or { _hover: { bg } }), two levels at most. */
-function describeValue(value: unknown, depth: number): Leaf | Described | undefined {
+const RESPONSIVE_KEYS = new Set<string>(["base", ...BREAKPOINTS, ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)]);
+
+/**
+ * The only objects an Astralis prop takes: a responsive map ({ base, md }) or
+ * a state payload (hover={{ bg }}), each holding plain values. Any other object
+ * belongs to something else the component renders through (framer-motion's
+ * `transition`, `initial`, `animate`), and can differ between the server and
+ * the first client render, which would make React report a hydration mismatch.
+ */
+function describeValue(key: string, value: unknown): Leaf | Described | undefined {
   if (isLeaf(value)) return value;
-  if (depth === 0 || typeof value !== "object" || value === null) return undefined;
+  if (typeof value !== "object" || value === null) return undefined;
   if (Object.getPrototypeOf(value) !== Object.prototype || "$$typeof" in value) return undefined;
+  if (!isStateProp(key) && !Object.keys(value).every((inner) => RESPONSIVE_KEYS.has(inner))) return undefined;
   const out: Described = {};
-  for (const [key, inner] of Object.entries(value)) {
-    const described = describeValue(inner, depth - 1);
-    if (described !== undefined) out[key] = described;
+  for (const [inner, leaf] of Object.entries(value)) {
+    if (isLeaf(leaf)) out[inner] = leaf;
   }
   return Object.keys(out).length > 0 ? out : undefined;
 }
@@ -74,7 +85,7 @@ export function describeProps(props: Record<string, unknown>): Described {
   const out: Described = {};
   for (const [key, value] of Object.entries(props)) {
     if (NOT_CONFIGURATION.test(key) || CONTENT_PROPS.has(key) || CONTENT_SUFFIX.test(key)) continue;
-    const described = describeValue(value, 2);
+    const described = describeValue(key, value);
     if (described !== undefined) out[key] = described;
   }
   return out;

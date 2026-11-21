@@ -1,10 +1,12 @@
-import { createElement } from "react";
-import { describe, expect, it } from "vitest";
+import { act, createElement, type ComponentType } from "react";
+import { renderToString } from "react-dom/server";
+import { hydrateRoot } from "react-dom/client";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { describeProps, identify, withIdentity } from "./dev-identity";
-import { Button, Card, Modal } from "../index";
+import { Box, Button, Card, Modal } from "../index";
 
 const described = (element: Element | null) =>
   JSON.parse(element?.getAttribute("data-astralis-props") ?? "null") as Record<string, unknown>[];
@@ -16,16 +18,16 @@ describe("describeProps", () => {
         variant: "outline",
         hoverable: true,
         columns: 3,
-        p: { base: "2", md: "4" },
-        _hover: { bg: "brand.500" },
+        p: { base: "2", md: "4", "@lg": "6" },
+        hover: { bg: "brand-subtle" },
         as: "section",
       }),
     ).toEqual({
       variant: "outline",
       hoverable: true,
       columns: 3,
-      p: { base: "2", md: "4" },
-      _hover: { bg: "brand.500" },
+      p: { base: "2", md: "4", "@lg": "6" },
+      hover: { bg: "brand-subtle" },
       as: "section",
     });
   });
@@ -57,14 +59,55 @@ describe("describeProps", () => {
     ).toEqual({});
   });
 
-  it("stops at two levels and drops maps with nothing left in them", () => {
+  it("drops objects that are neither a responsive map nor a state payload", () => {
     expect(
       describeProps({
-        state: { _hover: { bg: "brand.500" } },
-        deep: { a: { b: { c: "d" } } },
-        empty: { icon: createElement("svg") },
+        initial: { opacity: 0 },
+        transition: { duration: 0.6 },
+        variants: { shown: { opacity: 1 } },
+        deep: { base: { b: "c" } },
+        empty: { base: createElement("svg") },
+        focusVisible: { borderColor: "brand", nested: { x: "y" } },
       }),
-    ).toEqual({ state: { _hover: { bg: "brand.500" } } });
+    ).toEqual({ focusVisible: { borderColor: "brand" } });
+  });
+});
+
+/*
+ * framer-motion's `initial`, `animate` and `transition` are plain objects. A
+ * reduced-motion client renders `transition={{ duration: 0 }}` where the
+ * server rendered 0.6, so recording them put a different attribute on each
+ * side and React reported a hydration mismatch.
+ */
+describe("a component rendered through a motion component", () => {
+  const MotionDiv = ({ initial: _i, animate: _a, transition: _t, ...rest }: Record<string, unknown>) =>
+    createElement("div", rest);
+  const place = (duration: number) =>
+    createElement(Box as unknown as ComponentType<Record<string, unknown>>, {
+      as: MotionDiv,
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      transition: { duration },
+      p: "4",
+    });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.innerHTML = "";
+  });
+
+  it("hydrates without a mismatch when a foreign prop differs between server and client", async () => {
+    const host = document.createElement("div");
+    host.innerHTML = renderToString(place(0.6));
+    document.body.append(host);
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    await act(async () => {
+      hydrateRoot(host, place(0));
+    });
+
+    expect(errors.mock.calls.map((call) => String(call[0]))).toEqual([]);
+    expect(described(host.firstElementChild)).toEqual([{ p: "4" }]);
   });
 });
 
