@@ -62,6 +62,7 @@ import { RangeSlider } from "./data-entry/slider";
 import { CopyButton } from "./buttons/copy-button";
 import { FloatingButton } from "./buttons/floating-button";
 import { PLACEMENT_ADOPTERS } from "../utils/placement";
+import { displayTypes } from "../const/common-mappings";
 import { AstralisProvider } from "../theme/provider";
 
 /**
@@ -191,7 +192,28 @@ describe.each(ADOPTERS)("placement on %s", (_name, render_) => {
       expect(root.hasAttribute(leaked)).toBe(false);
     }
   });
+
+  it("takes a responsive display that replaces the recipe's own display", () => {
+    const { container } = render(render_({ display: { base: "hidden", lg: "inline-flex" } }));
+    const root = container.firstElementChild as HTMLElement;
+
+    expectDisplay(root, "hidden", "astralis:lg:inline-flex");
+    expect(root.hasAttribute("display")).toBe(false);
+  });
 });
+
+/** Base display classes, any keyword. A recipe's own `astralis:inline-flex`
+ *  left beside the prop's `astralis:hidden` would leave the winner to
+ *  stylesheet order, so exactly one may survive the class merge. */
+const BASE_DISPLAY = new RegExp(
+  `^astralis:(${Object.keys(displayTypes).join("|")})$`,
+);
+
+function expectDisplay(root: Element, base: string, ...responsive: string[]) {
+  const classes = [...root.classList];
+  expect(classes.filter((c) => BASE_DISPLAY.test(c))).toEqual([`astralis:${base}`]);
+  expect(classes).toEqual(expect.arrayContaining(responsive));
+}
 
 describe("placement props on recipe components", () => {
   it("resolves placement props to classes on Card", () => {
@@ -258,6 +280,38 @@ describe("placement props on recipe components", () => {
     expect(card.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-full)");
     // Fraction tokens ride the escaped size ident (size.css declares 1\/2).
     expect(card.style.getPropertyValue("--astralis-w-md")).toBe("var(--astralis-size-1\\/2)");
+  });
+
+  it("lets a scalar display replace the recipe's own display", () => {
+    const { container } = render(
+      <>
+        <Button display="block">a</Button>
+        <Badge display="block">b</Badge>
+        <Kbd display="block">K</Kbd>
+        <Tag display="block">t</Tag>
+        <Card display="flex">c</Card>
+      </>,
+    );
+    const [button, badge, kbd, tag, card] = [...container.children];
+    expectDisplay(button, "block");
+    expectDisplay(badge, "block");
+    expectDisplay(kbd, "block");
+    expectDisplay(tag, "block");
+    expectDisplay(card, "flex");
+  });
+
+  it("takes display on Card, ThemeToggle and FloatingButton, where the root is not the first element", () => {
+    const { container } = render(
+      <AstralisProvider>
+        <Card display={{ base: "hidden", md: "block" }}>c</Card>
+        <ThemeToggle display={{ base: "hidden", md: "inline-flex" }} />
+        <FloatingButton aria-label="Add" display={{ base: "hidden", md: "inline-flex" }}>+</FloatingButton>
+      </AstralisProvider>,
+    );
+    const [toggle, floating] = [...container.querySelectorAll("button")];
+    expectDisplay(container.querySelector("[data-card-size]")!, "hidden", "astralis:md:block");
+    expectDisplay(toggle, "hidden", "astralis:md:inline-flex");
+    expectDisplay(floating, "hidden", "astralis:md:inline-flex");
   });
 
   it("gives Stat placement props", () => {

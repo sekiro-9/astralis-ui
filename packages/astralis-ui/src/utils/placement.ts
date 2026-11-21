@@ -66,6 +66,11 @@ export const PLACEMENT_PROP_NAMES = [
   "bottom",
   "left",
   "zIndex",
+  // Display — whether it takes part in the layout at this width. Hiding a
+  // Button below `lg` is the composition's call, like its width. The value
+  // replaces the recipe's own display (merged after it), so `hidden` at base
+  // with `lg: "inline-flex"` restores the right box.
+  "display",
   // Motion — how it arrives on the page. Like placement, it is the
   // composition's call: the same Card fades up in a hero and is still in a
   // table. Carousel omits `animation` (its own slide/fade prop has the name).

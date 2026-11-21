@@ -11,7 +11,7 @@ export const STYLE_PROP_GROUPS: Record<string, readonly string[]> = {
   gridItem: ["colSpan","colStart","colEnd","rowSpan","rowStart","rowEnd","order","alignSelf","justifySelf","placeSelf","columnSpan","columnStart","columnEnd"],
   text: ["size","weight","align","color","casing","fontFamily","fontStyle","textDecoration","lineHeight","letterSpacing","textWrap","whiteSpace","numeric","lineClamp","gutterBottom","paragraph","truncate"],
   stack: ["direction","justifyContent","alignItems","alignContent","placeContent","wrap","gap","rowGap","columnGap"],
-  placement: ["w","minW","maxW","h","minH","maxH","flex","basis","grow","shrink","order","alignSelf","m","mx","my","mt","mr","mb","ml","position","inset","top","right","bottom","left","zIndex","animation","reveal","animationDuration","animationDelay","animationDistance","revealMode","margin","marginX","marginY","marginTop","marginRight","marginBottom","marginLeft","width","height","minWidth","minHeight","maxWidth","maxHeight","flexBasis","flexGrow","flexShrink"],
+  placement: ["w","minW","maxW","h","minH","maxH","flex","basis","grow","shrink","order","alignSelf","m","mx","my","mt","mr","mb","ml","position","inset","top","right","bottom","left","zIndex","display","animation","reveal","animationDuration","animationDelay","animationDistance","revealMode","margin","marginX","marginY","marginTop","marginRight","marginBottom","marginLeft","width","height","minWidth","minHeight","maxWidth","maxHeight","flexBasis","flexGrow","flexShrink"],
 };
 
 /** HTML attributes that share a style prop's name; never reported. */
@@ -125,7 +125,7 @@ export const COMPONENT_STYLE_PROPS: Record<string, readonly [string, string]> = 
   "HoverCard": ["", ""],
   "HoverCard.Content": ["", ""],
   "HoverCard.Trigger": ["", ""],
-  "Icon": ["placement", "cursor direction display fontFamily fontStyle letterSpacing opacity overflow pointerEvents rotate scale textDecoration"],
+  "Icon": ["placement", "cursor direction fontFamily fontStyle letterSpacing opacity overflow pointerEvents rotate scale textDecoration"],
   "Image": ["placement", "aspectRatio rounded"],
   "ImageGroup": ["", "columns gap rounded"],
   "Input": ["placement", "rounded"],

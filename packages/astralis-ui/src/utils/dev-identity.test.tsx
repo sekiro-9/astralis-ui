@@ -206,9 +206,9 @@ describe("a style prop the component does not take", () => {
 
   it("points a layout prop at a Box around the component", () => {
     const spy = warnings();
-    render(<Button {...{ display: "hidden" }}>Go</Button>);
+    render(<Button {...{ overflow: "hidden" }}>Go</Button>);
     expect(told(spy)).toEqual([
-      "[astralis-ui] Button does not take display: it reaches the HTML as a stray attribute and changes nothing (Button takes placement props; put display on a Box around it)",
+      "[astralis-ui] Button does not take overflow: it reaches the HTML as a stray attribute and changes nothing (Button takes placement props; put overflow on a Box around it)",
     ]);
   });
 
@@ -227,7 +227,7 @@ describe("a style prop the component does not take", () => {
         <Card w="full" m={{ base: "2", md: "4" }} marginTop="2" position="relative" variant="outline">a</Card>
         <Box p="4" bg="subtle" display="flex" hover={{ bg: "muted" }} />
         <Text color="muted" size="sm" {...({ p: undefined } as Record<string, unknown>)}>t</Text>
-        <Button rounded="full" size="sm">b</Button>
+        <Button rounded="full" size="sm" display={{ base: "hidden", lg: "inline-flex" }}>b</Button>
         <Image src="/a.png" alt="" aspectRatio="square" rounded="md" />
       </>,
     );
