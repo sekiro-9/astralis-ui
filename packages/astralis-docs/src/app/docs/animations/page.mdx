@@ -76,10 +76,38 @@ is how you stagger siblings:
 
 <ComponentPreview name="animation-stagger" />
 
-A `reveal` is tied to the scroll position, so it has no time of its own:
-there `animationDuration` sets how much of the element's pass up the screen
-the reveal takes. By default it is done once the element is 30% of the way
-through; `fast` makes that 15% and `slow` 50%.
+A `reveal` is tied to the scroll position, so it has no time of its own.
+There the two props are measured in scroll instead: `animationDuration` sets
+how much of the element's pass up the screen the reveal takes (by default it
+is done 30% of the way through; `fast` makes that 15% and `slow` 50%), and
+`animationDelay` starts it later in that pass, by 1% for every 25 ms, so a
+row of revealed cards arrives one after another:
+
+```tsx
+<Card reveal="fade-up" />
+<Card reveal="fade-up" animationDelay="100" />
+<Card reveal="fade-up" animationDelay="200" />
+```
+
+## Play once
+
+A scroll-linked `reveal` follows the scroll both ways: scroll back up and the
+element fades out again as it drops below the bottom of the screen.
+`revealMode="once"` plays the reveal the first time the element is 10% into
+view, as a timed animation, and then leaves it shown for good. Duration and
+delay are times again here, as on `animation`.
+
+```tsx
+<Card reveal="fade-up" revealMode="once" animationDelay="100" />
+```
+
+<ComponentPreview name="animation-reveal-stagger" />
+
+`once` uses CSS scroll-triggered animations (`timeline-trigger`), still in
+CSS alone. Chrome and Edge ship them; in a browser without them `once` falls
+back to the scroll-linked reveal. Holding the shown state after the element
+leaves the screen is otherwise memory that only JavaScript has, and the
+library does not add any for it.
 
 ## Strength
 

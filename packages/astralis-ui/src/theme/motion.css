@@ -109,14 +109,43 @@
   }
 }
 
-/* ---- reveal: plays as the element scrolls into view --------------------- */
+/* ---- reveal: plays as the element scrolls into view ---------------------
+   Longhands, not the shorthand, so `motion-reveal-once` can switch them
+   through the --astralis-reveal-* variables without a cascade fight. Those
+   four are registered as non-inheriting: a `once` parent must not turn the
+   plain reveals inside it into timed animations with no trigger. */
+
+@property --astralis-reveal-timeline {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --astralis-reveal-duration {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --astralis-reveal-easing {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --astralis-reveal-delay {
+  syntax: "*";
+  inherits: false;
+}
+
 
 @utility reveal-fade-in {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-fade-in linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-fade-in;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -124,9 +153,13 @@
 @utility reveal-fade-up {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-fade-up linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-fade-up;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -134,9 +167,13 @@
 @utility reveal-fade-down {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-fade-down linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-fade-down;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -144,9 +181,13 @@
 @utility reveal-slide-left {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-slide-left linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-slide-left;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -154,9 +195,13 @@
 @utility reveal-slide-right {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-slide-right linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-slide-right;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -164,9 +209,13 @@
 @utility reveal-scale-in {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-scale-in linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-scale-in;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -174,9 +223,13 @@
 @utility reveal-pop {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-pop linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-pop;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -184,9 +237,13 @@
 @utility reveal-blur-in {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      animation: astralis-blur-in linear both;
-      animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
+      animation-name: astralis-blur-in;
+      animation-duration: var(--astralis-reveal-duration, auto);
+      animation-timing-function: var(--astralis-reveal-easing, linear);
+      animation-delay: var(--astralis-reveal-delay, 0s);
+      animation-fill-mode: both;
+      animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));
+      animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));
     }
   }
 }
@@ -198,9 +255,38 @@
   }
 }
 
+/* revealMode. `once` turns the reveal into a timed animation (duration,
+   delay and easing as on `animation`) that a scroll trigger starts when the
+   element is 10% into the screen. With only an enter action it never plays
+   back, so the element stays shown when scrolled away and back. Without
+   `timeline-trigger` the block is skipped and the scroll-linked reveal stays. */
+
+@utility motion-reveal-once {
+  @supports (timeline-trigger: --astralis-reveal-trigger view()) {
+    --astralis-reveal-timeline: auto;
+    --astralis-reveal-duration: var(--astralis-motion-duration, 400ms);
+    --astralis-reveal-easing: var(--astralis-easing-ease-out, ease-out);
+    --astralis-reveal-delay: var(--astralis-motion-delay, 0ms);
+    timeline-trigger: --astralis-reveal-trigger var(--astralis-reveal-source, view()) entry 10% exit 100%;
+    animation-trigger: --astralis-reveal-trigger play-forwards;
+  }
+}
+
+@utility motion-reveal-scroll {
+  @supports (timeline-trigger: --astralis-reveal-trigger view()) {
+    --astralis-reveal-timeline: initial;
+    --astralis-reveal-duration: initial;
+    --astralis-reveal-easing: initial;
+    --astralis-reveal-delay: initial;
+    timeline-trigger: none;
+    animation-trigger: none;
+  }
+}
+
 /* ---- animationDuration, animationDelay and animationDistance ------------
-   A reveal has no time of its own, so duration sets how much of the
-   element's pass through the screen it spans instead. */
+   A scroll-linked reveal has no time of its own, so duration sets how much
+   of the element's pass through the screen it spans, and delay shifts its
+   start later in that pass by 1% per 25 ms, which staggers siblings. */
 
 @utility motion-duration-fast {
   --astralis-motion-duration: 200ms;
@@ -219,34 +305,42 @@
 
 @utility motion-delay-75 {
   --astralis-motion-delay: 75ms;
+  --astralis-reveal-shift: 3%;
 }
 
 @utility motion-delay-100 {
   --astralis-motion-delay: 100ms;
+  --astralis-reveal-shift: 4%;
 }
 
 @utility motion-delay-150 {
   --astralis-motion-delay: 150ms;
+  --astralis-reveal-shift: 6%;
 }
 
 @utility motion-delay-200 {
   --astralis-motion-delay: 200ms;
+  --astralis-reveal-shift: 8%;
 }
 
 @utility motion-delay-300 {
   --astralis-motion-delay: 300ms;
+  --astralis-reveal-shift: 12%;
 }
 
 @utility motion-delay-500 {
   --astralis-motion-delay: 500ms;
+  --astralis-reveal-shift: 20%;
 }
 
 @utility motion-delay-700 {
   --astralis-motion-delay: 700ms;
+  --astralis-reveal-shift: 28%;
 }
 
 @utility motion-delay-1000 {
   --astralis-motion-delay: 1000ms;
+  --astralis-reveal-shift: 40%;
 }
 
 @utility motion-distance-sm {

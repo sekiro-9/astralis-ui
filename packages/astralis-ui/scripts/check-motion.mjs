@@ -14,6 +14,9 @@
    - ESSENTIAL: it conveys state rather than decoration (a loader says
      "working"), listed below with its reason. WCAG 2.3.3 exempts these.
 
+   Scroll timelines and scroll triggers must also sit inside an @supports
+   guard for their feature, so a browser without them shows the content.
+
    Anything else is a failure, named with where it comes from. Run after the
    stylesheet is compiled.
    ========================================================================== */
@@ -88,6 +91,15 @@ const needsPairing = new Map();
 
 for (const rule of styleRules(css)) {
   for (const decl of rule.body.split(";")) {
+    // A scroll timeline or trigger outside its @supports guard would apply in
+    // a browser that cannot run it, and a reveal there must simply show.
+    const guarded = decl.match(/^\s*(animation-timeline|timeline-trigger|animation-trigger)\s*:\s*(.+)$/s);
+    if (guarded && !/^(auto|none|initial|unset|inherit|revert)$/.test(guarded[2].trim())) {
+      const feature = guarded[1] === "animation-timeline" ? "animation-timeline" : "timeline-trigger";
+      if (!rule.context.some((at) => at.startsWith("@supports") && at.includes(feature))) {
+        failures.push(`${unescape(rule.selector)}: ${guarded[1]} is set outside @supports (${feature}: ...)`);
+      }
+    }
     const m = decl.match(/^\s*(animation|animation-name)\s*:\s*(.+)$/s);
     if (!m) continue;
     const value = m[2].trim();

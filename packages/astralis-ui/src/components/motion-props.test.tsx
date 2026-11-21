@@ -16,6 +16,7 @@ import {
   animationDurationTypes,
   animationDelayTypes,
   animationDistanceTypes,
+  revealModeTypes,
 } from "../const/motion-mappings";
 
 const rootOf = (ui: React.ReactElement) => render(ui).container.firstElementChild as HTMLElement;
@@ -54,13 +55,21 @@ describe("motion props", () => {
     expect(rootOf(<Card reveal="slide-left" animationDistance="lg">x</Card>).className).toContain(animationDistanceTypes.lg);
   });
 
+  it("revealMode sets its class, on Box and on recipe components, and responsively", () => {
+    expect(rootOf(<Box reveal="fade-up" revealMode="once">x</Box>).className).toContain(revealModeTypes.once);
+    expect(rootOf(<Card reveal="fade-up" revealMode="once">x</Card>).className).toContain(revealModeTypes.once);
+    const el = rootOf(<Box reveal="fade-up" revealMode={{ base: "once", md: "scroll" }}>x</Box>);
+    expect(el.className).toContain("astralis:motion-reveal-once");
+    expect(el.className).toContain("astralis:md:motion-reveal-scroll");
+  });
+
   it("the props never reach the DOM as attributes", () => {
     const el = rootOf(
-      <Box animation="pop" reveal="fade-in" animationDuration="fast" animationDelay="100" animationDistance="lg">
+      <Box animation="pop" reveal="fade-in" animationDuration="fast" animationDelay="100" animationDistance="lg" revealMode="once">
         x
       </Box>,
     );
-    for (const attr of ["animation", "reveal", "animationduration", "animationdelay", "animationdistance"]) {
+    for (const attr of ["animation", "reveal", "animationduration", "animationdelay", "animationdistance", "revealmode"]) {
       expect(el.hasAttribute(attr), attr).toBe(false);
     }
   });
@@ -136,7 +145,7 @@ describe("motion stylesheet", () => {
     const utilities = css.split("@utility ").slice(1).filter((block) => /^(animate|reveal)-/.test(block));
     expect(utilities.length).toBe(Object.keys(animationTypes).length + Object.keys(revealTypes).length);
     for (const block of utilities) {
-      expect(block, block.slice(0, 24)).toMatch(/@media \(prefers-reduced-motion: no-preference\)\s*\{[^}]*animation:/s);
+      expect(block, block.slice(0, 24)).toMatch(/@media \(prefers-reduced-motion: no-preference\)\s*\{[^}]*animation(-name)?:/s);
     }
   });
 
@@ -147,7 +156,9 @@ describe("motion stylesheet", () => {
 
   it("reads the reveal timeline from the nearest scope, falling back to the element's own view", () => {
     const reveals = css.split("@utility ").slice(1).filter((block) => block.startsWith("reveal-"));
-    for (const block of reveals) expect(block).toContain("animation-timeline: var(--astralis-reveal-source, view());");
+    for (const block of reveals) {
+      expect(block).toContain("animation-timeline: var(--astralis-reveal-timeline, var(--astralis-reveal-source, view()));");
+    }
     expect(css).toMatch(/@utility motion-reveal-scope \{[^}]*view-timeline: --astralis-reveal-scope block;\s*--astralis-reveal-source: --astralis-reveal-scope;/s);
   });
 
@@ -176,8 +187,35 @@ describe("motion stylesheet", () => {
     }
   });
 
+  it("animationDelay shifts a scroll-linked reveal later in the pass, 1% per 25 ms", () => {
+    const reveals = css.split("@utility ").slice(1).filter((block) => block.startsWith("reveal-"));
+    for (const block of reveals) {
+      expect(block).toContain(
+        "animation-range: cover var(--astralis-reveal-shift, 0%) cover calc(var(--astralis-reveal-shift, 0%) + var(--astralis-reveal-length, 30%));",
+      );
+    }
+    for (const ms of Object.keys(animationDelayTypes)) {
+      const block = css.split(`@utility motion-delay-${ms} {`)[1]?.split("}")[0] ?? "";
+      expect(block, ms).toContain(`--astralis-reveal-shift: ${Number(ms) / 25}%;`);
+    }
+  });
+
+  it("revealMode once is a timed animation a scroll trigger starts, with no exit action, behind @supports", () => {
+    const block = css.split("@utility motion-reveal-once {")[1].split("\n}\n")[0];
+    expect(block).toContain("@supports (timeline-trigger: --astralis-reveal-trigger view())");
+    expect(block).toContain("--astralis-reveal-timeline: auto;");
+    expect(block).toContain("--astralis-reveal-duration: var(--astralis-motion-duration, 400ms);");
+    expect(block).toContain("--astralis-reveal-delay: var(--astralis-motion-delay, 0ms);");
+    expect(block).toContain("timeline-trigger: --astralis-reveal-trigger var(--astralis-reveal-source, view()) entry 10% exit 100%;");
+    expect(block).toContain("animation-trigger: --astralis-reveal-trigger play-forwards;");
+    // A once parent must not make the plain reveals inside it timed.
+    for (const name of ["timeline", "duration", "easing", "delay"]) {
+      expect(css).toMatch(new RegExp(`@property --astralis-reveal-${name} \\{[^}]*inherits: false;`));
+    }
+  });
+
   it("has a class for every name the props accept", () => {
-    const classes = [animationTypes, revealTypes, animationDurationTypes, animationDelayTypes, animationDistanceTypes].flatMap((map) => Object.values(map));
+    const classes = [animationTypes, revealTypes, animationDurationTypes, animationDelayTypes, animationDistanceTypes, revealModeTypes].flatMap((map) => Object.values(map));
     for (const cls of classes) expect(css, cls).toContain(`@utility ${cls.replace("astralis:", "")} {`);
   });
 });

@@ -30,7 +30,7 @@ export const revealTypes = {
 
 /** `animationDuration`: how long an `animation` takes. On a `reveal` it sets
  *  how much of the element's pass through the screen the reveal spans
- *  (15%, 30%, 50%).
+ *  (15%, 30%, 50%); with `revealMode="once"` it is the time it plays for.
  *  @default "normal" */
 export const animationDurationTypes = {
   fast: "astralis:motion-duration-fast",
@@ -39,7 +39,9 @@ export const animationDurationTypes = {
 } as const;
 
 /** `animationDelay`, in milliseconds: wait before an `animation` starts, for
- *  staggering siblings. */
+ *  staggering siblings. On a `reveal` it starts the reveal later in the
+ *  scroll, by 1% of the element's pass per 25 ms (`"200"` waits 8%); with
+ *  `revealMode="once"` it is a time delay, as on `animation`. */
 export const animationDelayTypes = {
   "75": "astralis:motion-delay-75",
   "100": "astralis:motion-delay-100",
@@ -61,4 +63,15 @@ export const animationDistanceTypes = {
   md: "astralis:motion-distance-md",
   lg: "astralis:motion-distance-lg",
   xl: "astralis:motion-distance-xl",
+} as const;
+
+/** `revealMode`: `scroll` ties a `reveal` to the scroll position, so it plays
+ *  back when the element leaves the bottom of the screen again. `once` plays
+ *  it once, as a timed animation, when the element first scrolls into view,
+ *  and it stays shown. `once` needs scroll-triggered animations
+ *  (`timeline-trigger`); a browser without them falls back to `scroll`.
+ *  @default "scroll" */
+export const revealModeTypes = {
+  scroll: "astralis:motion-reveal-scroll",
+  once: "astralis:motion-reveal-once",
 } as const;

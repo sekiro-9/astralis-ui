@@ -74,6 +74,7 @@ export const PLACEMENT_PROP_NAMES = [
   "animationDuration",
   "animationDelay",
   "animationDistance",
+  "revealMode",
 ] as const;
 
 export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
