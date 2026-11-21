@@ -33,7 +33,8 @@ character counter via `showCount` + `maxLength`.
 ## Prefix and suffix
 
 Wrap in `InputGroup` for decorative slots on either side: the input pads
-itself automatically.
+itself automatically. Placement props (`w`, `maxW`, margins, `flex`,
+`position`...) go on the `InputGroup`, which the slots sit against.
 
 <ComponentPreview name="input-group" align="start" />
 
@@ -55,7 +56,7 @@ Inputs accept all native attributes of their element, plus:
 | --- | --- |
 | `Input.Search` | `onSearch(value)`, `showSearchButton` |
 | `Input.TextArea` | `rows`, `maxLength`, `showCount` |
-| `InputGroup` | `prefix`, `suffix` (non-interactive slots) |
+| `InputGroup` | `prefix`, `suffix` (non-interactive slots), placement props |
 
 ## Accessibility
 

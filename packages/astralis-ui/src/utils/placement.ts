@@ -91,7 +91,7 @@ export const PLACEMENT_ADOPTERS = [
   "Calendar", "Card", "Carousel", "CheckableTag", "Checkbox", "CheckboxCard", "CodeBlock",
   "Collapsible", "Combobox", "CopyButton", "DataList", "DatePicker", "Editable", "EmptyState",
   "Field", "FileUpload", "FloatingButton", "Heading", "Highlight", "Icon", "Image", "Input",
-  "InputPassword", "InputSearch", "Kbd", "Link", "Loader", "Marquee", "MultiSelect", "NativeSelect", "NumberInput",
+  "InputGroup", "InputPassword", "InputSearch", "Kbd", "Link", "Loader", "Marquee", "MultiSelect", "NativeSelect", "NumberInput",
   "Pagination", "PinInput", "Progress", "QrCode", "Radio", "RadioCard", "RangeSlider", "Rating",
   "ScrollArea", "SegmentedControl", "Select", "Skeleton", "Slider", "Splitter", "Stat", "Steps",
   "Switch", "Table", "TableOfContents", "Tabs", "Tag", "Text", "ThemeToggle", "Timeline",

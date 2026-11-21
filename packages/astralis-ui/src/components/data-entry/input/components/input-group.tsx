@@ -1,5 +1,6 @@
 import type { InputGroupProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { identify } from "../../../../utils/dev-identity";
 
 /**
@@ -8,12 +9,15 @@ import { identify } from "../../../../utils/dev-identity";
  * no context, so the group itself is a Server Component (the Input inside is
  * client either way; it owns focus/typing).
  */
-export const InputGroup = identify("InputGroup", function InputGroup({ prefix, suffix, children, className = "", ...rest }: InputGroupProps) {
+export const InputGroup = identify("InputGroup", function InputGroup({ prefix, suffix, children, className = "", ...props }: InputGroupProps) {
+  // Placement goes on the wrapper, which the slots are positioned against.
+  const { placementClass, rest } = splitPlacement(props);
+
   return (
     <div
       data-inputgroup-prefix={prefix ? "" : undefined}
       data-inputgroup-suffix={suffix ? "" : undefined}
-      className={astralisMerge("astralis:relative astralis:flex astralis:items-center", className)}
+      className={astralisMerge("astralis:relative astralis:flex astralis:items-center", placementClass, className)}
       {...rest}
     >
       {prefix && (

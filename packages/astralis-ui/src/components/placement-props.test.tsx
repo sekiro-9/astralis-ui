@@ -16,7 +16,7 @@ import { Loader } from "./feedback/loader";
 import { Icon } from "./icon";
 import { Link } from "./typography/link";
 import { Alert } from "./feedback/alert";
-import { Input } from "./data-entry/input";
+import { Input, InputGroup } from "./data-entry/input";
 import { Checkbox } from "./data-entry/checkbox";
 import { Switch } from "./data-entry/switch";
 import { Radio } from "./data-entry/radio";
@@ -107,6 +107,7 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Input", (p) => <Input {...p} />],
   ["InputPassword", (p) => <Input.Password {...p} />],
   ["InputSearch", (p) => <Input.Search {...p} />],
+  ["InputGroup", (p) => <InputGroup {...p} prefix="$"><Input /></InputGroup>],
   ["Checkbox", (p) => <Checkbox {...p} />],
   ["Switch", (p) => <Switch {...p} />],
   ["Radio", (p) => <Radio {...p} value="a" />],

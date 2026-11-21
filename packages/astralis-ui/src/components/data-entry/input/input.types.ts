@@ -31,7 +31,7 @@ export interface InputProps extends Omit<
   className?: string;
 }
 
-export interface InputGroupProps extends Omit<ComponentPropsWithoutRef<"div">, "prefix"> {
+export interface InputGroupProps extends Omit<ComponentPropsWithoutRef<"div">, "prefix">, PlacementProps {
   /** Icon or element rendered at the start of the input */
   prefix?: ReactNode;
   /** Icon or element rendered at the end of the input */
