@@ -16,8 +16,28 @@ export type TextLineClamp = "1" | "2" | "3" | "4" | "5" | "6";
  *  channel but is a typography rung here — a closed set, hence the skip.
  *  Link composes the same surface. */
 export type TextStyleProps = Responsive<
-  WidenChannelProps<Omit<VariantProps<typeof textVariants>, "lineClamp">, "size">
->;
+  WidenChannelProps<
+    Omit<VariantProps<typeof textVariants>, "lineClamp" | "lineHeight">,
+    "size"
+  >
+> &
+  TextFlowProps;
+
+type TextVariantValue<K extends keyof VariantProps<typeof textVariants>> = NonNullable<VariantProps<typeof textVariants>[K]>;
+
+export type TextLineHeight = TextVariantValue<"lineHeight">;
+
+/** Line height, with the size's own as a named value. */
+interface TextFlowProps {
+  /**
+   * Line height, as a multiple of the font size. `"size"` keeps the line
+   * height that comes with `size` (Heading otherwise uses `"tight"`). `"size"`
+   * is a whole value only, not a breakpoint value: after another line height
+   * it could not restore the size's own.
+   * @default undefined (the size's own; "tight" on Heading)
+   */
+  lineHeight?: ResponsiveProp<Exclude<TextLineHeight, "size">> | "size";
+}
 
 /** What a Text state may carry: the stateable props Text takes itself, its
  *  `color` and the channel placement props. Paint and padding stay off, as

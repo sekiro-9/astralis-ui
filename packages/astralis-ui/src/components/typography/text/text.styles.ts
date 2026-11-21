@@ -73,6 +73,12 @@ export const textVariantMap = {
       normal: "astralis:leading-normal",
       relaxed: "astralis:leading-relaxed",
       loose: "astralis:leading-loose",
+      // The size's own line height: no class, so the size class's line
+      // height applies (the parent's for `md`, which has none). A class
+      // cannot do it at a later breakpoint: a leading-* class sets
+      // line-height itself and beats the size class, so text.types.ts keeps
+      // "size" out of breakpoint maps.
+      size: "",
     },
     letterSpacing: {
       tighter: "astralis:tracking-tighter",
