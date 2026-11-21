@@ -36,3 +36,31 @@ describe("Card size via data attribute", () => {
     expect(getByText("orphan").className).toContain("astralis:px-5");
   });
 });
+
+describe("Card hoverable", () => {
+  const classes = (ui: React.ReactElement) => [...(render(ui).container.firstElementChild as HTMLElement).classList];
+
+  it("lifts 4px with a deeper shadow, and moves only for motion-safe users", () => {
+    const c = classes(<Card hoverable>x</Card>);
+    expect(c).toEqual(expect.arrayContaining([
+      "astralis:hover:shadow-xl",
+      "astralis:motion-safe:hover:-translate-y-1",
+      "astralis:motion-safe:active:scale-95",
+    ]));
+    // No transform outside the motion-safe gate.
+    expect(c.filter((n) => /translate|scale/.test(n) && !n.includes("motion-safe:"))).toEqual([]);
+  });
+
+  it("firms up the border only on the bordered variants", () => {
+    for (const variant of ["elevated", "outline"] as const) expect(classes(<Card variant={variant} hoverable>x</Card>), variant).toContain("astralis:hover:border-stroke-muted");
+    for (const variant of ["filled", "unstyled"] as const) expect(classes(<Card variant={variant} hoverable>x</Card>), variant).not.toContain("astralis:hover:border-stroke-muted");
+  });
+
+  it("adds nothing when off", () => {
+    expect(classes(<Card>x</Card>).filter((n) => /hover:|active:|cursor/.test(n))).toEqual([]);
+  });
+
+  it("keeps an unstyled card's inner margins inside it", () => {
+    expect(classes(<Card variant="unstyled">x</Card>)).toContain("astralis:flow-root");
+  });
+});

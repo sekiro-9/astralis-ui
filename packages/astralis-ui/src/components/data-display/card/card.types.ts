@@ -20,7 +20,9 @@ export interface CardRootProps extends HTMLAttributes<HTMLDivElement>, Placement
   variant?: CardVariant;
   /** Controls padding and border-radius */
   size?: CardSize;
-  /** Lift card on hover */
+  /** Lift the card 4px with a deeper shadow on hover and press it in on click,
+   *  for clickable cards. Under reduced motion only the shadow and border change.
+   *  @default false */
   hoverable?: boolean;
   className?: string;
   style?: CSSProperties;

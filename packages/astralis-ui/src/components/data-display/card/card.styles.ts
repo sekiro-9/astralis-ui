@@ -19,10 +19,20 @@ export const cardRootVariants = cva("astralis:overflow-clip astralis:transition-
       lg: "astralis:rounded-2xl",
     },
     hoverable: {
-      true: "astralis:cursor-pointer astralis:hover:shadow-lg astralis:hover:-translate-y-0.5 astralis:active:scale-95",
+      // The lift and the press move the card, so they wait for motion-safe;
+      // the shadow (and the border, below) still answer the pointer under
+      // reduced motion.
+      true:
+        "astralis:cursor-pointer astralis:hover:shadow-xl " +
+        "astralis:motion-safe:hover:-translate-y-1 astralis:motion-safe:active:scale-95",
       false: "",
     },
   },
+  // A shadow barely shows on a dark surface, so the bordered variants also
+  // firm up their border.
+  compoundVariants: [
+    { hoverable: true, variant: ["elevated", "outline"], class: "astralis:hover:border-stroke-muted" },
+  ],
   defaultVariants: { variant: "elevated", size: "md", hoverable: false },
 });
 

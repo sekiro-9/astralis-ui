@@ -18,6 +18,6 @@ export const cardProps: PropRow[] = [
     prop: "hoverable",
     type: `boolean`,
     default: `false`,
-    description: "Hover elevation.",
+    description: "Lift, deeper shadow and press feedback for clickable cards; no movement under reduced motion.",
   },
 ];
