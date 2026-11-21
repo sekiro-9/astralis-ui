@@ -76,7 +76,7 @@ for (const mode of ["light", "dark"]) {
 }
 
 /* ---- engine constants, from the built package ---------------------------- */
-const { CHANNEL_PROPS, UNITLESS_CHANNEL_SLUGS } = await import(distUrl("const/channel.js"));
+const { CHANNEL_PROPS, UNITLESS_CHANNEL_SLUGS, channelKeywords } = await import(distUrl("const/channel.js"));
 const { STATE_VARIANTS, STATE_STYLE_MAPS } = await import(distUrl("utils/interaction-state.js"));
 const { PLACEMENT_PROP_NAMES } = await import(distUrl("utils/placement.js"));
 // Not reachable from the entry, so tree-shaken out of dist; read the source.
@@ -121,6 +121,9 @@ function propSpec(prop, tokenMap) {
       arbitrary: true,
       unitless: UNITLESS_CHANNEL_SLUGS.has(slug),
       valueType: SLUG_VALUE_TYPES[slug] ?? "length",
+      // The CSS-wide keywords this channel honours; any other one would
+      // apply to its variable, not the property, and is not emitted.
+      cssKeywords: channelKeywords(slug),
     };
   }
   return { kind: "keyword", tokens, arbitrary: false };
@@ -623,7 +626,7 @@ const spec = {
   // 3: exports lists every name the entry point exports; components carry
   //    overrides and requiresChildren, and exclude covers every group prop
   //    their type omits.
-  // 4: components carry responsiveProps; scalarProps and props describe the
+  // 4: channel props carry cssKeywords; components carry responsiveProps; scalarProps and props describe the
   //    props that take a number or tokens, and a responsive map of them.
   specVersion: 4,
   // What this version can and cannot answer; consumers should branch on it.

@@ -106,13 +106,19 @@ same custom property the token would have used:
 <Box hover={{ bg: "rebeccapurple" }} />   {/* states take them too */}
 ```
 
-Two things to know:
+Three things to know:
 
 - **Tokens win.** If the string is a token, you get the token's variable:
   `p="4"` is always `var(--astralis-spacing-4)`, never the literal `4`.
 - **Units are on you.** A bare number like `p="37"` isn't valid CSS for a
   length, so Astralis warns in development and passes it through unchanged.
   Write `p="37px"` (or use a token).
+- **CSS-wide keywords are limited.** `unset` works on every value prop, and
+  `initial` on every one except `color`. `inherit` works on `bg`, `color`,
+  `borderColor` and `rounded` (`rounded="inherit"` follows the parent's
+  corners). Anywhere else, and `revert` everywhere, the keyword would apply to
+  the custom property and copy the same prop set further up the page, so it is
+  ignored, with a warning in development and an error from `astralis validate`.
 
 **Keyword props stay closed.** `display`, alignment, overflow and friends are
 finite CSS vocabularies backed by build-time classes. An unknown value there

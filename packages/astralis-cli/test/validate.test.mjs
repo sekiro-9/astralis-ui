@@ -627,3 +627,12 @@ test("an own prop that takes no responsive map is told so", () => {
   assert.deepEqual(codes(r.errors), ["invalid-prop-type"]);
   assert.match(r.errors[0].message, /Button: variant takes no responsive map/);
 });
+
+test("CSS-wide keywords: those a channel carries pass, the rest are errors", () => {
+  const good = validate(`<Box w="unset" p="initial" rounded="inherit" color="inherit" bg="unset" hover={{ rounded: "inherit" }} />`);
+  assert.deepEqual(good.errors, []);
+  const bad = validate(`<Box w="inherit" p="revert" m={{ md: "revert-layer" }} color="initial" hover={{ h: "inherit" }} />`);
+  assert.deepEqual(codes(bad.errors), Array(5).fill("unsupported-css-keyword"));
+  assert.match(bad.errors[0].message, /Box: w="inherit" cannot work: .*copy the nearest w set above.* It takes initial, unset$/);
+  assert.match(bad.errors[4].message, /copy the nearest h set above/);
+});

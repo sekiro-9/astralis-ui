@@ -31,7 +31,7 @@ export async function loadSpec() {
   return { ...spec, contrastOn: math.contrastOn };
 }
 
-/** CHANNEL_PROPS, the paint slugs with an `inherit` class, and the breakpoint table. */
+/** CHANNEL_PROPS, the slugs with an `inherit` class, and the breakpoint table. */
 export async function loadLayout() {
   const [channel, breakpoints] = await loadTs("const/channel.ts", "const/breakpoints.ts");
   return {
@@ -249,7 +249,7 @@ export function channelsCss({ CHANNEL_PROPS, INHERIT_CHANNEL_SLUGS, BREAKPOINTS,
   channelSlugs(CHANNEL_PROPS);
   const all = CHANNEL_GROUPS.flatMap(([, slugs]) => Object.entries(slugs));
   const declare = (props, value) => props.map((p) => `${p}: ${value};`).join(" ");
-  // A paint slug's `inherit` rule follows its var rule in the same block, so it
+  // A slug's `inherit` rule follows its var rule in the same block, so it
   // takes part in the same breakpoint and state order.
   const rules = (indent, slug, props, { selector, v, inherit }) => [
     `${indent}${selector} { ${declare(props, `var(${v})`)} }`,
@@ -273,8 +273,8 @@ export function channelsCss({ CHANNEL_PROPS, INHERIT_CHANNEL_SLUGS, BREAKPOINTS,
       "  breakpoint value. States do not compose with breakpoints.",
       "- Custom properties inherit, but a child only carries the channel class",
       "  when it received the prop itself, so inherited values are inert.",
-      "- `inherit` on a paint prop has a rule of its own (.astralis-color-inherit):",
-      "  a variable set to `inherit` inherits the variable, not the parent's colour.",
+      "- `inherit` on bg, color, borderColor and rounded has a rule of its own",
+      "  (.astralis-color-inherit): a variable set to `inherit` inherits the variable.",
     ]),
     "@layer channels {",
   ];

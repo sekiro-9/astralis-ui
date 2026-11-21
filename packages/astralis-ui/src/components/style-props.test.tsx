@@ -380,11 +380,12 @@ describe("interaction-state props", () => {
  * it, skipping a parent coloured by a class or by its own hover state. The
  * keyword gets a class that sets the property itself, and no variable.
  */
-describe("inherit on the paint props", () => {
+describe("inherit on the props with a class for it", () => {
   const paint = [
     ["color", "color"],
     ["bg", "bg"],
     ["borderColor", "border-color"],
+    ["rounded", "rounded"],
   ] as const;
 
   for (const [prop, slug] of paint) {
@@ -398,7 +399,7 @@ describe("inherit on the paint props", () => {
 
     it(`${prop} takes inherit per breakpoint and container width`, () => {
       const { container } = render(
-        <Box {...{ [prop]: { base: "inherit", md: "red", "@lg": "inherit" } }} />,
+        <Box {...{ [prop]: { base: "inherit", md: prop === "rounded" ? "lg" : "red", "@lg": "inherit" } }} />,
       );
 
       expect(classesOf(container)).toEqual(
@@ -410,7 +411,7 @@ describe("inherit on the paint props", () => {
     });
 
     it(`${prop} takes inherit inside a state`, () => {
-      const { container } = render(<Box {...{ [prop]: "red", hover: { [prop]: "inherit" } }} />);
+      const { container } = render(<Box {...{ [prop]: prop === "rounded" ? "lg" : "red", hover: { [prop]: "inherit" } }} />);
 
       expect(classesOf(container)).toEqual(
         expect.arrayContaining([`astralis-${slug}`, `astralis-hover-${slug}-inherit`]),
@@ -432,6 +433,44 @@ describe("inherit on the paint props", () => {
 
     expect(styleVarOf(container, "--astralis-color")).toBe("currentColor");
     expect(styleVarOf(container, "--astralis-bg")).toBe("transparent");
+  });
+});
+
+/*
+ * The other CSS-wide keywords. In a variable, `initial` and `unset` leave it
+ * empty, so the property itself is `unset`: exactly `unset`, and `initial` on
+ * every non-inherited property. `inherit` elsewhere, `revert`, `revert-layer`
+ * and `initial` on colour would act on the variable and copy the nearest prop
+ * of the same name above, so they emit nothing and warn in development.
+ */
+describe("CSS-wide keywords on the channel props", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("unset and initial empty the variable, which unsets the property", () => {
+    const { container } = render(<Box w="unset" p="initial" color="unset" rounded={{ md: "UNSET" }} />);
+
+    expect(classesOf(container)).toEqual(
+      expect.arrayContaining(["astralis-w", "astralis-p", "astralis-color", "astralis-rounded-md"]),
+    );
+    expect(styleVarOf(container, "--astralis-w")).toBe("initial");
+    expect(styleVarOf(container, "--astralis-p")).toBe("initial");
+    expect(styleVarOf(container, "--astralis-color")).toBe("initial");
+    expect(styleVarOf(container, "--astralis-rounded-md")).toBe("initial");
+  });
+
+  it("a keyword the channel cannot carry emits nothing and says what works", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { container } = render(
+      <Box w="inherit" p="revert" m="revert-layer" color="initial" hover={{ h: "inherit" }} />,
+    );
+
+    expect(classesOf(container).filter((c) => c.startsWith("astralis-"))).toEqual([]);
+    expect(container.firstElementChild?.getAttribute("style") ?? "").toBe("");
+    const messages = warn.mock.calls.map((call) => String(call[0]));
+    expect(messages).toHaveLength(5);
+    expect(messages[0]).toMatch(/w="inherit" cannot work: .*copy the nearest w set above.*It takes initial, unset/);
+    expect(messages[3]).toMatch(/color="initial" cannot work: .*It takes inherit, unset/);
+    expect(messages[4]).toMatch(/h="inherit" cannot work/);
   });
 });
 

@@ -166,14 +166,57 @@ export const channelVar = (slug: string, suffix?: string): string =>
    validator) carries the exact same rule the runtime warning uses. */
 export const UNITLESS_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["order", "opacity"]);
 
-/* The paint channels whose `inherit` token gets a class of its own
+/* The channels whose `inherit` gets a class of its own
    (`.astralis-color-inherit { color: inherit }`) instead of riding the var.
    A custom property cannot carry `inherit`: `--astralis-color: inherit` makes
    the VARIABLE inherit, so the element would copy the nearest colour prop above
-   it and skip a parent coloured by a class or by its own hover state. */
-export const INHERIT_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["bg", "color", "border-color"]);
+   it and skip a parent coloured by a class or by its own hover state. Each
+   slug here costs twelve rules (base, breakpoints, containers, states), so
+   only the props where following the parent is a real need have one: the
+   paints, and `rounded` (a child clipped to its parent's corners). */
+export const INHERIT_CHANNEL_SLUGS: ReadonlySet<string> = new Set(["bg", "color", "border-color", "rounded"]);
 
-/** The class for `inherit` on a paint channel: (`color`, `md`) -> `astralis-color-inherit-md`. */
+/* The one channel whose CSS property is inherited. `initial` in a var makes
+   the property behave as `unset`, which is `initial` for every other channel
+   but `inherit` for colour. */
+const INHERITED_PROPERTY_SLUGS: ReadonlySet<string> = new Set(["color"]);
+
+/**
+ * The CSS-wide keywords a channel prop honours. In a variable `initial` and
+ * `unset` both leave the variable empty, which makes the property itself
+ * `unset`: right for `unset` everywhere and for `initial` on the
+ * non-inherited properties. `inherit` needs its own class (above); `revert`
+ * and `revert-layer` would revert the variable, not the property.
+ */
+export function channelKeywords(slug: string): string[] {
+  return [
+    ...(INHERIT_CHANNEL_SLUGS.has(slug) ? ["inherit"] : []),
+    ...(INHERITED_PROPERTY_SLUGS.has(slug) ? [] : ["initial"]),
+    "unset",
+  ];
+}
+
+const CSS_WIDE_KEYWORDS: ReadonlySet<string> = new Set(["inherit", "initial", "unset", "revert", "revert-layer"]);
+
+/**
+ * A CSS-wide keyword as the channel can carry it: `inherit` (for the class),
+ * `initial` (in the var, for `initial` and `unset`), or undefined when the
+ * channel cannot honour it, so nothing is emitted rather than the element
+ * copying the nearest value of the same prop above it.
+ */
+function channelKeyword(keyword: string, slug: string): string | undefined {
+  if (channelKeywords(slug).includes(keyword)) return keyword === "inherit" ? "inherit" : "initial";
+  if (process.env.NODE_ENV !== "production") {
+    const prop = Object.entries(CHANNEL_PROPS).find(([, s]) => s === slug)?.[0] ?? slug;
+    const works = channelKeywords(slug).join(", ");
+    console.warn(
+      `[astralis-ui] ${prop}="${keyword}" cannot work: the value rides a CSS variable, so the keyword would apply to the variable and copy the nearest ${prop} set above, not the property. It takes ${works}, so this value is ignored.`,
+    );
+  }
+  return undefined;
+}
+
+/** The class for `inherit` on a channel: (`color`, `md`) -> `astralis-color-inherit-md`. */
 export const inheritClass = (slug: string, suffix?: string): string => channelClass(`${slug}-inherit`, suffix);
 
 /** True when a resolved channel value must use the `inherit` class instead of the var. */
@@ -191,7 +234,8 @@ const BARE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
  * safelist did, and values don't need to exist at build time.
  *
  * Token lookups use `=== undefined`, never truthiness — "0" is a real token.
- * Non-strings and empty strings resolve to nothing, same as before.
+ * Non-strings and empty strings resolve to nothing, same as before. A CSS-wide
+ * keyword resolves as the channel can carry it (`channelKeywords`).
  */
 export function resolveChannelToken(
   map: Record<string, string>,
@@ -201,6 +245,8 @@ export function resolveChannelToken(
   const css = map[token as string];
   if (css !== undefined) return css;
   if (typeof token !== "string" || token === "") return undefined;
+  const keyword = token.trim().toLowerCase();
+  if (CSS_WIDE_KEYWORDS.has(keyword)) return channelKeyword(keyword, slug);
 
   if (process.env.NODE_ENV !== "production") {
     if (BARE_NUMBER.test(token) && !UNITLESS_CHANNEL_SLUGS.has(slug)) {

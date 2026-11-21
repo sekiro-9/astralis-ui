@@ -19,6 +19,8 @@
    - a var(--astralis-*) reference no stylesheet declares   (unknown-css-variable)
    - a prop its component deliberately types away           (excluded-prop)
    - a bare number where CSS needs a unit                   (bare-number-value)
+   - a CSS-wide keyword a channel prop cannot carry: w=     (unsupported-css-keyword)
+     "inherit" would copy the nearest w above, not the parent's width
    - a style prop the component does not take, which reaches the HTML as a
      stray attribute and changes nothing                    (unknown-style-prop)
    - a component left empty that its type requires children for (missing-children):
@@ -35,7 +37,7 @@
    ========================================================================== */
 
 import { parse } from "@babel/parser";
-import { classifyChannelValue } from "./css-value.mjs";
+import { classifyChannelValue, CSS_WIDE } from "./css-value.mjs";
 import { ARIA_ATTRS, ROLES } from "./aria.mjs";
 import { suggest } from "./suggest.mjs";
 import { checkRequiredChildren } from "./children-rule.mjs";
@@ -220,6 +222,15 @@ function checkScalar(ctx, comp, prop, propSpec, value, node) {
   // value. The grammar condemns only the definitely-wrong.
   if (value === "") {
     ctx.error("empty-channel-value", node, `${comp}: ${prop}="" resolves to nothing`);
+    return;
+  }
+  // A channel value rides a CSS variable, where a CSS-wide keyword applies to
+  // the variable: the props list the ones that still work (specs from v4).
+  const keyword = value.trim().toLowerCase();
+  if (CSS_WIDE.has(keyword) && propSpec.cssKeywords && !propSpec.cssKeywords.includes(keyword)) {
+    ctx.error("unsupported-css-keyword", node,
+      `${comp}: ${prop}="${value}" cannot work: the value rides a CSS variable, so the keyword would apply to the variable ` +
+      `and copy the nearest ${prop.replace(/^.*\./, "")} set above, not the property. It takes ${propSpec.cssKeywords.join(", ")}`);
     return;
   }
   for (const m of value.matchAll(CSS_VAR_REF)) {

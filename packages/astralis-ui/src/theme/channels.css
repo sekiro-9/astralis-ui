@@ -18,8 +18,8 @@
      breakpoint value. States do not compose with breakpoints.
    - Custom properties inherit, but a child only carries the channel class
      when it received the prop itself, so inherited values are inert.
-   - `inherit` on a paint prop has a rule of its own (.astralis-color-inherit):
-     a variable set to `inherit` inherits the variable, not the parent's colour.
+   - `inherit` on bg, color, borderColor and rounded has a rule of its own
+     (.astralis-color-inherit): a variable set to `inherit` inherits the variable.
    ========================================================================== */
 
 @layer channels {
@@ -70,6 +70,7 @@
 
   /* --- radius (shorthand, then edges, then corners) --- */
   .astralis-rounded { border-radius: var(--astralis-rounded); }
+  .astralis-rounded-inherit { border-radius: inherit; }
   .astralis-rounded-t { border-top-left-radius: var(--astralis-rounded-t); border-top-right-radius: var(--astralis-rounded-t); }
   .astralis-rounded-r { border-top-right-radius: var(--astralis-rounded-r); border-bottom-right-radius: var(--astralis-rounded-r); }
   .astralis-rounded-b { border-bottom-right-radius: var(--astralis-rounded-b); border-bottom-left-radius: var(--astralis-rounded-b); }
@@ -131,6 +132,7 @@
     .astralis-bottom-sm { bottom: var(--astralis-bottom-sm); }
     .astralis-left-sm { left: var(--astralis-left-sm); }
     .astralis-rounded-sm { border-radius: var(--astralis-rounded-sm); }
+    .astralis-rounded-inherit-sm { border-radius: inherit; }
     .astralis-rounded-t-sm { border-top-left-radius: var(--astralis-rounded-t-sm); border-top-right-radius: var(--astralis-rounded-t-sm); }
     .astralis-rounded-r-sm { border-top-right-radius: var(--astralis-rounded-r-sm); border-bottom-right-radius: var(--astralis-rounded-r-sm); }
     .astralis-rounded-b-sm { border-bottom-right-radius: var(--astralis-rounded-b-sm); border-bottom-left-radius: var(--astralis-rounded-b-sm); }
@@ -189,6 +191,7 @@
     .astralis-bottom-md { bottom: var(--astralis-bottom-md); }
     .astralis-left-md { left: var(--astralis-left-md); }
     .astralis-rounded-md { border-radius: var(--astralis-rounded-md); }
+    .astralis-rounded-inherit-md { border-radius: inherit; }
     .astralis-rounded-t-md { border-top-left-radius: var(--astralis-rounded-t-md); border-top-right-radius: var(--astralis-rounded-t-md); }
     .astralis-rounded-r-md { border-top-right-radius: var(--astralis-rounded-r-md); border-bottom-right-radius: var(--astralis-rounded-r-md); }
     .astralis-rounded-b-md { border-bottom-right-radius: var(--astralis-rounded-b-md); border-bottom-left-radius: var(--astralis-rounded-b-md); }
@@ -247,6 +250,7 @@
     .astralis-bottom-lg { bottom: var(--astralis-bottom-lg); }
     .astralis-left-lg { left: var(--astralis-left-lg); }
     .astralis-rounded-lg { border-radius: var(--astralis-rounded-lg); }
+    .astralis-rounded-inherit-lg { border-radius: inherit; }
     .astralis-rounded-t-lg { border-top-left-radius: var(--astralis-rounded-t-lg); border-top-right-radius: var(--astralis-rounded-t-lg); }
     .astralis-rounded-r-lg { border-top-right-radius: var(--astralis-rounded-r-lg); border-bottom-right-radius: var(--astralis-rounded-r-lg); }
     .astralis-rounded-b-lg { border-bottom-right-radius: var(--astralis-rounded-b-lg); border-bottom-left-radius: var(--astralis-rounded-b-lg); }
@@ -305,6 +309,7 @@
     .astralis-bottom-xl { bottom: var(--astralis-bottom-xl); }
     .astralis-left-xl { left: var(--astralis-left-xl); }
     .astralis-rounded-xl { border-radius: var(--astralis-rounded-xl); }
+    .astralis-rounded-inherit-xl { border-radius: inherit; }
     .astralis-rounded-t-xl { border-top-left-radius: var(--astralis-rounded-t-xl); border-top-right-radius: var(--astralis-rounded-t-xl); }
     .astralis-rounded-r-xl { border-top-right-radius: var(--astralis-rounded-r-xl); border-bottom-right-radius: var(--astralis-rounded-r-xl); }
     .astralis-rounded-b-xl { border-bottom-right-radius: var(--astralis-rounded-b-xl); border-bottom-left-radius: var(--astralis-rounded-b-xl); }
@@ -367,6 +372,7 @@
     .astralis-bottom-cq-sm { bottom: var(--astralis-bottom-cq-sm); }
     .astralis-left-cq-sm { left: var(--astralis-left-cq-sm); }
     .astralis-rounded-cq-sm { border-radius: var(--astralis-rounded-cq-sm); }
+    .astralis-rounded-inherit-cq-sm { border-radius: inherit; }
     .astralis-rounded-t-cq-sm { border-top-left-radius: var(--astralis-rounded-t-cq-sm); border-top-right-radius: var(--astralis-rounded-t-cq-sm); }
     .astralis-rounded-r-cq-sm { border-top-right-radius: var(--astralis-rounded-r-cq-sm); border-bottom-right-radius: var(--astralis-rounded-r-cq-sm); }
     .astralis-rounded-b-cq-sm { border-bottom-right-radius: var(--astralis-rounded-b-cq-sm); border-bottom-left-radius: var(--astralis-rounded-b-cq-sm); }
@@ -425,6 +431,7 @@
     .astralis-bottom-cq-md { bottom: var(--astralis-bottom-cq-md); }
     .astralis-left-cq-md { left: var(--astralis-left-cq-md); }
     .astralis-rounded-cq-md { border-radius: var(--astralis-rounded-cq-md); }
+    .astralis-rounded-inherit-cq-md { border-radius: inherit; }
     .astralis-rounded-t-cq-md { border-top-left-radius: var(--astralis-rounded-t-cq-md); border-top-right-radius: var(--astralis-rounded-t-cq-md); }
     .astralis-rounded-r-cq-md { border-top-right-radius: var(--astralis-rounded-r-cq-md); border-bottom-right-radius: var(--astralis-rounded-r-cq-md); }
     .astralis-rounded-b-cq-md { border-bottom-right-radius: var(--astralis-rounded-b-cq-md); border-bottom-left-radius: var(--astralis-rounded-b-cq-md); }
@@ -483,6 +490,7 @@
     .astralis-bottom-cq-lg { bottom: var(--astralis-bottom-cq-lg); }
     .astralis-left-cq-lg { left: var(--astralis-left-cq-lg); }
     .astralis-rounded-cq-lg { border-radius: var(--astralis-rounded-cq-lg); }
+    .astralis-rounded-inherit-cq-lg { border-radius: inherit; }
     .astralis-rounded-t-cq-lg { border-top-left-radius: var(--astralis-rounded-t-cq-lg); border-top-right-radius: var(--astralis-rounded-t-cq-lg); }
     .astralis-rounded-r-cq-lg { border-top-right-radius: var(--astralis-rounded-r-cq-lg); border-bottom-right-radius: var(--astralis-rounded-r-cq-lg); }
     .astralis-rounded-b-cq-lg { border-bottom-right-radius: var(--astralis-rounded-b-cq-lg); border-bottom-left-radius: var(--astralis-rounded-b-cq-lg); }
@@ -541,6 +549,7 @@
     .astralis-bottom-cq-xl { bottom: var(--astralis-bottom-cq-xl); }
     .astralis-left-cq-xl { left: var(--astralis-left-cq-xl); }
     .astralis-rounded-cq-xl { border-radius: var(--astralis-rounded-cq-xl); }
+    .astralis-rounded-inherit-cq-xl { border-radius: inherit; }
     .astralis-rounded-t-cq-xl { border-top-left-radius: var(--astralis-rounded-t-cq-xl); border-top-right-radius: var(--astralis-rounded-t-cq-xl); }
     .astralis-rounded-r-cq-xl { border-top-right-radius: var(--astralis-rounded-r-cq-xl); border-bottom-right-radius: var(--astralis-rounded-r-cq-xl); }
     .astralis-rounded-b-cq-xl { border-bottom-right-radius: var(--astralis-rounded-b-cq-xl); border-bottom-left-radius: var(--astralis-rounded-b-cq-xl); }
@@ -598,6 +607,7 @@
   .astralis-hover-bottom:hover { bottom: var(--astralis-bottom-hover); }
   .astralis-hover-left:hover { left: var(--astralis-left-hover); }
   .astralis-hover-rounded:hover { border-radius: var(--astralis-rounded-hover); }
+  .astralis-hover-rounded-inherit:hover { border-radius: inherit; }
   .astralis-hover-rounded-t:hover { border-top-left-radius: var(--astralis-rounded-t-hover); border-top-right-radius: var(--astralis-rounded-t-hover); }
   .astralis-hover-rounded-r:hover { border-top-right-radius: var(--astralis-rounded-r-hover); border-bottom-right-radius: var(--astralis-rounded-r-hover); }
   .astralis-hover-rounded-b:hover { border-bottom-right-radius: var(--astralis-rounded-b-hover); border-bottom-left-radius: var(--astralis-rounded-b-hover); }
@@ -654,6 +664,7 @@
   .astralis-focus-visible-bottom:focus-visible { bottom: var(--astralis-bottom-focus-visible); }
   .astralis-focus-visible-left:focus-visible { left: var(--astralis-left-focus-visible); }
   .astralis-focus-visible-rounded:focus-visible { border-radius: var(--astralis-rounded-focus-visible); }
+  .astralis-focus-visible-rounded-inherit:focus-visible { border-radius: inherit; }
   .astralis-focus-visible-rounded-t:focus-visible { border-top-left-radius: var(--astralis-rounded-t-focus-visible); border-top-right-radius: var(--astralis-rounded-t-focus-visible); }
   .astralis-focus-visible-rounded-r:focus-visible { border-top-right-radius: var(--astralis-rounded-r-focus-visible); border-bottom-right-radius: var(--astralis-rounded-r-focus-visible); }
   .astralis-focus-visible-rounded-b:focus-visible { border-bottom-right-radius: var(--astralis-rounded-b-focus-visible); border-bottom-left-radius: var(--astralis-rounded-b-focus-visible); }
@@ -710,6 +721,7 @@
   .astralis-active-bottom:active { bottom: var(--astralis-bottom-active); }
   .astralis-active-left:active { left: var(--astralis-left-active); }
   .astralis-active-rounded:active { border-radius: var(--astralis-rounded-active); }
+  .astralis-active-rounded-inherit:active { border-radius: inherit; }
   .astralis-active-rounded-t:active { border-top-left-radius: var(--astralis-rounded-t-active); border-top-right-radius: var(--astralis-rounded-t-active); }
   .astralis-active-rounded-r:active { border-top-right-radius: var(--astralis-rounded-r-active); border-bottom-right-radius: var(--astralis-rounded-r-active); }
   .astralis-active-rounded-b:active { border-bottom-right-radius: var(--astralis-rounded-b-active); border-bottom-left-radius: var(--astralis-rounded-b-active); }

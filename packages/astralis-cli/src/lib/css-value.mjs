@@ -18,7 +18,7 @@
    as the runtime) | no-claim.
    ========================================================================== */
 
-const CSS_WIDE = new Set(["inherit", "initial", "unset", "revert", "revert-layer"]);
+export const CSS_WIDE = new Set(["inherit", "initial", "unset", "revert", "revert-layer"]);
 
 const LENGTH_KEYWORDS = new Set([
   "auto", "none", "max-content", "min-content", "fit-content", "stretch",
