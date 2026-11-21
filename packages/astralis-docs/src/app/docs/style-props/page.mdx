@@ -72,6 +72,12 @@ say it out loud: padding is space *inside* a component, which its recipe owns;
 margin is space *between* it and its siblings, which only the parent can
 decide.
 
+A style prop a component does not take (`p` on a Card, `display` on a Button)
+reaches the HTML as an attribute and changes nothing. In development the
+console says so, once per component and prop, with what to reach for instead;
+`astralis validate` reports the same as an error. Production builds carry no
+part of this check.
+
 ### One name, two meanings
 
 `size` is the exception worth knowing. On Box it sets width **and** height. On

@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { describeProps, identify, withIdentity } from "./dev-identity";
-import { Box, Button, Card, Modal } from "../index";
+import { describeProps, identify, ignoredStyleProps, withIdentity } from "./dev-identity";
+import { Badge, Box, Button, Card, Icon, Image, Input, Modal, Text, Textarea } from "../index";
 
 const described = (element: Element | null) =>
   JSON.parse(element?.getAttribute("data-astralis-props") ?? "null") as Record<string, unknown>[];
@@ -175,5 +175,115 @@ describe("identify", () => {
     await waitFor(() => expect(screen.getByText("Layer")).toBeInTheDocument());
     expect(screen.getByText("Layer").getAttribute("data-astralis")).toBe("Modal.Title");
     expect(screen.getByRole("dialog").closest("[data-astralis]")?.getAttribute("data-astralis")).toMatch(/^Modal\./);
+  });
+});
+
+/*
+ * The warned set lives for the whole module, as it does in an app, so each
+ * test below uses a component and prop no other test passes.
+ */
+describe("a style prop the component does not take", () => {
+  const warnings = () => vi.spyOn(console, "warn").mockImplementation(() => {});
+  const told = (spy: ReturnType<typeof warnings>) =>
+    spy.mock.calls.map((call) => String(call[0])).filter((text) => text.includes("does not take"));
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  it("warns once per component and prop, in the validator's words, and still renders the attribute", () => {
+    const spy = warnings();
+    const { rerender, container } = render(<Card {...{ p: "4" }}>a</Card>);
+    rerender(<Card {...{ p: "6" }}>a</Card>);
+    render(<Card {...{ p: "4" }}>b</Card>);
+
+    expect(told(spy)).toEqual([
+      "[astralis-ui] Card does not take p: it reaches the HTML as a stray attribute and changes nothing (Card owns how it looks; reach for variant, size or colorScheme)",
+    ]);
+    expect(container.querySelector("[p]")).not.toBeNull();
+  });
+
+  it("points a layout prop at a Box around the component", () => {
+    const spy = warnings();
+    render(<Button {...{ display: "hidden" }}>Go</Button>);
+    expect(told(spy)).toEqual([
+      "[astralis-ui] Button does not take display: it reaches the HTML as a stray attribute and changes nothing (Button takes placement props; put display on a Box around it)",
+    ]);
+  });
+
+  it("reports a long spelling and a component that takes no style props", () => {
+    const spy = warnings();
+    render(<Textarea {...({ padding: "4" } as Record<string, unknown>)} />);
+    expect(told(spy)).toEqual([
+      "[astralis-ui] Input.TextArea does not take padding: it reaches the HTML as a stray attribute and changes nothing (Input.TextArea takes no style props; put padding on a Box around it)",
+    ]);
+  });
+
+  it("is silent for the props a component takes", () => {
+    const spy = warnings();
+    render(
+      <>
+        <Card w="full" m={{ base: "2", md: "4" }} marginTop="2" position="relative" variant="outline">a</Card>
+        <Box p="4" bg="subtle" display="flex" hover={{ bg: "muted" }} />
+        <Text color="muted" size="sm" {...({ p: undefined } as Record<string, unknown>)}>t</Text>
+        <Button rounded="full" size="sm">b</Button>
+        <Image src="/a.png" alt="" aspectRatio="square" rounded="md" />
+      </>,
+    );
+    expect(told(spy)).toEqual([]);
+  });
+
+  it("is silent for HTML attributes that share a style prop's name", () => {
+    const spy = warnings();
+    render(
+      <>
+        <Image src="/a.png" alt="" width={200} height={100} />
+        <Input size="sm" color="red" />
+        <Textarea rows={4} wrap="soft" />
+        <Icon display="block" opacity={0.5}>
+          <svg />
+        </Icon>
+      </>,
+    );
+    expect(told(spy)).toEqual([]);
+  });
+
+  it("reports once, on the component the prop was written on, when it renders through another", () => {
+    const spy = warnings();
+    render(
+      <Modal>
+        <Modal.Trigger {...{ bg: "red" }}>
+          <Button>Open</Button>
+        </Modal.Trigger>
+      </Modal>,
+    );
+    expect(told(spy)).toEqual([
+      "[astralis-ui] Modal.Trigger does not take bg: it reaches the HTML as a stray attribute and changes nothing (Modal.Trigger takes no style props; put bg on a Box around it)",
+    ]);
+  });
+
+  it("warns from a server render too", () => {
+    const spy = warnings();
+    renderToString(<Badge {...{ shadow: "lg" }}>new</Badge>);
+    expect(told(spy)).toHaveLength(1);
+    expect(told(spy)[0]).toMatch(/^\[astralis-ui\] Badge does not take shadow:/);
+  });
+
+  it("says nothing in production, where the component is not wrapped", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const spy = warnings();
+    const Plain = (props: Record<string, unknown>) => createElement("div", props);
+    const Named = identify("Kbd", Plain);
+    expect(Named).toBe(Plain);
+    render(createElement(Named, { bg: "red", p: "4" }));
+    expect(told(spy)).toEqual([]);
+  });
+
+  it("judges as the validator does: groups, own props and element attributes", () => {
+    expect(ignoredStyleProps("Card", { p: "4", w: "full", gap: "2", color: "red", onClick: () => {} })).toEqual(["p", "gap"]);
+    expect(ignoredStyleProps("Image", { rounded: "md", width: 10, bg: "red" })).toEqual(["bg"]);
+    expect(ignoredStyleProps("Box", { p: "4", display: "flex" })).toEqual([]);
+    expect(ignoredStyleProps("Menu.Item", { p: "4" })).toEqual([]);
   });
 });

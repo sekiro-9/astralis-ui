@@ -2,6 +2,7 @@ import { createElement, type ElementType } from "react";
 import { BREAKPOINTS } from "../const/breakpoints";
 import { CONTAINER_BREAKPOINT_WIDTHS } from "../const/channel";
 import { isStateProp } from "./interaction-state";
+import { COMPONENT_STYLE_PROPS, HTML_ATTRIBUTE_NAMES, STYLE_PROP_GROUPS } from "./dev-style-props";
 
 /**
  * Development builds name every component on the element it renders, so a
@@ -113,17 +114,94 @@ export function withIdentity(name: string, props: Record<string, unknown>): Reco
   };
 }
 
+/*
+ * A style prop a component does not take reaches the HTML as a stray
+ * attribute and changes nothing; `astralis validate` reports it as
+ * unknown-style-prop. Development builds say the same in the console, once per
+ * component and prop, judged from the same spec (dev-style-props.ts is
+ * generated from it), in the validator's words. The attribute still renders:
+ * nothing is stripped. The wrapper sees the props as the caller wrote them,
+ * before the component takes its own.
+ */
+
+/* Mirrors DOCTRINE_PAINT_PROPS in astralis-cli's validate-core.mjs. */
+const PAINT_PROPS = new Set(["p", "px", "py", "pt", "pr", "pb", "pl", "bg", "borderColor", "shadow"]);
+let styleNames: Set<string> | undefined;
+const takenBy = new Map<string, { groups: string[]; takes: Set<string> }>();
+const warned = new Set<string>();
+
+function styleTable(name: string) {
+  const row = COMPONENT_STYLE_PROPS[name];
+  if (!row) return undefined;
+  let table = takenBy.get(name);
+  if (!table) {
+    const groups = row[0] ? row[0].split(" ") : [];
+    const own = row[1] ? row[1].split(" ") : [];
+    table = { groups, takes: new Set([...groups.flatMap((group) => STYLE_PROP_GROUPS[group] ?? []), ...own]) };
+    takenBy.set(name, table);
+  }
+  return table;
+}
+
+/** The style props `name` was given but does not take, as the validator judges them. */
+export function ignoredStyleProps(name: string, props: Record<string, unknown>): string[] {
+  const table = styleTable(name);
+  if (!table) return [];
+  styleNames ??= new Set(Object.values(STYLE_PROP_GROUPS).flat());
+  return Object.keys(props).filter(
+    (prop) =>
+      props[prop] !== undefined &&
+      styleNames!.has(prop) &&
+      !table.takes.has(prop) &&
+      !HTML_ATTRIBUTE_NAMES.includes(prop),
+  );
+}
+
+/**
+ * Warn about the style props `name` ignores. In a chain (Modal.Trigger
+ * rendering a Button) a prop an outer component was given is that
+ * component's to report: the warning names it, and says nothing when the
+ * outer component has a table of its own, because it has already judged.
+ */
+export function warnIgnoredStyleProps(name: string, props: Record<string, unknown>): void {
+  const ignored = ignoredStyleProps(name, props);
+  if (ignored.length === 0) return;
+  const outer = typeof props[IDENTITY_ATTRIBUTE] === "string" ? (props[IDENTITY_ATTRIBUTE] as string).split(" ") : [];
+  const outerGiven = outerProps(props, outer.length);
+  const { groups } = styleTable(name)!;
+  for (const prop of ignored) {
+    const by = outer.findIndex((_, index) => prop in outerGiven[index]);
+    if (by !== -1 && COMPONENT_STYLE_PROPS[outer[by]]) continue;
+    const subject = by === -1 ? name : outer[by];
+    const key = `${subject} ${prop}`;
+    if (warned.has(key)) continue;
+    warned.add(key);
+    const hint =
+      groups.length === 1 && groups[0] === "placement" && PAINT_PROPS.has(prop)
+        ? `${subject} owns how it looks; reach for variant, size or colorScheme`
+        : `${subject} takes ${groups.length ? `${groups.join(", ")} props` : "no style props"}; put ${prop} on a Box around it`;
+    console.warn(
+      `[astralis-ui] ${subject} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing (${hint})`,
+    );
+  }
+}
+
 /**
  * Give a component its public name. In development the returned component
- * renders the original with the identity attributes added; in production it
- * is the original. Either way it carries `displayName`.
+ * renders the original with the identity attributes added, and reports the
+ * style props it ignores; in production it is the original. Either way it
+ * carries `displayName`.
  */
 export function identify<C extends object>(name: string, component: C): C & { displayName: string } {
-  if (process.env.NODE_ENV === "production") {
-    return Object.assign(component, { displayName: name });
+  // The development half sits inside the branch, so a production bundle drops
+  // it and the table it reads.
+  if (process.env.NODE_ENV !== "production") {
+    const Identified = (props: Record<string, unknown>) => {
+      warnIgnoredStyleProps(name, props);
+      return createElement(component as ElementType, withIdentity(name, props));
+    };
+    Identified.displayName = name;
+    return Identified as unknown as C & { displayName: string };
   }
-  const Identified = (props: Record<string, unknown>) =>
-    createElement(component as ElementType, withIdentity(name, props));
-  Identified.displayName = name;
-  return Identified as unknown as C & { displayName: string };
+  return Object.assign(component, { displayName: name });
 }

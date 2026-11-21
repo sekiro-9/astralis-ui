@@ -40,6 +40,7 @@ import { extractComponentTypes, UNDOCUMENTED_PROPS } from "./extract-literal-pro
 import { extractSourceDefaults } from "./prop-docs.mjs";
 import { measureContent } from "./measure-content.mjs";
 import { loadTs } from "./load-ts.mjs";
+import { renderDevStyleProps } from "./dev-style-props.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG = join(__dirname, "..");
@@ -645,6 +646,28 @@ const spec = {
   classes,
   cssVariables,
 };
+
+/* The development warning's copy of the style-prop judgement (dev-style-props.mjs). */
+const devTable = renderDevStyleProps(spec, rootExports);
+const devTablePath = join(PKG, "src", "utils", "dev-style-props.ts");
+const devTableNow = (() => {
+  try {
+    return readFileSync(devTablePath, "utf8").replace(/\r\n/g, "\n");
+  } catch {
+    return null;
+  }
+})();
+if (process.argv.includes("--write-dev-props")) {
+  writeFileSync(devTablePath, devTable.source);
+  console.log(`[astralis] wrote ${devTablePath}; build again so dist carries it`);
+} else if (devTable.problems.length || devTableNow !== devTable.source) {
+  console.error("[astralis] SYSTEM SPEC FAILURE:");
+  for (const problem of devTable.problems) console.error("  " + problem);
+  if (devTableNow !== devTable.source) {
+    console.error("  src/utils/dev-style-props.ts no longer matches the spec: run `pnpm run gen:dev-props`, then build again");
+  }
+  process.exit(1);
+}
 
 const out = join(PKG, "dist", "system-spec.json");
 writeFileSync(out, JSON.stringify(spec, null, 2) + "\n");
