@@ -31,9 +31,4 @@ export const navLinks: NavLink[] = [
     href: "/theme-builder",
     isActive: (path) => path.startsWith("/theme-builder"),
   },
-  {
-    title: "Issues & Contributions",
-    href: "/issues",
-    isActive: (path) => path.startsWith("/issues"),
-  },
 ];

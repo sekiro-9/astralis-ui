@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Box, Card, CardBody, Flex, Grid, Heading, Stack, Text } from "astralis-ui";
-import { Bot, Bug, LayoutTemplate, MousePointerClick, Palette, TerminalSquare } from "lucide-react";
+import { Bot, LayoutTemplate, MousePointerClick, Palette, ShieldCheck, TerminalSquare } from "lucide-react";
 import { Reveal } from "./reveal";
 import { SectionLead, SectionTitle } from "./section-title";
 
@@ -37,10 +37,10 @@ export function Toolkit({ blocks }: { blocks: number }) {
       href: "/docs/devtools",
     },
     {
-      icon: Bug,
-      title: "Report a problem in one click",
-      body: "Send a bug to the maintainers with everything they need to reproduce it, and follow the fix.",
-      href: "/issues",
+      icon: ShieldCheck,
+      title: "Checked on every commit",
+      body: "Run the validator in CI, so every pull request uses the design system the way it was meant.",
+      href: "/docs/validate-in-ci",
     },
   ];
 

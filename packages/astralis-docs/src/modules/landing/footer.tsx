@@ -26,7 +26,6 @@ const columns = [
   {
     title: "Community",
     links: [
-      { label: "Issues & contributions", href: "/issues" },
       { label: "GitHub", href: GITHUB_URL },
     ],
   },
