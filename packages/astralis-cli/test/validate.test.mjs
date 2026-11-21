@@ -605,3 +605,25 @@ test("Stack's own props are checked like Flex's: colorScheme on every stack", ()
   assert.deepEqual(codes(r.errors), ["invalid-recipe-value", "invalid-recipe-value"]);
   assert.match(r.errors[0].message, /Stack: "nope" is not a colorScheme value/);
 });
+
+test("a number-or-map prop takes numbers and maps of numbers, not strings or unknown keys", () => {
+  const good = validate(`<Carousel slidesPerView={3} slideGap={{ base: 8, md: 16, "@lg": 24 }}>x</Carousel>`, "Carousel");
+  assert.deepEqual(good.errors, []);
+  const bad = validate(`<Carousel slidesPerView="3" slideGap={{ base: "8", huge: 16 }} loop="yes">x</Carousel>`, "Carousel");
+  assert.deepEqual(codes(bad.errors), ["invalid-prop-type", "invalid-prop-type", "invalid-breakpoint-key", "invalid-prop-type"]);
+  assert.match(bad.errors[0].message, /slidesPerView takes a number, not the string "3" — write slidesPerView=\{3\}/);
+  assert.match(bad.errors[3].message, /loop takes a boolean/);
+});
+
+test("Icon size takes a token or a number, scalar or per breakpoint", () => {
+  const good = validate(`<><Icon size="lg" /><Icon size={24} /><Icon size={{ base: "sm", lg: 32 }} /></>`);
+  assert.deepEqual(good.errors, []);
+  const bad = validate(`<><Icon size="huge" /><Icon size={{ base: "nope" }} /></>`);
+  assert.deepEqual(codes(bad.errors), ["invalid-recipe-value", "invalid-recipe-value"]);
+});
+
+test("an own prop that takes no responsive map is told so", () => {
+  const r = validate(`<Button variant={{ base: "solid", md: "outline" }} />`);
+  assert.deepEqual(codes(r.errors), ["invalid-prop-type"]);
+  assert.match(r.errors[0].message, /Button: variant takes no responsive map/);
+});

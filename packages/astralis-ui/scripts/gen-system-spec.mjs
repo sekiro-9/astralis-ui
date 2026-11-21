@@ -249,6 +249,7 @@ const {
   literal: literalProps,
   responsive: responsiveProps,
   scalar: scalarProps,
+  takesMap,
   required: requiredProps,
   propNames,
   redefined,
@@ -365,8 +366,15 @@ const components = Object.fromEntries(
     const ownResponsive = Object.entries(responsiveProps.get(name) ?? {}).filter(([prop]) => !groupProps.has(prop));
     const props = { ...literalProps.get(name), ...Object.fromEntries(ownResponsive) };
     if (Object.keys(props).length) entry.props = props;
-    const scalars = scalarProps.get(name);
-    if (scalars) entry.scalarProps = scalars;
+    // A responsive scalar inside the groups (Box's p) is the group's prop.
+    const mapProps = [...(takesMap.get(name) ?? [])].filter((prop) => !groupProps.has(prop));
+    const scalars = Object.fromEntries(
+      Object.entries(scalarProps.get(name) ?? {}).filter(([prop]) => !groupProps.has(prop) || !takesMap.get(name)?.has(prop)),
+    );
+    if (Object.keys(scalars).length) entry.scalarProps = scalars;
+    // Own props that also take a responsive map ({ base, md }) of their values:
+    // List styleType, Carousel slidesPerView, Icon size.
+    if (mapProps.length) entry.responsiveProps = mapProps.sort();
     // Props the types make mandatory, by the kind of value each takes. A
     // builder fills the string ones and cannot place a component that
     // demands anything else.
@@ -615,7 +623,9 @@ const spec = {
   // 3: exports lists every name the entry point exports; components carry
   //    overrides and requiresChildren, and exclude covers every group prop
   //    their type omits.
-  specVersion: 3,
+  // 4: components carry responsiveProps; scalarProps and props describe the
+  //    props that take a number or tokens, and a responsive map of them.
+  specVersion: 4,
   // What this version can and cannot answer; consumers should branch on it.
   propsManifest: "style-props-v1",
   // Off by default so two builds of one commit emit identical bytes.

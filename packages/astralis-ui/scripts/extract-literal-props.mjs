@@ -98,6 +98,7 @@ const GENERIC_PROPS = new Set(["className", "style", "id", "children"]);
  *   literal: Map<string, Record<string, string[]>>,
  *   responsive: Map<string, Record<string, string[]>>,
  *   scalar: Map<string, Record<string, "boolean" | "string" | "number">>,
+ *   takesMap: Map<string, Set<string>>,
  *   required: Map<string, Record<string, string>>,
  *   propNames: Map<string, Set<string>>,
  *   redefined: Map<string, string[]>,
@@ -126,6 +127,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   const result = new Map();
   const responsive = new Map();
   const scalar = new Map();
+  const responsiveNames = new Map();
   const required = new Map();
   const propNames = new Map();
   const redefined = new Map();
@@ -194,6 +196,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     const scalars = {};
     const needed = {};
     const own = [];
+    const takesMap = [];
     propNames.set(name, new Set(paramType.getProperties().map((p) => p.getName())));
     const fromReact = new Set();
     const dom = new Set();
@@ -224,6 +227,14 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
       const responsiveValues = responsiveKeys ? responsiveLiteralValues(propType, checker, source, responsiveKeys) : null;
       if (responsiveValues) {
         responsiveProps[propName] = responsiveValues;
+        takesMap.push(propName);
+        continue;
+      }
+      const mixed = responsiveKeys ? responsiveScalarValues(propType, checker, source, responsiveKeys) : null;
+      if (mixed && declaredHere(propSymbol)) {
+        if (mixed.values.length) responsiveProps[propName] = mixed.values;
+        if (mixed.kind) scalars[propName] = mixed.kind;
+        takesMap.push(propName);
         continue;
       }
       const kind = kindOf(propType);
@@ -232,6 +243,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     if (Object.keys(props).length) result.set(name, props);
     if (Object.keys(responsiveProps).length) responsive.set(name, responsiveProps);
     if (Object.keys(scalars).length) scalar.set(name, scalars);
+    if (takesMap.length) responsiveNames.set(name, new Set(takesMap));
     if (Object.keys(needed).length) required.set(name, needed);
     if (own.length) redefined.set(name, own);
     inheritedProps.set(name, fromReact);
@@ -257,7 +269,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   }
   const exports = moduleExports.map((s) => s.getName()).sort();
   return {
-    literal: result, responsive, scalar, required, propNames, redefined, needsChildren,
+    literal: result, responsive, scalar, takesMap: responsiveNames, required, propNames, redefined, needsChildren,
     ownProps, docs, partOwnProps, partDocs, inherited: inheritedProps, domAttributes, exports,
   };
 }
@@ -333,6 +345,54 @@ function responsiveLiteralValues(type, checker, source, responsiveKeys) {
     }
   }
   return [...new Set(values)];
+}
+
+/** "number", "string" or "boolean" for a non-literal scalar arm; null otherwise. */
+function scalarArmKind(arm) {
+  if (arm.flags & ts.TypeFlags.NumberLike) return "number";
+  if (arm.flags & ts.TypeFlags.BooleanLike) return "boolean";
+  if (arm.flags & ts.TypeFlags.String) return "string";
+  return null;
+}
+
+/**
+ * A responsive prop that is not a closed vocabulary: a scalar kind, string
+ * literals, or both, plus maps over responsive keys holding those same values.
+ * Carousel's `slidesPerView` (`number | { base, md… }` of numbers) reads as
+ * `{ values: [], kind: "number" }`, Icon's `size` (`"xs".."xl" | number`, or a
+ * map of either) as `{ values: ["xs"…], kind: "number" }`. Null for anything
+ * else, so an arm of any other kind still disqualifies.
+ */
+function responsiveScalarValues(type, checker, source, responsiveKeys) {
+  const nonNullable = type.getNonNullableType();
+  if (!nonNullable.isUnion()) return null;
+  const values = [];
+  const kinds = new Set();
+  const maps = [];
+  const readArm = (arm) => {
+    if (arm.isStringLiteral()) values.push(arm.value);
+    else if (scalarArmKind(arm)) kinds.add(scalarArmKind(arm));
+    else return false;
+    return true;
+  };
+  for (const arm of nonNullable.types) {
+    if (arm.flags & ts.TypeFlags.Object) maps.push(arm);
+    else if (!readArm(arm)) return null;
+  }
+  if (maps.length === 0 || kinds.size > 1 || (kinds.size === 0 && values.length === 0)) return null;
+  const leafFits = (leaf) =>
+    leaf.isStringLiteral() ? values.includes(leaf.value) : scalarArmKind(leaf) !== null && kinds.has(scalarArmKind(leaf));
+  for (const map of maps) {
+    const keys = map.getProperties();
+    if (keys.length === 0 || map.getCallSignatures().length) return null;
+    for (const key of keys) {
+      if (!responsiveKeys.has(key.getName())) return null;
+      const leaf = checker.getTypeOfSymbolAtLocation(key, source).getNonNullableType();
+      const leaves = leaf.isUnion() && !(leaf.flags & ts.TypeFlags.Boolean) ? leaf.types : [leaf];
+      if (!leaves.every(leafFits)) return null;
+    }
+  }
+  return { values: [...new Set(values)], kind: [...kinds][0] ?? null };
 }
 
 /** The values of a pure string-literal union, or null if it isn't one. */

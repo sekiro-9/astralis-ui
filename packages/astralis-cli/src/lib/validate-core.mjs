@@ -11,6 +11,8 @@
    - a component or compound part that doesn't exist        (unknown-import,
                                                               unknown-part)
    - a keyword prop value outside its closed set            (invalid-keyword-value)
+   - an own prop given the wrong kind of value: a string    (invalid-prop-type)
+     where it takes a number, a map where it takes one value
    - a breakpoint or state key that isn't one               (invalid-breakpoint-key,
                                                               invalid-state-prop)
    - an `astralis:*` class missing from the compiled CSS    (unknown-class)
@@ -362,6 +364,49 @@ function checkTabIndex(ctx, attr) {
 
 /* ---- rule: astralis component props --------------------------------------------- */
 
+const LITERAL_KINDS = { StringLiteral: "string", NumericLiteral: "number", BooleanLiteral: "boolean" };
+
+/** One literal value of an own prop: in its vocabulary, or of its scalar kind.
+ *  `at` is where a finding is reported: the attribute, or the map entry. */
+function checkOwnLeaf(ctx, name, comp, prop, node, at = node) {
+  const value = literalOf(node);
+  if (value === null) return;
+  const values = comp.props?.[prop];
+  const kind = comp.scalarProps?.[prop];
+  const given = LITERAL_KINDS[node.type] ?? "string";
+  if (kind === given || values?.includes(value)) return;
+  if (values && (!kind || given === "string")) {
+    ctx.error("invalid-recipe-value", at, `${name}: "${value}" is not a ${prop} value` + closedSetHint(value, values));
+  } else {
+    const shown = given === "string" ? `the string "${value}"` : `${given === "number" ? "a number" : "a boolean"}`;
+    ctx.error("invalid-prop-type", at, `${name}: ${prop} takes a ${kind}, not ${shown}` +
+      (kind === "number" && given === "string" && /^-?\d+(\.\d+)?$/.test(value) ? ` — write ${prop}={${value}}` : ""));
+  }
+}
+
+function checkOwnValue(ctx, name, comp, prop, attr) {
+  const valueNode = attr.value;
+  if (valueNode === null) return; // a bare attribute is {true}; TypeScript's to judge
+  const node = valueNode.type === "JSXExpressionContainer" ? valueNode.expression : valueNode;
+  if (node.type !== "ObjectExpression") return checkOwnLeaf(ctx, name, comp, prop, node, attr);
+  // Specs from version 4 list the own props that take a responsive map.
+  if (!comp.responsiveProps?.includes(prop)) {
+    if ((ctx.spec.specVersion ?? 0) >= 4) {
+      ctx.error("invalid-prop-type", node, `${name}: ${prop} takes no responsive map — give it one value`);
+    }
+    return;
+  }
+  for (const p of node.properties) {
+    if (p.type !== "ObjectProperty" || p.computed) continue;
+    const key = keyName(p);
+    if (!ctx.bpKeys.has(key)) {
+      ctx.error("invalid-breakpoint-key", p, `${name}: "${key}" is not a breakpoint — responsive maps take ${[...ctx.bpKeys].join("/")}`);
+      continue;
+    }
+    checkOwnLeaf(ctx, name, comp, prop, p.value);
+  }
+}
+
 function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
   const name = identity.specName;
   if (comp.exclude?.includes(prop)) {
@@ -390,13 +435,10 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
     return;
   }
   // Recipe props (Button variant, Alert status, …): closed vocabularies read
-  // out of the shipped d.ts. Literal values only; dynamic ones are TypeScript's.
-  if (comp.props?.[prop]) {
-    const values = comp.props[prop];
-    const value = attributeLiteral(attr.value);
-    if (value !== null && !values.includes(value)) {
-      ctx.error("invalid-recipe-value", attr, `${name}: "${value}" is not a ${prop} value` + closedSetHint(value, values));
-    }
+  // out of the shipped d.ts, and the library's own scalar props (Carousel
+  // slidesPerView takes a number). Literal values only; dynamic ones are TypeScript's.
+  if (comp.props?.[prop] || comp.scalarProps?.[prop]) {
+    checkOwnValue(ctx, name, comp, prop, attr);
     return;
   }
   // A style prop this component's type does not take at all: it is passed to
