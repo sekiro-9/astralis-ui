@@ -67,8 +67,10 @@ packages/
   astralis-devtools/  the development overlay
   astralis-blocks/    ready-made sections, copied into projects by the CLI
   astralis-docs/      the documentation site at astralis-ui.com (Next.js + MDX)
-bench/                bundle and hydration benchmarks
 ```
+
+The benchmarks that compare Astralis with other libraries live in their own
+repository, [astralis-bench](https://github.com/sekiro-9/astralis-bench).
 
 ## Setting up
 

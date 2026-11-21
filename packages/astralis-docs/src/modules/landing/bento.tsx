@@ -21,7 +21,7 @@ import { Reveal } from "./reveal";
 import { SectionLead, SectionTitle } from "./section-title";
 
 /**
- * reports/bench-hydration.md, final table: gzipped First Load JS of one bench
+ * astralis-bench, results/simple-bench.md: gzipped First Load JS of one bench
  * page per library, minus the bare-framework floor. Re-measure there first.
  */
 const BENCH = [
@@ -32,7 +32,7 @@ const BENCH = [
   { name: "Chakra", kb: 94.5, self: false },
 ];
 const BENCH_MAX = Math.max(...BENCH.map((row) => row.kb));
-const BENCH_URL = "https://github.com/sekiro-9/astralis-ui/tree/main/bench";
+const BENCH_URL = "https://github.com/sekiro-9/astralis-bench";
 
 const tokenRows = [
   { token: "--astralis-color-surface-base", light: "#ffffff", dark: "#000000" },
