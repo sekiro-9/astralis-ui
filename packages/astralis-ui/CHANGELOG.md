@@ -6,6 +6,13 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
+## Unreleased
+
+### Fixed
+
+- **Image's loading surface no longer pulses.** The pulse animated a background colour, which repaints on the main thread every frame; on a page of lazy images it more than doubled main-thread time on a throttled phone (shop bench: 3.8 s to 1.9 s). The muted surface and its glyph are unchanged.
+- **The development warnings for ignored style props no longer reach production bundles.** `dev-identity` imported the interaction-state engine and with it every style map, which Next's bundler kept even though the code using them is development-only. A page with one interactive component carried 3.3 kB gzip more than on 0.9.0; it is back to 0.9.0's size (simple bench: 21.3 to 17.8 kB).
+
 ## 0.10.0 (2026-11-21)
 
 Publish with astralis-cli 0.6.0: the system spec is now version 4, and older

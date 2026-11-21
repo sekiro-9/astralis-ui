@@ -1,7 +1,7 @@
 import { createElement, type ElementType } from "react";
 import { BREAKPOINTS } from "../const/breakpoints";
 import { CONTAINER_BREAKPOINT_WIDTHS } from "../const/channel";
-import { isStateProp } from "./interaction-state";
+import { isStateProp } from "./state-props";
 import { COMPONENT_STYLE_PROPS, HTML_ATTRIBUTE_NAMES, STYLE_PROP_GROUPS } from "./dev-style-props";
 
 /**
@@ -56,7 +56,11 @@ function isLeaf(value: unknown): value is Leaf {
   return typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value));
 }
 
-const RESPONSIVE_KEYS = new Set<string>(["base", ...BREAKPOINTS, ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)]);
+// Built on first use, so a production bundle keeps no top-level reference to
+// the breakpoint tables.
+let responsiveKeys: Set<string> | undefined;
+const isResponsiveKey = (key: string) =>
+  (responsiveKeys ??= new Set(["base", ...BREAKPOINTS, ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)])).has(key);
 
 /**
  * The only objects an Astralis prop takes: a responsive map ({ base, md }) or
@@ -69,7 +73,7 @@ function describeValue(key: string, value: unknown): Leaf | Described | undefine
   if (isLeaf(value)) return value;
   if (typeof value !== "object" || value === null) return undefined;
   if (Object.getPrototypeOf(value) !== Object.prototype || "$$typeof" in value) return undefined;
-  if (!isStateProp(key) && !Object.keys(value).every((inner) => RESPONSIVE_KEYS.has(inner))) return undefined;
+  if (!isStateProp(key) && !Object.keys(value).every(isResponsiveKey)) return undefined;
   const out: Described = {};
   for (const [inner, leaf] of Object.entries(value)) {
     if (isLeaf(leaf)) out[inner] = leaf;
