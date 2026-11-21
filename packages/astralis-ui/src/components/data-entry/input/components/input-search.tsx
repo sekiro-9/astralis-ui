@@ -7,6 +7,7 @@ import { useFieldContext } from "../../field/field.context";
 import { useMergedRefs } from "../../../../utils/merge-refs";
 import type { InputSearchProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { accentClass } from "../../../../const/color-schemes";
 import { SearchIcon } from "../../../icon/internal-icons";
 import { identify } from "../../../../utils/dev-identity";
@@ -16,10 +17,14 @@ export const InputSearch = identify("Input.Search", function InputSearch({
   showSearchButton = false,
   colorScheme,
   className = "",
+  style,
   onKeyDown,
   ref,
-  ...props
+  ...rest
 }: InputSearchProps & { ref?: Ref<HTMLInputElement> }) {
+  // Placement belongs on the wrapper: the icon and button are positioned
+  // against it, so moving or sizing only the inner input would leave them behind.
+  const { placementClass, placementStyle, rest: props } = splitPlacement(rest);
   const inputRef = useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRefs(ref, inputRef);
   const field = useFieldContext();
@@ -39,7 +44,10 @@ export const InputSearch = identify("Input.Search", function InputSearch({
   };
 
   return (
-    <div className={astralisMerge("astralis:relative astralis:flex astralis:items-center", colorScheme && accentClass(colorScheme))}>
+    <div
+      className={astralisMerge("astralis:relative astralis:flex astralis:items-center", colorScheme && accentClass(colorScheme), placementClass)}
+      style={placementStyle}
+    >
       <span className="astralis:absolute astralis:left-3 astralis:z-10 astralis:flex astralis:items-center astralis:text-label-subtle astralis:pointer-events-none">
         <SearchIcon className="astralis:h-4 astralis:w-4" aria-hidden="true" />
       </span>
@@ -51,6 +59,7 @@ export const InputSearch = identify("Input.Search", function InputSearch({
           onKeyDown={handleKeyDown}
           className={astralisMerge("astralis:pl-9", showSearchButton && "astralis:rounded-r-none", className)}
           {...props}
+          style={style}
         />
       </div>
 

@@ -79,7 +79,8 @@ export type PlacementPropName = (typeof PLACEMENT_PROP_NAMES)[number];
 
 /**
  * Every exported component that takes placement props, by its compound name
- * (TagRoot is Tag; parts such as Input.Password are not listed). The spec
+ * (TagRoot is Tag). Attached parts are not listed, except the standalone
+ * inputs Input.Password and Input.Search, under their flat exports. The spec
  * generator fails the build when this list and the components' types
  * disagree, and placement-props.test.tsx fails when it renders fewer.
  */
@@ -88,7 +89,7 @@ export const PLACEMENT_ADOPTERS = [
   "Calendar", "Card", "Carousel", "CheckableTag", "Checkbox", "CheckboxCard", "CodeBlock",
   "Collapsible", "Combobox", "CopyButton", "DataList", "DatePicker", "Editable", "EmptyState",
   "Field", "FileUpload", "FloatingButton", "Heading", "Highlight", "Icon", "Image", "Input",
-  "Kbd", "Link", "Loader", "Marquee", "MultiSelect", "NativeSelect", "NumberInput",
+  "InputPassword", "InputSearch", "Kbd", "Link", "Loader", "Marquee", "MultiSelect", "NativeSelect", "NumberInput",
   "Pagination", "PinInput", "Progress", "QrCode", "Radio", "RadioCard", "RangeSlider", "Rating",
   "ScrollArea", "SegmentedControl", "Select", "Skeleton", "Slider", "Splitter", "Stat", "Steps",
   "Switch", "Table", "TableOfContents", "Tabs", "Tag", "Text", "ThemeToggle", "Timeline",

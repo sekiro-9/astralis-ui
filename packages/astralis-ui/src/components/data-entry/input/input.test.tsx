@@ -45,6 +45,27 @@ describe("Input.Password", () => {
   });
 });
 
+describe.each([
+  ["Input.Password", Input.Password],
+  ["Input.Search", Input.Search],
+])("%s placement", (_name, Component) => {
+  it("places the wrapper and leaves the input's own className and style on the input", () => {
+    const { container } = render(
+      <Component aria-label="x" w="40" position="absolute" className="custom" style={{ letterSpacing: "1px" }} />,
+    );
+    const wrapper = container.firstElementChild as HTMLElement;
+    const input = container.querySelector("input")!;
+
+    expect(wrapper).toHaveClass("astralis:absolute", "astralis-w");
+    expect(wrapper.style.getPropertyValue("--astralis-w")).toBe("var(--astralis-size-40)");
+    expect(input).not.toHaveClass("astralis-w");
+    expect(input).not.toHaveClass("astralis:absolute");
+    expect(input.style.getPropertyValue("--astralis-w")).toBe("");
+    expect(input).toHaveClass("custom");
+    expect(input.style.letterSpacing).toBe("1px");
+  });
+});
+
 describe("Input colorScheme", () => {
   it("scopes the accent channel only when a scheme is given", () => {
     const { rerender } = render(<Input aria-label="a" />);

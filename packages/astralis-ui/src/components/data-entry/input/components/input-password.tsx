@@ -4,26 +4,32 @@ import { useState, type Ref } from "react";
 import { InputBase } from "./input";
 import type { InputPasswordProps } from "../input.types";
 import { astralisMerge } from "../../../../utils/astralis-merge";
+import { splitPlacement } from "../../../../utils/placement";
 import { EyeIcon, EyeOffIcon } from "../../../icon/internal-icons";
 import { identify } from "../../../../utils/dev-identity";
 
 export const InputPassword = identify("Input.Password", function InputPassword({
   className = "",
+  style,
   disabled,
   ref,
   ...props
 }: InputPasswordProps & { ref?: Ref<HTMLInputElement> }) {
   const [visible, setVisible] = useState(false);
+  // Placement belongs on the wrapper: the toggle button is positioned against
+  // it, so moving or sizing only the inner input would leave the button behind.
+  const { placementClass, placementStyle, rest: inputProps } = splitPlacement(props);
 
   return (
-    <div className="astralis:relative astralis:flex astralis:items-center">
+    <div className={astralisMerge("astralis:relative astralis:flex astralis:items-center", placementClass)} style={placementStyle}>
       <div className="astralis:w-full">
         <InputBase
           ref={ref}
           type={visible ? "text" : "password"}
           disabled={disabled}
           className={astralisMerge("astralis:pr-10", className)}
-          {...props}
+          {...inputProps}
+          style={style}
         />
       </div>
       <button

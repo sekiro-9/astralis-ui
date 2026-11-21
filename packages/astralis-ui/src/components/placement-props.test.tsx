@@ -105,6 +105,8 @@ const ADOPTERS: Array<[string, (props: Record<string, unknown>) => React.ReactEl
   ["Link", (p) => <Link {...p} href="#">link</Link>],
   ["Alert", (p) => <Alert {...p}>alert</Alert>],
   ["Input", (p) => <Input {...p} />],
+  ["InputPassword", (p) => <Input.Password {...p} />],
+  ["InputSearch", (p) => <Input.Search {...p} />],
   ["Checkbox", (p) => <Checkbox {...p} />],
   ["Switch", (p) => <Switch {...p} />],
   ["Radio", (p) => <Radio {...p} value="a" />],
