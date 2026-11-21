@@ -454,6 +454,24 @@ test("recipe check rides the spec: Alert status typo caught, colorScheme vocabul
   assert.equal(scheme.errors[0].code, "invalid-recipe-value");
 });
 
+test('colorScheme="inherit" is a scheme everywhere colorScheme is, Box included; a bogus one is not', () => {
+  const ok = validate(`<Box colorScheme="red"><Button colorScheme="inherit">x</Button><Badge colorScheme="inherit">b</Badge></Box>`, "Box, Button, Badge");
+  assert.deepEqual(ok.errors, []);
+  const bad = validate(`<Box colorScheme="crimson">x</Box>`);
+  assert.equal(bad.errors[0].code, "invalid-recipe-value");
+});
+
+test('Text size="inherit" is a size, scalar or per breakpoint', () => {
+  const ok = validate(`<Text size="inherit">a<Text size={{ base: "lg", md: "inherit" }}>b</Text></Text>`);
+  assert.deepEqual(ok.errors, []);
+});
+
+test("Text states are checked: only props Text takes, with valid values", () => {
+  assert.deepEqual(validate(`<Text color="muted" hover={{ color: "base" }} focusVisible={{ color: "red" }}>t</Text>`).errors, []);
+  assert.equal(validate(`<Text hover={{ bg: "subtle" }}>t</Text>`).errors[0].code, "invalid-state-prop");
+  assert.equal(validate(`<Text hover={{ color: "nope" }}>t</Text>`).errors[0].code, "channel-value-invalid");
+});
+
 /* ---- container-query responsive keys ------------------------------------ */
 
 test("container keys (@sm..@xl) are legal responsive keys; typos still caught", () => {

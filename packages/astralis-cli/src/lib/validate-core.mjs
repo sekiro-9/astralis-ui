@@ -267,7 +267,8 @@ function checkPropValue(ctx, comp, prop, propSpec, valueNode, attr) {
   }
 }
 
-function checkStateValue(ctx, comp, state, valueNode) {
+/** `takes`, when given, narrows the payload to the component's own base props. */
+function checkStateValue(ctx, comp, state, valueNode, takes) {
   if (valueNode?.type !== "JSXExpressionContainer" || valueNode.expression.type !== "ObjectExpression") return;
   for (const p of valueNode.expression.properties) {
     if (p.type !== "ObjectProperty" || p.computed) continue;
@@ -276,6 +277,11 @@ function checkStateValue(ctx, comp, state, valueNode) {
     if (!payloadSpec) {
       ctx.error("invalid-state-prop", p,
         `${comp}: "${key}" cannot appear in ${state} — states carry channel props only (spacing, sizing, gap, paint, …)`);
+      continue;
+    }
+    if (takes && !takes[key]) {
+      ctx.error("invalid-state-prop", p,
+        `${comp}: "${key}" cannot appear in ${state} — ${comp} has no ${key} prop, and a state carries only the props it takes`);
       continue;
     }
     const v = literalOf(p.value);
@@ -373,8 +379,10 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
   const overridden = comp.overrides?.includes(prop);
   if (overridden && !comp.props?.[prop]) return;
   if (!overridden && ctx.stateProps.has(prop)) {
-    // Only Box-composing primitives resolve states; elsewhere no claim.
+    // Box-composing primitives resolve every stateable prop; Text, Heading and
+    // Link only those they take as base props. Elsewhere no claim.
     if (comp.groups.includes("box")) checkStateValue(ctx, name, prop, attr.value);
+    else if (comp.groups.includes("text")) checkStateValue(ctx, name, prop, attr.value, allowed);
     return;
   }
   if (!overridden && allowed[prop]) {
