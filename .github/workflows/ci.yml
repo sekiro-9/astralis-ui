@@ -24,12 +24,47 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # Library build includes the CSS coverage gate — every emitted class
-      # must exist in the compiled stylesheet or this step fails.
+      # must exist in the compiled stylesheet or this step fails. Every step
+      # below reads its dist/ (the docs, the blocks and the validator's spec).
       - name: Build library (with CSS coverage gate)
         run: pnpm --filter astralis-ui build
 
-      - name: Unit & behavior tests
+      - name: Library unit & behavior tests
         run: pnpm --filter astralis-ui test
 
+      - name: CLI tests
+        run: pnpm --filter astralis-cli test
+
+      - name: DevTools tests
+        run: pnpm --filter astralis-devtools test
+
+      - name: MCP server tests
+        run: pnpm --filter astralis-mcp test
+
+      - name: create-astralis tests
+        run: pnpm --filter create-astralis test
+
+      # Type check, registry drift check and a server render of every block.
+      - name: Blocks tests
+        run: pnpm --filter astralis-blocks test
+
+      - name: Validate the blocks against the design system
+        run: node packages/astralis-cli/src/index.mjs validate packages/astralis-blocks/src --spec packages/astralis-ui/dist/system-spec.json
+
+      # Before the docs tests and type check: the build generates the block
+      # registry, the thumbnails and the search index they read.
       - name: Build docs site
         run: pnpm --filter astralis-docs build
+
+      - name: Docs type check
+        run: pnpm --filter astralis-docs exec tsc --noEmit
+
+      - name: Docs lint
+        run: pnpm --filter astralis-docs exec eslint src
+
+      - name: Docs tests
+        run: pnpm --filter astralis-docs test
+
+      - name: Validate the docs against the design system
+        working-directory: packages/astralis-docs
+        run: node ../astralis-cli/src/index.mjs validate src
