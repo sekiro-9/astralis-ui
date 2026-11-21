@@ -13,6 +13,7 @@ import { splitPlacement } from "../../../../utils/placement";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { useControllableState } from "../../../../hooks/use-controllable-state";
 import { accentClass } from "../../../../const/color-schemes";
+import { usePortalScheme } from "../../../../hooks/use-portal-scheme";
 import { ChevronDownIcon, XIcon, SearchIcon, SpinnerIcon } from "../../../icon/internal-icons";
 import type { SelectOptionItem, SelectProps } from "../select.types";
 import { identify } from "../../../../utils/dev-identity";
@@ -86,6 +87,7 @@ export const SelectBase = identify("Select", forwardRef<HTMLButtonElement, Selec
     useImperativeHandle(ref, () => triggerRef.current!, []);
 
     const pos = useMenuPosition(isOpen, triggerRef, dropdownRef);
+    const listScheme = usePortalScheme(colorScheme, triggerRef, isOpen);
 
     const openMenu = () => {
       // Open on the current selection, so the active option starts where the value is.
@@ -285,7 +287,7 @@ export const SelectBase = identify("Select", forwardRef<HTMLButtonElement, Selec
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
                 "astralis astralis:bg-surface-raised astralis:border-normal astralis:border-stroke-base astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
-                accentClass(colorScheme),
+                accentClass(listScheme),
               )}
             >
               {searchable && (

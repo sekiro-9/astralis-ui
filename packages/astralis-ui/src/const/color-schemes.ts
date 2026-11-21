@@ -11,7 +11,17 @@ export const COLOR_SCHEMES = [
   "error", "warning", "success", "info",
 ] as const;
 
-export type ColorScheme = (typeof COLOR_SCHEMES)[number];
+/** One of the 15 palettes in `COLOR_SCHEMES`. */
+export type ColorSchemeHue = (typeof COLOR_SCHEMES)[number];
 
-/** The accent-channel scope class for a hue, e.g. `accentClass("red") === "astralis-accent-red"`. */
-export const accentClass = (scheme: ColorScheme): string => `astralis-accent-${scheme}`;
+/**
+ * What a `colorScheme` prop takes: a hue, or `"inherit"`, which applies no
+ * scheme of its own and paints with the one in scope (an ancestor's
+ * `accentClass`, or brand when there is none).
+ */
+export type ColorScheme = ColorSchemeHue | "inherit";
+
+/** The accent-channel scope class for a hue, e.g. `accentClass("red") === "astralis-accent-red"`;
+ *  `accentClass("inherit")` is no class at all. */
+export const accentClass = (scheme: ColorScheme): string =>
+  scheme === "inherit" ? "" : `astralis-accent-${scheme}`;

@@ -13,6 +13,7 @@ import { filterOptions, flattenOptions, isGroup, optionId, optionSearchText } fr
 import { OptionRow } from "../../shared/option-row";
 import { consumeEscape, usePickerLayer } from "../../shared/use-picker-layer";
 import { accentClass } from "../../../../const/color-schemes";
+import { usePortalScheme } from "../../../../hooks/use-portal-scheme";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../../icon/internal-icons";
 import type { MultiSelectOptionItem, MultiSelectProps, MultiSelectSize } from "../multi-select.types";
 import { identify } from "../../../../utils/dev-identity";
@@ -127,6 +128,7 @@ export const MultiSelectBase = identify("MultiSelect", forwardRef<HTMLDivElement
     const dropdownRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
     useImperativeHandle(ref, () => containerRef.current!, []);
+    const listScheme = usePortalScheme(colorScheme, containerRef, isOpen);
 
     const pos = useMenuPosition(isOpen, containerRef, dropdownRef);
 
@@ -325,7 +327,7 @@ export const MultiSelectBase = identify("MultiSelect", forwardRef<HTMLDivElement
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
                 "astralis astralis:bg-surface-raised astralis:border-normal astralis:border-stroke-base astralis:rounded-xl astralis:shadow-lg astralis:overflow-hidden",
-                accentClass(colorScheme),
+                accentClass(listScheme),
               )}
             >
               {isMaxReached && (

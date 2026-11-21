@@ -1,8 +1,10 @@
 "use client";
 
-import type { Ref } from "react";
+import { useRef, type Ref } from "react";
 import { splitPlacement } from "../../../utils/placement";
 import { useControllableState } from "../../../hooks/use-controllable-state";
+import { usePortalScheme } from "../../../hooks/use-portal-scheme";
+import { useMergedRefs } from "../../../utils/merge-refs";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { accentClass } from "../../../const/color-schemes";
 import { identify, IDENTITY_ATTRIBUTE, PROPS_ATTRIBUTE } from "../../../utils/dev-identity";
@@ -70,6 +72,9 @@ export const DatePicker = identify("DatePicker", function DatePicker({
 
   const [value, setValue] = useControllableState<DatePickerValue>({ value: valueProp, defaultValue, onChange: onValueChange });
   const [open, setOpen] = useControllableState<boolean>({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const mergedRef = useMergedRefs(ref, triggerRef);
+  const popoverScheme = usePortalScheme(colorScheme, triggerRef, open);
 
   const text = formatValue(value, locale, formatOptions);
   const picked = isRange(value) ? value.start : value;
@@ -87,7 +92,7 @@ export const DatePicker = identify("DatePicker", function DatePicker({
       <Popover.Trigger {...{ [IDENTITY_ATTRIBUTE]: identity, [PROPS_ATTRIBUTE]: identityProps }}>
         <button
           type="button"
-          ref={ref}
+          ref={mergedRef}
           id={id}
           disabled={isDisabled}
           aria-invalid={isInvalid || undefined}
@@ -108,7 +113,7 @@ export const DatePicker = identify("DatePicker", function DatePicker({
       </Popover.Trigger>
       <Popover.Content
         aria-label={selectionMode === "range" ? "Choose a date range" : "Choose a date"}
-        className={astralisMerge("astralis:max-w-none astralis:p-3", colorScheme && accentClass(colorScheme))}
+        className={astralisMerge("astralis:max-w-none astralis:p-3", popoverScheme && accentClass(popoverScheme))}
       >
         <Calendar
           selectionMode={selectionMode}
@@ -120,7 +125,7 @@ export const DatePicker = identify("DatePicker", function DatePicker({
           minDate={minDate}
           maxDate={maxDate}
           isDateUnavailable={isDateUnavailable}
-          colorScheme={colorScheme}
+          colorScheme={popoverScheme}
           size="sm"
           // The popover is the surface; a second bordered box inside it reads as a frame within a frame.
           className="astralis:border-transparent astralis:bg-transparent astralis:p-0"

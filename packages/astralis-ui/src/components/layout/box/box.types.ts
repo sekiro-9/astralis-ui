@@ -6,6 +6,7 @@ import type { StateProps } from "../../../utils/interaction-state";
 import type { WidenChannelProps } from "../../../const/channel";
 import type { AliasesOf } from "../../../const/prop-aliases";
 import type { PolymorphicRef } from "../../../types";
+import type { ColorScheme } from "../../../const/color-schemes";
 
 interface BoxCustomProps<T extends ElementType = "div"> {
   as?: T;
@@ -18,6 +19,12 @@ interface BoxCustomProps<T extends ElementType = "div"> {
    * against. Without a `container` ancestor, `@`-keyed values are inert.
    */
   container?: boolean;
+  /**
+   * Sets the accent hue for everything inside: a component given
+   * `colorScheme="inherit"`, and any part that paints with the accent and sets
+   * no scheme of its own, takes this one. Paints nothing on the element itself.
+   */
+  colorScheme?: ColorScheme;
 }
 
 /** Every Box style prop accepts a scalar token or a responsive map. Channel

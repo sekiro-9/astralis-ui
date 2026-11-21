@@ -13,6 +13,7 @@ import { consumeEscape, usePickerLayer } from "../shared/use-picker-layer";
 import { astralisMerge } from "../../../utils/astralis-merge";
 import { useControllableState } from "../../../hooks/use-controllable-state";
 import { accentClass } from "../../../const/color-schemes";
+import { usePortalScheme } from "../../../hooks/use-portal-scheme";
 import { ChevronDownIcon, XIcon, SpinnerIcon } from "../../icon/internal-icons";
 import type { ComboboxOptionItem, ComboboxProps } from "./combobox.types";
 import { identify } from "../../../utils/dev-identity";
@@ -97,6 +98,7 @@ export const Combobox = identify("Combobox", forwardRef<HTMLInputElement, Combob
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => inputRef.current!, []);
+    const listScheme = usePortalScheme(colorScheme, inputRef, isOpen);
 
     const pos = useMenuPosition(isOpen, inputRef, dropdownRef);
 
@@ -265,7 +267,7 @@ export const Combobox = identify("Combobox", forwardRef<HTMLInputElement, Combob
               style={{ position: "fixed", top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
               className={astralisMerge(
                 "astralis",
-                accentClass(colorScheme),
+                accentClass(listScheme),
                 "astralis:max-h-64 astralis:overflow-auto astralis:rounded-xl astralis:border-normal astralis:border-stroke-base astralis:bg-surface-raised astralis:shadow-lg astralis:p-1",
               )}
             >

@@ -29,6 +29,7 @@
 
 import { isStateProp, resolveStateStyles } from "./interaction-state";
 import { normalizeAliases } from "../const/prop-aliases";
+import { accentClass, type ColorScheme } from "../const/color-schemes";
 import {
   CHANNEL_PROPS,
   CONTAINER_BREAKPOINT_WIDTHS,
@@ -158,6 +159,13 @@ export function resolveStyleProps(
     // every Box-composing primitive gets it and none leaks it onto the DOM.
     if (key === "container") {
       if (value) classes.push("astralis-container");
+      continue;
+    }
+
+    // The accent scope for a section, so a Box-composing primitive can theme
+    // its subtree without a class. A scope class, not a style: not responsive.
+    if (key === "colorScheme") {
+      if (typeof value === "string") classes.push(accentClass(value as ColorScheme));
       continue;
     }
 
