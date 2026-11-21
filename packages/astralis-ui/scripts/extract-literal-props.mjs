@@ -15,8 +15,9 @@
      apart (`responsive`), since they are the style groups' props unless the
      spec finds them outside every group the component has
    - `size?: never` (Container)                   → no union, disqualified
-   so exactly the closed recipe vocabularies fall out, with DOM enumerations
-   (button `type`, `inputMode`) as a harmless, correct bonus.
+   - attributes inherited from React's DOM and SVG types (a button's `type`,
+     an svg's `strokeLinecap`)                    → the element's, skipped
+   so exactly the closed recipe vocabularies fall out.
 
    Derivation, not invention: the .d.ts ships to consumers, so the spec can
    never promise a value the types would reject.
@@ -45,8 +46,7 @@ const DOM_ENUM_PROPS = new Set([
   "fetchPriority",
   "referrerPolicy",
   "wrap",
-  // NOT "type": Stat.Indicator's type="increase|decrease" is system
-  // vocabulary; button's submit/reset riding along is correct anyway.
+  // NOT "type": Stat.Indicator's type="increase|decrease" is system vocabulary.
   "target",
   "method",
   "autoComplete",
@@ -81,6 +81,11 @@ const GENERIC_PROPS = new Set(["className", "style", "id", "children"]);
  * same name. `needsChildren` names the components whose children are not
  * optional; `exports` is every name the entry point exports, values and types.
  *
+ * `inherited` is every prop the component takes only because its type extends
+ * React's DOM or SVG attributes (Textarea's `rows`, Icon's `opacity`, the HTML
+ * `color`); `domAttributes` is the same less that `color`, which paints
+ * nothing on the elements the library renders.
+ *
  * For the prop documentation: `ownProps`, the props the library itself
  * declares (not React's DOM attributes), and `docs`, their JSDoc; `partDocs`
  * and `partOwnProps` are the same read through the owner for each attached
@@ -101,6 +106,8 @@ const GENERIC_PROPS = new Set(["className", "style", "id", "children"]);
  *   docs: Map<string, Record<string, { description?: string, default?: string, deprecated?: string, declaredIn?: string }>>,
  *   partOwnProps: Map<string, Record<string, string[]>>,
  *   partDocs: Map<string, Record<string, Record<string, { description?: string, default?: string, deprecated?: string, declaredIn?: string }>>>,
+ *   inherited: Map<string, Set<string>>,
+ *   domAttributes: Map<string, Set<string>>,
  *   exports: string[],
  * }}
  */
@@ -127,8 +134,13 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   const docs = new Map();
   const partOwnProps = new Map();
   const partDocs = new Map();
+  const inheritedProps = new Map();
+  const domAttributes = new Map();
 
   const declaredHere = (propSymbol) => propSymbol.declarations?.some((d) => d.getSourceFile() === source) === true;
+  // A prop with no declaration at all comes from one of the library's mapped
+  // types (the long-spelling aliases, the state props), so it is the library's.
+  const isInheritedAttribute = (propSymbol) => (propSymbol.declarations?.length ?? 0) > 0 && !declaredHere(propSymbol);
   /** The library's own props of one props type, and the JSDoc of each. */
   const documentation = (paramType) => {
     const names = [];
@@ -170,15 +182,22 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     const needed = {};
     const own = [];
     propNames.set(name, new Set(paramType.getProperties().map((p) => p.getName())));
+    const fromReact = new Set();
+    const dom = new Set();
     for (const propSymbol of paramType.getProperties()) {
       const propName = propSymbol.getName();
+      const inherited = isInheritedAttribute(propSymbol);
+      if (inherited) fromReact.add(propName);
+      if (inherited && !isInertAttribute(propSymbol)) dom.add(propName);
       if (isRedefinedHere(propSymbol, name)) own.push(propName);
       if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName === "children") needsChildren.add(name);
       if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName !== "children") {
         needed[propName] = kindOf(checker.getTypeOfSymbolAtLocation(propSymbol, source));
       }
-      // aria-* / data-* / event handlers: other tiers own these.
-      if (propName.startsWith("aria-") || propName.startsWith("data-") || /^on[A-Z]/.test(propName)) continue;
+      // aria-* / data-* / event handlers: other tiers own these. Attributes
+      // inherited from React's DOM and SVG types (an svg's `accumulate`, a
+      // button's `type`) are the element's, not the component's vocabulary.
+      if (propName.startsWith("aria-") || propName.startsWith("data-") || /^on[A-Z]/.test(propName) || inherited) continue;
       const propType = checker.getTypeOfSymbolAtLocation(propSymbol, source);
       const values = literalUnionValues(propType);
       if (values) {
@@ -202,6 +221,8 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     if (Object.keys(scalars).length) scalar.set(name, scalars);
     if (Object.keys(needed).length) required.set(name, needed);
     if (own.length) redefined.set(name, own);
+    inheritedProps.set(name, fromReact);
+    domAttributes.set(name, dom);
 
     const { names, found } = documentation(paramType);
     ownProps.set(name, names);
@@ -224,8 +245,19 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   const exports = moduleExports.map((s) => s.getName()).sort();
   return {
     literal: result, responsive, scalar, required, propNames, redefined, needsChildren,
-    ownProps, docs, partOwnProps, partDocs, exports,
+    ownProps, docs, partOwnProps, partDocs, inherited: inheritedProps, domAttributes, exports,
   };
+}
+
+/**
+ * React types `color` on every HTML element for the legacy `<font color>`
+ * attribute; on the elements the library renders it paints nothing. (An svg's
+ * `color` presentation attribute does paint, so only the HTMLAttributes one.)
+ */
+function isInertAttribute(propSymbol) {
+  const declarations = propSymbol.declarations ?? [];
+  return propSymbol.getName() === "color" && declarations.length > 0 &&
+    declarations.every((d) => ts.isInterfaceDeclaration(d.parent) && d.parent.name.text === "HTMLAttributes");
 }
 
 /** Plumbing every component has; documenting it on each would be noise. */

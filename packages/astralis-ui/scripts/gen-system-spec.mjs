@@ -251,6 +251,8 @@ const {
   docs: propJsDocs,
   partOwnProps,
   partDocs: partJsDocs,
+  inherited: inheritedProps,
+  domAttributes,
   exports: entryExports,
 } = extractComponentTypes(join(PKG, "dist", "index.d.ts"), {
   responsiveKeys: new Set(["base", ...Object.keys(breakpoints), ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)]),
@@ -383,8 +385,16 @@ const components = Object.fromEntries(
     // Style-prop names the component's own type declares outside its groups
     // (Image's aspectRatio, Marquee's gap): with this list the validator can
     // tell a style prop the component ignores from one it takes as its own.
-    // Present, possibly empty, whenever the type was read.
-    if (accepted) entry.ownStyleProps = [...accepted].filter((prop) => allStyleProps.has(prop) && !groupProps.has(prop)).sort();
+    // Present, possibly empty, whenever the type was read. A name the type
+    // takes only as an attribute of the element (Textarea's rows, Table.Cell's
+    // colSpan, Icon's svg opacity) is not the component's own: it is listed
+    // apart, so the validator still knows it is no stray.
+    if (accepted) {
+      const outside = [...accepted].filter((prop) => allStyleProps.has(prop) && !groupProps.has(prop)).sort();
+      entry.ownStyleProps = outside.filter((prop) => !inheritedProps.get(name)?.has(prop));
+      const domStyleProps = outside.filter((prop) => domAttributes.get(name)?.has(prop));
+      if (domStyleProps.length) entry.domStyleProps = domStyleProps;
+    }
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what
     // actually exists at runtime. Some compounds also have flat exports
