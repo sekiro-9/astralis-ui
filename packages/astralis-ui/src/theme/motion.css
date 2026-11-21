@@ -12,6 +12,9 @@
       element's own style, so with the animation absent (reduced motion, or a
       browser without scroll timelines) the content is simply there.
 
+   The start is scaled by `--astralis-motion-distance` (animationDistance),
+   1 when unset, so the base values are the `md` ones.
+
    `animate-*` plays once when the element is rendered. `reveal-*` plays as
    the element scrolls into view, on a view timeline; browsers without
    `animation-timeline` skip the whole block and show the content.
@@ -28,32 +31,32 @@
 }
 
 @keyframes astralis-fade-up {
-  from { opacity: 0; transform: translateY(1rem); }
+  from { opacity: 0; transform: translateY(calc(1rem * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-fade-down {
-  from { opacity: 0; transform: translateY(-1rem); }
+  from { opacity: 0; transform: translateY(calc(-1rem * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-slide-left {
-  from { opacity: 0; transform: translateX(2rem); }
+  from { opacity: 0; transform: translateX(calc(2rem * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-slide-right {
-  from { opacity: 0; transform: translateX(-2rem); }
+  from { opacity: 0; transform: translateX(calc(-2rem * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-scale-in {
-  from { opacity: 0; transform: scale(0.92); }
+  from { opacity: 0; transform: scale(calc(1 - 0.08 * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-pop {
-  0% { opacity: 0; transform: scale(0.8); }
-  60% { opacity: 1; transform: scale(1.04); }
+  0% { opacity: 0; transform: scale(calc(1 - 0.2 * var(--astralis-motion-distance, 1))); }
+  60% { opacity: 1; transform: scale(calc(1 + 0.04 * var(--astralis-motion-distance, 1))); }
 }
 
 @keyframes astralis-blur-in {
-  from { opacity: 0; filter: blur(8px); }
+  from { opacity: 0; filter: blur(calc(8px * var(--astralis-motion-distance, 1))); }
 }
 
 /* ---- animation: plays once on render ----------------------------------- */
@@ -113,7 +116,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-fade-in linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -123,7 +126,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-fade-up linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -133,7 +136,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-fade-down linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -143,7 +146,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-slide-left linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -153,7 +156,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-slide-right linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -163,7 +166,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-scale-in linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -173,7 +176,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-pop linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -183,7 +186,7 @@
     @supports (animation-timeline: view()) {
       animation: astralis-blur-in linear both;
       animation-timeline: var(--astralis-reveal-source, view());
-      animation-range: entry 0% cover 30%;
+      animation-range: entry 0% cover var(--astralis-reveal-length, 30%);
     }
   }
 }
@@ -195,18 +198,23 @@
   }
 }
 
-/* ---- animationDuration and animationDelay ------------------------------- */
+/* ---- animationDuration, animationDelay and animationDistance ------------
+   A reveal has no time of its own, so duration sets how much of the
+   element's pass through the screen it spans instead. */
 
 @utility motion-duration-fast {
   --astralis-motion-duration: 200ms;
+  --astralis-reveal-length: 15%;
 }
 
 @utility motion-duration-normal {
   --astralis-motion-duration: 400ms;
+  --astralis-reveal-length: 30%;
 }
 
 @utility motion-duration-slow {
   --astralis-motion-duration: 700ms;
+  --astralis-reveal-length: 50%;
 }
 
 @utility motion-delay-75 {
@@ -239,4 +247,20 @@
 
 @utility motion-delay-1000 {
   --astralis-motion-delay: 1000ms;
+}
+
+@utility motion-distance-sm {
+  --astralis-motion-distance: 0.5;
+}
+
+@utility motion-distance-md {
+  --astralis-motion-distance: 1;
+}
+
+@utility motion-distance-lg {
+  --astralis-motion-distance: 2;
+}
+
+@utility motion-distance-xl {
+  --astralis-motion-distance: 3;
 }

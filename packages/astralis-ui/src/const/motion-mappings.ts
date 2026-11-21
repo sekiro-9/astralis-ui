@@ -28,7 +28,10 @@ export const revealTypes = {
   "blur-in": "astralis:reveal-blur-in",
 } as const;
 
-/** `animationDuration`: how long an `animation` takes. */
+/** `animationDuration`: how long an `animation` takes. On a `reveal` it sets
+ *  how much of the element's pass through the screen the reveal spans
+ *  (15%, 30%, 50%).
+ *  @default "normal" */
 export const animationDurationTypes = {
   fast: "astralis:motion-duration-fast",
   normal: "astralis:motion-duration-normal",
@@ -46,4 +49,16 @@ export const animationDelayTypes = {
   "500": "astralis:motion-delay-500",
   "700": "astralis:motion-delay-700",
   "1000": "astralis:motion-delay-1000",
+} as const;
+
+/** `animationDistance`: how far an `animation` or `reveal` travels. `md` is
+ *  the base (`fade-up` 1rem, `slide-*` 2rem, `scale-in` from 0.92, `pop` from
+ *  0.8, `blur-in` from 8px); `sm` halves it, `lg` doubles it, `xl` triples
+ *  it. `fade-in` only changes opacity, so it has no distance.
+ *  @default "md" */
+export const animationDistanceTypes = {
+  sm: "astralis:motion-distance-sm",
+  md: "astralis:motion-distance-md",
+  lg: "astralis:motion-distance-lg",
+  xl: "astralis:motion-distance-xl",
 } as const;

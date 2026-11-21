@@ -80,7 +80,8 @@ import {
   animationTypes,
   revealTypes,
   animationDurationTypes,
-  animationDelayTypes
+  animationDelayTypes,
+  animationDistanceTypes
 } from "../../../const/motion-mappings";
 
 /**
@@ -167,6 +168,7 @@ export const boxVariantMap = {
     reveal: revealTypes,
     animationDuration: animationDurationTypes,
     animationDelay: animationDelayTypes,
+    animationDistance: animationDistanceTypes,
 } as const;
 
 export const boxVariants = cva("", {

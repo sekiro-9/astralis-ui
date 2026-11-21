@@ -26,6 +26,7 @@ import { BoxAs } from "./box/box-as";
 import { AnimationEntrance } from "./animations/animation-entrance";
 import { AnimationReveal } from "./animations/animation-reveal";
 import { AnimationStagger } from "./animations/animation-stagger";
+import { AnimationDistance } from "./animations/animation-distance";
 import { FlexDemo } from "./flex/flex-demo";
 import { FlexAlign } from "./flex/flex-align";
 import { FlexItem } from "./flex/flex-item";
@@ -251,6 +252,7 @@ export const demos = {
   "animation-entrance": { component: AnimationEntrance, file: "animations/animation-entrance.tsx" },
   "animation-reveal": { component: AnimationReveal, file: "animations/animation-reveal.tsx" },
   "animation-stagger": { component: AnimationStagger, file: "animations/animation-stagger.tsx" },
+  "animation-distance": { component: AnimationDistance, file: "animations/animation-distance.tsx" },
   "flex-demo": { component: FlexDemo, file: "flex/flex-demo.tsx" },
   "flex-align": { component: FlexAlign, file: "flex/flex-align.tsx" },
   "flex-item": { component: FlexItem, file: "flex/flex-item.tsx" },

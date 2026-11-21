@@ -10,7 +10,13 @@ import { Heading } from "./typography/heading";
 import { Carousel } from "./disclosure/carousel";
 import { ScrollArea } from "./layout/scroll-area";
 import { Table } from "./data-display/table";
-import { animationTypes, revealTypes, animationDurationTypes, animationDelayTypes } from "../const/motion-mappings";
+import {
+  animationTypes,
+  revealTypes,
+  animationDurationTypes,
+  animationDelayTypes,
+  animationDistanceTypes,
+} from "../const/motion-mappings";
 
 const rootOf = (ui: React.ReactElement) => render(ui).container.firstElementChild as HTMLElement;
 
@@ -39,13 +45,22 @@ describe("motion props", () => {
     expect(el.className).toContain(animationDelayTypes["200"]);
   });
 
+  it("animationDistance sets its class, on Box and on recipe components", () => {
+    for (const [name, cls] of Object.entries(animationDistanceTypes)) {
+      const el = rootOf(<Box reveal="fade-up" animationDistance={name as keyof typeof animationDistanceTypes}>x</Box>);
+      expect(el.className, name).toContain(cls);
+    }
+    expect(rootOf(<Heading animation="fade-up" animationDistance="xl">x</Heading>).className).toContain(animationDistanceTypes.xl);
+    expect(rootOf(<Card reveal="slide-left" animationDistance="lg">x</Card>).className).toContain(animationDistanceTypes.lg);
+  });
+
   it("the props never reach the DOM as attributes", () => {
     const el = rootOf(
-      <Box animation="pop" reveal="fade-in" animationDuration="fast" animationDelay="100">
+      <Box animation="pop" reveal="fade-in" animationDuration="fast" animationDelay="100" animationDistance="lg">
         x
       </Box>,
     );
-    for (const attr of ["animation", "reveal", "animationduration", "animationdelay"]) {
+    for (const attr of ["animation", "reveal", "animationduration", "animationdelay", "animationdistance"]) {
       expect(el.hasAttribute(attr), attr).toBe(false);
     }
   });
@@ -136,8 +151,33 @@ describe("motion stylesheet", () => {
     expect(css).toMatch(/@utility motion-reveal-scope \{[^}]*view-timeline: --astralis-reveal-scope block;\s*--astralis-reveal-source: --astralis-reveal-scope;/s);
   });
 
+  it("scales every moving keyframe by the distance, with the md values as the base", () => {
+    const frames = Object.fromEntries(
+      [...css.matchAll(/@keyframes (astralis-[a-z-]+) \{(.*?)\n\}/gs)].map((m) => [m[1], m[2]]),
+    );
+    expect(frames["astralis-fade-up"]).toContain("translateY(calc(1rem * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-fade-down"]).toContain("translateY(calc(-1rem * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-slide-left"]).toContain("translateX(calc(2rem * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-slide-right"]).toContain("translateX(calc(-2rem * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-scale-in"]).toContain("scale(calc(1 - 0.08 * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-pop"]).toContain("scale(calc(1 - 0.2 * var(--astralis-motion-distance, 1)))");
+    expect(frames["astralis-blur-in"]).toContain("blur(calc(8px * var(--astralis-motion-distance, 1)))");
+    const multipliers = { sm: "0.5", md: "1", lg: "2", xl: "3" };
+    for (const [name, value] of Object.entries(multipliers)) {
+      expect(css).toMatch(new RegExp(`@utility motion-distance-${name} \\{\\s*--astralis-motion-distance: ${value};\\s*\\}`));
+    }
+  });
+
+  it("animationDuration sets how much of the pass a reveal spans", () => {
+    const reveals = css.split("@utility ").slice(1).filter((block) => block.startsWith("reveal-"));
+    for (const block of reveals) expect(block).toContain("var(--astralis-reveal-length, 30%)");
+    for (const [name, length] of [["fast", "15%"], ["normal", "30%"], ["slow", "50%"]]) {
+      expect(css).toMatch(new RegExp(`@utility motion-duration-${name} \\{[^}]*--astralis-reveal-length: ${length};`));
+    }
+  });
+
   it("has a class for every name the props accept", () => {
-    const classes = [animationTypes, revealTypes, animationDurationTypes, animationDelayTypes].flatMap((map) => Object.values(map));
+    const classes = [animationTypes, revealTypes, animationDurationTypes, animationDelayTypes, animationDistanceTypes].flatMap((map) => Object.values(map));
     for (const cls of classes) expect(css, cls).toContain(`@utility ${cls.replace("astralis:", "")} {`);
   });
 });

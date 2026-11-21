@@ -41,6 +41,12 @@ export const placementProps: PropRow[] = [
   {
     prop: "animationDuration · animationDelay",
     type: `"fast" | "normal" | "slow" · "75" – "1000" (milliseconds)`,
-    description: "How long an animation takes, and how long it waits before starting, for staggering siblings.",
+    description:
+      "How long an animation takes, and how long it waits before starting, for staggering siblings. On a reveal, how much of the scroll it spans.",
+  },
+  {
+    prop: "animationDistance",
+    type: `"sm" | "md" | "lg" | "xl"`,
+    description: "How far an animation or reveal travels: md is the default, sm half, lg twice, xl three times.",
   },
 ];

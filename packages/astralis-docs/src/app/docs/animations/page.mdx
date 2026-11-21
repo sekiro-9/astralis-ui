@@ -76,12 +76,36 @@ is how you stagger siblings:
 
 <ComponentPreview name="animation-stagger" />
 
-Both apply to `animation`. A `reveal` is tied to the scroll position, so it
-has no duration of its own.
+A `reveal` is tied to the scroll position, so it has no time of its own:
+there `animationDuration` sets how much of the element's pass up the screen
+the reveal takes. By default it is done once the element is 30% of the way
+through; `fast` makes that 15% and `slow` 50%.
+
+## Strength
+
+`animationDistance` sets how far an `animation` or `reveal` travels: `sm`,
+`md` (the default), `lg` or `xl`. Use `lg` or `xl` on large headings and
+full-width sections, where the default move is too small to notice.
+
+```tsx
+<Heading reveal="fade-up" animationDistance="xl">Built for the server</Heading>
+```
+
+<ComponentPreview name="animation-distance" />
+
+| Name | `md` (default) | `sm` | `lg` | `xl` |
+| --- | --- | --- | --- | --- |
+| `fade-up` · `fade-down` | 1rem | 0.5rem | 2rem | 3rem |
+| `slide-left` · `slide-right` | 2rem | 1rem | 4rem | 6rem |
+| `scale-in` | from 0.92 | 0.96 | 0.84 | 0.76 |
+| `pop` | from 0.8 | 0.9 | 0.6 | 0.4 |
+| `blur-in` | from 8px blur | 4px | 16px | 24px |
+
+`fade-in` only changes opacity, so it has no distance.
 
 ## Every component takes them
 
-The four props are placement props, so they work on Box and on every
+The motion props are placement props, so they work on Box and on every
 component with its own recipe (Card, Button, Text, Heading, Badge and the
 rest), and they accept [responsive maps](/docs/responsive):
 
