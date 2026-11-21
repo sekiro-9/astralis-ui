@@ -71,6 +71,15 @@ html {
   scroll-padding-top: 5.5rem;
 }
 
+/* Below lg the Theme Builder's preview sticks under the header (canvas.tsx,
+   45vh tall). Padding the scroller by its height keeps a control reached by
+   keyboard from sitting underneath it. */
+@media (width < 64rem) {
+  html:has([data-theme-builder]) {
+    scroll-padding-top: calc(45vh + 4.5rem);
+  }
+}
+
 body {
   background-color: var(--astralis-color-surface-base);
   color: var(--astralis-color-label-base);

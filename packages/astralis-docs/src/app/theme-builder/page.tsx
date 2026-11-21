@@ -25,7 +25,9 @@ export default async function ThemesPage({
   const initialSeed = typeof shared === "string" ? decodeSeed(shared) : {};
 
   return (
-    <Stack as="main" h="calc(100vh - 3.5rem)" minH="0" p={{ base: "4", lg: "5" }} overflow={{ lg: "hidden" }}>
+    // A fixed viewport height from lg up only: below it the page scrolls as a
+    // whole, since the three panels stack and cannot share one screen.
+    <Stack as="main" h={{ lg: "calc(100vh - 3.5rem)" }} minH="0" p={{ base: "4", lg: "5" }} overflow={{ lg: "hidden" }}>
       <ThemeBuilder initialSeed={initialSeed} />
     </Stack>
   );

@@ -135,7 +135,9 @@ function BuilderEditor({ initialSeed }: { initialSeed: ThemeSeed }) {
     // rows="1" (one minmax(0,1fr) track) pins the row to the container height:
     // without it the row grows with the rail's content and its scroll never engages.
     // The uneven column tracks stay classes: `columns` counts equal columns only.
+    // Below lg the three stack, preview first (see canvas.tsx and globals.css).
     <Grid
+      data-theme-builder
       minH="0"
       flex="1"
       gap="4"

@@ -49,14 +49,21 @@ export function Canvas({ vars }: { vars: Record<string, string> }) {
   };
 
   return (
+    // Below lg the panels stack: the preview goes first and sticks under the
+    // header, so the controls scroll beneath it and every change stays in view.
+    // The background is opaque there because the controls pass behind it.
     <Box
-      position="relative"
+      position={{ base: "sticky", lg: "relative" }}
+      top={{ base: "3.5rem", lg: "auto" }}
+      zIndex="lower"
+      order={{ base: "first", lg: "none" }}
       minH="0"
       overflow="hidden"
       rounded="2xl"
       border="normal"
       borderColor="base"
-      h={{ base: "70vh", lg: "auto" }}
+      bg={{ base: "base", lg: "transparent" }}
+      h={{ base: "45vh", lg: "auto" }}
       className="preview-grid"
     >
       {/* No prop hides a scrollbar, so those two stay classes. */}

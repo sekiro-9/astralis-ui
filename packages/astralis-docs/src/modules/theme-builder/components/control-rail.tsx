@@ -49,9 +49,8 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
       as="aside"
       gap="2"
       minH="0"
-      overflowY="auto"
+      overflowY={{ lg: "auto" }}
       pr="1"
-      maxH={{ base: "96", lg: "none" }}
       className="docs-scroll"
     >
       <Flex alignItems="center" justifyContent="between">

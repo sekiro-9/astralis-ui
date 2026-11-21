@@ -74,7 +74,7 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
 
   if (untouched) {
     return (
-      <Stack as="aside" minH="0" gap="2" h={{ base: "70vh", lg: "auto" }}>
+      <Stack as="aside" minH="0" gap="2">
         <Stack
           h="full"
           minH="0"
