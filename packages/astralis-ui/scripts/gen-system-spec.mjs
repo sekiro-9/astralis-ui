@@ -156,11 +156,17 @@ const box = groupSpec(boxVariantMap);
 // responsive engine, not the variant maps, so it is added here explicitly.
 box.container = { kind: "keyword", tokens: ["true", "false"], arbitrary: false };
 const flex = groupSpec(flexVariantMap);
+// Grid's track and area templates: raw CSS, a string or a breakpoint map,
+// with no tokens (grid.tsx resolves them, not the variant maps).
+const grid = groupSpec(gridVariantMap);
+for (const prop of ["templateColumns", "templateRows", "templateAreas"]) {
+  grid[prop] = { kind: "raw", tokens: [], arbitrary: true, unitless: false, valueType: "template" };
+}
 const propGroups = {
   box,
   flex,
   flexItem: groupSpec(flexItemVariantMap),
-  grid: groupSpec(gridVariantMap),
+  grid,
   gridItem: groupSpec(gridItemVariantMap),
   text: groupSpec(textVariantMap),
   // Stack is Flex minus `direction` plus its own axis vocabulary

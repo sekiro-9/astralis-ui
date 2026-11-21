@@ -1,0 +1,56 @@
+/* Grid `templateColumns`, `templateRows` and `templateAreas` given a
+   breakpoint map. Track lists are raw values, so they ride variables the way
+   channel props do (theme/channels.css): the grid carries a class per key it
+   sets and the value in the matching inline variable, so the server's HTML
+   lays out correctly at every width before hydration. A plain string stays
+   inline style and never reaches these rules. In the channels layer, above
+   utilities, so the prop beats Grid's own `columns`/`rows` classes as the
+   inline string does. Widths are breakpoints.ts's; the coverage gate fails on
+   any other. */
+@layer channels {
+  .astralis-template-columns { grid-template-columns: var(--astralis-template-columns); }
+  .astralis-template-rows { grid-template-rows: var(--astralis-template-rows); }
+  .astralis-template-areas { grid-template-areas: var(--astralis-template-areas); }
+
+  @media (min-width: 40rem) {
+    .astralis-template-columns-sm { grid-template-columns: var(--astralis-template-columns-sm); }
+    .astralis-template-rows-sm { grid-template-rows: var(--astralis-template-rows-sm); }
+    .astralis-template-areas-sm { grid-template-areas: var(--astralis-template-areas-sm); }
+  }
+  @media (min-width: 48rem) {
+    .astralis-template-columns-md { grid-template-columns: var(--astralis-template-columns-md); }
+    .astralis-template-rows-md { grid-template-rows: var(--astralis-template-rows-md); }
+    .astralis-template-areas-md { grid-template-areas: var(--astralis-template-areas-md); }
+  }
+  @media (min-width: 64rem) {
+    .astralis-template-columns-lg { grid-template-columns: var(--astralis-template-columns-lg); }
+    .astralis-template-rows-lg { grid-template-rows: var(--astralis-template-rows-lg); }
+    .astralis-template-areas-lg { grid-template-areas: var(--astralis-template-areas-lg); }
+  }
+  @media (min-width: 80rem) {
+    .astralis-template-columns-xl { grid-template-columns: var(--astralis-template-columns-xl); }
+    .astralis-template-rows-xl { grid-template-rows: var(--astralis-template-rows-xl); }
+    .astralis-template-areas-xl { grid-template-areas: var(--astralis-template-areas-xl); }
+  }
+
+  @container (min-width: 40rem) {
+    .astralis-template-columns-cq-sm { grid-template-columns: var(--astralis-template-columns-cq-sm); }
+    .astralis-template-rows-cq-sm { grid-template-rows: var(--astralis-template-rows-cq-sm); }
+    .astralis-template-areas-cq-sm { grid-template-areas: var(--astralis-template-areas-cq-sm); }
+  }
+  @container (min-width: 48rem) {
+    .astralis-template-columns-cq-md { grid-template-columns: var(--astralis-template-columns-cq-md); }
+    .astralis-template-rows-cq-md { grid-template-rows: var(--astralis-template-rows-cq-md); }
+    .astralis-template-areas-cq-md { grid-template-areas: var(--astralis-template-areas-cq-md); }
+  }
+  @container (min-width: 64rem) {
+    .astralis-template-columns-cq-lg { grid-template-columns: var(--astralis-template-columns-cq-lg); }
+    .astralis-template-rows-cq-lg { grid-template-rows: var(--astralis-template-rows-cq-lg); }
+    .astralis-template-areas-cq-lg { grid-template-areas: var(--astralis-template-areas-cq-lg); }
+  }
+  @container (min-width: 80rem) {
+    .astralis-template-columns-cq-xl { grid-template-columns: var(--astralis-template-columns-cq-xl); }
+    .astralis-template-rows-cq-xl { grid-template-rows: var(--astralis-template-rows-cq-xl); }
+    .astralis-template-areas-cq-xl { grid-template-areas: var(--astralis-template-areas-cq-xl); }
+  }
+}

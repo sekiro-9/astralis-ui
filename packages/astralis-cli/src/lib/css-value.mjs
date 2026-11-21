@@ -3,7 +3,8 @@
    --------------------------------------------------------------------------
    Classifies an ARBITRARY channel value (a string that is not a token)
    against the value type its channel carries — length, color, shadow,
-   number, integer (spec propGroups[*].valueType).
+   number, integer (spec propGroups[*].valueType). A `template` (Grid's
+   track and area lists) is open CSS with no grammar here: never judged.
 
    The design rule: NEVER reject valid CSS. A false "invalid" kills trust in
    the whole validator, so the grammar only condemns what is definitely
@@ -83,6 +84,7 @@ const invalid = (reason) => ({ verdict: "invalid", reason });
  */
 export function classifyChannelValue(raw, type) {
   const value = raw.trim();
+  if (type === "template") return { verdict: "no-claim" };
 
   // Function calls first — their arguments may contain spaces and commas.
   const fn = value.match(/^([a-zA-Z-]+)\((.*)\)$/s);

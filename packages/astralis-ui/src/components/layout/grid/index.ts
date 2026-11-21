@@ -10,4 +10,4 @@ export const Grid = Object.assign(GridRoot, {
 export { GridItem };
 
 export default Grid;
-export type { GridProps, GridItemProps } from "./grid.types";
+export type { GridProps, GridItemProps, GridTemplate } from "./grid.types";

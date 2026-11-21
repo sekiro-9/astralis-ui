@@ -483,6 +483,17 @@ test("container keys (@sm..@xl) are legal responsive keys; typos still caught", 
   assert.ok(bad.errors[0].message.includes("@md"));
 });
 
+test("Grid templates take any track list, as a string or a breakpoint map", () => {
+  const ok = validate(`<Grid templateColumns="repeat(3, minmax(0, 1fr))" templateRows={{ base: "auto", lg: "1fr", "@md": "subgrid" }}
+    templateAreas={{ base: '"main"', md: '"nav main"' }} />`, "Grid");
+  assert.deepEqual(ok.errors, []);
+  assert.deepEqual(ok.warnings, []);
+  assert.equal(validate(`<Grid templateColumns={{ base: "1fr", tablet: "1fr 1fr" }} />`, "Grid").errors[0].code, "invalid-breakpoint-key");
+  assert.equal(validate(`<Grid templateRows="" />`, "Grid").errors[0].code, "empty-channel-value");
+  assert.equal(validate(`<Grid templateColumns="3" />`, "Grid").warnings[0].code, "bare-number-value");
+  assert.equal(validate(`<Box templateColumns="1fr 1fr" />`).errors[0].code, "unknown-style-prop");
+});
+
 test("`container` prop is spec-legal as a bare attribute", () => {
   const r = validate(`<Box container><Card>x</Card></Box>`);
   assert.deepEqual(r.errors, []);
