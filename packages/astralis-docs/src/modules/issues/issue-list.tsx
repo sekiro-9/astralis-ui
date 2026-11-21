@@ -42,7 +42,7 @@ export function IssueList({ issues }: { issues: IssueSummary[] }) {
               {issue.comments > 0 && (
                 <>
                   <Icon as={MessageSquare} size="xs" aria-hidden />
-                  <Text as="span" size="xs" color="inherit" className="tabular-nums" aria-label={`${issue.comments} comments`}>
+                  <Text as="span" size="xs" color="inherit" numeric="tabular" aria-label={`${issue.comments} comments`}>
                     {issue.comments}
                   </Text>
                 </>

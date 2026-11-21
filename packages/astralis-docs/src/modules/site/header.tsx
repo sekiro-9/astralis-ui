@@ -31,7 +31,8 @@ export function Header({ version }: { version: string }) {
                   py="1.5"
                   color={active ? "base" : "muted"}
                   hover={active ? undefined : { bg: "subtle", color: "base" }}
-                  className="whitespace-nowrap transition-colors"
+                  whiteSpace="nowrap"
+                  className="transition-colors"
                 >
                   <Text as="span" size="sm">
                     {link.title}

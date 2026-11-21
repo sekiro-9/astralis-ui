@@ -73,7 +73,7 @@ export function Hero() {
           </Entrance>
 
           <Entrance delay={0.08}>
-            <Text mt="8" maxW="lg" size="md" lineHeight="relaxed" color="muted" className="text-pretty">
+            <Text mt="8" maxW="lg" size="md" lineHeight="relaxed" color="muted" textWrap="pretty">
               Accessible, themeable React components for crafting polished web apps and
               design systems. Server-first, built for the Next.js RSC
             </Text>
@@ -135,7 +135,7 @@ export function Hero() {
                   opacity="0"
                 />
               </Flex>
-              <Text as="span" ml="2" fontFamily="mono" size="xs" color="subtle" className="tabular-nums">
+              <Text as="span" ml="2" fontFamily="mono" size="xs" color="subtle" numeric="tabular">
                 {brand}
               </Text>
             </Flex>
@@ -168,7 +168,7 @@ export function Hero() {
               <Box shrink="0">
                 <CopyCommand command="npx astralis-cli create my-app" />
               </Box>
-              <Text as="span" size="xs" color="subtle" className="sm:whitespace-nowrap">
+              <Text as="span" size="xs" color="subtle" whiteSpace={{ sm: "nowrap" }}>
                 Scaffold your React project ·{" "}
                 <AstralisLink as={Link} href="/docs/cli" color="subtle" hover={{ color: "muted" }} variant="underline">
                   How the CLI works

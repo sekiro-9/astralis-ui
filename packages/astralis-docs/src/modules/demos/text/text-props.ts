@@ -55,6 +55,21 @@ export const textProps: PropRow[] = [
     description: "Style and decoration.",
   },
   {
+    prop: "textWrap",
+    type: `"wrap" | "nowrap" | "balance" | "pretty"`,
+    description: "How lines break: `balance` evens out the lines of a short title, `pretty` avoids a lone last word in a paragraph.",
+  },
+  {
+    prop: "whiteSpace",
+    type: `"normal" | "nowrap" | "pre" | "pre-line" | "pre-wrap" | "break-spaces"`,
+    description: "How spaces and line breaks are kept: `nowrap` keeps one line, `pre-wrap` keeps the text's own line breaks.",
+  },
+  {
+    prop: "numeric",
+    type: `"tabular" | "normal"`,
+    description: "Figure style: `tabular` gives every digit the same width, so counts and prices line up and do not shift as they change.",
+  },
+  {
     prop: "truncate",
     type: "boolean",
     default: "false",

@@ -65,6 +65,11 @@ export const boxProps: PropRow[] = [
     description: "Misc utilities, all typed.",
   },
   {
+    prop: "whiteSpace",
+    type: `"normal" | "nowrap" | "pre" | "pre-line" | "pre-wrap" | "break-spaces"`,
+    description: "How spaces and line breaks in the text inside are kept: `nowrap` keeps a row of labels on one line. Inherited by the text inside.",
+  },
+  {
     prop: "basis · flex · grow · shrink · order · alignSelf",
     type: `sizing scale · "1" | "auto" | "initial" | "none" · boolean | "0" | "1" · "1"–"12" · "auto" | "start" | "center" | "end" | "stretch" | "baseline"`,
     description:

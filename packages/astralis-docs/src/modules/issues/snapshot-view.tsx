@@ -118,7 +118,7 @@ export function SnapshotView({ snapshot, repro }: { snapshot: Snapshot; repro: R
 
       {snapshot.console && snapshot.console.length > 0 && (
         <Section title={`Console errors (${snapshot.console.length})`}>
-          <Box as="pre" p="4" rounded="xl" border="normal" borderColor="base" bg="subtle" overflowX="auto" className="docs-scroll whitespace-pre-wrap">
+          <Box as="pre" p="4" rounded="xl" border="normal" borderColor="base" bg="subtle" overflowX="auto" whiteSpace="pre-wrap" className="docs-scroll">
             <Text as="span" fontFamily="mono" size="xs">
               {snapshot.console.join("\n\n")}
             </Text>

@@ -24,11 +24,11 @@ export function FinalCta() {
             weight="semibold"
             lineHeight="size"
             color="base"
-            className="text-balance"
+            textWrap="balance"
           >
             Ship something <Box as="span" className="text-gradient">stellar</Box>
           </Heading>
-          <Text mx="auto" mt="6" size="lg" color="muted" className="text-balance lg:whitespace-nowrap">
+          <Text mx="auto" mt="6" size="lg" color="muted" textWrap="balance" whiteSpace={{ lg: "nowrap" }}>
             Install the package, add the provider, and every component here is yours.
           </Text>
           <Flex mt="10" wrap="wrap" justifyContent="center" gap="4">

@@ -103,8 +103,7 @@ export function ScaleControl({
           </Text>
           {info && <InfoPopover label={label} info={info} />}
         </Flex>
-        {/* No prop sets tabular figures. */}
-        <Text size="xs" color="subtle" className="tabular-nums">
+        <Text size="xs" color="subtle" numeric="tabular">
           {format ? format(value) : `×${value.toFixed(2)}`}
         </Text>
       </Flex>

@@ -101,7 +101,8 @@ function StatusTabs({ current, href }: { current: StatusFilter; href: (status: S
             shadow={active ? "sm" : undefined}
             color={active ? "base" : "muted"}
             hover={{ color: "base" }}
-            className="whitespace-nowrap transition-colors"
+            whiteSpace="nowrap"
+            className="transition-colors"
           >
             <Text as="span" size="sm" weight={active ? "medium" : "normal"}>
               {tab.label}

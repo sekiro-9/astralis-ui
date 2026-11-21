@@ -57,7 +57,7 @@ function Words({ label, text }: { label: string; text?: string }) {
       <Text size="sm" weight="semibold">
         {label}
       </Text>
-      <Text size="sm" lineHeight="relaxed" className="whitespace-pre-wrap">
+      <Text size="sm" lineHeight="relaxed" whiteSpace="pre-wrap">
         {text}
       </Text>
     </Stack>

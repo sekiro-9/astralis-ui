@@ -57,6 +57,7 @@ import { TextSizes } from "./text/text-sizes";
 import { TextWeights } from "./text/text-weights";
 import { TextTruncation } from "./text/text-truncation";
 import { TextStyling } from "./text/text-styling";
+import { TextWrapping } from "./text/text-wrapping";
 import { TextInherit } from "./text/text-inherit";
 import { TextStates } from "./text/text-states";
 import { HeadingDemo } from "./heading/heading-demo";
@@ -290,6 +291,7 @@ export const demos = {
   "text-weights": { component: TextWeights, file: "text/text-weights.tsx" },
   "text-truncation": { component: TextTruncation, file: "text/text-truncation.tsx" },
   "text-styling": { component: TextStyling, file: "text/text-styling.tsx" },
+  "text-wrapping": { component: TextWrapping, file: "text/text-wrapping.tsx" },
   "text-inherit": { component: TextInherit, file: "text/text-inherit.tsx" },
   "text-states": { component: TextStates, file: "text/text-states.tsx" },
   "heading-demo": { component: HeadingDemo, file: "heading/heading-demo.tsx" },

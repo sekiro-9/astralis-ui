@@ -180,8 +180,7 @@ export function ControlRail({ state, setState, setSeed, resetNonce, reset }: Con
                   <Text size="sm" weight="medium">
                     Speed
                   </Text>
-                  {/* No prop sets tabular figures. */}
-                  <Text size="xs" color="subtle" className="tabular-nums">
+                  <Text size="xs" color="subtle" numeric="tabular">
                     {Math.round(200 * (seed.motionScale ?? 1))}ms moderate
                   </Text>
                 </Flex>
