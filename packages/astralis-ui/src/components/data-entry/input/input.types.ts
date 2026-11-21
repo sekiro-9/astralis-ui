@@ -10,6 +10,8 @@ import type {
 export type InputSize = "sm" | "md" | "lg";
 export type InputVariant = "outline" | "filled" | "underline" | "unstyled";
 export type InputRounded = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+/** Textarea stops at `xl`: a larger corner cuts through the browser's resize handle. */
+export type TextareaRounded = "none" | "sm" | "md" | "lg" | "xl";
 
 export interface InputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -60,6 +62,10 @@ export interface InputTextareaProps extends Omit<
   size?: InputSize;
   /** Visual variant */
   variant?: InputVariant;
+  /** Corner radius, on Input's scale up to `xl`: a larger corner would cut
+   *  through the resize handle. Unset, the variant decides: `lg` on outline
+   *  and filled, square on underline and unstyled. @default "lg" */
+  rounded?: TextareaRounded;
   /** Marks the textarea as invalid */
   invalid?: boolean;
   /** Hue of the focus border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */

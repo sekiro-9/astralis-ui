@@ -1,7 +1,7 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
-import type { InputSize, InputVariant } from "../input/input.types";
+import type { InputRounded, InputSize, InputVariant } from "../input/input.types";
 
 export interface ComboboxOptionItem {
   label: string;
@@ -33,6 +33,10 @@ export interface ComboboxProps
   placeholder?: string;
   size?: InputSize;
   variant?: InputVariant;
+  /** Corner radius, on Input's scale; `full` makes a pill. Unset, the variant
+   *  decides: `lg` on outline and filled, square on underline and unstyled.
+   *  @default "lg" */
+  rounded?: InputRounded;
   /** Hue for focus ring and active option (via the accent channel). @default "brand" */
   colorScheme?: ColorScheme;
   disabled?: boolean;

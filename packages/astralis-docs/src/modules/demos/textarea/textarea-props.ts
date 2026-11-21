@@ -15,6 +15,12 @@ export const textareaProps: PropRow[] = [
     description: "Visual style.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl"`,
+    default: `"lg"`,
+    description: "Corner radius, on Input's scale up to `xl`: a larger corner would cut through the resize handle.",
+  },
+  {
     prop: "rows",
     type: `number`,
     default: `4`,

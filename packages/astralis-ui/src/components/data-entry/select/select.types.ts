@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 import type { PlacementProps } from "../../../utils/placement";
+import type { InputRounded } from "../input/input.types";
 
 export type SelectSize = "sm" | "md" | "lg";
 export type SelectVariant = "outline" | "filled" | "underline" | "unstyled";
@@ -56,6 +57,10 @@ export interface SelectProps
   placeholder?: string;
   size?: SelectSize;
   variant?: SelectVariant;
+  /** Corner radius, on Input's scale; `full` makes a pill. Unset, the variant
+   *  decides: `lg` on outline and filled, square on underline and unstyled.
+   *  @default "lg" */
+  rounded?: InputRounded;
   /** Hue for focus ring and selected-option highlight (via the accent channel). @default "brand" */
   colorScheme?: ColorScheme;
   disabled?: boolean;

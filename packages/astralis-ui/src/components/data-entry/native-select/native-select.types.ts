@@ -1,7 +1,7 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ReactNode, SelectHTMLAttributes } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
-import type { InputVariant } from "../input/input.types";
+import type { InputRounded, InputVariant } from "../input/input.types";
 
 export type NativeSelectSize = "sm" | "md" | "lg";
 export type NativeSelectVariant = InputVariant;
@@ -14,6 +14,10 @@ export interface NativeSelectProps extends Omit<
   size?: NativeSelectSize;
   /** Field chrome, mirroring Input's taxonomy. @default "outline" */
   variant?: NativeSelectVariant;
+  /** Corner radius, on Input's scale; `full` makes a pill. Unset, the variant
+   *  decides: `lg` on outline and filled, square on underline and unstyled.
+   *  @default "lg" */
+  rounded?: InputRounded;
   /** Hue of the focus border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */
   colorScheme?: ColorScheme;
   /** Marks the select as invalid */

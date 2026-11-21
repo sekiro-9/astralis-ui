@@ -37,6 +37,7 @@ export const Combobox = identify("Combobox", forwardRef<HTMLInputElement, Combob
       placeholder = "Search…",
       size = "md",
       variant = "outline",
+      rounded,
       colorScheme = "brand",
       disabled: disabledProp,
       invalid: invalidProp,
@@ -233,7 +234,7 @@ export const Combobox = identify("Combobox", forwardRef<HTMLInputElement, Combob
             if (!isDisabled && !isReadOnly) setIsOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          className={astralisMerge(inputVariants({ size, variant, invalid: !!isInvalid }), "astralis:pr-9")}
+          className={astralisMerge(inputVariants({ size, variant, rounded, invalid: !!isInvalid }), "astralis:pr-9")}
         />
         <span className="astralis:absolute astralis:inset-y-0 astralis:right-3 astralis:flex astralis:items-center astralis:gap-1 astralis:text-label-subtle">
           {loading ? (

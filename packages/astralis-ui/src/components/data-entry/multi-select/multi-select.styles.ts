@@ -1,4 +1,5 @@
 import { cva } from "class-variance-authority";
+import { inputMultilineRounded } from "../input/input.styles";
 import type { MultiSelectSize, MultiSelectVariant } from "./multi-select.types";
 
 const invalidBorder = "astralis:border-error-solid astralis:hover:border-error-solid";
@@ -20,6 +21,8 @@ export const msContainer = cva(
           "astralis:border-0 astralis:border-b-2 astralis:border-stroke-base astralis:bg-transparent astralis:rounded-none astralis:px-0 astralis:hover:border-stroke-muted",
         unstyled: "astralis:border-0 astralis:bg-transparent astralis:rounded-none",
       },
+      // After `variant`, so an explicit radius replaces the chrome's in the merge.
+      rounded: inputMultilineRounded,
       invalid: { true: "", false: "" },
     },
     compoundVariants: [

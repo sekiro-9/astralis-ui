@@ -32,6 +32,7 @@ export const SelectBase = identify("Select", forwardRef<HTMLButtonElement, Selec
       placeholder = "Select an option",
       size = "md",
       variant = "outline",
+      rounded,
       colorScheme = "brand",
       disabled: disabledProp,
       invalid: invalidProp,
@@ -238,7 +239,7 @@ export const SelectBase = identify("Select", forwardRef<HTMLButtonElement, Selec
           }}
           style={style}
           className={astralisMerge(
-            selectTrigger({ size, variant, invalid: !!isInvalid }),
+            selectTrigger({ size, variant, rounded, invalid: !!isInvalid }),
             isReadOnly && "astralis:cursor-default astralis:bg-surface-muted",
           )}
         >

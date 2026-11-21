@@ -45,6 +45,7 @@ export const DatePicker = identify("DatePicker", function DatePicker({
   defaultMonth,
   size = "md",
   variant = "outline",
+  rounded,
   colorScheme,
   invalid: invalidProp,
   disabled: disabledProp,
@@ -98,7 +99,7 @@ export const DatePicker = identify("DatePicker", function DatePicker({
           aria-invalid={isInvalid || undefined}
           aria-describedby={field?.describedBy}
           className={astralisMerge(
-            inputVariants({ size, variant, invalid: Boolean(isInvalid) }),
+            inputVariants({ size, variant, rounded, invalid: Boolean(isInvalid) }),
             triggerClasses,
             text === null && "astralis:text-label-subtle",
             colorScheme && accentClass(colorScheme),

@@ -40,4 +40,10 @@ export const numberInputProps: PropRow[] = [
     default: `as Input`,
     description: "Shares the Input styling system.",
   },
+  {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius, on Input's scale; the stepper follows the corners. Unset, underline and unstyled stay square.",
+  },
 ];

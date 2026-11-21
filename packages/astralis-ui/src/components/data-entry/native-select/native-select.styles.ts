@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { inputInvalidChrome, inputVariantChrome } from "../input/input.styles";
+import { inputInvalidChrome, inputRounded, inputVariantChrome } from "../input/input.styles";
 
 /** Field chrome for the raw `<select>` — the same variant set as Input. */
 export const nativeSelectField = cva(
@@ -14,6 +14,8 @@ export const nativeSelectField = cva(
         lg: "astralis:h-12 astralis:px-4 astralis:text-base",
       },
       variant: inputVariantChrome,
+      // After `variant`, so an explicit radius replaces the chrome's in the merge.
+      rounded: inputRounded,
       invalid: { true: "", false: "" },
     },
     compoundVariants: [

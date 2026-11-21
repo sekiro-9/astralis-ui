@@ -42,6 +42,12 @@ export const multiSelectProps: PropRow[] = [
     description: "Styling; colorScheme tints the tags.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius, on Input's scale. `full` gives `3xl`: a pill at one row, still clear of the tags when they wrap.",
+  },
+  {
     prop: "invalid / disabled / readOnly",
     type: `boolean`,
     default: `false`,

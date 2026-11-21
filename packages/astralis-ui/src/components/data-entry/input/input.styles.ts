@@ -51,6 +51,21 @@ export const inputRounded = {
   full: "astralis:rounded-full",
 } as const;
 
+/** For MultiSelect, which grows a line per row of tags: `full` becomes `3xl`,
+ *  still a pill at one row's height (24px clamps to half of a 48px field) but
+ *  leaving the corner tags inside when it wraps. */
+export const inputMultilineRounded = { ...inputRounded, full: "astralis:rounded-3xl" } as const;
+
+/** Textarea's radii: the scale up to `xl`. A larger corner cuts through the
+ *  browser's resize handle in the bottom-right corner. */
+export const textareaRounded = {
+  none: inputRounded.none,
+  sm: inputRounded.sm,
+  md: inputRounded.md,
+  lg: inputRounded.lg,
+  xl: inputRounded.xl,
+} as const;
+
 /** The trailing corners of Input.Search's attached button, matching the input's. */
 export const inputEndRounded = {
   none: "astralis:rounded-r-none",
@@ -99,6 +114,7 @@ export const textareaVariants = cva(base + " astralis:resize-y", {
       lg: "astralis:px-4 astralis:py-3 astralis:text-base",
     },
     variant: inputVariantChrome,
+    rounded: textareaRounded,
     invalid: { true: "", false: "" },
   },
   compoundVariants: [

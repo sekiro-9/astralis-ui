@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { inputInvalidChrome, inputVariantChrome } from "../input/input.styles";
+import { inputInvalidChrome, inputRounded, inputVariantChrome } from "../input/input.styles";
 
 /** A single PIN cell — square, centred, mono, wearing Input's chrome. */
 export const pinCell = cva(
@@ -15,6 +15,8 @@ export const pinCell = cva(
         lg: "astralis:h-12 astralis:w-12 astralis:text-lg",
       },
       variant: inputVariantChrome,
+      // After `variant`, so an explicit radius replaces the chrome's in the merge.
+      rounded: inputRounded,
       invalid: { true: "", false: "" },
     },
     compoundVariants: [

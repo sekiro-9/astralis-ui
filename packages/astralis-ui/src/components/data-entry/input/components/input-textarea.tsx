@@ -11,6 +11,7 @@ import { identify } from "../../../../utils/dev-identity";
 export const InputTextarea = identify("Input.TextArea", function InputTextarea({
   size = "md",
   variant = "outline",
+  rounded,
   invalid: invalidProp,
   colorScheme,
   disabled: disabledProp,
@@ -57,7 +58,7 @@ export const InputTextarea = identify("Input.TextArea", function InputTextarea({
         defaultValue={defaultValue}
         rows={rows}
         className={astralisMerge(
-          textareaVariants({ size, variant, invalid: !!isInvalid }),
+          textareaVariants({ size, variant, rounded, invalid: !!isInvalid }),
           colorScheme && accentClass(colorScheme),
           // Native auto-growing textarea (CSS field-sizing, Baseline
           // 2026-06) — the entire scroll-height-listener genre, deleted.

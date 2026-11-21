@@ -18,6 +18,7 @@ import { identify } from "../../../../utils/dev-identity";
 export const NativeSelect = identify("NativeSelect", function NativeSelect({
   size = "md",
   variant = "outline",
+  rounded,
   colorScheme,
   invalid: invalidProp,
   disabled: disabledProp,
@@ -57,7 +58,7 @@ export const NativeSelect = identify("NativeSelect", function NativeSelect({
         // The placeholder is an empty-valued disabled option, so it shows
         // until a choice is made but can never be re-selected.
         defaultValue={placeholder && defaultValue === undefined && props.value === undefined ? "" : defaultValue}
-        className={astralisMerge(nativeSelectField({ size, variant, invalid: !!isInvalid }), nativeSelectChevronGutter)}
+        className={astralisMerge(nativeSelectField({ size, variant, rounded, invalid: !!isInvalid }), nativeSelectChevronGutter)}
         {...domProps}
       >
         {placeholder && (

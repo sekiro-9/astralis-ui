@@ -18,6 +18,15 @@ const stepperClasses =
   "astralis:disabled:opacity-moderate astralis:disabled:pointer-events-none astralis:outline-none " +
   "astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-[-2px] astralis:focus-visible:outline-accent-ring";
 
+/* The stepper column follows the field's corners. On a pill it becomes a
+   capsule 6px in from the edge, which keeps it inside the curve at every size. */
+const stepperShape: Partial<Record<NonNullable<NumberInputProps["rounded"]>, string>> = {
+  none: "astralis:right-1 astralis:rounded-none",
+  sm: "astralis:right-1 astralis:rounded-sm",
+  full: "astralis:right-1.5 astralis:rounded-full",
+};
+const stepperShapeDefault = "astralis:right-1 astralis:rounded-md";
+
 /** `base + delta` without binary drift: 0.1 + 0.2 is 0.3 here. */
 function addExact(base: number, delta: number): number {
   return Number((base + delta).toFixed(Math.max(decimals(base), decimals(delta))));
@@ -39,6 +48,7 @@ export const NumberInput = identify("NumberInput", function NumberInput({
   precision,
   size = "md",
   variant = "outline",
+  rounded,
   colorScheme,
   invalid: invalidProp,
   disabled: disabledProp,
@@ -142,8 +152,8 @@ export const NumberInput = identify("NumberInput", function NumberInput({
           commit(text.trim() === "" ? null : Number(text));
         }}
         className={astralisMerge(
-          inputVariants({ size, variant, invalid: !!isInvalid }),
-          !hideSteppers && "astralis:pr-8",
+          inputVariants({ size, variant, rounded, invalid: !!isInvalid }),
+          !hideSteppers && (rounded === "full" ? "astralis:pr-9" : "astralis:pr-8"),
           className,
         )}
         {...domProps}
@@ -151,7 +161,10 @@ export const NumberInput = identify("NumberInput", function NumberInput({
       {!hideSteppers && (
         <div
           aria-hidden="true"
-          className="astralis:absolute astralis:inset-y-1 astralis:right-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:rounded-md astralis:border-normal astralis:border-stroke-base"
+          className={astralisMerge(
+            "astralis:absolute astralis:inset-y-1 astralis:flex astralis:w-6 astralis:flex-col astralis:overflow-hidden astralis:border-normal astralis:border-stroke-base",
+            (rounded && stepperShape[rounded]) || stepperShapeDefault,
+          )}
         >
           <button type="button" tabIndex={-1} disabled={isDisabled || isReadOnly} onClick={() => nudge(1)} className={stepperClasses}>
             <ChevronUpIcon className="astralis:h-3 astralis:w-3" />

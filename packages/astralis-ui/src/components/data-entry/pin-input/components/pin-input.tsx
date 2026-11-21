@@ -32,6 +32,7 @@ export const PinInputBase = identify("PinInput", function PinInputBase({
   mask = false,
   size = "md",
   variant = "outline",
+  rounded,
   colorScheme,
   disabled: disabledProp,
   invalid: invalidProp,
@@ -191,7 +192,7 @@ export const PinInputBase = identify("PinInput", function PinInputBase({
           onPaste={handlePaste}
           onFocus={handleFocus}
           className={astralisMerge(
-            pinCell({ size, variant, invalid: !!isInvalid }),
+            pinCell({ size, variant, rounded, invalid: !!isInvalid }),
             isReadOnly && "astralis:bg-surface-muted astralis:cursor-default",
           )}
         />

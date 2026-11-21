@@ -64,6 +64,12 @@ export const datePickerProps: PropRow[] = [
     description: "The field's chrome, matching Input.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius, on Input's scale; `full` makes a pill. Unset, underline and unstyled stay square.",
+  },
+  {
     prop: "colorScheme",
     type: `ColorScheme`,
     description: "Hue of the focus ring and of the selected day.",

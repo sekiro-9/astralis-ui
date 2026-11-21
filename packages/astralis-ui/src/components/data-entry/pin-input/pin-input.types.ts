@@ -1,7 +1,7 @@
 import type { PlacementProps } from "../../../utils/placement";
 import type { ComponentPropsWithoutRef } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
-import type { InputVariant } from "../input/input.types";
+import type { InputRounded, InputVariant } from "../input/input.types";
 
 export type PinInputType = "numeric" | "alphanumeric" | "alpha";
 export type PinInputSize = "sm" | "md" | "lg";
@@ -30,6 +30,10 @@ export interface PinInputProps
   size?: PinInputSize;
   /** Cell chrome, the same set as Input's. @default "outline" */
   variant?: PinInputVariant;
+  /** Corner radius, on Input's scale; `full` makes round cells. Unset, the variant
+   *  decides: `lg` on outline and filled, square on underline and unstyled.
+   *  @default "lg" */
+  rounded?: InputRounded;
   /** Hue of the focused cell's border and ring (via the accent channel). Inherits the surrounding scheme, brand by default. */
   colorScheme?: ColorScheme;
   disabled?: boolean;

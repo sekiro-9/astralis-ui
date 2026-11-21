@@ -71,6 +71,7 @@ export const MultiSelectBase = identify("MultiSelect", forwardRef<HTMLDivElement
       placeholder = "Select options…",
       size = "md",
       variant = "outline",
+      rounded,
       colorScheme = "brand",
       disabled: disabledProp,
       invalid: invalidProp,
@@ -237,7 +238,7 @@ export const MultiSelectBase = identify("MultiSelect", forwardRef<HTMLDivElement
           ref={containerRef}
           onClick={handleContainerClick}
           className={astralisMerge(
-            msContainer({ size, variant, invalid: !!isInvalid }),
+            msContainer({ size, variant, rounded, invalid: !!isInvalid }),
             isFocused && !isReadOnly && msFocusRing(variant, !!isInvalid),
             isDisabled && "astralis:cursor-not-allowed astralis:opacity-moderate astralis:pointer-events-none",
             isReadOnly && "astralis:cursor-default astralis:bg-surface-muted",

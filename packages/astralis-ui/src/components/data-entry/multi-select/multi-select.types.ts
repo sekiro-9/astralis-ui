@@ -1,4 +1,5 @@
 import type { PlacementProps } from "../../../utils/placement";
+import type { InputRounded } from "../input/input.types";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { ColorScheme } from "../../../const/color-schemes";
 
@@ -36,6 +37,11 @@ export interface MultiSelectProps
   placeholder?: string;
   size?: MultiSelectSize;
   variant?: MultiSelectVariant;
+  /** Corner radius, on Input's scale. `full` gives the `3xl` radius, a pill
+   *  at one line's height that stays clear of the text when the field grows.
+   *  Unset, the variant decides: `lg` on outline and filled, square on
+   *  underline and unstyled. @default "lg" */
+  rounded?: InputRounded;
   /** Hue for focus ring, selected tags, and highlighted options (via the accent channel). @default "brand" */
   colorScheme?: ColorScheme;
   disabled?: boolean;

@@ -57,6 +57,12 @@ export const selectProps: PropRow[] = [
     description: "Styling.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius of the trigger, on Input's scale; `full` makes a pill. Unset, underline and unstyled stay square.",
+  },
+  {
     prop: "colorScheme",
     type: COLOR_SCHEME_TYPE,
     default: `"brand"`,

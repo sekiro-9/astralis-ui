@@ -38,6 +38,12 @@ export const pinInputProps: PropRow[] = [
     description: "Styling.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius of each cell, on Input's scale; `full` makes round cells. Unset, underline and unstyled stay square.",
+  },
+  {
     prop: "placeholder",
     type: `string`,
     default: `"○"`,

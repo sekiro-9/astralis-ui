@@ -20,6 +20,12 @@ export const nativeSelectProps: PropRow[] = [
     description: "Field chrome, matching Input.",
   },
   {
+    prop: "rounded",
+    type: `"none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full"`,
+    default: `"lg"`,
+    description: "Corner radius, on Input's scale; `full` makes a pill. Unset, underline and unstyled stay square.",
+  },
+  {
     prop: "placeholder",
     type: "string",
     description: "A disabled empty option shown until a value is chosen.",

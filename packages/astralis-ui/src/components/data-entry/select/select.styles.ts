@@ -1,4 +1,5 @@
 import { cva } from "class-variance-authority";
+import { inputRounded } from "../input/input.styles";
 import type { CSSProperties } from "react";
 import type { SelectSize, SelectVariant } from "./select.types";
 
@@ -32,6 +33,8 @@ export const selectTrigger = cva(
           "astralis:focus-visible:border-accent-stroke",
         unstyled: "astralis:border-0 astralis:bg-transparent astralis:rounded-none",
       },
+      // After `variant`, so an explicit radius replaces the chrome's in the merge.
+      rounded: inputRounded,
       invalid: { true: "", false: "" },
     },
     compoundVariants: [
