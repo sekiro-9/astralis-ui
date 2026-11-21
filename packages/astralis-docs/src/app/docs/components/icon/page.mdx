@@ -30,6 +30,12 @@ Token sizes `xs`–`xl`, or any explicit pixel number.
 
 <ComponentPreview name="icon-sizes" />
 
+`size` is responsive like a style prop: a map of tokens or pixel numbers per
+breakpoint (`{ base: "sm", lg: 48 }`), resolved by CSS so the first paint is
+right at every width. A map without `base` starts from `md`.
+
+<ComponentPreview name="icon-responsive" />
+
 ## Colors
 
 Semantic text-color tokens, or omit `color` and the icon inherits the

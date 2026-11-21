@@ -20,3 +20,7 @@ export const iconVariants = cva(
     defaultVariants: { size: "md" },
   },
 );
+
+/** The sizing-scale step each token's class above uses, so a responsive size
+ *  can carry the same values on the `size` channel. */
+export const iconSizeSteps = { xs: "4", sm: "5", md: "6", lg: "8", xl: "10" } as const;

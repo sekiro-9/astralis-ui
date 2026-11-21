@@ -2,9 +2,25 @@ import { splitPlacement } from "../../utils/placement";
 import type { HTMLAttributes, Ref } from "react";
 import { astralisMerge } from "../../utils/astralis-merge";
 import { textColors } from "../../const/color-mappings";
-import { iconVariants } from "./icon.styles";
-import type { IconProps } from "./icon.types";
+import { sizeSizing } from "../../const/sizing-mappings";
+import { resolveStyleProps, type ResponsiveKey } from "../../utils/responsive";
+import { iconSizeSteps, iconVariants } from "./icon.styles";
+import type { IconProps, IconSize } from "./icon.types";
 import { identify } from "../../utils/dev-identity";
+
+const noVariants = () => "";
+
+/** Each entry becomes a sizing-scale step (a token) or a pixel length (a
+ *  number); a map without `base` starts from the default `md`. */
+function responsiveIconSize(map: Partial<Record<ResponsiveKey, IconSize>>) {
+  const values: Partial<Record<ResponsiveKey, string>> = { base: iconSizeSteps.md };
+  for (const key in map) {
+    const value = map[key as ResponsiveKey];
+    if (typeof value === "number") values[key as ResponsiveKey] = `${value}px`;
+    else if (value !== undefined && value in iconSizeSteps) values[key as ResponsiveKey] = iconSizeSteps[value];
+  }
+  return resolveStyleProps({ size: values }, { maps: { size: sizeSizing }, variants: noVariants });
+}
 
 /**
  * Icon — a bring-your-own-icon wrapper. It standardizes size (our sizing tokens),
@@ -32,16 +48,22 @@ const Icon = identify("Icon", function Icon({
     };
 
     const isToken = typeof size === "string";
+    const isMap = typeof size === "object" && size !== null;
+    // A responsive size rides Box's `size` channel (one class per breakpoint,
+    // width and height from a variable), because a pixel number has no class.
+    const responsive = isMap ? responsiveIconSize(size) : null;
     const classes = astralisMerge(
-      iconVariants({ size: isToken ? size : undefined }),
+      iconVariants({ size: isToken ? size : isMap ? null : undefined }),
+      responsive?.className,
       placementClass, className,
     );
     // `textColors` is a VALUE map since the var-channel migration — its
     // entries are CSS values, not classes, so colour is applied via style.
     // Non-token strings pass through raw, same as the channel props.
     const mergedStyle = {
+      ...responsive?.style,
       ...(color ? { color: textColors[color as keyof typeof textColors] ?? color } : {}),
-      ...(isToken ? {} : { width: size, height: size }),
+      ...(isToken || isMap ? {} : { width: size, height: size }),
       ...incomingStyle, // channel vars first, caller's style last — both win over ours
     };
     const styleAttr = Object.keys(mergedStyle).length ? mergedStyle : undefined;

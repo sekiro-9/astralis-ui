@@ -1,6 +1,7 @@
 import type { PlacementProps } from "../../utils/placement";
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import type { textColors } from "../../const/color-mappings";
+import type { ResponsiveProp } from "../../utils/responsive";
 
 export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | number;
 /** Any semantic text-colour token, or arbitrary CSS colour (icons inherit
@@ -19,8 +20,9 @@ export interface IconProps
   as?: ElementType;
   /** …or pass a raw `<svg>` as children. */
   children?: ReactNode;
-  /** Token (`xs`–`xl`) or an explicit pixel number. */
-  size?: IconSize;
+  /** Token (`xs`–`xl`) or an explicit pixel number, or a responsive map of
+   *  either (`{ base: "sm", lg: 32 }`). @default "md" */
+  size?: ResponsiveProp<IconSize>;
   /** A semantic text-colour token; omit to inherit the surrounding text colour. */
   color?: IconColor;
   strokeWidth?: number;

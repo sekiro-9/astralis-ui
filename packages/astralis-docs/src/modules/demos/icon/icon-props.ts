@@ -14,9 +14,9 @@ export const iconProps: PropRow[] = [
   },
   {
     prop: "size",
-    type: `"xs" | "sm" | "md" | "lg" | "xl" | number`,
+    type: `"xs" | "sm" | "md" | "lg" | "xl" | number | responsive map`,
     default: `"md"`,
-    description: "A size token, or an explicit size in pixels.",
+    description: "A size token, an explicit size in pixels, or a responsive map of either.",
   },
   {
     prop: "color",

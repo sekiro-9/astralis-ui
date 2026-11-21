@@ -86,6 +86,7 @@ import { PaginationFull } from "./pagination/pagination-full";
 import { PaginationControlled } from "./pagination/pagination-controlled";
 import { IconDemo } from "./icon/icon-demo";
 import { IconSizes } from "./icon/icon-sizes";
+import { IconResponsive } from "./icon/icon-responsive";
 import { IconColors } from "./icon/icon-colors";
 import { IconCustom } from "./icon/icon-custom";
 import { TabsDemo } from "./tabs/tabs-demo";
@@ -309,6 +310,7 @@ export const demos = {
   "pagination-controlled": { component: PaginationControlled, file: "pagination/pagination-controlled.tsx" },
   "icon-demo": { component: IconDemo, file: "icon/icon-demo.tsx" },
   "icon-sizes": { component: IconSizes, file: "icon/icon-sizes.tsx" },
+  "icon-responsive": { component: IconResponsive, file: "icon/icon-responsive.tsx" },
   "icon-colors": { component: IconColors, file: "icon/icon-colors.tsx" },
   "icon-custom": { component: IconCustom, file: "icon/icon-custom.tsx" },
   "tabs-demo": { component: TabsDemo, file: "tabs/tabs-demo.tsx" },
