@@ -37,7 +37,6 @@ export function NavItem({
         hover={active ? undefined : { bg: "subtle", color: "base" }}
         className="transition-colors"
       >
-        {/* No colour here: color="inherit" would take the row's resting colour and miss its hover colour. */}
         <Text as="span" size="sm" weight={active ? "medium" : "normal"}>
           {children}
         </Text>
