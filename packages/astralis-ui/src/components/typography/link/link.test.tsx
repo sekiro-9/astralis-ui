@@ -92,3 +92,12 @@ describe("Link state props", () => {
     expect(cls(container)).toContain("astralis:hover:text-accent-solid");
   });
 });
+
+describe('Link size="inherit"', () => {
+  it('keeps the accent colour (tailwind-merge reads it as a size)', () => {
+    const { container } = render(<Link href="#" size="inherit">x</Link>);
+
+    expect(cls(container)).toContain("astralis:text-size-inherit");
+    expect(cls(container)).toContain("astralis:text-accent-label");
+  });
+});

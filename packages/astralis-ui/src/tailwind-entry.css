@@ -872,6 +872,15 @@
   }
 }
 
+/* Text `size="inherit"`: the parent's font size and line height. Not named
+   `text-inherit`, which Tailwind already ships as `color: inherit`. Line height
+   reads --tw-leading first, as Tailwind's own text-* sizes do, so an explicit
+   leading-* on the same element still wins. */
+@utility text-size-inherit {
+  font-size: inherit;
+  line-height: var(--tw-leading, inherit);
+}
+
 /* Intrinsic-sizing flex-basis values the default basis utility doesn't ship. */
 @utility basis-fit {
   flex-basis: fit-content;

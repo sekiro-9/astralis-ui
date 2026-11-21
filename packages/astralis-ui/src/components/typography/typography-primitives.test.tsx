@@ -124,3 +124,25 @@ describe("state props on Text and Heading", () => {
     expect(root.hasAttribute("hover")).toBe(false);
   });
 });
+
+describe('Text size="inherit"', () => {
+  it("emits the inherit utility instead of a size rung", () => {
+    const { container } = render(<Text as="strong" size="inherit">t</Text>);
+    const classes = [...(container.firstElementChild as HTMLElement).classList];
+
+    expect(classes).toContain("astralis:text-size-inherit");
+    expect(classes.some((c) => /^astralis:text-(xs|sm|md|lg|\d?xl)$/.test(c))).toBe(false);
+  });
+
+  it("still defaults to md, and Heading to its level's size", () => {
+    expect((render(<Text>t</Text>).container.firstElementChild as HTMLElement).className).toContain("astralis:text-md");
+    expect((render(<Heading>h</Heading>).container.firstElementChild as HTMLElement).className).toContain("astralis:text-3xl");
+  });
+
+  it("works per breakpoint, so it can reset a size set below it", () => {
+    const { container } = render(<Text size={{ base: "lg", md: "inherit" }}>t</Text>);
+    const classes = [...(container.firstElementChild as HTMLElement).classList];
+
+    expect(classes).toEqual(expect.arrayContaining(["astralis:text-lg", "astralis:md:text-size-inherit"]));
+  });
+});

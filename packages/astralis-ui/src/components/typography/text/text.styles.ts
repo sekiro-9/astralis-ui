@@ -17,6 +17,9 @@ export const textVariantMap = {
       "7xl": "astralis:text-7xl",
       "8xl": "astralis:text-8xl",
       "9xl": "astralis:text-9xl",
+      // The parent's font size and line height. A class rather than no class,
+      // so it also resets a smaller size set at an earlier breakpoint.
+      inherit: "astralis:text-size-inherit",
     },
     weight: {
       thin: "astralis:font-thin",

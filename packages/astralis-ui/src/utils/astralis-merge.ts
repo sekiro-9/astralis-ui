@@ -6,6 +6,9 @@ const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
       // Tell tailwind-merge that 'border-<val>' are valid border widths for these custom keys
+      // Text's size="inherit" utility is a font size; unregistered,
+      // tailwind-merge would read `text-*` as a colour and drop Link's accent.
+      "font-size": [{ text: ["size-inherit"] }],
       "border-w": [{ border: ["normal", "moderate", "thick", "thicker", "thickest"] }],
       // …and the per-side forms, each in its OWN group. Sharing a group with
       // border-w would make `border-b-normal` cancel `border-normal`, when in
