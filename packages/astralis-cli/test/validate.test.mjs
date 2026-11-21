@@ -599,3 +599,9 @@ test("a component's own prop under a style prop's name keeps its own vocabulary"
   assert.deepEqual(codes(wrong), ["invalid-recipe-value"], "the motion name is not a Carousel animation");
   assert.match(wrong[0].message, /valid: slide, fade/);
 });
+
+test("Stack's own props are checked like Flex's: colorScheme on every stack", () => {
+  const r = validate(`<><Stack colorScheme="nope" /><HStack colorScheme="red" /><VStack colorScheme="blu" /></>`, "Stack, HStack, VStack");
+  assert.deepEqual(codes(r.errors), ["invalid-recipe-value", "invalid-recipe-value"]);
+  assert.match(r.errors[0].message, /Stack: "nope" is not a colorScheme value/);
+});

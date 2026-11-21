@@ -159,6 +159,19 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     }
     return { names, found };
   };
+  /** A prop's type. A polymorphic component's props type keeps its type
+   *  parameter (`Omit<FlexProps<T>, "direction">` on Stack), so its props read
+   *  as `FlexProps<T>["colorScheme"]`, which no reading below recognises; the
+   *  prop is looked up on that object type instead, where it is concrete. */
+  const typeOfProp = (propSymbol) => {
+    let type = checker.getTypeOfSymbolAtLocation(propSymbol, source);
+    for (let depth = 0; depth < 4 && type.flags & ts.TypeFlags.IndexedAccess && type.indexType.isStringLiteral(); depth += 1) {
+      const inner = checker.getPropertyOfType(checker.getApparentType(type.objectType), type.indexType.value);
+      if (!inner) break;
+      type = checker.getTypeOfSymbolAtLocation(inner, source);
+    }
+    return type;
+  };
   const propsTypeOf = (type) => {
     const [param] = type.getCallSignatures()[0]?.getParameters() ?? [];
     return param ? checker.getTypeOfSymbolAtLocation(param, source) : null;
@@ -192,13 +205,13 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
       if (isRedefinedHere(propSymbol, name)) own.push(propName);
       if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName === "children") needsChildren.add(name);
       if (!(propSymbol.flags & ts.SymbolFlags.Optional) && propName !== "children") {
-        needed[propName] = kindOf(checker.getTypeOfSymbolAtLocation(propSymbol, source));
+        needed[propName] = kindOf(typeOfProp(propSymbol));
       }
       // aria-* / data-* / event handlers: other tiers own these. Attributes
       // inherited from React's DOM and SVG types (an svg's `accumulate`, a
       // button's `type`) are the element's, not the component's vocabulary.
       if (propName.startsWith("aria-") || propName.startsWith("data-") || /^on[A-Z]/.test(propName) || inherited) continue;
-      const propType = checker.getTypeOfSymbolAtLocation(propSymbol, source);
+      const propType = typeOfProp(propSymbol);
       const values = literalUnionValues(propType);
       if (values) {
         // Standard HTML attribute enums inherited from React's DOM types: real
