@@ -164,6 +164,17 @@ export const pointerEventsTypes = {
   auto: "astralis:pointer-events-auto",
 } as const;
 
+/** `white-space`: shared by Box's group and Text's, since it is the one text
+ *  property a layout box also needs (a row of labels that must not wrap). */
+export const whiteSpaceTypes = {
+  normal: "astralis:whitespace-normal",
+  nowrap: "astralis:whitespace-nowrap",
+  pre: "astralis:whitespace-pre",
+  "pre-line": "astralis:whitespace-pre-line",
+  "pre-wrap": "astralis:whitespace-pre-wrap",
+  "break-spaces": "astralis:whitespace-break-spaces",
+} as const;
+
 export const aspectRatioTypes = {
   auto: "astralis:aspect-auto",
   square: "astralis:aspect-square",

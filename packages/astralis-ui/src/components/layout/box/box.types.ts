@@ -1,7 +1,8 @@
 import type { VariantProps } from "class-variance-authority";
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import type { boxVariants } from "./box.styles";
-import type { Responsive } from "../../../utils/responsive";
+import type { Responsive, ResponsiveProp } from "../../../utils/responsive";
+import type { whiteSpaceTypes } from "../../../const/common-mappings";
 import type { StateProps } from "../../../utils/interaction-state";
 import type { WidenChannelProps } from "../../../const/channel";
 import type { AliasesOf } from "../../../const/prop-aliases";
@@ -25,6 +26,13 @@ interface BoxCustomProps<T extends ElementType = "div"> {
    * no scheme of its own, takes this one. Paints nothing on the element itself.
    */
   colorScheme?: ColorScheme;
+  /**
+   * How spaces and line breaks in the text inside are kept (`white-space`):
+   * `nowrap` keeps a row of labels on one line, `pre-wrap` keeps the text's
+   * own line breaks. Inherited by the text inside.
+   * @default undefined (inherited, `normal`)
+   */
+  whiteSpace?: ResponsiveProp<keyof typeof whiteSpaceTypes>;
 }
 
 /** Every Box style prop accepts a scalar token or a responsive map. Channel

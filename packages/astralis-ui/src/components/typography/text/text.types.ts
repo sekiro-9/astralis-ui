@@ -17,7 +17,7 @@ export type TextLineClamp = "1" | "2" | "3" | "4" | "5" | "6";
  *  Link composes the same surface. */
 export type TextStyleProps = Responsive<
   WidenChannelProps<
-    Omit<VariantProps<typeof textVariants>, "lineClamp" | "lineHeight">,
+    Omit<VariantProps<typeof textVariants>, "lineClamp" | "lineHeight" | "textWrap" | "whiteSpace" | "numeric">,
     "size"
   >
 > &
@@ -26,8 +26,11 @@ export type TextStyleProps = Responsive<
 type TextVariantValue<K extends keyof VariantProps<typeof textVariants>> = NonNullable<VariantProps<typeof textVariants>[K]>;
 
 export type TextLineHeight = TextVariantValue<"lineHeight">;
+export type TextWrap = TextVariantValue<"textWrap">;
+export type TextWhiteSpace = TextVariantValue<"whiteSpace">;
+export type TextNumeric = TextVariantValue<"numeric">;
 
-/** Line height, with the size's own as a named value. */
+/** Line height and how text wraps, breaks and sets its figures. */
 interface TextFlowProps {
   /**
    * Line height, as a multiple of the font size. `"size"` keeps the line
@@ -37,6 +40,25 @@ interface TextFlowProps {
    * @default undefined (the size's own; "tight" on Heading)
    */
   lineHeight?: ResponsiveProp<Exclude<TextLineHeight, "size">> | "size";
+  /**
+   * How lines break (`text-wrap`): `balance` evens out the lines of a short
+   * title, `pretty` avoids a lone last word in a paragraph, `nowrap` keeps
+   * one line.
+   * @default undefined (the browser's `wrap`)
+   */
+  textWrap?: ResponsiveProp<TextWrap>;
+  /**
+   * How spaces and line breaks in the text are kept (`white-space`):
+   * `nowrap` keeps one line, `pre-wrap` keeps the text's own line breaks.
+   * @default undefined (inherited, `normal`)
+   */
+  whiteSpace?: ResponsiveProp<TextWhiteSpace>;
+  /**
+   * Figure style (`font-variant-numeric`): `tabular` gives every digit the
+   * same width, so counts and prices line up and do not shift as they change.
+   * @default undefined (inherited, the font's own figures)
+   */
+  numeric?: ResponsiveProp<TextNumeric>;
 }
 
 /** What a Text state may carry: the stateable props Text takes itself, its

@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority";
 import { textColors } from "../../../const/color-mappings";
+import { whiteSpaceTypes } from "../../../const/common-mappings";
 
 /** Shared by CVA (typing + scalar) and the responsive engine (per-breakpoint). */
 export const textVariantMap = {
@@ -87,6 +88,17 @@ export const textVariantMap = {
       wide: "astralis:tracking-wide",
       wider: "astralis:tracking-wider",
       widest: "astralis:tracking-widest",
+    },
+    textWrap: {
+      wrap: "astralis:text-wrap",
+      nowrap: "astralis:text-nowrap",
+      balance: "astralis:text-balance",
+      pretty: "astralis:text-pretty",
+    },
+    whiteSpace: whiteSpaceTypes,
+    numeric: {
+      tabular: "astralis:tabular-nums",
+      normal: "astralis:normal-nums",
     },
     lineClamp: {
       "1": "astralis:line-clamp-1",

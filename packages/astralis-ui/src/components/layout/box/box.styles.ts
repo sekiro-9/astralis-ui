@@ -59,7 +59,8 @@ import {
   overflowYTypes,
   cursorTypes,
   pointerEventsTypes,
-  aspectRatioTypes
+  aspectRatioTypes,
+  whiteSpaceTypes
 } from "../../../const/common-mappings";
 import {
   insetTypes,
@@ -132,6 +133,7 @@ export const boxVariantMap = {
     overflowY: overflowYTypes,
     cursor: cursorTypes,
     pointerEvents: pointerEventsTypes,
+    whiteSpace: whiteSpaceTypes,
     aspectRatio: aspectRatioTypes,
     shadow: shadowTypes,
     border: borderWidthTypes,
