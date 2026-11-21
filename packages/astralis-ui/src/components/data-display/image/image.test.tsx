@@ -87,6 +87,50 @@ describe("Image loading state", () => {
 });
 
 /**
+ * `width`/`height` are the img's intrinsic size. They size the box on their
+ * own, but a sizing prop must win over them, or a fluid or responsive size
+ * can never apply.
+ */
+describe("Image width/height against sizing props", () => {
+  const img = (el: React.ReactElement) => render(el).container.querySelector("img")!;
+
+  it("alone, they reserve the box inline", () => {
+    const node = img(<Image src="/a.png" alt="" width={140} height={90} />);
+    expect(node.style.width).toBe("140px");
+    expect(node.style.height).toBe("90px");
+  });
+
+  it("with w/h, they stay attributes and the props size the image", () => {
+    const node = img(<Image src="/a.png" alt="" width={1419} height={1400} w="full" h="full" />);
+    expect(node.style.width).toBe("");
+    expect(node.style.height).toBe("");
+    expect(node).toHaveAttribute("width", "1419");
+    expect(node).toHaveAttribute("height", "1400");
+    expect(node).toHaveClass("astralis-w", "astralis-h");
+  });
+
+  it("a responsive h wins too", () => {
+    const node = img(<Image src="/a.png" alt="" width={120} height={40} w="auto" h={{ base: "1.5rem", lg: "2.25rem" }} />);
+    expect(node.style.height).toBe("");
+    expect(node.style.getPropertyValue("--astralis-h-lg")).toBe("2.25rem");
+  });
+
+  it("the ratio box drops its inline width for w", () => {
+    const { container } = render(<Image src="/a.png" alt="" aspectRatio="video" width={300} w="full" />);
+    expect((container.firstElementChild as HTMLElement).style.width).toBe("");
+  });
+
+  it("the failure box follows w and keeps the ratio", () => {
+    const { container } = render(<Image src="/missing.png" alt="" width={140} height={90} w="60" />);
+    fireEvent.error(container.querySelector("img")!);
+    const box = container.firstElementChild as HTMLElement;
+    expect(box).toHaveClass("astralis-w");
+    expect(box.style.width).toBe("");
+    expect(box.style.aspectRatio).toBe("140 / 90");
+  });
+});
+
+/**
  * The DOM remainder (id, data-*, aria-*) has to land on whichever element is
  * outermost, because that is the element a caller can point at: a builder
  * addresses the node it placed, a test addresses the thing it rendered.

@@ -36,6 +36,18 @@ export const ImageRoot = identify("Image", function ImageRoot({
   ref,
   ...rest
 }: ImageProps & { ref?: Ref<HTMLImageElement> }) {
+    // `width`/`height` reserve the box only until a sizing prop takes over;
+    // then they stay as attributes, which give the browser the aspect ratio.
+    const sizedByProps = rest.w != null || rest.h != null;
+    const intrinsicSize = sizedByProps ? {} : { width, height };
+    const ratio = typeof width === "number" && typeof height === "number" ? `${width} / ${height}` : undefined;
+    const fallbackSize: React.CSSProperties = !sizedByProps
+      ? { width, height: height ?? 160 }
+      : ratio
+        ? { aspectRatio: ratio }
+        : rest.h == null
+          ? { height: height ?? 160 }
+          : {};
     const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
 
     // Keyed by src, so a new src starts loading again instead of inheriting
@@ -121,15 +133,13 @@ export const ImageRoot = identify("Image", function ImageRoot({
       ) : (
         <div
           {...domProps("img")}
-          className={[
+          className={astralisMerge(
             "astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2",
             "astralis:bg-surface-muted astralis:text-label-subtle",
             roundedClass,
-            aspectRatio ? "astralis:absolute astralis:inset-0" : "",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          style={aspectRatio ? {} : { width, height: height ?? 160 }}
+            aspectRatio ? "astralis:absolute astralis:inset-0" : placementClass,
+          )}
+          style={aspectRatio ? {} : { ...placementStyle, ...fallbackSize }}
         >
           <svg
             viewBox="0 0 24 24"
@@ -165,7 +175,7 @@ export const ImageRoot = identify("Image", function ImageRoot({
           aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,
           className,
         )}
-        style={aspectRatio ? loadingStyle : { ...placementStyle, width, height, ...loadingStyle, ...style }}
+        style={aspectRatio ? loadingStyle : { ...placementStyle, ...intrinsicSize, ...loadingStyle, ...style }}
       />
     );
 
@@ -180,7 +190,7 @@ export const ImageRoot = identify("Image", function ImageRoot({
         {...domProps("box")}
         {...previewProps("box")}
         className={astralisMerge(placementClass, previewClasses, roundedClass)}
-        style={{ ...placementStyle, ...ratioStyle, width, ...style }}
+        style={{ ...placementStyle, ...ratioStyle, width: intrinsicSize.width, ...style }}
       >
         {imageElement}
       </div>

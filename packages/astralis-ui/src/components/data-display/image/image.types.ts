@@ -30,7 +30,13 @@ export interface ImageProps extends Omit<PlacementProps, "width" | "height"> {
   alt: string;
   className?: string;
   style?: CSSProperties;
+  /**
+   * The img element's intrinsic width. With `height`, it reserves the box
+   * before the image loads. A `w` or `h` prop takes over the sizing; the two
+   * attributes then only give the aspect ratio.
+   */
   width?: number | string;
+  /** The img element's intrinsic height. See `width`. */
   height?: number | string;
   objectFit?: ImageObjectFit;
   loading?: "eager" | "lazy";
