@@ -246,7 +246,7 @@ function checkScalar(ctx, comp, prop, propSpec, value, node) {
       (near ? ` (did you mean "${near}"?)` : ""));
   } else if (verdict.verdict === "bare-number" || (BARE_NUMBER.test(value) && !propSpec.unitless)) {
     ctx.warn("bare-number-value", node,
-      `${comp}: ${prop}="${value}" is not a token, and a bare number is not valid CSS here — did you mean a token, or "${value}px"?`);
+      `${comp}: ${prop}="${value}" is not a token, and a bare number is not valid CSS here — did you mean a token, or "${value}${propSpec.valueType === "angle" ? "deg" : "px"}"?`);
   } else if (ctx.opts.strictTokens && propSpec.valueType === "color") {
     ctx.warn("off-token-color", node,
       `${comp}: ${prop}="${value}" is a raw color — it won't follow the theme or dark mode; prefer a token`);

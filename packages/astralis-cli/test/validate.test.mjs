@@ -60,6 +60,25 @@ test("arbitrary channel values pass; bare numbers warn; unitless don't", () => {
   assert.deepEqual(unitless.warnings, []);
 });
 
+test("transform props: tokens, CSS values, states and breakpoints pass; wrong values do not", () => {
+  const good = validate(`<Flex scale="105" translateX="-2" translateY={{ base: "0", md: "-1" }} rotate="0.25turn"
+    transformOrigin="top-left" transition={{ base: "none", md: "common" }}
+    hover={{ scale: "1.02", translateY: "-1", shadow: "lg" }} active={{ scale: "95" }} focusVisible={{ rotate: "-3" }} />`);
+  assert.deepEqual(good.errors, []);
+  assert.deepEqual(good.warnings, []);
+
+  const bad = validate(`<Box transformOrigin="middle" transition="all" scale="big" rotate="45px" hover={{ rotate: "nope" }} />`);
+  assert.deepEqual(codes(bad.errors), [
+    "invalid-keyword-value", "invalid-keyword-value", "channel-value-invalid", "channel-value-invalid", "channel-value-invalid",
+  ]);
+
+  const bare = validate(`<Box rotate="30" hover={{ rotate: "30" }} />`);
+  assert.deepEqual(codes(bare.warnings), ["bare-number-value", "bare-number-value"]);
+  assert.match(bare.warnings[0].message, /"30deg"/);
+
+  assert.deepEqual(codes(validate(`<Card scale="105" />`).errors), ["unknown-style-prop"]);
+});
+
 test("responsive maps only take real breakpoint keys", () => {
   const r = validate(`<Box p={{ base: "2", tablet: "4" }} />`);
   assert.equal(r.errors[0].code, "invalid-breakpoint-key");

@@ -3,7 +3,7 @@
    --------------------------------------------------------------------------
    Classifies an ARBITRARY channel value (a string that is not a token)
    against the value type its channel carries — length, color, shadow,
-   number, integer (spec propGroups[*].valueType). A `template` (Grid's
+   number, integer, scale, angle (spec propGroups[*].valueType). A `template` (Grid's
    track and area lists) is open CSS with no grammar here: never judged.
 
    The design rule: NEVER reject valid CSS. A false "invalid" kills trust in
@@ -41,7 +41,11 @@ const FUNCTIONS = {
   shadow: new Set(["var"]),
   number: new Set(["var", "calc", "min", "max", "clamp"]),
   integer: new Set(["var", "calc"]),
+  scale: new Set(["var", "calc", "min", "max", "clamp"]),
+  angle: new Set(["var", "calc", "min", "max", "clamp"]),
 };
+
+const ANGLE_UNITS = new Set(["deg", "rad", "grad", "turn"]);
 
 /** The CSS named colors, plus transparent/currentColor. */
 const NAMED_COLORS = new Set([
@@ -112,7 +116,11 @@ export function classifyChannelValue(raw, type) {
       case "integer":
         return unit === "" && /^[+-]?\d+$/.test(value) ? ok : invalid("takes a whole number");
       case "number":
+      case "scale":
         return unit === "" || unit === "%" ? ok : invalid("takes a plain number or percentage");
+      case "angle":
+        if (unit === "") return { verdict: "bare-number" };
+        return ANGLE_UNITS.has(unit) ? ok : invalid(`"${unit}" is not a CSS angle unit`);
       case "length":
         if (unit === "") return { verdict: "bare-number" };
         return unit === "%" || LENGTH_UNITS.has(unit)
@@ -129,6 +137,7 @@ export function classifyChannelValue(raw, type) {
     if (type === "color") return NAMED_COLORS.has(word) ? ok : invalid("not a CSS color name");
     if (type === "length") return LENGTH_KEYWORDS.has(word) ? ok : invalid("not a CSS sizing keyword");
     if (type === "shadow") return word === "none" ? ok : invalid("not a shadow");
+    if (type === "scale" || type === "angle") return word === "none" ? ok : invalid(`takes a ${type === "angle" ? "CSS angle" : "number or percentage"}`);
     return invalid(`takes a ${type === "integer" ? "whole number" : "number"}`);
   }
 
