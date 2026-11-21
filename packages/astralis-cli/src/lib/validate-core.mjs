@@ -394,7 +394,10 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
   // A style prop this component's type does not take at all: it is passed to
   // the DOM, where it is a meaningless attribute. Only decided when the spec
   // lists the component's own style-prop names (spec builds from Oct 2026).
-  if (comp.ownStyleProps && !comp.ownStyleProps.includes(prop) && ctx.stylePropNames.has(prop) && !HTML_ATTRIBUTE_NAMES.has(prop)) {
+  // `domStyleProps` are the element's own attributes under a style prop's
+  // name (Textarea rows, Table.Cell colSpan): real, so never stray.
+  if (comp.ownStyleProps && !comp.ownStyleProps.includes(prop) && !comp.domStyleProps?.includes(prop) &&
+      ctx.stylePropNames.has(prop) && !HTML_ATTRIBUTE_NAMES.has(prop)) {
     const recipe = comp.groups.length === 1 && comp.groups[0] === "placement" && DOCTRINE_PAINT_PROPS.has(prop);
     ctx.error("unknown-style-prop", attr,
       `${name} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing` +

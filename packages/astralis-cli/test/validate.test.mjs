@@ -167,6 +167,18 @@ test("a component's own prop under a style-prop name, and real HTML attributes, 
   assert.deepEqual(codes(r.errors), []);
 });
 
+test("an element attribute under a style-prop name is not stray, though it is not the component's own", () => {
+  assert.equal(spec.components.Textarea.ownStyleProps.includes("rows"), false, "rows is the textarea's attribute");
+  assert.equal(spec.components.Card.ownStyleProps.includes("color"), false, "the HTML color attribute is no prop of Card");
+  const r = validate(`<Stack>
+    <Textarea rows="4" />
+    <Table><Table.Body><Table.Row><Table.Cell colSpan="2" rowSpan="2">x</Table.Cell></Table.Row></Table.Body></Table>
+    <Icon opacity="0.5" />
+    <Card color="red">x</Card>
+  </Stack>`, "Stack, Textarea, Table, Icon, Card");
+  assert.deepEqual(codes(r.errors), []);
+});
+
 test("advice: a Flex column is a VStack", () => {
   const r = validate(`<Flex direction="column" gap="4">x</Flex>`);
   assert.deepEqual(codes(r.warnings), ["prefer-vstack"]);
