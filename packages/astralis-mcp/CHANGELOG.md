@@ -3,6 +3,10 @@
 All notable changes to `astralis-mcp`. Under 0.x, a minor version may contain
 breaking changes; a patch never does.
 
+## 0.4.1 (2026-11-21)
+
+Uses astralis-cli 0.6.0, so `validate_code` reads astralis-ui 0.10.0's version 4 system spec.
+
 ## 0.4.0 (2026-11-19)
 
 Requires Node `^22.18` or `>=24.11`.

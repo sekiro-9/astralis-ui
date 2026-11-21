@@ -6,6 +6,22 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
+## 0.6.0 (2026-11-21)
+
+Publish with astralis-ui 0.10.0, whose system spec is version 4.
+
+### Added
+
+- **New errors**: `invalid-prop-type` (a number written as a string, a bad responsive map) and `unsupported-css-keyword` (a CSS-wide keyword a value prop cannot carry).
+- **State props on Text, Heading and Link are checked** against the props they take.
+- **Scale and angle values are judged**, including inside `hover`; a bare `rotate` number gets a `deg` suggestion.
+- **Grid template values** are accepted as track lists, per breakpoint.
+
+### Changed
+
+- **Names in the spec's `domStyleProps` are never reported as stray style props** (Textarea `rows`, Table cell `colSpan`).
+- **`unknown-style-prop` on a component that takes no style props says so** instead of naming an empty group list.
+
 ## 0.5.1 (2026-11-20)
 
 Uses astralis-ui 0.9.0, whose specification adds the animation props, so

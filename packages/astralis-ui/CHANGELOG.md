@@ -6,10 +6,29 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
-## Unreleased
+## 0.10.0 (2026-11-21)
+
+Publish with astralis-cli 0.6.0: the system spec is now version 4, and older
+CLIs misread its new fields. Under 0.x a minor version may change behaviour;
+every change of that kind is under Changed.
 
 ### Added
 
+- **`<Image as={NextImage}>`.** Image renders through a framework's image component, so Next.js does the resizing, `srcset`, modern formats and preloading while Image keeps `rounded`, `objectFit`, `aspectRatio`, placement props, the loading surface and the fallback. With `as`, `placeholder` and `loading` belong to that component.
+- **Transforms, in states too.** `scale`, `translateX`, `translateY` and `rotate` on Box and every layout primitive, responsive and usable inside `hover`, `focusVisible` and `active` (`hover={{ scale: "105" }}`), with `transformOrigin` and `transition` (`none`, `colors`, `transform`, `common`). Under reduced motion the change applies at once.
+- **`hover`, `focusVisible` and `active` on Text, Heading and Link**, for colour and placement props. An explicit `hover.color` on Link replaces its accent hover shift.
+- **`display` is a placement prop.** Button, Text, Link, Badge, Kbd and every component with a recipe hide and show by breakpoint: `<Button display={{ base: "hidden", lg: "inline-flex" }}>`.
+- **Placement props on compound parts.** Card, Table, Tabs, Stat and DataList parts, `CodeBlock.Content` and `Popover.Content` take size, margin, flex item, position, `display` and motion props. They still take no paint or padding.
+- **`colorScheme="inherit"`** on every component that takes `colorScheme`, and `colorScheme` on Box and the layout primitives to theme a section. Picker lists and the DatePicker calendar follow the scheme in scope.
+- **`size="inherit"`** on Text, Heading and Link, and **`lineHeight="size"`** to keep the line height that comes with the size (Heading otherwise uses `tight`).
+- **`textWrap`, `whiteSpace` and `numeric`** (tabular figures) on Text, Heading and Link; `whiteSpace` on Box and the layout primitives.
+- **Responsive Grid templates.** `templateColumns`, `templateRows` and `templateAreas` accept a breakpoint map and container keys, laid out by CSS before hydration. A plain string is unchanged.
+- **Motion strength, stagger and play-once.** `animationDistance` (`sm`, `md`, `lg`, `xl`) scales how far an entrance or reveal travels; `animationDelay` staggers `reveal`; `revealMode="once"` plays a reveal the first time it scrolls into view and keeps it shown (falls back to `scroll` where the browser has no scroll triggers).
+- **Responsive Carousel and Icon.** Carousel `slidesPerView` and `slideGap` and Icon `size` accept `{ base, sm, md, lg, xl }`; the Carousel is laid out by CSS, so the server HTML is right at every width.
+- **`rounded` on the input family**: Input, Input.Password, Input.Search, NumberInput, Combobox, DatePicker, Select, NativeSelect, MultiSelect, PinInput and Textarea. Unset keeps today's corners.
+- **Placement props on InputGroup, Input.Password and Input.Search**, applied to the outer element.
+- **Development warnings for ignored style props.** A style prop a component does not take is reported once in the console, in the validator's words. Production builds are unchanged.
+- **System spec version 4**: `propDocs` (descriptions and defaults from the type files), `responsiveProps`, `domStyleProps`, `cssKeywords`; prop groups are derived from each component's types.
 - **Prop documentation in the system spec.** Each component entry in
   `system-spec.json` carries `propDocs`: for each of its own props, a short
   `description` and its `default`, plus `deprecated` where a prop is. They
@@ -21,8 +40,27 @@ npm. Their changes reached npm in the next published version, which says so.
   and style props once, as a `description` on their entry in `propGroups`.
   Tools such as the DevTools can now explain a prop without the docs site.
 
+### Changed
+
+- **`inherit` on `color`, `bg` and `borderColor` now inherits the parent's actual value**, including its hover colour and a colour set by a class. Before, it copied the nearest colour prop above.
+- **CSS-wide keywords on the other value props.** `unset` and `initial` now unset the property and `rounded` takes `inherit`; `w="inherit"`, `p="revert"` and similar render nothing (they used to copy the nearest ancestor's prop).
+- **Image.** A `w` or `h` prop now wins over `width`/`height`, which then only set the aspect ratio. `placeholder="blur"` looks the same as the default. An empty `src` shows the fallback. `onLoad` and `onError` receive the event and fire once per outcome.
+- **`animationDuration` now also sets how much of the scroll a `reveal` spans.**
+- **Card `hoverable` lifts 4px with a deeper shadow**, and moves only when motion is not reduced.
+- **Rating's empty stars are solid grey** instead of thin outlines.
+- **Card, AspectRatio and Accordion clip with `overflow: clip`**; an unstyled Card is `display: flow-root`.
+- **Smaller stylesheet over gzip**: dead fallback declarations dropped, responsive rules grouped so they compress, and responsive variants no prop can produce are no longer generated (responsive Kbd, Link and Highlight classes typed by hand no longer exist).
+- **The system spec no longer lists attributes inherited from React's DOM and SVG types as a component's own props.**
+
 ### Fixed
 
+- **Image put its placeholder in the server HTML**, so no picture loaded until JavaScript ran. The real `src` is now in the HTML and the loading state is a pulsing surface with a small glyph behind the image.
+- **`reveal` did nothing inside a horizontal ScrollArea, a Table, a Carousel slide, a Card, an AspectRatio or an Accordion.**
+- **Table's `outline` variant lost its sideways scroll.**
+- **Input.Search's button was 40px tall at every size.**
+- **A motion component's `transition` no longer breaks hydration in development**: only responsive maps and state payloads are recorded among object props.
+- **DatePicker's calendar had a frame of its own inside the popover.**
+- **The validator never checked style values on List, Code, Separator, Blockquote, Stat, Select and a dozen more**, because the spec gave them no prop groups; Stack's own values are checked too.
 - **The validator checks style-prop values on every component that takes
   them.** List, List.Item, Code, Separator and Blockquote take every box prop,
   and Stat, Select, NativeSelect, Collapsible, EmptyState, CheckboxCard,

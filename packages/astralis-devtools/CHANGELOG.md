@@ -2,7 +2,9 @@
 
 All notable changes to `astralis-devtools`.
 
-## Unreleased
+## 0.2.0 (2026-11-21)
+
+Uses astralis-cli 0.6.0 and reads the prop descriptions astralis-ui 0.10.0 puts in its system spec.
 
 ### Added
 
