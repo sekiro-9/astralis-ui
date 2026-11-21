@@ -23,9 +23,8 @@ export function PreviewTabs({ preview, code, align = "center" }: PreviewTabsProp
          longer ship since the var-channel). */
       style={{ gap: "var(--astralis-spacing-3)" }}
     >
-      {/* self-start: the list is a segmented pill, not a full-width bar.
-          Tabs.List takes no alignSelf prop. */}
-      <Tabs.List aria-label="Demo view" className="self-start">
+      {/* The list is a segmented pill, not a full-width bar. */}
+      <Tabs.List aria-label="Demo view" alignSelf="start">
         <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
         <Tabs.Trigger value="code">Code</Tabs.Trigger>
       </Tabs.List>

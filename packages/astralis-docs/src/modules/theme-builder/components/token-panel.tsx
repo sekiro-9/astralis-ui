@@ -35,7 +35,7 @@ function ExportView({ tab, source }: { tab: ExportTab; source: string }) {
             <CodeBlock.CopyTrigger />
           </CodeBlock.Control>
         </CodeBlock.Header>
-        <CodeBlock.Content className="shiki docs-scroll min-h-0 flex-1 overflow-y-auto">
+        <CodeBlock.Content minH="0" flex="1" className="shiki docs-scroll overflow-y-auto">
           {html != null ? <CodeBlock.Code highlightedHtml={html} /> : <CodeBlock.Code />}
         </CodeBlock.Content>
       </CodeBlock.Root>
@@ -125,8 +125,8 @@ export function TokenPanel({ state, css, json }: { state: BuilderState; css: str
         </Flex>
 
         {EXPORTS.map((item) => (
-          // Tabs.Content takes no layout props.
-          <Tabs.Content key={item.value} value={item.value} className="flex min-h-0 flex-col gap-2">
+          // Tabs.Content takes no flex-container props.
+          <Tabs.Content key={item.value} value={item.value} display="flex" minH="0" className="flex-col gap-2">
             <ExportView tab={item} source={item.value === "css" ? css : json} />
           </Tabs.Content>
         ))}

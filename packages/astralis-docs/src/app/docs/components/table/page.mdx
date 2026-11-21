@@ -31,7 +31,11 @@ still follows the page scroll.
 
 `Table.Head` defaults `scope="col"`; `Table.Caption` takes
 `placement: "top" | "bottom"` (default bottom). All parts forward their
-native element attributes.
+native element attributes, and every part takes the [placement props](/docs/style-props).
+On rows and cells, `w`, `h`, `display` and `position` with its offsets apply;
+margins have no effect on table rows and cells, and a `display` other than
+`hidden` takes the element out of the table layout. On `Table.Cell`, `width`
+and `height` stay the cell's HTML attributes; use `w` and `h`.
 
 ## Accessibility
 

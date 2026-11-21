@@ -38,10 +38,12 @@ and border change.
 
 <PropsTable of="Card" rows={cardProps} />
 
-Card takes placement props only (see the last row), no padding or paint: its
-look comes from `variant` and `size`. A `Grid` with `alignItems="stretch"`
-already gives a row of cards equal heights, and padding or a background goes
-on a wrapping `Box`.
+Card and each of its parts take placement props only (see the last row), no
+padding or paint: the card's look comes from `variant` and `size`. A body that
+fills the card is `<Card.Body flex="1">`, and `display` hides a part below a
+breakpoint; layout inside a part (`gap`, `alignItems`) is a `Stack` inside it.
+A `Grid` with `alignItems="stretch"` already gives a row of cards equal
+heights, and padding or a background goes on a wrapping `Box`.
 
 `Card.Header` additionally takes `extra: ReactNode`; `Card.Title` renders an
 `h3` and `Card.Description` a `p`. Both accept their native attributes.

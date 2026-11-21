@@ -56,10 +56,10 @@ Repainting one from the outside would defeat the variants it ships with.
 **Placement** is how big something is and where it sits *inside its parent*:
 width and height, the flex-item props, margin, position, `display` (whether it
 shows at this width) and motion. A component cannot know these: only the
-composition can. So components accept them, recipes included; every recipe's props table ends with a **placement
-props** row saying so. A few compound parts (`Card.Body`, `Tabs.List`,
-`Tabs.Content`, `Table.Cell`...) take no style props at all: put a `Stack` or
-`Box` inside or around them.
+composition can. So components accept them, recipes included; every recipe's
+props table ends with a **placement props** row saying so. The parts of Card,
+Table, Tabs, Stat and DataList, `CodeBlock.Content` and `Popover.Content` take
+them too. Layout inside a part (`gap`, `alignItems`) is a `Stack` inside it.
 
 So `<Button p="6">` and `<Card bg="subtle">` do nothing. Reach for the
 component's own `variant`, `size` and `colorScheme`, or wrap it:

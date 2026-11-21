@@ -18,8 +18,8 @@ export function CodeResultSwitcher({ panels }: { panels: Panel[] }) {
       rounded
       style={{ gap: "var(--astralis-spacing-6)" }}
     >
-      {/* Tabs.List takes no layout props. */}
-      <Tabs.List aria-label="Examples" className="flex-wrap self-start">
+      {/* Tabs.List takes no flex-container props. */}
+      <Tabs.List aria-label="Examples" alignSelf="start" className="flex-wrap">
         {panels.map((panel) => (
           <Tabs.Trigger key={panel.title} value={panel.title}>
             {panel.title}

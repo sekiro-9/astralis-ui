@@ -22,8 +22,7 @@ export function InfoPopover({ label, info }: { label: string; info: string }) {
           mt="-0.125rem"
         />
       </Popover.Trigger>
-      {/* Popover.Content takes no size props. */}
-      <Popover.Content withArrow className="max-w-64">
+      <Popover.Content withArrow maxW="64">
         <Popover.Title>{label}</Popover.Title>
         <Popover.Description>{info}</Popover.Description>
       </Popover.Content>

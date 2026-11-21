@@ -70,10 +70,9 @@ function Cell({
       <CardHeader>
         {/* `style`, not a class: it has to beat Title's own text-base. */}
         <CardTitle style={{ fontSize: "var(--astralis-font-size-sm)" }}>{title}</CardTitle>
-        {/* Card's parts take no style props. */}
-        <CardDescription className="mt-1">{body}</CardDescription>
+        <CardDescription mt="1">{body}</CardDescription>
       </CardHeader>
-      {children && <CardBody className="flex min-h-0 flex-1 items-center">{children}</CardBody>}
+      {children && <CardBody display="flex" minH="0" flex="1" className="items-center">{children}</CardBody>}
     </Card>
   );
 }
@@ -167,10 +166,10 @@ export function Bento({ stats }: { stats: SiteStats }) {
               >
                 {/* Overrides the horizontal Label's fixed w-40, which would crop
                     these long token names. */}
-                <DataListLabel className="truncate" style={{ width: "auto", flex: "1 1 0%" }}>
+                <DataListLabel w="auto" flex="1" className="truncate">
                   {row.token}
                 </DataListLabel>
-                <DataListValue className="flex items-center gap-1.5" style={{ flex: "none" }}>
+                <DataListValue display="flex" flex="none" className="items-center gap-1.5">
                   <Box as="span" size="3.5" rounded="full" border="normal" borderColor="base" bg={row.light} />
                   <Box as="span" size="3.5" rounded="full" border="normal" borderColor="base" bg={row.dark} />
                 </DataListValue>

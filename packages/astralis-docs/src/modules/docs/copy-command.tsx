@@ -37,7 +37,7 @@ export function CopyCommand({ command }: CopyCommandProps) {
           "var(--astralis-spacing-1) var(--astralis-spacing-1) var(--astralis-spacing-1) var(--astralis-spacing-3)",
       }}
     >
-      <CodeBlockContent style={{ minWidth: 0, padding: 0 }}>
+      <CodeBlockContent minW="0" style={{ padding: 0 }}>
         <CodeBlockCode
           style={{
             fontSize: "var(--astralis-font-size-xs)",

@@ -53,8 +53,7 @@ export function BlockGallery({ groups, all }: BlockGalleryProps) {
       size="sm"
       style={{ gap: "var(--astralis-spacing-4)" }}
     >
-      {/* Tabs.List takes no alignSelf prop. */}
-      <Tabs.List aria-label="Block categories" className="self-start">
+      <Tabs.List aria-label="Block categories" alignSelf="start">
         <Tabs.Trigger value={ALL}>
           All
           <Count value={all.length} />

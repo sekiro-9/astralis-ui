@@ -43,7 +43,7 @@ export function BlockCard({ block, eager, hidden }: BlockCardProps) {
         {/* Name and id only: the description lives on the detail page. A grid
             of thumbnails is scanned visually, and two lines of prose per tile
             competed with the previews rather than adding to them. Card.Body
-            takes no layout props, so the column is a Stack inside it. */}
+            takes no flex-container props, so the column is a Stack inside it. */}
         <Card.Body>
           <Stack alignItems="start" gap="2">
             <Card.Title style={{ fontSize: "var(--astralis-font-size-sm)" }}>{block.name}</Card.Title>

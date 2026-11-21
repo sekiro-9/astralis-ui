@@ -59,7 +59,7 @@ export function StatsStrip({ stats }: { stats: SiteStats }) {
         py={{ base: "16", lg: "20" }}
       >
         {numbers.map((item) => (
-          // Stat and its parts take no style props.
+          // Stat and its parts take no gap or typography props.
           <Stat
             key={item.label}
             align="center"

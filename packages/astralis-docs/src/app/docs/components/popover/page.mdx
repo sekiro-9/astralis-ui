@@ -36,7 +36,9 @@ interactive → Popover; blocking decision → [Modal](/docs/components/modal).
 
 <PropsTable rows={popoverProps} />
 
-`Popover.Content` takes `withArrow`; `Popover.Trigger` and `Popover.Close`
+`Popover.Content` takes `withArrow` and the [placement props](/docs/style-props)
+for its size (`w`, `maxW`), margins, `display` and motion. Its `position`,
+offsets and `zIndex` have no effect: the popover places itself. `Popover.Trigger` and `Popover.Close`
 wrap a single element, like Modal's.
 
 ## Keyboard

@@ -26,7 +26,7 @@ function PlacementRow() {
       <Table.Cell>
         <Code style={propChipStyle}>{placementRow.prop}</Code>
       </Table.Cell>
-      <Table.Cell className="max-w-60">
+      <Table.Cell maxW="60">
         <Code bg="transparent" color="muted">
           {placementRow.type}
         </Code>
@@ -36,7 +36,7 @@ function PlacementRow() {
           None
         </Text>
       </Table.Cell>
-      <Table.Cell className="min-w-56 leading-relaxed" style={{ color: "var(--astralis-color-label-muted)" }}>
+      <Table.Cell minW="56" className="leading-relaxed" style={{ color: "var(--astralis-color-label-muted)" }}>
         {placementRow.description}{" "}
         <Link as={NextLink} href={PLACEMENT_RULE_HREF}>
           Paint and placement
@@ -65,14 +65,14 @@ export function PropsTable({ rows, of }: { rows: PropRow[]; of?: string }) {
       </Table.Header>
       <Table.Body>
         {rows.map((row) => (
-          // Table.Row and Table.Cell take no style props: alignment and cell widths stay classes.
+          // Table.Row takes no vertical-align prop, so alignment stays a class.
           <Table.Row key={row.prop} className="align-top">
             <Table.Cell>
               <Code style={propChipStyle}>{row.prop}</Code>
             </Table.Cell>
             {/* bg="transparent" + color: Box style props, so the unchipped
                 look is expressed in tokens rather than an override class. */}
-            <Table.Cell className="max-w-60">
+            <Table.Cell maxW="60">
               <Code bg="transparent" color="muted">
                 {row.type}
               </Code>
@@ -89,7 +89,8 @@ export function PropsTable({ rows, of }: { rows: PropRow[]; of?: string }) {
               )}
             </Table.Cell>
             <Table.Cell
-              className="min-w-56 leading-relaxed"
+              minW="56"
+              className="leading-relaxed"
               style={{ color: "var(--astralis-color-label-muted)" }}
             >
               {row.description}

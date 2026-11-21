@@ -34,5 +34,6 @@ narrow columns and cards.
 
 <PropsTable of="DataList" rows={dataListProps} />
 
-`Item`, `Label` and `Value` take only `className`: they're layout, the
-semantics come free.
+`Item`, `Label` and `Value` take the [placement props](/docs/style-props): `w="auto"`
+on a `Label` gives up its fixed column, `flex="none"` keeps a `Value` at its own
+width. Their look stays with `size`; the semantics come free.
