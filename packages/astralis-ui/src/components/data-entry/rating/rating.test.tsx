@@ -26,6 +26,24 @@ describe("Rating", () => {
     const overlays = [...container.querySelectorAll("span")].filter((s) => s.style.width);
     expect(overlays.map((s) => s.style.width)).toContain("50%");
   });
+
+  it("draws empty stars as solid grey stars, in both modes, and red outlines when invalid", () => {
+    const paint = (svg: Element) => [svg.getAttribute("fill"), [...svg.classList].find((c) => c.startsWith("astralis:text-"))];
+    const empty = ["currentColor", "astralis:text-stroke-muted"];
+
+    const readOnly = render(<Rating value={3} readOnly />).container;
+    // Each star's first svg is its empty base; filled ones carry an overlay on top.
+    const bases = [...readOnly.querySelectorAll('[role="img"] > span > svg')];
+    expect(bases.map(paint)).toEqual(Array(5).fill(empty));
+
+    const interactive = render(<Rating defaultValue={3} />).container;
+    const stars = [...interactive.querySelectorAll("label svg")];
+    expect(stars.slice(3).map(paint)).toEqual(Array(2).fill(empty));
+    expect(paint(stars[0])).toEqual(["currentColor", "astralis:text-accent-solid"]);
+
+    const invalid = render(<Rating defaultValue={3} invalid />).container;
+    expect(paint([...invalid.querySelectorAll("label svg")][4])).toEqual(["none", "astralis:text-error-label"]);
+  });
 });
 
 describe("Rating API and Field", () => {

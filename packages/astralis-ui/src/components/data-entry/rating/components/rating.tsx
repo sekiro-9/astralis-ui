@@ -71,7 +71,7 @@ export const Rating = identify("Rating", function Rating({
           const fraction = Math.max(0, Math.min(1, value - (star - 1)));
           return (
             <span key={star} aria-hidden="true" className="astralis:relative astralis:inline-flex">
-              <StarIcon className={astralisMerge(sz, ratingStarColor(false))} />
+              <StarIcon fill="currentColor" className={astralisMerge(sz, ratingStarColor(false))} />
               {fraction > 0 && (
                 // Partial fill: a clipped overlay star. Width is inline on
                 // purpose — fraction utilities don't emit from dynamic values.
@@ -132,7 +132,7 @@ export const Rating = identify("Rating", function Rating({
               className="astralis:sr-only astralis:peer"
             />
             <span className={ratingStar}>
-              <StarIcon fill={filled ? "currentColor" : "none"} className={astralisMerge(sz, ratingStarColor(filled, !!invalid))} />
+              <StarIcon fill={filled || !invalid ? "currentColor" : "none"} className={astralisMerge(sz, ratingStarColor(filled, !!invalid))} />
             </span>
           </label>
         );
