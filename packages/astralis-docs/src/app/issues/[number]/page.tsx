@@ -110,8 +110,7 @@ export default async function IssuePage({ params }: Props) {
         </Flex>
       </Stack>
 
-      {/* The track sizes are a class: Grid's columns prop counts equal columns, and this is one fluid and one fixed. */}
-      <Grid gap="10" className="lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <Grid gap="10" templateColumns={{ lg: "minmax(0,1fr) 18rem" }}>
         <Stack gap="10" minW="0">
           <Stack as="section" gap="4">
             <Byline person={issue.author} date={issue.createdAt} />

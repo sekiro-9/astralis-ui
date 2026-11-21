@@ -40,6 +40,7 @@ import { GridDemo } from "./grid/grid-demo";
 import { GridSpan } from "./grid/grid-span";
 import { GridResponsive } from "./grid/grid-responsive";
 import { GridTemplate } from "./grid/grid-template";
+import { GridTemplateResponsive } from "./grid/grid-template-responsive";
 import { CenterDemo } from "./center/center-demo";
 import { CenterBadges } from "./center/center-badges";
 import { ContainerDemo } from "./container/container-demo";
@@ -271,6 +272,7 @@ export const demos = {
   "grid-span": { component: GridSpan, file: "grid/grid-span.tsx" },
   "grid-responsive": { component: GridResponsive, file: "grid/grid-responsive.tsx" },
   "grid-template": { component: GridTemplate, file: "grid/grid-template.tsx" },
+  "grid-template-responsive": { component: GridTemplateResponsive, file: "grid/grid-template-responsive.tsx" },
   "center-demo": { component: CenterDemo, file: "center/center-demo.tsx" },
   "center-badges": { component: CenterBadges, file: "center/center-badges.tsx" },
   "container-demo": { component: ContainerDemo, file: "container/container-demo.tsx" },

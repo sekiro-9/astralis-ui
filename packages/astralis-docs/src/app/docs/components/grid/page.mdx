@@ -40,6 +40,17 @@ For genuinely custom layouts, `templateAreas`, `templateColumns` and
 
 <ComponentPreview name="grid-template" />
 
+## Responsive templates
+
+The three template props also take a breakpoint map, for track sizes that
+`columns` cannot express, such as one fluid column beside a fixed one from
+`md` up. Each value rides a CSS variable read at its breakpoint, so the
+server's HTML already has the right layout at every width. A template beats
+`columns` and `rows` wherever both are set. Container keys (`"@md"`) work
+too, against the nearest `container` ancestor.
+
+<ComponentPreview name="grid-template-responsive" />
+
 ## Props
 
 Grid extends [Box](/docs/components/box), so every style prop works here too.

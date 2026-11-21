@@ -40,8 +40,8 @@ export const gridProps: PropRow[] = [
   },
   {
     prop: "templateColumns · templateRows · templateAreas",
-    type: "string",
-    description: "Escape hatches: arbitrary track/area templates, applied as inline styles.",
+    type: "string | { base, sm, md, lg, xl, @sm…@xl }",
+    description: "Raw track and area templates. A string is applied as inline style; a breakpoint map changes the template per breakpoint, before any JavaScript runs. Beats columns and rows.",
   },
 ];
 
