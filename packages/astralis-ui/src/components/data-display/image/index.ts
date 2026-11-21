@@ -10,6 +10,9 @@ export default Image;
 
 export type {
   ImageProps,
+  ImageAsProps,
+  ImageComponent,
+  ImageOwnProps,
   ImageGroupProps,
   ImageGroupItem,
   ImageObjectFit,

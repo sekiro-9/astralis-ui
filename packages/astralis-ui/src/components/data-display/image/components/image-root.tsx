@@ -1,7 +1,16 @@
 "use client";
 
 import { splitPlacement } from "../../../../utils/placement";
-import { useState, type KeyboardEvent, type Ref, type RefCallback } from "react";
+import {
+  useRef,
+  useState,
+  type CSSProperties,
+  type ElementType,
+  type KeyboardEvent,
+  type Ref,
+  type RefCallback,
+  type SyntheticEvent,
+} from "react";
 import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ImageLightbox } from "./image-lightbox";
 import {
@@ -10,74 +19,139 @@ import {
   PLACEHOLDER_SIZE_MAP,
   ROUNDED_MAP,
 } from "./image.constants";
-import type { ImageProps } from "../image.types";
+import type { ImageAsProps, ImageComponent, ImageOwnProps, ImageProps } from "../image.types";
 import { identify } from "../../../../utils/dev-identity";
 
-export const ImageRoot = identify("Image", function ImageRoot({
-  src,
-  alt,
-  className = "",
-  style,
-  width,
-  height,
-  objectFit = "cover",
-  loading = "lazy",
-  srcset,
-  sizes,
-  placeholder = "empty",
-  rounded = "none",
-  aspectRatio,
-  fallback,
-  caption,
-  preview = false,
-  onLoad,
-  onError,
-  ariaLabel,
-  ref,
-  ...rest
-}: ImageProps & { ref?: Ref<HTMLImageElement> }) {
+interface StaticImageData {
+  src: string;
+  width?: number;
+  height?: number;
+}
+
+/** Every prop either render path can receive, as the body reads them. */
+type ImageRenderProps = ImageOwnProps & {
+  as?: ElementType;
+  ref?: Ref<HTMLImageElement>;
+  src?: string | StaticImageData | { default: StaticImageData };
+  width?: number | string;
+  height?: number | string;
+  loading?: "eager" | "lazy";
+  srcset?: string;
+  sizes?: string;
+  placeholder?: string;
+  onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void;
+  onError?: (event: SyntheticEvent<HTMLImageElement>) => void;
+  [prop: string]: unknown;
+};
+
+/** A framework's static image import is an object (`{ src, width, height }`), sometimes under `default`. */
+function staticImageData(src: ImageRenderProps["src"]): StaticImageData | undefined {
+  if (!src || typeof src !== "object") return undefined;
+  const data = "default" in src ? src.default : src;
+  return typeof data?.src === "string" ? data : undefined;
+}
+
+/** Drops undefined entries: an image component that merges styles with Object.assign (Next's `fill`) would let them erase its own. */
+function definedStyle(style: Record<string, unknown>): CSSProperties {
+  return Object.fromEntries(Object.entries(style).filter(([, value]) => value !== undefined)) as CSSProperties;
+}
+
+// What addresses the element on the page (id, data-*, aria-*) stays on the
+// outermost element; with `as`, the rest is the image component's own.
+const ADDRESSING_PROP = /^(id$|data-|aria-)/;
+
+export const ImageRoot = identify("Image", function ImageRoot(
+  props: (ImageProps & { ref?: Ref<HTMLImageElement> }) | ImageAsProps<ElementType>,
+) {
+    const {
+      as,
+      src,
+      alt,
+      className = "",
+      style,
+      width,
+      height,
+      objectFit = "cover",
+      loading,
+      srcset,
+      sizes,
+      placeholder,
+      rounded = "none",
+      aspectRatio,
+      fallback,
+      caption,
+      preview = false,
+      onLoad,
+      onError,
+      ariaLabel,
+      ref,
+      ...rest
+    } = props as ImageRenderProps;
+    const imageData = staticImageData(src);
+    const srcUrl = typeof src === "string" ? src : (imageData?.src ?? "");
+    // A static import carries its own pixel size; the frame math reads it,
+    // while the image component is handed `width`/`height` as given.
+    const intrinsicWidth = width ?? imageData?.width;
+    const intrinsicHeight = height ?? imageData?.height;
+    // `fill` is the image component's own (Next's): it positions the picture
+    // absolutely over its parent, so nothing here may size it.
+    const fills = Boolean(as && rest.fill);
+
     // `width`/`height` reserve the box only until a sizing prop takes over;
     // then they stay as attributes, which give the browser the aspect ratio.
-    const sizedByProps = rest.w != null || rest.h != null;
-    const intrinsicSize = sizedByProps ? {} : { width, height };
-    const ratio = typeof width === "number" && typeof height === "number" ? `${width} / ${height}` : undefined;
-    const fallbackSize: React.CSSProperties = !sizedByProps
-      ? { width, height: height ?? 160 }
-      : ratio
-        ? { aspectRatio: ratio }
-        : rest.h == null
-          ? { height: height ?? 160 }
-          : {};
-    const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
+    const sizedByProps = fills || rest.w != null || rest.h != null;
+    const intrinsicSize = sizedByProps ? {} : { width: intrinsicWidth, height: intrinsicHeight };
+    const ratio =
+      typeof intrinsicWidth === "number" && typeof intrinsicHeight === "number"
+        ? `${intrinsicWidth} / ${intrinsicHeight}`
+        : undefined;
+    const fallbackSize: React.CSSProperties = fills
+      ? {}
+      : !sizedByProps
+        ? { width: intrinsicWidth, height: intrinsicHeight ?? 160 }
+        : ratio
+          ? { aspectRatio: ratio }
+          : rest.h == null
+            ? { height: intrinsicHeight ?? 160 }
+            : {};
+    const { placementClass, placementStyle, rest: splitRest } = splitPlacement(rest);
+    const { style: _placementVars, ...domRest } = splitRest as Record<string, unknown>;
 
     // Keyed by src, so a new src starts loading again instead of inheriting
     // the previous one's loaded or failed state.
     const [settled, setSettled] = useState<{ src: string; failed: boolean } | null>(null);
     const [isOpen, setIsOpen] = useState(false);
-    const isLoading = Boolean(src) && settled?.src !== src;
-    const hasError = !src || (settled?.src === src && settled.failed);
+    const isLoading = Boolean(srcUrl) && settled?.src !== srcUrl;
+    const hasError = !srcUrl || (settled?.src === srcUrl && settled.failed);
 
-    const handleLoad = () => {
-      setSettled({ src, failed: false });
-      onLoad?.();
+    // The same outcome can arrive twice: from the node's state on attach and
+    // from the event itself, or from an image component that replays it.
+    const reported = useRef<string | null>(null);
+    const settle = (failed: boolean, event: SyntheticEvent<HTMLImageElement>) => {
+      const outcome = `${failed}:${srcUrl}`;
+      if (reported.current === outcome) return;
+      reported.current = outcome;
+      setSettled({ src: srcUrl, failed });
+      (failed ? onError : onLoad)?.(event);
     };
-
-    const handleError = () => {
-      setSettled({ src, failed: true });
-      onError?.();
-    };
+    const handleLoad = (event: SyntheticEvent<HTMLImageElement>) => settle(false, event);
+    const handleError = (event: SyntheticEvent<HTMLImageElement>) => settle(true, event);
 
     // The real src is in the server HTML, so the image can finish, or fail,
-    // before React attaches onLoad/onError; the node itself says which.
+    // before React attaches onLoad/onError. The node itself says which, and
+    // replaying that as a real event reaches every handler in between: an
+    // image component's own (Next's blur removal) as well as this one's.
     const attach: RefCallback<HTMLImageElement> = (node) => {
       if (typeof ref === "function") ref(node);
       else if (ref) ref.current = node;
       if (!node || !isLoading || !node.complete || !node.currentSrc) return;
-      if (node.naturalWidth > 0) handleLoad();
-      else handleError();
+      node.dispatchEvent(new Event(node.naturalWidth > 0 ? "load" : "error"));
     };
 
-    const lowResSrc = placeholder !== "empty" && placeholder !== "blur" ? placeholder : undefined;
+    // Without `as` the placeholder is Image's own; with it, the component's.
+    const lowResSrc =
+      !as && placeholder && placeholder !== "empty" && placeholder !== "blur" ? placeholder : undefined;
+    const componentPlaceholder = Boolean(as && placeholder && placeholder !== "empty");
     const loadingStyle: React.CSSProperties | undefined =
       isLoading && lowResSrc
         ? {
@@ -87,6 +161,8 @@ export const ImageRoot = identify("Image", function ImageRoot({
             backgroundRepeat: "no-repeat",
           }
         : undefined;
+    // Next sizes its blur from the inline objectFit, not from a class.
+    const componentFit = componentPlaceholder ? { objectFit } : undefined;
 
     const roundedClass = ROUNDED_MAP[rounded] ?? "";
     const fitClass = FIT_MAP[objectFit] ?? "";
@@ -100,9 +176,18 @@ export const ImageRoot = identify("Image", function ImageRoot({
       : {};
 
     // The DOM remainder (id, data-*, aria-*) lands on the outermost element,
-    // so what a caller addresses is what it sees on the page.
+    // so what a caller addresses is what it sees on the page. With `as`, the
+    // image component takes the rest wherever it sits.
     const outer = caption ? "figure" : aspectRatio ? "box" : "img";
-    const domProps = (target: typeof outer) => (target === outer ? domRest : {});
+    const outerRest = as
+      ? Object.fromEntries(Object.entries(domRest).filter(([key]) => ADDRESSING_PROP.test(key)))
+      : domRest;
+    const componentRest = as
+      ? Object.fromEntries(
+          Object.entries(domRest).filter(([key]) => outer === "img" || !ADDRESSING_PROP.test(key)),
+        )
+      : {};
+    const domProps = (target: typeof outer) => (target === outer ? outerRest : {});
 
     // The previewable element is a keyboard-operable button that opens the
     // lightbox dialog; the ratio box when there is one, else the image.
@@ -127,6 +212,22 @@ export const ImageRoot = identify("Image", function ImageRoot({
       ? "astralis:cursor-zoom-in astralis:outline-none astralis:focus-visible:outline-2 astralis:focus-visible:outline-offset-2 astralis:focus-visible:outline-accent-ring"
       : "";
 
+    const imageClassName = astralisMerge(
+      "astralis:transition-opacity astralis:duration-200",
+      fitClass,
+      roundedClass,
+      isLoading && !lowResSrc && !componentPlaceholder && "astralis-image-loading",
+      !aspectRatio && previewClasses,
+      aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,
+      className,
+    );
+    const imageStyle = definedStyle(
+      aspectRatio
+        ? { ...loadingStyle, ...componentFit }
+        : { ...placementStyle, ...intrinsicSize, ...loadingStyle, ...componentFit, ...style },
+    );
+
+    const Component = as as ElementType | undefined;
     const imageElement = hasError ? (
       fallback ? (
         <>{fallback}</>
@@ -137,9 +238,9 @@ export const ImageRoot = identify("Image", function ImageRoot({
             "astralis:flex astralis:flex-col astralis:items-center astralis:justify-center astralis:gap-2",
             "astralis:bg-surface-muted astralis:text-label-subtle",
             roundedClass,
-            aspectRatio ? "astralis:absolute astralis:inset-0" : placementClass,
+            aspectRatio || fills ? "astralis:absolute astralis:inset-0" : placementClass,
           )}
-          style={aspectRatio ? {} : { ...placementStyle, ...fallbackSize }}
+          style={aspectRatio || fills ? {} : { ...placementStyle, ...fallbackSize }}
         >
           <svg
             viewBox="0 0 24 24"
@@ -151,9 +252,9 @@ export const ImageRoot = identify("Image", function ImageRoot({
           <span className="astralis:text-xs">Failed to load</span>
         </div>
       )
-    ) : (
-      <img
-        {...domProps("img")}
+    ) : Component ? (
+      <Component
+        {...componentRest}
         ref={attach}
         src={src}
         alt={alt}
@@ -161,21 +262,31 @@ export const ImageRoot = identify("Image", function ImageRoot({
         width={width}
         height={height}
         loading={loading}
+        sizes={sizes}
+        placeholder={placeholder}
+        onLoad={handleLoad}
+        onError={handleError}
+        {...previewProps("img")}
+        className={imageClassName}
+        style={imageStyle}
+      />
+    ) : (
+      <img
+        {...domProps("img")}
+        ref={attach}
+        src={srcUrl}
+        alt={alt}
+        aria-label={ariaLabel}
+        width={width}
+        height={height}
+        loading={loading ?? "lazy"}
         srcSet={srcset}
         sizes={sizes}
         onLoad={handleLoad}
         onError={handleError}
         {...previewProps("img")}
-        className={astralisMerge(
-          "astralis:transition-opacity astralis:duration-200",
-          fitClass,
-          roundedClass,
-          isLoading && !lowResSrc && "astralis-image-loading",
-          !aspectRatio && previewClasses,
-          aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,
-          className,
-        )}
-        style={aspectRatio ? loadingStyle : { ...placementStyle, ...intrinsicSize, ...loadingStyle, ...style }}
+        className={imageClassName}
+        style={imageStyle}
       />
     );
 
@@ -211,8 +322,8 @@ export const ImageRoot = identify("Image", function ImageRoot({
           wrapped
         )}
         {canPreview && isOpen && (
-          <ImageLightbox src={src} alt={alt} onClose={() => setIsOpen(false)} />
+          <ImageLightbox src={srcUrl} alt={alt} onClose={() => setIsOpen(false)} />
         )}
       </>
     );
-});
+}) as ImageComponent & { displayName: string };

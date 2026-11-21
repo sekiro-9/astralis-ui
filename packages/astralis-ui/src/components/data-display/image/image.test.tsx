@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderToStaticMarkup } from "react-dom/server";
+import { useState, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
 import { Image } from "./index";
 
 /**
@@ -169,6 +170,224 @@ describe("Image forwards DOM props to its outermost element", () => {
     expect(outer?.tagName).toBe("DIV");
     expect(outer?.textContent).toContain("Failed to load");
     expect(outer?.getAttribute("data-node")).toBe("n4");
+  });
+});
+
+interface StaticImport {
+  src: string;
+  width: number;
+  height: number;
+  blurDataURL?: string;
+}
+
+interface FrameworkImageProps
+  extends Omit<ComponentPropsWithoutRef<"img">, "src" | "width" | "height" | "loading" | "placeholder"> {
+  src: string | StaticImport;
+  width?: number;
+  height?: number;
+  fill?: boolean;
+  priority?: boolean;
+  quality?: number;
+  loading?: "lazy" | "eager";
+  placeholder?: "blur" | "empty";
+  blurDataURL?: string;
+  ref?: Ref<HTMLImageElement>;
+}
+
+/**
+ * Behaves like next/image where it matters here: it builds its own srcset,
+ * refuses priority with loading="lazy", merges `fill`'s inline positioning
+ * with Object.assign (so an undefined key from the caller erases it), and
+ * paints a blur background that its own onLoad removes.
+ */
+function FrameworkImage({
+  src,
+  width,
+  height,
+  fill,
+  priority,
+  quality,
+  loading,
+  placeholder = "empty",
+  blurDataURL,
+  style,
+  onLoad,
+  ref,
+  ...rest
+}: FrameworkImageProps) {
+  if (priority && loading === "lazy") throw new Error("priority and loading='lazy' together");
+  const data = typeof src === "string" ? undefined : src;
+  const url = typeof src === "string" ? src : src.src;
+  const [blurDone, setBlurDone] = useState(false);
+  const blur = placeholder === "blur" && !blurDone ? { backgroundImage: `url("${blurDataURL ?? data?.blurDataURL}")` } : {};
+  const merged = Object.assign(
+    fill ? { position: "absolute", width: "100%", height: "100%", inset: 0 } : {},
+    { color: "transparent" },
+    style,
+    blur,
+  ) as CSSProperties;
+  return (
+    <img
+      {...rest}
+      ref={ref}
+      data-quality={quality}
+      data-fill={fill ? "" : undefined}
+      loading={priority ? "eager" : (loading ?? "lazy")}
+      width={width ?? data?.width}
+      height={height ?? data?.height}
+      style={merged}
+      srcSet={`${url}?w=640 640w, ${url}?w=1080 1080w`}
+      src={`${url}?w=1080`}
+      onLoad={(event) => {
+        setBlurDone(true);
+        onLoad?.(event);
+      }}
+    />
+  );
+}
+
+/**
+ * `as` renders the picture through a framework's image component, which does
+ * the resizing and loading, while the frame, look, loading state and fallback
+ * stay the library's.
+ */
+describe("Image through an image component (as)", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("passes the component's own props through, without a lazy default, and keeps the library's look", () => {
+    const { container } = render(
+      <Image as={FrameworkImage} src="/hero.jpg" alt="Hero" width={1600} height={900} sizes="100vw" priority quality={70} rounded="xl" objectFit="contain" />,
+    );
+    const img = container.querySelector("img")!;
+    expect(container.firstElementChild).toBe(img);
+    expect(img.getAttribute("srcset")).toContain("/hero.jpg?w=640 640w");
+    expect(img).toHaveAttribute("sizes", "100vw");
+    expect(img).toHaveAttribute("loading", "eager");
+    expect(img).toHaveAttribute("data-quality", "70");
+    expect(img).toHaveClass("astralis:rounded-xl", "astralis:object-contain", "astralis-image-loading");
+    expect(img.style.color).toBe("transparent");
+    expect(img.style.width).toBe("1600px");
+  });
+
+  it("drives the loading state and the fallback from the component's events", () => {
+    const targets: EventTarget[] = [];
+    const onLoad = vi.fn((event: React.SyntheticEvent<HTMLImageElement>) => targets.push(event.currentTarget));
+    const onError = vi.fn();
+    const { container, rerender } = render(
+      <Image as={FrameworkImage} src="/a.jpg" alt="" width={40} height={40} onLoad={onLoad} onError={onError} />,
+    );
+    const img = container.querySelector("img")!;
+    fireEvent.load(img);
+    expect(img).not.toHaveClass("astralis-image-loading");
+    expect(onLoad).toHaveBeenCalledOnce();
+    expect(targets).toEqual([img]);
+
+    rerender(<Image as={FrameworkImage} src="/missing.jpg" alt="" width={40} height={40} onLoad={onLoad} onError={onError} />);
+    fireEvent.error(container.querySelector("img")!);
+    expect(container.textContent).toContain("Failed to load");
+    expect(onError).toHaveBeenCalledOnce();
+  });
+
+  it("hands placeholder to the component: its blur shows, with no pulsing surface beneath", () => {
+    const { container } = render(
+      <Image as={FrameworkImage} src="/a.jpg" alt="" width={40} height={40} placeholder="blur" blurDataURL="data:image/png;base64,AAAA" />,
+    );
+    const img = container.querySelector("img")!;
+    expect(img.style.backgroundImage).toContain("data:image/png;base64,AAAA");
+    expect(img.style.objectFit).toBe("cover");
+    expect(img).not.toHaveClass("astralis-image-loading");
+    fireEvent.load(img);
+    expect(img.style.backgroundImage).toBe("");
+  });
+
+  it("a static import sizes the frame from its own width and height", () => {
+    const hero = { src: "/static/hero.jpg", width: 400, height: 300 };
+    const { container } = render(<Image as={FrameworkImage} src={hero} alt="" />);
+    const img = container.querySelector("img")!;
+    expect(img.getAttribute("src")).toBe("/static/hero.jpg?w=1080");
+    expect(img).toHaveAttribute("width", "400");
+    expect(img.style.width).toBe("400px");
+    expect(img.style.height).toBe("300px");
+  });
+
+  it("fill keeps the component's own absolute positioning, inside a ratio frame or not", () => {
+    const framed = render(<Image as={FrameworkImage} src="/a.jpg" alt="" fill sizes="50vw" aspectRatio="square" rounded="lg" />);
+    const box = framed.container.firstElementChild as HTMLElement;
+    expect(box.style.aspectRatio).toBe("1 / 1");
+    expect(box.style.position).toBe("relative");
+    const inner = box.querySelector("img")!;
+    expect(inner).toHaveAttribute("data-fill");
+    expect(inner.style.position).toBe("absolute");
+    expect(inner.style.width).toBe("100%");
+
+    const bareView = render(<Image as={FrameworkImage} src="/b.jpg" alt="" fill />);
+    const bare = bareView.container.querySelector("img")!;
+    expect(bare.style.width).toBe("100%");
+    expect(bare.style.height).toBe("100%");
+    fireEvent.error(bare);
+    const fallbackBox = bareView.container.firstElementChild as HTMLElement;
+    expect(fallbackBox.textContent).toContain("Failed to load");
+    expect(fallbackBox).toHaveClass("astralis:absolute", "astralis:inset-0");
+  });
+
+  it("addressing props go to the outermost element, the component's own to the component", () => {
+    const { container } = render(
+      <Image as={FrameworkImage} src="/a.jpg" alt="" width={40} height={40} aspectRatio="video" id="hero" data-node="n5" quality={50} />,
+    );
+    const box = container.firstElementChild as HTMLElement;
+    const img = container.querySelector("img")!;
+    expect(box).toHaveAttribute("id", "hero");
+    expect(box).toHaveAttribute("data-node", "n5");
+    expect(box).not.toHaveAttribute("data-quality");
+    expect(img).toHaveAttribute("data-quality", "50");
+    expect(img).not.toHaveAttribute("data-node");
+  });
+
+  it("an image finished before React attached reaches the component's handler and the caller once", () => {
+    vi.spyOn(HTMLImageElement.prototype, "complete", "get").mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, "currentSrc", "get").mockReturnValue("http://x/a.jpg");
+    vi.spyOn(HTMLImageElement.prototype, "naturalWidth", "get").mockReturnValue(640);
+    const onLoad = vi.fn();
+    const { container } = render(
+      <Image as={FrameworkImage} src="/a.jpg" alt="" width={40} height={40} placeholder="blur" blurDataURL="data:image/png;base64,AAAA" onLoad={onLoad} />,
+    );
+    const img = container.querySelector("img")!;
+    expect(img.style.backgroundImage).toBe("");
+    fireEvent.load(img);
+    expect(onLoad).toHaveBeenCalledOnce();
+  });
+
+  it("types follow the component", () => {
+    const hero = { src: "/s.jpg", width: 4, height: 3 };
+    const typed = [
+      <Image key="a" as={FrameworkImage} src={hero} alt="" fill priority w="full" rounded="md" />,
+      // @ts-expect-error `fill` is the component's prop; the plain img has none
+      <Image key="b" src="/a.jpg" alt="" fill />,
+      // @ts-expect-error the component's own `src` type applies
+      <Image key="c" as={FrameworkImage} src={3} alt="" />,
+      // @ts-expect-error a static import is a src only for a component that takes one
+      <Image key="d" src={hero} alt="" />,
+    ];
+    expect(typed).toHaveLength(4);
+  });
+});
+
+describe("Image reports each outcome once", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("a cached image that also fires its load event calls onLoad once", () => {
+    vi.spyOn(HTMLImageElement.prototype, "complete", "get").mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, "currentSrc", "get").mockReturnValue("http://x/a.png");
+    vi.spyOn(HTMLImageElement.prototype, "naturalWidth", "get").mockReturnValue(640);
+    const onLoad = vi.fn();
+    const { container } = render(<Image src="/a.png" alt="" onLoad={onLoad} />);
+    fireEvent.load(container.querySelector("img")!);
+    expect(onLoad).toHaveBeenCalledOnce();
+  });
+
+  it("keeps lazy loading as the plain img's default", () => {
+    const { container } = render(<Image src="/a.png" alt="" />);
+    expect(container.querySelector("img")).toHaveAttribute("loading", "lazy");
   });
 });
 
