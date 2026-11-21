@@ -15,6 +15,12 @@
    `animate-*` plays once when the element is rendered. `reveal-*` plays as
    the element scrolls into view, on a view timeline; browsers without
    `animation-timeline` skip the whole block and show the content.
+
+   A view timeline follows the nearest scroll container, and a container that
+   only scrolls sideways never moves it, so a reveal inside one would never
+   run. Such containers carry `motion-reveal-scope`: it names a view timeline
+   on the container itself, which the page scroll does move, and points every
+   reveal inside at it through `--astralis-reveal-source`.
    ========================================================================== */
 
 @keyframes astralis-fade-in {
@@ -106,7 +112,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-fade-in linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -116,7 +122,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-fade-up linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -126,7 +132,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-fade-down linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -136,7 +142,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-slide-left linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -146,7 +152,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-slide-right linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -156,7 +162,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-scale-in linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -166,7 +172,7 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-pop linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
   }
@@ -176,9 +182,16 @@
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: astralis-blur-in linear both;
-      animation-timeline: view();
+      animation-timeline: var(--astralis-reveal-source, view());
       animation-range: entry 0% cover 30%;
     }
+  }
+}
+
+@utility motion-reveal-scope {
+  @supports (animation-timeline: view()) {
+    view-timeline: --astralis-reveal-scope block;
+    --astralis-reveal-source: --astralis-reveal-scope;
   }
 }
 

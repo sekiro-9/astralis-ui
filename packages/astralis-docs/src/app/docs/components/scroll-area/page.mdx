@@ -26,6 +26,13 @@ import { ScrollArea } from "astralis-ui";
 Give it a `height` or `maxHeight` through `style`. Without one the area grows
 with its content and there is nothing to scroll.
 
+## Animations inside
+
+A [`reveal`](/docs/animations#reveal) on content inside a horizontal Scroll
+Area follows the area's place on the page, so a row of cards reveals as the
+row scrolls into view. Inside a vertical Scroll Area with a height, `reveal`
+follows the area's own scrolling instead.
+
 ## Props
 
 Extends `div` props:

@@ -28,7 +28,9 @@ export const TableRoot = identify("Table", function TableRoot({
       data-table-striped={striped ? "" : undefined}
       data-table-interactive={interactive ? "" : undefined}
       data-table-sticky={stickyHeader ? "" : undefined}
-      className={astralisMerge("astralis:w-full astralis:overflow-x-auto", outer, placementClass, className)}
+      // A sideways scroller holds a view timeline still; the scope lets a
+      // `reveal` inside the table follow the page instead (theme/motion.css).
+      className={astralisMerge("astralis:w-full astralis:overflow-x-auto astralis:motion-reveal-scope", outer, placementClass, className)}
       style={placementStyle}
     >
       <table className="astralis:w-full astralis:border-collapse astralis:text-label-base" {...domProps}>

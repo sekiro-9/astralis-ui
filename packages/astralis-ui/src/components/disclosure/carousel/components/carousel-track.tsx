@@ -59,7 +59,7 @@ export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({
     return (
       <div
         aria-live="polite"
-        className={astralisMerge("astralis:relative astralis:grid astralis:overflow-hidden", isVertical ? "astralis:flex-1" : "astralis:w-full", className)}
+        className={astralisMerge("astralis:relative astralis:grid astralis:overflow-clip", isVertical ? "astralis:flex-1" : "astralis:w-full", className)}
         style={{ ...dragStyle, ...style }}
         {...gestures}
         {...rest}
@@ -69,7 +69,12 @@ export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({
     );
   }
 
-  /* slide: flex track translated by whole pages
+  /* `overflow-clip`, not `hidden`: the track moves by transform and never
+     scrolls, and a clip is not a scroll container, so a `reveal` on a slide
+     still follows the page (a hidden one would hold its view timeline still).
+     The fade track above clips for the same reason.
+
+     slide: flex track translated by whole pages
      Step per slide is (100% + gap) / slidesPerView; the scroll position is
      clamped to (slideCount - slidesPerView) so the final page sits flush.
      The per-view count and gap in the CSS are the root's active variables
@@ -81,7 +86,7 @@ export const CarouselTrack = identify("Carousel.Track", function CarouselTrack({
 
   return (
     <div
-      className={astralisMerge("astralis:overflow-hidden", isVertical ? "astralis:h-full astralis:flex-1" : "astralis:w-full", className)}
+      className={astralisMerge("astralis:overflow-clip", isVertical ? "astralis:h-full astralis:flex-1" : "astralis:w-full", className)}
       style={style}
       {...rest}
     >

@@ -8,6 +8,8 @@ import { Button } from "./buttons/button";
 import { Text } from "./typography/text";
 import { Heading } from "./typography/heading";
 import { Carousel } from "./disclosure/carousel";
+import { ScrollArea } from "./layout/scroll-area";
+import { Table } from "./data-display/table";
 import { animationTypes, revealTypes, animationDurationTypes, animationDelayTypes } from "../const/motion-mappings";
 
 const rootOf = (ui: React.ReactElement) => render(ui).container.firstElementChild as HTMLElement;
@@ -73,6 +75,45 @@ describe("motion props", () => {
   });
 });
 
+describe("reveal inside the library's scroll containers", () => {
+  const SCOPE = "astralis:motion-reveal-scope";
+
+  it("a horizontal ScrollArea gives the reveals inside it a timeline the page scroll moves", () => {
+    expect(rootOf(<ScrollArea direction="horizontal">x</ScrollArea>).className).toContain(SCOPE);
+    // A vertical one scrolls its own content, and reveals inside follow that.
+    expect(rootOf(<ScrollArea>x</ScrollArea>).className).not.toContain(SCOPE);
+    expect(rootOf(<ScrollArea direction="both">x</ScrollArea>).className).not.toContain(SCOPE);
+  });
+
+  it("Table, which scrolls sideways, carries the scope", () => {
+    const el = rootOf(
+      <Table>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>x</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table>,
+    );
+    expect(el.className).toContain(SCOPE);
+  });
+
+  it("Carousel.Track clips instead of hiding, so it is not a scroll container", () => {
+    for (const animation of ["slide", "fade"] as const) {
+      const root = rootOf(
+        <Carousel animation={animation}>
+          <Carousel.Track data-testid="track">
+            <Carousel.Slide>one</Carousel.Slide>
+          </Carousel.Track>
+        </Carousel>,
+      );
+      const track = root.querySelector("[data-testid=track]") as HTMLElement;
+      expect(track.className, animation).toContain("astralis:overflow-clip");
+      expect(track.className, animation).not.toContain("astralis:overflow-hidden");
+    }
+  });
+});
+
 describe("motion stylesheet", () => {
   const css = readFileSync(join(process.cwd(), "src", "theme", "motion.css"), "utf8");
 
@@ -87,6 +128,12 @@ describe("motion stylesheet", () => {
   it("guards every scroll animation with @supports, so other browsers show the content", () => {
     const reveals = css.split("@utility ").slice(1).filter((block) => block.startsWith("reveal-"));
     for (const block of reveals) expect(block).toContain("@supports (animation-timeline: view())");
+  });
+
+  it("reads the reveal timeline from the nearest scope, falling back to the element's own view", () => {
+    const reveals = css.split("@utility ").slice(1).filter((block) => block.startsWith("reveal-"));
+    for (const block of reveals) expect(block).toContain("animation-timeline: var(--astralis-reveal-source, view());");
+    expect(css).toMatch(/@utility motion-reveal-scope \{[^}]*view-timeline: --astralis-reveal-scope block;\s*--astralis-reveal-source: --astralis-reveal-scope;/s);
   });
 
   it("has a class for every name the props accept", () => {

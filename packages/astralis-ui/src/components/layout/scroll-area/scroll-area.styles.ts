@@ -6,9 +6,11 @@ import type { ScrollAreaDirection } from "./scroll-area.types";
    (keyboard, momentum, RTL) is untouched and the component ships zero
    client JavaScript. */
 
+/* A sideways-only scroller never moves a view timeline, so `horizontal` gives
+   the reveals inside it its own place on the page to follow (theme/motion.css). */
 export const scrollAreaDirections: Record<ScrollAreaDirection, string> = {
   vertical: "astralis:overflow-y-auto astralis:overflow-x-hidden",
-  horizontal: "astralis:overflow-x-auto astralis:overflow-y-hidden",
+  horizontal: "astralis:overflow-x-auto astralis:overflow-y-hidden astralis:motion-reveal-scope",
   both: "astralis:overflow-auto",
 };
 

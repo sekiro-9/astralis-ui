@@ -45,6 +45,23 @@ render.
 which Chrome, Edge and Safari support. In a browser without them the content
 is shown without the animation; nothing is ever left hidden.
 
+### Inside a scroll container
+
+A scroll-driven animation follows the nearest scroll container, not the page.
+In a box that scrolls up and down, like the one above, `reveal` follows that
+box. The library's containers that only scroll sideways, a horizontal
+[Scroll Area](/docs/components/scroll-area) and [Table](/docs/components/table),
+hand the reveals inside them the page's scroll instead, and
+[Carousel](/docs/components/carousel) is not a scroll container at all, so a
+`reveal` on each product card in a row or each slide works as it does
+anywhere else.
+
+Your own `overflow: hidden` or `overflow-x: auto` wrapper is a scroll
+container too, and a `reveal` inside it stays still (the content shows, with
+no motion). To clip without scrolling, use `overflow: clip`, which is not a
+scroll container. A [Card](/docs/components/card) currently clips with
+`overflow: hidden`, so put `reveal` on the Card, not on what is inside it.
+
 ## Duration and delay
 
 `animationDuration` takes `fast`, `normal` or `slow`. `animationDelay` takes
