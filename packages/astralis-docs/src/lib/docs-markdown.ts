@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { navigation } from "./navigation";
 import type { PropRow } from "@/modules/docs/props-table";
 import { COLOR_SCHEME_TYPE, COLOR_SCHEMES } from "@/modules/demos/color-schemes";
+import { PLACEMENT_RULE_HREF, isPlacementOnly, placementRow } from "@/modules/docs/placement-only";
 
 /**
  * Agent-consumable markdown for every docs page: the source MDX with imports
@@ -95,8 +96,14 @@ function mdxToMarkdown(mdxPath: string, { demos = true }: MarkdownOptions = {}):
   });
 
   // Render each props table from its data module as a markdown table.
-  md = md.replace(/<PropsTable\s+rows=\{([A-Za-z0-9_]+)\}\s*\/>/g, (_, ident: string) =>
-    propsTableMarkdown(loadPropRows(mdxPath, importPaths.get(ident), ident)),
+  // `of` names a recipe component; its table gains the shared placement row.
+  md = md.replace(
+    /<PropsTable\s+(?:of="([A-Za-z.]+)"\s+)?rows=\{([A-Za-z0-9_]+)\}\s*\/>/g,
+    (_, of: string | undefined, ident: string) => {
+      const rows = loadPropRows(mdxPath, importPaths.get(ident), ident);
+      const placement = { ...placementRow, description: `${placementRow.description} See ${PLACEMENT_RULE_HREF}.` };
+      return propsTableMarkdown(of && isPlacementOnly(of) ? [...rows, placement] : rows);
+    },
   );
 
   return md.trim() + "\n";

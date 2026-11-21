@@ -54,9 +54,21 @@ design system's job, adjusted through `variant`, `size` and `colorScheme`.
 Repainting one from the outside would defeat the variants it ships with.
 
 **Placement** is how big something is and where it sits *inside its parent*:
-width and height, the flex-item props, and margin. A component cannot know
-these: only the composition can. So every component that can be a child
-accepts them.
+width and height, the flex-item props, margin, position and motion. A
+component cannot know these: only the composition can. So components accept
+them, recipes included; every recipe's props table ends with a **placement
+props** row saying so. A few compound parts (`Card.Body`, `Tabs.List`,
+`Tabs.Content`, `Table.Cell`...) take no style props at all: put a `Stack` or
+`Box` inside or around them.
+
+So `<Button p="6">` and `<Card bg="subtle">` do nothing. Reach for the
+component's own `variant`, `size` and `colorScheme`, or wrap it:
+
+```tsx
+<Box p="6" bg="subtle" rounded="xl">
+  <Card variant="outline" w="full">…</Card>
+</Box>
+```
 
 The test, if you're unsure which one you're reaching for:
 
@@ -96,6 +108,39 @@ Box's and silently constrain the height. It is now a type error; use `maxW`.
 ## The prop families
 
 <PropsTable rows={boxProps} />
+
+## Value props and keyword props
+
+Style props come in two kinds, and they behave differently.
+
+- **Value props** carry a value: spacing, sizing, offsets (`top`...),
+  `rounded`, `gap`, `bg`, `color`, `borderColor`, `shadow`, `opacity`,
+  `order`, `basis`. `p="4"` renders one fixed class, `astralis-p`, and puts
+  the value in a CSS variable on the element. So they take tokens or any CSS
+  value (see [Arbitrary values](#arbitrary-values)).
+- **Keyword props** pick from a closed list: `display`, `position`, `zIndex`,
+  `overflow`, alignment, Grid `columns`, Text `size` and `weight`... Each
+  value is its own prebuilt class, so a value outside the list renders
+  nothing (and `astralis validate` reports it).
+
+One consequence matters in practice: **a utility class cannot override a
+value prop**, not even a `hover:` or `group-hover:` one. The prop is applied
+in a CSS layer above the utilities layer, so that a prop you set is never
+undone by a component's own styles. Only inline `style`, plain CSS outside
+any layer and `!important` beat it.
+
+```tsx
+{/* Never changes: the color prop beats the hover class */}
+<Box color="muted" className="hover:text-red-500" />
+
+{/* Changes on hover */}
+<Box color="muted" hover={{ color: "base" }} />
+```
+
+So for a hover, focus or other state change of a value, use the state props
+(`hover={{ }}`, `focusVisible={{ }}`...) rather than a class. A keyword prop
+is different: your own class for the same property wins whenever your
+stylesheet loads after the library's.
 
 ## Arbitrary values
 
@@ -152,10 +197,13 @@ Reach for the token variables inside `style` to stay on the scale:
 
 **2. `className`**: every component forwards it. Astralis's internal
 classes are prefixed (`astralis:*`), so your own utility classes, whatever
-generates them, can't collide. Note that Astralis ships utility classes
-only for **keyword** props (`display`, alignment, overflow, ...); since the
-var-channel migration there is no per-value class like `astralis:p-4` to
-reach for. Value styling belongs to the props or to `style`.
+generates them, can't collide. Value props do not render per-value classes:
+`p="4"` is `astralis-p` plus a variable. The stylesheet does contain classes
+such as `astralis:p-4`, which the components' own styles use, but they are
+internal, and one the library itself does not use is never generated. So
+value styling belongs to the props, the state props or `style`, and your
+class cannot override a value prop (see
+[Value props and keyword props](#value-props-and-keyword-props)).
 
 ```tsx
 <Box p="4" className="my-fancy-gradient" />

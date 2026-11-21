@@ -27,6 +27,11 @@ export const placementProps: PropRow[] = [
     description: "Where it sits among its siblings, overriding the parent's alignment for one child.",
   },
   {
+    prop: "position · inset · top/right/bottom/left · zIndex",
+    type: `"static" | "relative" | "absolute" | "fixed" | "sticky" · spacing scale · "lowest" – "max"`,
+    description: "Takes the component out of the flow or pins it, for example a Badge in the corner of a Card.",
+  },
+  {
     prop: "m · mx · my · mt/mb/ml/mr",
     type: `"0" – "96" (spacing scale) | "auto"`,
     description:
