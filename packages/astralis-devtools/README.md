@@ -6,8 +6,9 @@ screens:
 
 - **Home.** What is on the page at a glance.
 - **Components.** Every Astralis component on the page, grouped by kind. Each
-  opens a page of its own: its name, the props it was given, how it reaches
-  the browser (Server Component, client island or Client Component), where it
+  opens a page of its own: its name, the props it was given, every prop it
+  takes with the values each accepts (searchable by name or value), how it
+  reaches the browser (Server Component, client island or Client Component), where it
   sits, a link to its documentation, and the findings about it. This includes
   Server Components, which React DevTools cannot see because they never
   hydrate.
@@ -21,11 +22,14 @@ screens:
   you picked with their props, the versions in use, the validator's findings
   and a small reproduction. You see the exact JSON first, page text is
   replaced by placeholders unless you include it, and nothing is sent until
-  you press Send. **Your issues** lists the issues you have opened and where
-  each stands.
+  you press Send. To add a screenshot or a file, open the issue on GitHub
+  once it is created and drop it in there. **Your issues** lists the issues
+  you have opened and where each stands.
 
-`Shift+Alt+A` opens and closes it. `Shift+Alt+C` picks a component on the page
-and opens its page.
+The minimize button in the panel's header, `Shift+Alt+A`, or Escape from
+inside the panel fold it down to the launcher, so the page is free to use; the
+launcher or `Shift+Alt+A` brings it back where it was. `Shift+Alt+C` picks a
+component on the page and opens its page.
 
 It runs in development only. Production builds contain none of it, and the
 library's production HTML carries no DevTools attributes.

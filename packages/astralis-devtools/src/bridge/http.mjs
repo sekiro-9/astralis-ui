@@ -28,7 +28,7 @@ import { assembleSnapshot } from "./snapshot.mjs";
 export const BASE_PATH = "/api/astralis-devtools";
 
 const KEEPALIVE_MS = 15_000;
-/** A snapshot is at most 256 kB; the page's part, with a screenshot, stays well under this. */
+/** A snapshot is at most 256 kB; the page's part stays well under this. */
 const MAX_BODY_BYTES = 1024 * 1024;
 const LOOPBACK = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 

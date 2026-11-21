@@ -64,7 +64,6 @@ export function assembleSnapshot(bridge, input = {}) {
     ...(include.console && Array.isArray(input.console)
       ? { console: input.console.slice(-LIMITS.console).map((m) => cleanConsoleMessage(m)) }
       : {}),
-    ...(include.screenshot && typeof input.screenshot === "string" ? { screenshot: input.screenshot } : {}),
     description,
   };
   return { snapshot, problems: checkSnapshot(snapshot) };

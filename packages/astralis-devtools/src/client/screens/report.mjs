@@ -1,7 +1,7 @@
 import { h, icon, plural } from "../dom.mjs";
 import { readIdentity } from "../identity.mjs";
 import { GITHUB_MARK, ICONS } from "../icons.mjs";
-import { browserEnvironment, captureScreenshot, treeFromElement } from "../report.mjs";
+import { browserEnvironment, treeFromElement } from "../report.mjs";
 import { empty } from "./shared.mjs";
 
 /* Report: a problem sent to the maintainers as a GitHub issue, opened from
@@ -10,7 +10,8 @@ import { empty } from "./shared.mjs";
    A report is an issue snapshot of one component and everything inside it.
    The exact JSON is shown before anything is sent, and nothing is sent until
    the reporter presses Send. The form keeps its input across screens and
-   while findings stream in. */
+   while findings stream in. Pictures and files are added on GitHub, in the
+   issue itself: its API cannot attach them. */
 
 /** The form for a new report. */
 function newReport(app) {
@@ -36,14 +37,6 @@ function newReport(app) {
   let timer = null;
   let request = 0;
 
-  /** The JSON as shown: exact, except that a screenshot's data is summarised (it is shown as an image). */
-  function previewText(snapshot) {
-    const shown = snapshot.screenshot
-      ? { ...snapshot, screenshot: `data:image/jpeg;base64,… (${Math.round((snapshot.screenshot.length * 0.75) / 1024)} kB, shown above)` }
-      : snapshot;
-    return JSON.stringify(shown, null, 2);
-  }
-
   function schedule() {
     clearTimeout(timer);
     timer = setTimeout(assemble, 250);
@@ -58,9 +51,8 @@ function newReport(app) {
       route: location.pathname,
       environment: browserEnvironment(window),
       description: { title: r.title, happened: r.happened, expected: r.expected },
-      include: { findings: r.includeFindings, console: r.includeConsole, screenshot: Boolean(r.screenshot) },
+      include: { findings: r.includeFindings, console: r.includeConsole },
       console: [...app.consoleErrors.messages],
-      ...(r.screenshot ? { screenshot: r.screenshot } : {}),
     };
     try {
       const response = await fetch(`${app.base}/snapshot`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -109,7 +101,6 @@ function newReport(app) {
       r.number = result.number;
       r.added = Boolean(addTo);
       r.similar = null;
-      window.open(result.url, "_blank", "noopener");
       app.github.loadIssues();
     } catch (error) {
       r.status = "failed";
@@ -148,32 +139,10 @@ function newReport(app) {
       const result = await response.json();
       if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
       window.open(result.url, "_blank", "noopener");
-      notice(
-        r.screenshot
-          ? "GitHub's form is open in a new tab: check it, drop the screenshot in, and press Create."
-          : "GitHub's form is open in a new tab: check it and press Create.",
-      );
+      notice("GitHub's form is open in a new tab: check it, add any picture or file there, and press Create.");
     } catch (error) {
       notice(`${error.message} Copy JSON or Download keeps the snapshot.`);
     }
-  }
-
-  /** GitHub's API cannot attach images, so a screenshot is saved for the reporter to drop into the issue. */
-  function downloadScreenshot() {
-    h("a", { href: r.screenshot, download: "astralis-screenshot.jpg" }).click();
-  }
-
-  async function addScreenshot() {
-    try {
-      r.screenshot = await captureScreenshot({
-        hide: () => (app.host.style.visibility = "hidden"),
-        show: () => (app.host.style.visibility = ""),
-      });
-      schedule();
-    } catch (error) {
-      notice(error?.name === "NotAllowedError" ? "No screenshot: the capture was declined." : `No screenshot: ${error.message}`);
-    }
-    refresh();
   }
 
   const field = (label, key, multiline, placeholder) => {
@@ -199,10 +168,9 @@ function newReport(app) {
   const textToggle = toggle("Include page text", "includeText", "Off: text is replaced by its length.");
   const findingsToggle = toggle("Include the validator's findings", "includeFindings", "For the files that render this page.");
   const consoleToggle = toggle("Include console errors", "includeConsole", "Paths are trimmed to the app.");
-  const shot = h("div", { class: "shot" });
   const preview = h("pre", { class: "json", "aria-label": "Snapshot JSON" });
   const problems = h("ul", { class: "problems" });
-  const status = h("p", { class: "report-status" });
+  const status = h("div", { class: "report-status", role: "status" });
   const similar = h("div", {});
   const sendButton = h("button", { class: "btn primary", type: "button", onclick: () => send() }, icon(GITHUB_MARK), h("span", {}, "Open issue on GitHub"));
   const linkButton = h("button", { class: "btn", type: "button", title: "Opens GitHub's own form, filled in; you submit it there. No sign-in.", onclick: openOnGitHub }, icon(ICONS.external), "Open on GitHub instead");
@@ -222,7 +190,7 @@ function newReport(app) {
     field("Title", "title", false, "Card loses its border in dark mode"),
     field("What happened?", "happened", true, "What you saw"),
     field("What did you expect?", "expected", true, "What should have happened"),
-    h("div", { class: "card", style: "padding:2px 14px" }, textToggle.row, findingsToggle.row, consoleToggle.row, h("div", { class: "switch-row", style: "cursor:default" }, h("span", {}, "Screenshot", h("small", {}, "Captured only when you ask. You add it to the issue yourself.")), shot)),
+    h("div", { class: "card", style: "padding:2px 14px" }, textToggle.row, findingsToggle.row, consoleToggle.row),
     problems,
     similar,
     h("details", { class: "json-box" }, h("summary", {}, icon(ICONS.chevron), "Exactly what will be sent"), preview),
@@ -270,17 +238,7 @@ function newReport(app) {
 
   function refresh() {
     consoleToggle.text.textContent = `Include console errors (${app.consoleErrors.messages.length})`;
-    shot.replaceChildren(
-      r.screenshot
-        ? h(
-            "div",
-            { class: "row" },
-            h("img", { class: "thumb", src: r.screenshot, alt: "Screenshot to be sent" }),
-            h("button", { class: "btn ghost", type: "button", onclick: () => { r.screenshot = null; schedule(); refresh(); } }, "Remove"),
-          )
-        : h("button", { class: "btn", type: "button", onclick: addScreenshot }, icon(ICONS.camera), "Add…"),
-    );
-    preview.textContent = r.snapshot ? previewText(r.snapshot) : "Assembling…";
+    preview.textContent = r.snapshot ? JSON.stringify(r.snapshot, null, 2) : "Assembling…";
     problems.replaceChildren(...r.problems.map((p) => h("li", {}, p)));
     const signedIn = Boolean(app.state.github?.login);
     sendButton.disabled = !signedIn || !r.snapshot || r.problems.length > 0 || r.status === "sending";
@@ -294,13 +252,16 @@ function newReport(app) {
     status.replaceChildren(
       r.status === "sent"
         ? h(
-            "span",
-            {},
-            r.added ? `Added your report to #${r.number}. ` : `Opened #${r.number} on GitHub. `,
-            h("a", { class: "link", href: r.url, target: "_blank", rel: "noreferrer" }, "View it"),
-            r.screenshot
-              ? h("span", {}, ". GitHub cannot take images by API: ", h("button", { class: "link", type: "button", onclick: downloadScreenshot }, "save the screenshot"), " and drop it into the issue.")
-              : ".",
+            "div",
+            { class: "card sent-card" },
+            h("span", { class: "sent-icon" }, icon(ICONS.check)),
+            h(
+              "div",
+              { class: "grow" },
+              h("div", { class: "sent-title" }, r.added ? `Added your report to #${r.number}` : `Opened #${r.number} on GitHub`),
+              h("p", { class: "muted small" }, "To add a screenshot or a file, open the issue and drop it into a comment there."),
+              h("a", { class: "btn primary", href: r.url, target: "_blank", rel: "noreferrer" }, icon(GITHUB_MARK), "Open the issue on GitHub", icon(ICONS.external)),
+            ),
           )
         : r.status === "failed"
           ? `${r.message} Nothing was sent; Copy JSON or Download keeps the snapshot.`

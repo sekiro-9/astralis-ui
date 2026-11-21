@@ -124,6 +124,7 @@ export function createLauncher({ onToggle, onPick, onMove }) {
       element.dataset.open = String(open);
       markButton.setAttribute("aria-expanded", String(open));
     },
+    focus: () => markButton.focus(),
     setPicking(picking) {
       pickButton.setAttribute("aria-pressed", String(picking));
     },

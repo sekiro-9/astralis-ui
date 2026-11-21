@@ -91,7 +91,7 @@ export function homeScreen(app) {
     h(
       "div",
       { class: "shortcuts" },
-      h("span", { class: "shortcut" }, h("span", { class: "kbd" }, "Shift"), h("span", { class: "kbd" }, "Alt"), h("span", { class: "kbd" }, "A"), h("span", {}, "Open or close")),
+      h("span", { class: "shortcut" }, h("span", { class: "kbd" }, "Shift"), h("span", { class: "kbd" }, "Alt"), h("span", { class: "kbd" }, "A"), h("span", {}, "Open or minimize")),
       h("span", { class: "shortcut" }, h("span", { class: "kbd" }, "Shift"), h("span", { class: "kbd" }, "Alt"), h("span", { class: "kbd" }, "C"), h("span", {}, "Pick a component")),
     ),
   );

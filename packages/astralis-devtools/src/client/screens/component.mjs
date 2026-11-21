@@ -2,18 +2,21 @@ import { formatValue, h, icon, plural } from "../dom.mjs";
 import { describeComponent, IDENTITY_ATTRIBUTE, readIdentity } from "../identity.mjs";
 import { ICONS } from "../icons.mjs";
 import { findingsFor } from "../page.mjs";
+import { allProps } from "./props.mjs";
 import { findingRow } from "./shared.mjs";
 
-/* One component on the page: what it is, the props it was given, how it
-   reaches the browser, where it sits, and the findings and recommendations
-   about it. */
+/* One component on the page: what it is, the props it was given and every
+   prop it takes, how it reaches the browser, where it sits, and the findings
+   and recommendations about it. */
 
 export function componentScreen(app, element) {
   const root = h("div", {});
   const chain = readIdentity(element);
   const name = chain[0]?.name ?? "Component";
+  // Built once: findings and page changes redraw the screen, and must not reset the search.
+  const takes = allProps(app, chain);
 
-  function propsCard(entry, first) {
+  function propsCard(entry) {
     const about = describeComponent(app.state.spec, entry.name, app.framework);
     const props = Object.entries(entry.props);
     return h(
@@ -22,7 +25,7 @@ export function componentScreen(app, element) {
       h(
         "div",
         { class: "row", style: "margin-bottom:10px" },
-        h("span", { class: "code grow", style: "font-weight:600" }, first ? "Props" : entry.name),
+        h("span", { class: "code grow", style: "font-weight:600" }, entry.name),
         h("a", { class: "link", href: about.docsUrl, target: "_blank", rel: "noreferrer" }, "Docs", icon(ICONS.external)),
       ),
       app.state.spec && !about.known
@@ -131,6 +134,8 @@ export function componentScreen(app, element) {
           )
         : null;
 
+    takes.update();
+    const searching = takes.input.getRootNode().activeElement === takes.input;
     root.replaceChildren(
       head,
       actions,
@@ -139,11 +144,13 @@ export function componentScreen(app, element) {
         { class: "stack" },
         findingsSection("Findings", errors, "error"),
         findingsSection("Recommendations", warnings, "advice"),
-        h("section", {}, h("h3", { class: "section-title" }, "Props"), h("div", { class: "stack" }, chain.map((entry, index) => propsCard(entry, index === 0)))),
+        h("section", {}, h("h3", { class: "section-title" }, "Props given"), h("div", { class: "stack" }, chain.map((entry) => propsCard(entry)))),
+        takes.root,
         crumbs("Inside", ancestors),
         crumbs("Contains", inside.map((i) => i.element)),
       ),
     );
+    if (searching) takes.input.focus({ preventScroll: true });
   }
 
   update();

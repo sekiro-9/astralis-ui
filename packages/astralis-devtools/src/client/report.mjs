@@ -2,8 +2,8 @@ import { LIMITS, cleanConsoleMessage, contentOf, keptText, redactedText } from "
 import { IDENTITY_ATTRIBUTE, readIdentity } from "./identity.mjs";
 
 /* The page's part of an issue snapshot: the component tree under the
-   selected element, the browser's facts, console errors and an optional
-   screenshot. Nothing here sends anything; the bridge assembles the rest. */
+   selected element, the browser's facts and console errors. Nothing here
+   sends anything; the bridge assembles the rest. */
 
 const SKIP = new Set(["SCRIPT", "STYLE", "TEMPLATE", "NOSCRIPT"]);
 
@@ -119,43 +119,3 @@ function safeString(value) {
     return String(value);
   }
 }
-
-const MAX_SCREENSHOT_BYTES = 180 * 1024;
-
-/**
- * A screenshot of this tab through the browser's own capture prompt, as a
- * JPEG data URL small enough for a snapshot. `hide` and `show` take the
- * overlay out of the picture. Rejects if the reporter declines the prompt.
- */
-export async function captureScreenshot({ hide = () => {}, show = () => {}, win = globalThis.window } = {}) {
-  const stream = await win.navigator.mediaDevices.getDisplayMedia({
-    video: { displaySurface: "browser" },
-    audio: false,
-    preferCurrentTab: true,
-    selfBrowserSurface: "include",
-  });
-  const video = win.document.createElement("video");
-  try {
-    video.srcObject = stream;
-    video.muted = true;
-    await video.play();
-    hide();
-    // Two frames, so the capture shows the page without the overlay.
-    await new Promise((done) => win.requestAnimationFrame(() => win.requestAnimationFrame(done)));
-    for (const [width, quality] of [[1280, 0.72], [960, 0.6], [720, 0.5]]) {
-      const scale = Math.min(1, width / video.videoWidth);
-      const canvas = win.document.createElement("canvas");
-      canvas.width = Math.round(video.videoWidth * scale);
-      canvas.height = Math.round(video.videoHeight * scale);
-      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-      const url = canvas.toDataURL("image/jpeg", quality);
-      if (url.length * 0.75 <= MAX_SCREENSHOT_BYTES) return url;
-    }
-    throw new Error("The screenshot is too large to include.");
-  } finally {
-    show();
-    for (const track of stream.getTracks()) track.stop();
-    video.srcObject = null;
-  }
-}
-

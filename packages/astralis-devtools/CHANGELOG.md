@@ -2,6 +2,40 @@
 
 All notable changes to `astralis-devtools`.
 
+## Unreleased
+
+### Added
+
+- **Every prop a component takes, on its page.** Under the props it was
+  given, the component's page now lists every prop the installed system spec
+  says it accepts: its own props first, then its style props by group (Box,
+  Placement, Text…). Each shows the values it takes (a long scale shows its
+  first few and opens to the rest), whether it is required, its description
+  and default where the spec has them, and the value this instance uses. A
+  search finds a prop by name, long spelling (`padding` finds `p`) or value.
+  Groups other than the first open when asked for. On a trigger wrapping a
+  Button, both can be listed.
+- **Minimize.** The panel's header has a minimize button that folds it down
+  to the launcher, leaving the page free to click. The launcher's mark,
+  `Shift+Alt+A` or Escape from inside the panel do the same, and bringing it
+  back returns to the screen it was on. Whether it is open stays for the
+  browser tab's session, as before.
+
+### Changed
+
+- `Shift+Alt+A` brings the panel back on the screen it was minimized on,
+  instead of on Home.
+- After a report is sent, a confirmation shows **Open the issue on GitHub**
+  and says how to add a screenshot or a file there. No tab opens by itself.
+
+### Removed
+
+- **The Report screen's screenshot.** Capturing the tab could include the
+  open panel itself, and GitHub's API cannot attach images anyway. Pictures
+  and files are added on GitHub, in the issue. The snapshot DevTools builds
+  no longer carries a `screenshot` field; the snapshot format still accepts
+  one, so snapshots filed before and `astralis report` are unchanged.
+
 ## 0.1.0 (2026-11-19)
 
 The first release: a development overlay for Astralis UI. A launcher you can

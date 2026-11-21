@@ -178,7 +178,7 @@ test("mounts one launcher in a shadow root, once, with its fonts on the document
   assert.match(fonts.textContent, /font-family:"Astralis DevTools Grotesk"/);
 });
 
-test("the launcher opens the panel on Home, with the counts, and closes it again", async () => {
+test("the launcher opens the panel on Home, with the counts, and it minimizes again", async () => {
   streams[0].emit("findings", FINDINGS);
   await tick();
   openPanel();
@@ -190,7 +190,7 @@ test("the launcher opens the panel on Home, with the counts, and closes it again
   assert.match(tiles.findings, /^2Findingsin 2 of 3 files/);
   assert.match(tiles.recommendations, /^1Recommendationsin 1 of 3 files/);
   assert.match(view(), /astralis-ui 0\.8\.0 {2}· {2}Next\.js 16\.3\.3 {2}· {2}React 19\.2\.8/);
-  click($(".close"));
+  click($(".minimize"));
   assert.equal(isOpen(), false);
 });
 
@@ -221,6 +221,36 @@ test("the panel remembers being open, and on which screen, across a reload", () 
   unmount = mountOverlay({ framework: "next" });
   assert.equal(isOpen(), true);
   assert.equal(nav("findings").getAttribute("aria-current"), "page");
+});
+
+test("minimizing folds the panel to the launcher, stays folded across a reload, and restores where it was", () => {
+  openPanel();
+  click(nav("recommendations"));
+  const minimize = $(".topbar .minimize");
+  assert.equal(minimize.getAttribute("aria-label"), "Minimize to the launcher");
+  minimize.focus();
+  click(minimize);
+  assert.equal(isOpen(), false);
+  assert.equal($(".panel").hasAttribute("inert"), true, "a minimized panel takes no focus or clicks");
+  assert.equal(shadow().activeElement, $(".launcher-button.mark"), "focus goes to the launcher, not the page");
+  assert.deepEqual(JSON.parse(sessionStorage.getItem("astralis-devtools:panel")), { open: false, screen: "recommendations" });
+
+  unmount();
+  unmount = mountOverlay({ framework: "next" });
+  assert.equal(isOpen(), false, "still minimized after a reload");
+  assert.equal($(".launcher-button.mark").getAttribute("aria-expanded"), "false");
+  openPanel();
+  assert.equal(nav("recommendations").getAttribute("aria-current"), "page");
+});
+
+test("Escape minimizes the panel when focus is inside it, and not from the page", () => {
+  openPanel();
+  key({ key: "Escape" });
+  assert.equal(isOpen(), true, "an Escape meant for the page is left alone");
+  nav("components").focus();
+  nav("components").dispatchEvent(new dom.window.KeyboardEvent("keydown", { key: "Escape", bubbles: true, composed: true }));
+  assert.equal(isOpen(), false);
+  assert.equal(shadow().activeElement, $(".launcher-button.mark"));
 });
 
 /* ---- findings and recommendations -------------------------------------------------- */
@@ -381,8 +411,8 @@ test("picking a component opens its page, and the page never sees the click", as
   click(nav("components"));
   click($$(".group-row").find((r) => r.textContent.includes("Card.Body")));
   assert.equal($(".highlight").hidden, false);
-  click($(".close"));
-  assert.equal($(".highlight").hidden, true, "nor once the panel is closed");
+  click($(".minimize"));
+  assert.equal($(".highlight").hidden, true, "nor once the panel is minimized");
 });
 
 test("an element two components render onto shows the whole chain", async () => {
@@ -393,6 +423,83 @@ test("an element two components render onto shows the whole chain", async () => 
   assert.match($(".detail-head .chain").textContent, /renders through Button/);
   assert.ok($$(".card .code").some((c) => c.textContent === "Button"));
   assert.deepEqual($$(".props tr").map((r) => r.textContent), ['variant"ghost"']);
+});
+
+/** The "Props it takes" section of the open component's page. */
+const takes = () => $$(".view section").find((section) => section.querySelector(".section-title")?.textContent.startsWith("Props it takes"));
+const propRow = (name) => [...takes().querySelectorAll(".prop-row")].find((row) => row.querySelector(".prop-name").textContent === name);
+
+test("a component's page lists every prop it takes, its own open and each style group drawn when opened", async () => {
+  await tick();
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.querySelector('[data-astralis="Card"]'));
+  const section = takes();
+  assert.ok(section, "the section is there");
+  const groups = [...section.querySelectorAll(".prop-group")];
+  assert.deepEqual(groups.map((g) => g.querySelector(".group-label").textContent), ["Its own props", "Placement"]);
+  assert.deepEqual(groups.map((g) => g.dataset.open), ["true", "false"]);
+  assert.equal(groups[1].querySelectorAll(".prop-row").length, 0, "a closed group is not drawn");
+
+  const variant = propRow("variant");
+  assert.match(variant.textContent, /In use: "outline"/);
+  assert.deepEqual([...variant.querySelectorAll(".val")].map((v) => v.textContent), SPEC.components.Card.props.variant);
+  assert.equal(variant.querySelector(".val.on").textContent, "outline");
+  assert.equal(propRow("hoverable").querySelector(".prop-type").textContent, "boolean");
+
+  const head = groups[1].querySelector(".group-row");
+  click(head);
+  assert.equal(head.getAttribute("aria-expanded"), "true");
+  assert.ok(groups[1].querySelectorAll(".prop-row").length > 10);
+  const position = propRow("position");
+  assert.ok(position, "placement's props are listed");
+
+  // A long scale shows its first values and a count; the count opens the rest.
+  const width = propRow("w");
+  const more = width.querySelector("button.val.more");
+  assert.match(more.textContent, /^\+\d+ more$/);
+  click(more);
+  assert.equal(propRow("w").querySelector("button.val.more"), null);
+  assert.ok(propRow("w").querySelectorAll(".val").length > 9);
+  assert.match(propRow("w").textContent, /or any length/);
+});
+
+test("the props search filters by name or value, opens what it finds, and survives the page redrawing", async () => {
+  await tick();
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.querySelector('[data-astralis="Card"]'));
+  const input = takes().querySelector(".search input");
+  typeInto(input, "elev");
+  assert.deepEqual([...takes().querySelectorAll(".prop-name")].map((n) => n.textContent), ["variant"]);
+  assert.equal(takes().querySelector(".val.hit").textContent, "elevated");
+  assert.match(takes().querySelector(".section-title").textContent, /1 of \d+/);
+
+  typeInto(input, "margin");
+  assert.deepEqual([...takes().querySelectorAll(".prop-group .group-label")].map((n) => n.textContent), ["Placement"]);
+  assert.equal(takes().querySelector(".prop-group").dataset.open, "true");
+  assert.ok(propRow("m"));
+
+  streams[0].emit("findings", FINDINGS);
+  assert.equal(takes().querySelector(".search input"), input, "the search is kept when findings stream in");
+  assert.equal(input.value, "margin");
+
+  typeInto(input, "zzz");
+  assert.match(takes().textContent, /No prop or value matches "zzz"/);
+});
+
+test("on a trigger wrapping a Button, both components the page wrote can be listed", async () => {
+  await tick();
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.getElementById("trigger"));
+  const which = [...takes().querySelectorAll(".segmented button")];
+  assert.deepEqual(which.map((b) => b.textContent), ["Modal.Trigger", "Button"]);
+  click(which[1]);
+  assert.equal(takes().querySelector('.segmented [aria-pressed="true"]').textContent, "Button");
+  assert.match(propRow("variant").textContent, /In use: "ghost"/);
+  assert.ok(propRow("colorScheme"));
+
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.querySelector('[data-astralis="Card"]'));
+  assert.equal(takes().querySelector(".segmented").hidden, true, "one component, no choice to make");
 });
 
 test("Escape stops picking and brings the panel back as it was", () => {
@@ -413,13 +520,14 @@ test("page data is shown as text, never parsed as markup", () => {
 
 /* ---- shortcuts and the launcher ---------------------------------------------------------- */
 
-test("Shift+Alt+A opens on Home and closes; Shift+Alt+C picks, then opens the picked component", () => {
+test("Shift+Alt+A minimizes and brings the panel back where it was; Shift+Alt+C picks, then opens the picked component", () => {
   openPanel();
   click(nav("findings"));
-  click($(".close"));
+  key({ code: "KeyA", key: "Å", shiftKey: true, altKey: true });
+  assert.equal(isOpen(), false);
   key({ code: "KeyA", key: "Å", shiftKey: true, altKey: true });
   assert.equal(isOpen(), true);
-  assert.equal(nav("home").getAttribute("aria-current"), "page");
+  assert.equal(nav("findings").getAttribute("aria-current"), "page", "back on the screen it was minimized on");
   key({ code: "KeyA", shiftKey: true, altKey: true });
   assert.equal(isOpen(), false);
 
@@ -547,8 +655,23 @@ test("Send opens exactly the snapshot shown as a GitHub issue, and shows it", as
   await settle();
   const submitted = posts.find((p) => p.path === "submit");
   assert.deepEqual(submitted.body, shown);
-  assert.deepEqual(opened, ["https://github.com/sekiro-9/astralis-ui/issues/12"]);
-  assert.match($(".report-status").textContent, /Opened #12 on GitHub\. View it\./);
+  assert.deepEqual(opened, [], "no tab opens by itself");
+  assert.match($(".report-status .sent-card").textContent, /Opened #12 on GitHub/);
+  assert.match($(".report-status .sent-card").textContent, /To add a screenshot or a file, open the issue/);
+  const link = [...$(".report-status").querySelectorAll("a")].find((a) => a.textContent === "Open the issue on GitHub");
+  assert.equal(link.getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/12");
+  assert.equal(link.getAttribute("target"), "_blank");
+});
+
+test("the report has no screenshot of its own: the snapshot carries none, and nothing asks to capture the screen", async () => {
+  await reportOn("text");
+  typeInto($(".field"), "Card loses its border");
+  await settle();
+  assert.equal("screenshot" in posts.at(-1).body.include, false);
+  assert.equal("screenshot" in posts.at(-1).body, false);
+  assert.doesNotMatch(view(), /Screenshot/);
+  assert.equal(button("Add…"), undefined);
+  assert.equal($$("img").length, 0);
 });
 
 test("a failed send says so and keeps Copy and Download", async () => {
@@ -652,7 +775,8 @@ test("a likely duplicate is shown before sending, and the report can be added to
   click(button("Add my report here"));
   await settle();
   assert.equal(posts.at(-1).path, "submit?addTo=3");
-  assert.match($(".report-status").textContent, /Added your report to #3\. View it\./);
+  assert.match($(".report-status").textContent, /Added your report to #3/);
+  assert.equal($(".report-status a.btn").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1");
   assert.equal($(".similar"), null, "the suggestion goes once it is acted on");
 });
 

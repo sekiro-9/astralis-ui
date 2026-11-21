@@ -25,9 +25,12 @@ import { STYLES } from "./styles.mjs";
                       account, shown in full before anything is sent, and the
                       issues they have opened so far
 
-   Shift+Alt+A opens and closes it. Shift+Alt+C picks a component on the page
-   and opens its page. Plain DOM in a shadow root, so it needs no framework and
-   the page's CSS cannot reach it. Everything from the page or the bridge goes
+   Shift+Alt+A, the launcher's mark and the panel's minimize button fold it
+   down to the launcher and bring it back where it was; Escape folds it from
+   inside. Whether it is open, and on which screen, lasts the browser tab's
+   session; where the launcher sits lasts across sessions. Shift+Alt+C picks a
+   component on the page and opens its page. Plain DOM in a shadow root, so it
+   needs no framework and the page's CSS cannot reach it. Everything from the page or the bridge goes
    in as text. */
 
 const HOST_TAG = "astralis-devtools";
@@ -90,7 +93,6 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       includeText: false,
       includeFindings: true,
       includeConsole: false,
-      screenshot: null,
       snapshot: null,
       problems: [],
       status: "idle", // idle | sending | sent | failed | notice
@@ -137,13 +139,17 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   );
   const crumbs = h("div", { class: "crumbs" });
   const statusSlot = h("span", {});
-  const closeButton = h("button", { class: "icon-button close", type: "button", "aria-label": "Close", title: "Close (Shift+Alt+A)", onclick: () => setOpen(false) }, icon(ICONS.close));
+  const minimizeButton = h(
+    "button",
+    { class: "icon-button minimize", type: "button", "aria-label": "Minimize to the launcher", title: "Minimize (Shift+Alt+A or Esc)", onclick: () => setOpen(false) },
+    icon(ICONS.minimize),
+  );
   const view = h("div", { class: "view" });
   const panel = h(
     "section",
     { class: "panel", role: "dialog", "aria-label": "Astralis DevTools", "data-open": "false", inert: true },
     sidebar,
-    h("div", { class: "main" }, h("header", { class: "topbar" }, crumbs, statusSlot, closeButton), view),
+    h("div", { class: "main" }, h("header", { class: "topbar" }, crumbs, statusSlot, minimizeButton), view),
   );
 
   const launcher = createLauncher({
@@ -323,6 +329,8 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   }
 
   function setOpen(open) {
+    // Focus left inside a panel going inert would fall to the page; the launcher brings it back.
+    if (!open && panel.contains(shadow.activeElement)) launcher.focus();
     state.open = open;
     if (open) placePanel();
     showPanel(open && !picker.picking);
@@ -344,11 +352,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       if (event.code === SHORTCUTS.open) {
         event.preventDefault();
         if (picker.picking) picker.stop();
-        if (state.open) setOpen(false);
-        else {
-          if (state.screen !== "home") navigate("home");
-          setOpen(true);
-        }
+        setOpen(!state.open);
         return;
       }
       if (event.code === SHORTCUTS.pick) {

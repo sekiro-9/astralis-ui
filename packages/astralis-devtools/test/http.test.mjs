@@ -153,17 +153,16 @@ test("POST snapshot completes the page's part with what only the dev server know
   }
 });
 
-test("POST snapshot includes console errors and a screenshot only when asked, and reports what is missing", async () => {
+test("POST snapshot includes console errors only when asked, never a screenshot, and reports what is missing", async () => {
   const p = project();
   try {
-    const shot = "data:image/jpeg;base64,AAAA";
     const withAll = await (await handle(post("snapshot", {
       ...PAGE_PART,
       include: { findings: false, console: true, screenshot: true },
-      screenshot: shot,
+      screenshot: "data:image/jpeg;base64,AAAA",
     }), p.options)).json();
     assert.deepEqual(withAll.snapshot.console, ["Error at src/x.tsx"]);
-    assert.equal(withAll.snapshot.screenshot, shot);
+    assert.equal("screenshot" in withAll.snapshot, false, "pictures are added on GitHub, not carried in the snapshot");
     assert.equal("findings" in withAll.snapshot, false);
 
     const untitled = await (await handle(post("snapshot", { ...PAGE_PART, description: {} }), p.options)).json();
