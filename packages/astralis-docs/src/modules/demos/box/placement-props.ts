@@ -38,6 +38,12 @@ export const placementProps: PropRow[] = [
       "Space between the component and its siblings. auto is the layout tool: ml=\"auto\" pushes a flex item to the far edge, mx=\"auto\" centres a fixed-width block.",
   },
   {
+    prop: "display",
+    type: `"hidden" | "block" | "inline" | "inline-block" | "flex" | "inline-flex" | "grid" | "contents" | …`,
+    description:
+      "Whether and how the component takes part in the layout. Responsive, so display={{ base: \"hidden\", lg: \"inline-flex\" }} hides it below lg; the value replaces the component's own display at each width.",
+  },
+  {
     prop: "animation · reveal",
     type: `"fade-in" | "fade-up" | "fade-down" | "slide-left" | "slide-right" | "scale-in" | "pop" | "blur-in"`,
     description:

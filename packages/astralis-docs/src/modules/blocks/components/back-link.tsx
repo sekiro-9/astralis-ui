@@ -9,8 +9,9 @@ export function BackLink({ href, children }: { href: string; children: React.Rea
       variant="plain"
       colorScheme="gray"
       w="fit"
-      // Link takes no display or flex props.
-      className="flex items-center gap-1"
+      display="flex"
+      // Link takes no flex-container props.
+      className="items-center gap-1"
     >
       <Icon size="xs">
         <svg

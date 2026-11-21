@@ -25,7 +25,7 @@ export const PLACEMENT_RULE_HREF = "/docs/style-props#paint-and-placement";
  */
 export const placementRow = {
   prop: "placement props",
-  type: "w · h · m · flex · position",
+  type: "w · h · m · flex · position · display",
   description:
-    "Where it sits is up to its parent: width, height, margin, flex, position and motion. How it looks is its own, set by its own props (variant, size, colorScheme); for padding or a background, wrap it in a Box.",
+    "Where it sits is up to its parent: width, height, margin, flex, position, display and motion. How it looks is its own, set by its own props (variant, size, colorScheme); for padding or a background, wrap it in a Box.",
 };

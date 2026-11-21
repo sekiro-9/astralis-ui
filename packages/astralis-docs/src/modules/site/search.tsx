@@ -172,9 +172,9 @@ export function Search() {
           size="sm"
           aria-label="Search the docs"
           aria-keyshortcuts={apple ? "Meta+K" : "Control+K"}
-          // Kbd, Button and Text take no display prop, and Button no justifyContent, so those stay classes.
+          // Button takes no justifyContent, so that stays a class.
           rightIcon={
-            <Kbd size="sm" className="hidden md:inline-flex">
+            <Kbd size="sm" display={{ base: "hidden", md: "inline-flex" }}>
               {apple ? "⌘K" : "Ctrl K"}
             </Kbd>
           }
@@ -183,7 +183,7 @@ export function Search() {
         >
           <Flex as="span" alignItems="center" gap="2">
             <Icon as={SearchIcon} size={14} />
-            <Text as="span" size="xs" weight="normal" color="muted" className="hidden sm:inline">
+            <Text as="span" size="xs" weight="normal" color="muted" display={{ base: "hidden", sm: "inline" }}>
               Search docs
             </Text>
           </Flex>

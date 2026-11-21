@@ -41,8 +41,7 @@ export function MobileNav({ version }: { version: string }) {
           colorScheme="gray"
           size="sm"
           aria-label="Open navigation"
-          // Button takes no display prop.
-          className="lg:hidden"
+          display={{ lg: "hidden" }}
         >
           <Icon as={Menu} size="sm" />
         </Button>

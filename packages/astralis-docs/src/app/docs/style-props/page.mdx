@@ -54,9 +54,9 @@ design system's job, adjusted through `variant`, `size` and `colorScheme`.
 Repainting one from the outside would defeat the variants it ships with.
 
 **Placement** is how big something is and where it sits *inside its parent*:
-width and height, the flex-item props, margin, position and motion. A
-component cannot know these: only the composition can. So components accept
-them, recipes included; every recipe's props table ends with a **placement
+width and height, the flex-item props, margin, position, `display` (whether it
+shows at this width) and motion. A component cannot know these: only the
+composition can. So components accept them, recipes included; every recipe's props table ends with a **placement
 props** row saying so. A few compound parts (`Card.Body`, `Tabs.List`,
 `Tabs.Content`, `Table.Cell`...) take no style props at all: put a `Stack` or
 `Box` inside or around them.
@@ -84,7 +84,7 @@ say it out loud: padding is space *inside* a component, which its recipe owns;
 margin is space *between* it and its siblings, which only the parent can
 decide.
 
-A style prop a component does not take (`p` on a Card, `display` on a Button)
+A style prop a component does not take (`p` on a Card, `overflow` on a Button)
 reaches the HTML as an attribute and changes nothing. In development the
 console says so, once per component and prop, with what to reach for instead;
 `astralis validate` reports the same as an error. Production builds carry no
