@@ -34,6 +34,38 @@ JavaScript runs. Until it paints, the frame shows a pulsing muted surface with
 a small image glyph (the pulse stops under reduced motion), or the low-resolution URL
 you pass as `placeholder`.
 
+## With Next.js
+
+Pass Next's image component as `as`, and Image renders through it: Next does
+the resizing, the modern formats, `srcset`/`sizes` and the preload, and Image
+keeps its look (`rounded`, `objectFit`, `aspectRatio`), the placement props,
+the pulsing loading surface and the fallback when the picture fails. The
+library never imports `next`; it only takes the component you pass.
+
+```tsx
+import NextImage from "next/image";
+import { Image } from "astralis-ui";
+
+<Image as={NextImage} src="/hero.jpg" alt="" width={1419} height={1400} sizes="100vw" preload w="full" />
+```
+
+<ComponentPreview name="image-next" />
+
+With `as`, every prop Image does not own is the component's and goes to it:
+`src` (a static import too), `width`/`height`, `sizes`, `preload`/`priority`,
+`quality`, `fill`, `loading`. `placeholder` is also the component's, so
+`placeholder="blur"` with `blurDataURL` (or a static import) is Next's blur,
+and Image shows its own pulsing surface only while `placeholder` is unset or
+`"empty"`. Image adds no `loading="lazy"` of its own here, so `preload` works.
+With `fill`, give `aspectRatio` (Image's frame is the positioned parent Next
+needs) or put it in a positioned parent yourself, and pass `sizes`.
+`onLoad`/`onError` receive the component's event. It works from a Server
+Component page; Image is a client component either way.
+
+Measured on a 390px-wide phone viewport: the same 1419×1400 photo was 193,956
+bytes as a plain `Image` (the original JPEG) and 16,876 bytes through
+`as={NextImage}` (a 640px WebP).
+
 ## Preview lightbox
 
 `preview` makes the image click-to-zoom. The lightbox supports zoom, rotate

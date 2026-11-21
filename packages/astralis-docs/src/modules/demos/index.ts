@@ -174,6 +174,7 @@ import { AvatarSizes } from "./avatar/avatar-sizes";
 import { ImageDemo } from "./image/image-demo";
 import { ImagePreview } from "./image/image-preview";
 import { ImageFallback } from "./image/image-fallback";
+import { ImageNext } from "./image/image-next";
 import { DataListDemo } from "./data-list/data-list-demo";
 import { DataListVertical } from "./data-list/data-list-vertical";
 import { CalendarDemo } from "./calendar/calendar-demo";
@@ -404,6 +405,7 @@ export const demos = {
   "image-demo": { component: ImageDemo, file: "image/image-demo.tsx" },
   "image-preview": { component: ImagePreview, file: "image/image-preview.tsx" },
   "image-fallback": { component: ImageFallback, file: "image/image-fallback.tsx" },
+  "image-next": { component: ImageNext, file: "image/image-next.tsx" },
   "data-list-demo": { component: DataListDemo, file: "data-list/data-list-demo.tsx" },
   "data-list-vertical": { component: DataListVertical, file: "data-list/data-list-vertical.tsx" },
   "calendar-demo": { component: CalendarDemo, file: "calendar/calendar-demo.tsx" },

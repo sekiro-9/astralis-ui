@@ -3,6 +3,12 @@ import type { PropRow } from "@/modules/docs/props-table";
 /** Keep in sync with packages/astralis-ui/src/components/data-display/image/image.types.ts */
 export const imageProps: PropRow[] = [
   {
+    prop: "as",
+    type: "image component",
+    description:
+      "Render through a framework's image component, such as Next's Image. Every prop Image does not own, placeholder and loading included, then follows that component and is passed to it.",
+  },
+  {
     prop: "src / alt",
     type: "string",
     description: "Source and alternative text. Both required.",
@@ -67,7 +73,7 @@ export const imageProps: PropRow[] = [
   },
   {
     prop: "onLoad / onError",
-    type: "() => void",
+    type: "(event) => void",
     description: "Fire when the image loads or fails.",
   },
   {
