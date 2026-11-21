@@ -10,6 +10,8 @@ import { Heading } from "./typography/heading";
 import { Carousel } from "./disclosure/carousel";
 import { ScrollArea } from "./layout/scroll-area";
 import { Table } from "./data-display/table";
+import { AspectRatio } from "./layout/aspect-ratio";
+import { Accordion } from "./disclosure/accordion";
 import {
   animationTypes,
   revealTypes,
@@ -134,6 +136,44 @@ describe("reveal inside the library's scroll containers", () => {
       const track = root.querySelector("[data-testid=track]") as HTMLElement;
       expect(track.className, animation).toContain("astralis:overflow-clip");
       expect(track.className, animation).not.toContain("astralis:overflow-hidden");
+    }
+  });
+
+  // Any element under these roots that clips with `hidden` would be the
+  // scroll container a reveal inside follows, and it never scrolls.
+  const hiddenUnder = (root: Element) =>
+    [root, ...root.querySelectorAll("*")].filter((el) => el.classList.contains("astralis:overflow-hidden"));
+
+  it("Card clips instead of hiding, in every variant, and hoverable too", () => {
+    for (const variant of ["elevated", "outline", "filled", "unstyled"] as const) {
+      const root = rootOf(<Card variant={variant} hoverable><Card.Body>x</Card.Body></Card>);
+      expect(root.className, variant).toContain("astralis:overflow-clip");
+      expect(hiddenUnder(root), variant).toEqual([]);
+    }
+  });
+
+  it("AspectRatio clips instead of hiding", () => {
+    const root = rootOf(<AspectRatio><img alt="" /></AspectRatio>);
+    expect(root.className).toContain("astralis:overflow-clip");
+    expect(hiddenUnder(root)).toEqual([]);
+  });
+
+  it("Accordion clips its frames and its collapsing region instead of hiding, open or closed", () => {
+    for (const variant of ["enclosed", "outline", "separated", "subtle", "plain"] as const) {
+      const root = rootOf(
+        <Accordion variant={variant} defaultValue="a">
+          <Accordion.Item value="a">
+            <Accordion.Trigger>a</Accordion.Trigger>
+            <Accordion.Content>open</Accordion.Content>
+          </Accordion.Item>
+          <Accordion.Item value="b">
+            <Accordion.Trigger>b</Accordion.Trigger>
+            <Accordion.Content>closed</Accordion.Content>
+          </Accordion.Item>
+        </Accordion>,
+      );
+      expect(hiddenUnder(root), variant).toEqual([]);
+      expect(root.querySelectorAll('[role="region"] > .astralis\\:overflow-clip'), variant).toHaveLength(2);
     }
   });
 });

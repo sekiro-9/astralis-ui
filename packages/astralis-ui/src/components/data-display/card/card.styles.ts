@@ -1,12 +1,17 @@
 import { cva } from "class-variance-authority";
 
-export const cardRootVariants = cva("astralis:overflow-hidden astralis:transition-all astralis:duration-moderate", {
+/* `overflow-clip`, not `hidden`: it still rounds off media at the corners,
+   but a clip is not a scroll container, so a `reveal` inside the card follows
+   the page instead of a box that never scrolls. A clip also starts no block
+   formatting context, so `unstyled`, the one variant with no border to hold
+   them, gets `flow-root` to keep its children's margins inside. */
+export const cardRootVariants = cva("astralis:overflow-clip astralis:transition-all astralis:duration-moderate", {
   variants: {
     variant: {
       elevated: "astralis:bg-surface-base astralis:border-normal astralis:border-stroke-base astralis:shadow-md",
       outline: "astralis:bg-transparent astralis:border-normal astralis:border-stroke-base",
       filled: "astralis:bg-surface-subtle astralis:border-normal astralis:border-transparent",
-      unstyled: "",
+      unstyled: "astralis:flow-root",
     },
     size: {
       sm: "astralis:rounded-lg",

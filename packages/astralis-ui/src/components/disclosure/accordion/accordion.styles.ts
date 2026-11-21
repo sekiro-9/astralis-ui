@@ -1,11 +1,12 @@
 import { cva } from "class-variance-authority";
 
-/* Root — outer container chrome per variant. */
+/* Root — outer container chrome per variant. Rounded frames clip with
+   `overflow-clip`, not `hidden`, so a `reveal` inside still follows the page. */
 export const accordionRootVariants = cva("astralis:w-full", {
   variants: {
     variant: {
       // Shared outer border + rounded; items divided by inner borders.
-      enclosed: "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-hidden",
+      enclosed: "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-clip",
       // Divider lines only, no outer frame.
       outline: "",
       // Each item is its own card.
@@ -26,8 +27,8 @@ export const accordionItemVariants = cva("astralis:transition-colors", {
       enclosed: "astralis:border-b astralis:border-stroke-base astralis:last:border-b-0",
       outline: "astralis:border-b astralis:border-stroke-base astralis:last:border-b-0",
       separated:
-        "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-hidden astralis:bg-surface-base",
-      subtle: "astralis:rounded-lg astralis:overflow-hidden astralis:bg-surface-subtle",
+        "astralis:border-normal astralis:border-stroke-base astralis:rounded-lg astralis:overflow-clip astralis:bg-surface-base",
+      subtle: "astralis:rounded-lg astralis:overflow-clip astralis:bg-surface-subtle",
       plain: "",
     },
     disabled: {

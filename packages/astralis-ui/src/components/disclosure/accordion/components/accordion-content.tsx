@@ -10,7 +10,9 @@ import { identify } from "../../../../utils/dev-identity";
 /**
  * Smoothly collapsing region. The outer grid animates `grid-template-rows`
  * from `0fr` → `1fr` (a JS-measurement-free height transition); the inner
- * wrapper clips the overflow. Content mounts lazily on first open (unless
+ * wrapper clips the overflow (`clip`, not `hidden`: a hidden box is a scroll
+ * container, and a `reveal` inside would follow it instead of the page).
+ * Content mounts lazily on first open (unless
  * `keepMounted`) and stays mounted afterwards so the collapse still animates.
  */
 export const AccordionContent = identify("Accordion.Content", function AccordionContent({ children, className = "", style, ...rest }: AccordionContentProps) {
@@ -31,7 +33,7 @@ export const AccordionContent = identify("Accordion.Content", function Accordion
       style={{ gridTemplateRows: open ? "1fr" : "0fr", ...style }}
       {...rest}
     >
-      <div className="astralis:overflow-hidden astralis:min-h-0" inert={!open}>
+      <div className="astralis:overflow-clip astralis:min-h-0" inert={!open}>
         <div className={astralisMerge(accordionContentVariants({ size }), className)}>
           {mounted ? children : null}
         </div>

@@ -7,9 +7,10 @@ export const aspectRatioVariantMap = {
 } as const;
 
 export const aspectRatioVariants = cva(
-  // Lock the ratio + clip overflow, then stretch the single child to fill the box.
+  // Lock the ratio + clip overflow (`clip`, not `hidden`, so a `reveal` inside
+  // follows the page rather than a box that never scrolls), then stretch the single child to fill the box.
   // Direct children are absolutely positioned to the frame; media defaults to cover.
-  "astralis:relative astralis:overflow-hidden " +
+  "astralis:relative astralis:overflow-clip " +
     "astralis:[&>*:not(style)]:absolute astralis:[&>*:not(style)]:inset-0 astralis:[&>*:not(style)]:size-full " +
     "astralis:[&>img]:object-cover astralis:[&>video]:object-cover",
   {
