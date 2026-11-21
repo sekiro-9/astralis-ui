@@ -36,8 +36,8 @@ export const textProps: PropRow[] = [
   },
   {
     prop: "lineHeight",
-    type: `"none" | "tight" | "snug" | "normal" | "relaxed" | "loose"`,
-    description: "Leading token.",
+    type: `"none" | "tight" | "snug" | "normal" | "relaxed" | "loose" | "size"`,
+    description: "Leading token. `size` is the line height that comes with the size, the default on Text; Heading uses it to step back from its tight default. `size` is a whole value only, not a breakpoint value.",
   },
   {
     prop: "letterSpacing",

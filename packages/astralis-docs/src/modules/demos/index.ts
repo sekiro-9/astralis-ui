@@ -60,6 +60,7 @@ import { TextStyling } from "./text/text-styling";
 import { TextInherit } from "./text/text-inherit";
 import { TextStates } from "./text/text-states";
 import { HeadingDemo } from "./heading/heading-demo";
+import { HeadingLineHeight } from "./heading/heading-line-height";
 import { HeadingSizeOverride } from "./heading/heading-size-override";
 import { BlockquoteDemo } from "./blockquote/blockquote-demo";
 import { CollapsibleDemo } from "./collapsible/collapsible-demo";
@@ -293,6 +294,7 @@ export const demos = {
   "text-states": { component: TextStates, file: "text/text-states.tsx" },
   "heading-demo": { component: HeadingDemo, file: "heading/heading-demo.tsx" },
   "heading-size-override": { component: HeadingSizeOverride, file: "heading/heading-size-override.tsx" },
+  "heading-line-height": { component: HeadingLineHeight, file: "heading/heading-line-height.tsx" },
   "blockquote-demo": { component: BlockquoteDemo, file: "blockquote/blockquote-demo.tsx" },
   "collapsible-demo": { component: CollapsibleDemo, file: "collapsible/collapsible-demo.tsx" },
   "collapsible-exclusive": { component: CollapsibleExclusive, file: "collapsible/collapsible-exclusive.tsx" },

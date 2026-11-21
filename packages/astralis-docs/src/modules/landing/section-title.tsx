@@ -1,16 +1,13 @@
 import type { ReactNode } from "react";
-import { Text } from "astralis-ui";
+import { Heading, Text } from "astralis-ui";
 
-/**
- * A landing section's title. A Text, not a Heading: Heading pins the line
- * height to `tight`, and this title keeps the 4xl size's own line height.
- */
+/** A landing section's title, at the 4xl size's own line height. */
 export function SectionTitle({ children }: { children: ReactNode }) {
   return (
     // Balanced wrapping has no prop.
-    <Text as="h2" fontFamily="heading" size="4xl" weight="semibold" letterSpacing="tight" color="base" className="text-balance">
+    <Heading size="4xl" weight="semibold" lineHeight="size" color="base" className="text-balance">
       {children}
-    </Text>
+    </Heading>
   );
 }
 

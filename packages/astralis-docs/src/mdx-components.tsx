@@ -13,6 +13,7 @@ import {
   Link,
   List,
   ListItem,
+  Heading,
   Separator,
   Table,
   TableBody,
@@ -56,24 +57,22 @@ function HeadingAnchor({ id }: { id?: string }) {
 
 function H2({ id, children, ...props }: HeadingProps) {
   return (
-    <Text
-      as="h2"
+    <Heading
       id={id}
-      fontFamily="heading"
       size="xl"
       weight="semibold"
-      letterSpacing="tight"
+      lineHeight="size"
       color="base"
       mt="12"
       mb="4"
-      // `group` drives the anchor's reveal. Text takes no scroll margin,
+      // `group` drives the anchor's reveal. Heading takes no scroll margin,
       // padding or border props, so the rule above the section stays classes.
       className="group scroll-m-24 border-t border-stroke-base pt-10"
       {...props}
     >
       {children}
       <HeadingAnchor id={id} />
-    </Text>
+    </Heading>
   );
 }
 
@@ -131,12 +130,11 @@ const proseLinkClass =
 
 const components: MDXComponents = {
   h1: (props) => (
-    <Text
+    <Heading
       as="h1"
-      fontFamily="heading"
       size="3xl"
       weight="semibold"
-      letterSpacing="tight"
+      lineHeight="size"
       color="base"
       {...props}
     />

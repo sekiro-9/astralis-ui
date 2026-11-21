@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Card, CardBody, Flex, Grid, Stack, Text } from "astralis-ui";
+import { Box, Card, CardBody, Flex, Grid, Heading, Stack, Text } from "astralis-ui";
 import { Bot, Bug, LayoutTemplate, MousePointerClick, Palette, TerminalSquare } from "lucide-react";
 import { Reveal } from "./reveal";
 import { SectionLead, SectionTitle } from "./section-title";
@@ -87,9 +87,9 @@ export function Toolkit({ blocks }: { blocks: number }) {
                     >
                       <tool.icon size={18} aria-hidden="true" />
                     </Flex>
-                    <Text as="h3" mt="2" fontFamily="heading" size="lg" weight="semibold" letterSpacing="tight" color="base">
+                    <Heading as="h3" mt="2" size="lg" weight="semibold" lineHeight="size" color="base">
                       {tool.title}
-                    </Text>
+                    </Heading>
                     <Text size="sm" color="muted" lineHeight="relaxed">
                       {tool.body}
                     </Text>

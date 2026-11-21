@@ -31,6 +31,20 @@ Heading levels are for the document outline; size is for the design. Override
 
 <ComponentPreview name="heading-size-override" align="start" />
 
+## Line height
+
+Heading sets lines close together (`lineHeight="tight"`, 1.25), which suits
+large display titles. `lineHeight="size"` uses the line height that comes with
+the size instead: looser at the small sizes (1.4 at `xl`), about as tight at
+the display sizes, and the parent's at `md`, which has none of its own.
+
+<ComponentPreview name="heading-line-height" align="start" />
+
+`"size"` is a whole value, not a breakpoint value: after another line height
+at a smaller breakpoint it could not restore the size's own, so the types
+reject `lineHeight={{ base: "tight", md: "size" }}`. A breakpoint map of other
+line heights works as on Text, and replaces the tight default entirely.
+
 ## Props
 
 Heading accepts every [Text](/docs/components/text) prop except `paragraph`,

@@ -21,6 +21,12 @@ export const headingProps: PropRow[] = [
     description: "Bold for h1–h3, semibold for h4–h6.",
   },
   {
+    prop: "lineHeight",
+    type: `Text line heights | "size"`,
+    default: `"tight"`,
+    description: "`size` keeps the line height that comes with the size instead of tight. It is a whole value only, not a breakpoint value: after another line height it could not restore the size's own.",
+  },
+  {
     prop: "hover · focusVisible · active",
     type: `{ color, w, h, m*, inset… }`,
     description:

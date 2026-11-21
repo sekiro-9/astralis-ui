@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Button, Flex, Stack, Text } from "astralis-ui";
+import { Box, Button, Flex, Heading, Stack, Text } from "astralis-ui";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "./reveal";
 import { BrandScene } from "./scene/brand-scene";
@@ -19,17 +19,15 @@ export function FinalCta() {
       {/* Box has no text-align prop. */}
       <Stack position="relative" mx="auto" maxW="48rem" alignItems="center" px="6" className="text-center">
         <Reveal>
-          <Text
-            as="h2"
-            fontFamily="heading"
+          <Heading
             size={{ base: "5xl", sm: "6xl" }}
             weight="semibold"
-            letterSpacing="tight"
+            lineHeight="size"
             color="base"
             className="text-balance"
           >
             Ship something <Box as="span" className="text-gradient">stellar</Box>
-          </Text>
+          </Heading>
           <Text mx="auto" mt="6" size="lg" color="muted" className="text-balance lg:whitespace-nowrap">
             Install the package, add the provider, and every component here is yours.
           </Text>

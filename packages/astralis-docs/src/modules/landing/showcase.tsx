@@ -3,7 +3,7 @@
 import NextLink from "next/link";
 import {
   Marquee, Button, Badge, Tag, Avatar, Switch, Checkbox, ThemeToggle, Code, HStack, Link,
-  Box, Flex, Stack, Text,
+  Box, Flex, Heading, Stack,
 } from "astralis-ui";
 import { Reveal } from "./reveal";
 import { SectionLead } from "./section-title";
@@ -25,9 +25,9 @@ export function Showcase({ components, version }: { components: number; version:
           <Flex mb="14" wrap="wrap" alignItems="end" justifyContent="between" gap="4">
             <Box>
               {/* Not SectionTitle: balancing this title would rewrap it on a phone. */}
-              <Text as="h2" fontFamily="heading" size="4xl" weight="semibold" letterSpacing="tight" color="base">
+              <Heading size="4xl" weight="semibold" lineHeight="size" color="base">
                 {components} components, all real
-              </Text>
+              </Heading>
               <SectionLead>Nothing below is a screenshot. Hover to pause, then meet them in the docs.</SectionLead>
             </Box>
             <Link as={NextLink} href="/docs/components/button" variant="underline" size="sm" weight="medium">
