@@ -18,6 +18,22 @@ import { Image } from "astralis-ui";
 // Image.Group for galleries
 ```
 
+## Size and loading
+
+Give `width` and `height` (the picture's own pixel size) so the browser
+reserves the frame before the image arrives. On their own they size the image;
+add `w` or `h`, responsive or not, and those size it instead, with `width` and
+`height` keeping the aspect ratio.
+
+```tsx
+<Image src="/hero.jpg" alt="" width={1419} height={1400} w="full" h={{ base: "64", lg: "96" }} />
+```
+
+The real `src` is in the server HTML, so the download starts before any
+JavaScript runs. Until it paints, the frame shows a pulsing muted surface with
+a small image glyph (the pulse stops under reduced motion), or the low-resolution URL
+you pass as `placeholder`.
+
 ## Preview lightbox
 
 `preview` makes the image click-to-zoom. The lightbox supports zoom, rotate

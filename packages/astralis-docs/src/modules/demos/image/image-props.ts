@@ -27,7 +27,8 @@ export const imageProps: PropRow[] = [
   {
     prop: "width / height",
     type: "number | string",
-    description: "The img element's intrinsic size attributes, which reserve space before it loads.",
+    description:
+      "The img element's intrinsic size. On their own they reserve the box before the image loads; with a w or h prop, that prop sizes the image and these only give its aspect ratio.",
   },
   {
     prop: "loading",
@@ -39,7 +40,8 @@ export const imageProps: PropRow[] = [
     prop: "placeholder",
     type: `"blur" | "empty" | URL`,
     default: `"empty"`,
-    description: "A shimmer, nothing, or a low-resolution image shown while loading.",
+    description:
+      "What the frame shows while the image loads: a pulsing muted surface with a small image glyph (\"empty\"; \"blur\" is another name for it), or a low-resolution image URL drawn behind the picture. The real src is always in the server HTML.",
   },
   {
     prop: "srcset / sizes",
@@ -50,7 +52,7 @@ export const imageProps: PropRow[] = [
     prop: "fallback",
     type: "ReactNode",
     default: "icon",
-    description: "Rendered when the image fails to load.",
+    description: "Rendered when the image fails to load, or when src is empty.",
   },
   {
     prop: "caption",
