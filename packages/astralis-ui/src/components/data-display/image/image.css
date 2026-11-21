@@ -1,0 +1,30 @@
+/* Image's loading state. It is painted as the img element's own background,
+   not swapped in as its src, so the real src is in the server HTML and the
+   picture covers the placeholder as soon as it decodes, with or without
+   JavaScript. Only the background pulses: an opacity pulse would also pulse a
+   photo that finished loading before hydration. The glyph is a data URI and
+   cannot read currentColor, so it is a translucent black or white that sits
+   on any muted surface. */
+@layer components {
+  .astralis-image-loading {
+    background-color: var(--astralis-color-surface-muted);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-opacity='.28' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2.5'/%3E%3Ccircle cx='8.5' cy='9.5' r='1.75'/%3E%3Cpath d='m21 15.5-4.6-4.6a1.5 1.5 0 0 0-2.1 0L5 20'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: min(2rem, 50%);
+  }
+
+  .astralis-dark .astralis-image-loading {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-opacity='.24' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='16' rx='2.5'/%3E%3Ccircle cx='8.5' cy='9.5' r='1.75'/%3E%3Cpath d='m21 15.5-4.6-4.6a1.5 1.5 0 0 0-2.1 0L5 20'/%3E%3C/svg%3E");
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .astralis-image-loading {
+      animation: astralis-image-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+}
+
+@keyframes astralis-image-pulse {
+  50% { background-color: var(--astralis-color-surface-subtle); }
+}

@@ -1,7 +1,90 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToStaticMarkup } from "react-dom/server";
 import { Image } from "./index";
+
+/**
+ * The server HTML must carry the real src, so the browser starts the download
+ * from the HTML and visitors without JavaScript still see the picture.
+ */
+describe("Image server render", () => {
+  it.each([
+    ["default", {}],
+    ["lazy", { loading: "lazy" as const }],
+    ["eager", { loading: "eager" as const }],
+  ])("puts the real src in the HTML (%s)", (_, props) => {
+    const html = renderToStaticMarkup(<Image src="/hero.jpg" alt="Hero" {...props} />);
+    expect(html).toContain('src="/hero.jpg"');
+    expect(html).not.toContain("data:image");
+    expect(html).toContain("astralis-image-loading");
+  });
+
+  it("draws a low-resolution placeholder behind the real src", () => {
+    const html = renderToStaticMarkup(<Image src="/hero.jpg" alt="" placeholder="/hero-tiny.jpg" />);
+    expect(html).toContain('src="/hero.jpg"');
+    expect(html).toContain('background-image:url(&quot;/hero-tiny.jpg&quot;)');
+    expect(html).not.toContain("astralis-image-loading");
+  });
+
+  it("renders the fallback for a missing src", () => {
+    const html = renderToStaticMarkup(<Image src="" alt="" fallback={<span>none</span>} />);
+    expect(html).toBe("<span>none</span>");
+  });
+});
+
+describe("Image loading state", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("shows the placeholder until the image loads, then removes it", () => {
+    const onLoad = vi.fn();
+    const { container } = render(<Image src="/a.png" alt="" onLoad={onLoad} />);
+    const img = container.querySelector("img")!;
+    expect(img).toHaveClass("astralis-image-loading");
+    fireEvent.load(img);
+    expect(img).not.toHaveClass("astralis-image-loading");
+    expect(onLoad).toHaveBeenCalledOnce();
+  });
+
+  it("a new src after a failure loads again instead of keeping the fallback", () => {
+    const { container, rerender } = render(<Image src="/missing.png" alt="" />);
+    fireEvent.error(container.querySelector("img")!);
+    expect(container.textContent).toContain("Failed to load");
+    rerender(<Image src="/b.png" alt="" />);
+    const img = container.querySelector("img")!;
+    expect(img).toHaveAttribute("src", "/b.png");
+    expect(img).toHaveClass("astralis-image-loading");
+  });
+
+  it("a new src after a load shows the placeholder again", () => {
+    const { container, rerender } = render(<Image src="/a.png" alt="" />);
+    fireEvent.load(container.querySelector("img")!);
+    rerender(<Image src="/b.png" alt="" />);
+    expect(container.querySelector("img")).toHaveClass("astralis-image-loading");
+  });
+
+  const settledNode = (naturalWidth: number) => {
+    vi.spyOn(HTMLImageElement.prototype, "complete", "get").mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, "currentSrc", "get").mockReturnValue("http://x/a.png");
+    vi.spyOn(HTMLImageElement.prototype, "naturalWidth", "get").mockReturnValue(naturalWidth);
+  };
+
+  it("an image that finished before React attached reads as loaded", () => {
+    settledNode(640);
+    const onLoad = vi.fn();
+    const { container } = render(<Image src="/a.png" alt="" onLoad={onLoad} />);
+    expect(container.querySelector("img")).not.toHaveClass("astralis-image-loading");
+    expect(onLoad).toHaveBeenCalledOnce();
+  });
+
+  it("an image that failed before React attached shows the fallback", () => {
+    settledNode(0);
+    const onError = vi.fn();
+    const { container } = render(<Image src="/missing.png" alt="" onError={onError} />);
+    expect(container.textContent).toContain("Failed to load");
+    expect(onError).toHaveBeenCalledOnce();
+  });
+});
 
 /**
  * The DOM remainder (id, data-*, aria-*) has to land on whichever element is

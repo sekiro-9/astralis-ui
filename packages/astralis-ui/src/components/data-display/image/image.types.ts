@@ -36,7 +36,12 @@ export interface ImageProps extends Omit<PlacementProps, "width" | "height"> {
   loading?: "eager" | "lazy";
   srcset?: string;
   sizes?: string;
-  /** A blurred low-res URL shown while loading, or "blur" for the default shimmer */
+  /**
+   * What the frame shows while the image loads: "empty" a pulsing muted
+   * surface with a small image glyph ("blur" is kept as another name for
+   * it), or a URL of a low-resolution version drawn behind the image.
+   * @default "empty"
+   */
   placeholder?: "blur" | "empty" | string;
   rounded?: ImageRounded;
   /** Fixed aspect-ratio wrapper: "square"=1/1, "video"=16/9, "portrait"=3/4, "wide"=21/9, or any CSS ratio e.g. "4/3" */

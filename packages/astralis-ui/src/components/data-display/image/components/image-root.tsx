@@ -6,8 +6,8 @@ import { astralisMerge } from "../../../../utils/astralis-merge";
 import { ImageLightbox } from "./image-lightbox";
 import {
   ASPECT_RATIO_MAP,
-  DEFAULT_PLACEHOLDER,
   FIT_MAP,
+  PLACEHOLDER_SIZE_MAP,
   ROUNDED_MAP,
 } from "./image.constants";
 import type { ImageProps } from "../image.types";
@@ -38,33 +38,43 @@ export const ImageRoot = identify("Image", function ImageRoot({
 }: ImageProps & { ref?: Ref<HTMLImageElement> }) {
     const { placementClass, placementStyle, rest: domRest } = splitPlacement(rest);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [hasError, setIsError] = useState(false);
+    // Keyed by src, so a new src starts loading again instead of inheriting
+    // the previous one's loaded or failed state.
+    const [settled, setSettled] = useState<{ src: string; failed: boolean } | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const isLoading = Boolean(src) && settled?.src !== src;
+    const hasError = !src || (settled?.src === src && settled.failed);
 
     const handleLoad = () => {
-      setIsLoading(false);
+      setSettled({ src, failed: false });
       onLoad?.();
     };
 
     const handleError = () => {
-      setIsLoading(false);
-      setIsError(true);
+      setSettled({ src, failed: true });
       onError?.();
     };
 
-    // A cached or inline image can finish before React attaches onLoad, and
-    // the event is then never seen; the node itself says whether it is done.
+    // The real src is in the server HTML, so the image can finish, or fail,
+    // before React attaches onLoad/onError; the node itself says which.
     const attach: RefCallback<HTMLImageElement> = (node) => {
       if (typeof ref === "function") ref(node);
       else if (ref) ref.current = node;
-      if (node && isLoading && node.complete && node.naturalWidth > 0) handleLoad();
+      if (!node || !isLoading || !node.complete || !node.currentSrc) return;
+      if (node.naturalWidth > 0) handleLoad();
+      else handleError();
     };
 
-    const placeholderSrc =
-      placeholder !== "empty" && placeholder !== "blur"
-        ? placeholder
-        : DEFAULT_PLACEHOLDER;
+    const lowResSrc = placeholder !== "empty" && placeholder !== "blur" ? placeholder : undefined;
+    const loadingStyle: React.CSSProperties | undefined =
+      isLoading && lowResSrc
+        ? {
+            backgroundImage: `url(${JSON.stringify(lowResSrc)})`,
+            backgroundSize: PLACEHOLDER_SIZE_MAP[objectFit],
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }
+        : undefined;
 
     const roundedClass = ROUNDED_MAP[rounded] ?? "";
     const fitClass = FIT_MAP[objectFit] ?? "";
@@ -135,7 +145,7 @@ export const ImageRoot = identify("Image", function ImageRoot({
       <img
         {...domProps("img")}
         ref={attach}
-        src={isLoading ? placeholderSrc : src}
+        src={src}
         alt={alt}
         aria-label={ariaLabel}
         width={width}
@@ -150,13 +160,12 @@ export const ImageRoot = identify("Image", function ImageRoot({
           "astralis:transition-opacity astralis:duration-200",
           fitClass,
           roundedClass,
-          isLoading && "astralis:animate-pulse astralis:motion-reduce:animate-none astralis:bg-surface-muted",
-          placeholder === "blur" && isLoading && "astralis:blur-sm",
+          isLoading && !lowResSrc && "astralis-image-loading",
           !aspectRatio && previewClasses,
           aspectRatio ? "astralis:absolute astralis:inset-0 astralis:h-full astralis:w-full" : placementClass,
           className,
         )}
-        style={aspectRatio ? {} : { ...placementStyle, width, height, ...style }}
+        style={aspectRatio ? loadingStyle : { ...placementStyle, width, height, ...loadingStyle, ...style }}
       />
     );
 

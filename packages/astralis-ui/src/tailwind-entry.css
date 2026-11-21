@@ -64,6 +64,7 @@
    See const/channel.ts. */
 @import "./theme/channels.css";
 @import "./theme/motion.css";
+@import "./components/data-display/image/image.css";
 
 /* Auto-generated: forces sm/md/lg/xl variants for every token utility so the
    runtime responsive engine always resolves to real CSS. Regenerate via

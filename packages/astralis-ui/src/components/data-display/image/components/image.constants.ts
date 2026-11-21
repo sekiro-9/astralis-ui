@@ -26,5 +26,11 @@ export const FIT_MAP: Record<ImageObjectFit, string> = {
   "scale-down": "astralis:object-scale-down",
 };
 
-export const DEFAULT_PLACEHOLDER =
-  "data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNkI3MjgwIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNDE2LDY0SDk2YTY0LjA3LDY0LjA3LDAsMCwwLTY0LDY0VjM4NGE2NC4wNyw2NC4wNywwLDAsMCw2NCw2NEg0MTZhNjQuMDcsNjQuMDcsMCwwLDAsNjQtNjRWMTI4QTY0LjA3LDY0LjA3LDAsMCwwLDQxNiw2NFpNMzM2LDEyOGE0OCw0OCwwLDEsMSw0OCw0OEE0OC4wNSw0OC4wNSwwLDAsMSwzMzYsMTI4Wk05Niw0MTZhMzIsMzIsMCwwLDEtMzItMzJWMzE2LjM3bDk0Ljg0LTg0LjNhNDguMDYsNDguMDYsMCwwLDEsNjUuOCwxLjlsNjQuOTUsNjQuODFMMTcyLjM3LDQxNlpNNDQ4LDM4NGEzMiwzMiwwLDAsMSczMiwzMkgyMTcuNjNMMzM5LjA1LDI5NC41OGE0Ny43Miw0Ny43MiwwLDAsMSw2MS42NC0uMTZMNDQ4LDMzMy44NFoiLz48L3N2Zz4=";
+/** How a low-resolution placeholder URL is laid out behind the image, matched to its objectFit. */
+export const PLACEHOLDER_SIZE_MAP: Record<ImageObjectFit, string> = {
+  contain: "contain",
+  cover: "cover",
+  fill: "100% 100%",
+  none: "cover",
+  "scale-down": "contain",
+};
