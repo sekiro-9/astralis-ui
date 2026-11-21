@@ -8,9 +8,9 @@
  *
  * - RESPONSIVE tokens: only classes that the runtime responsive engine can
  *   breakpoint-prefix — i.e. values inside the token maps handed to
- *   `resolveStyleProps` (everything in src/const, plus `export const
- *   *Map = {...}` blocks in *.style(s).ts). Only these need sm/md/lg/xl
- *   variants force-generated.
+ *   `resolveStyleProps` (everything in src/const, plus the `export const
+ *   *Map = {...}` blocks in *.style(s).ts that some call passes as `maps`).
+ *   Only these need sm/md/lg/xl variants force-generated.
  *
  * Since the var-channel migration, both scopes cover KEYWORD props only —
  * value-bearing props (spacing, sizing, colors, ...) resolve to channel
@@ -66,7 +66,7 @@ export function collectAllTokens() {
 /** Slice out `export const <name>Map = { ... }` blocks (brace-balanced). */
 function mapBlocks(text) {
   const blocks = [];
-  const re = /export const \w*Map(?:\s*:[^=]+)? = \{/g;
+  const re = /export const (\w*Map)(?:\s*:[^=]+)? = \{/g;
   let m;
   while ((m = re.exec(text))) {
     let depth = 0;
@@ -78,9 +78,31 @@ function mapBlocks(text) {
         if (depth === 0) break;
       }
     }
-    blocks.push(text.slice(m.index, i + 1));
+    blocks.push({ name: m[1], text: text.slice(m.index, i + 1) });
   }
   return blocks;
+}
+
+/**
+ * Names of the maps handed to `resolveStyleProps` as its `maps` (directly, or
+ * as values of an inline object). A `*Map` that only feeds CVA (Kbd, Link,
+ * Highlight) never reaches the engine, so its classes are never
+ * breakpoint-prefixed. Every call must name its maps in a form read here, or
+ * the scope would silently shrink.
+ */
+function engineMapNames() {
+  const names = new Set();
+  for (const file of collectFiles(SRC)) {
+    const text = readFileSync(file, "utf8");
+    const calls = [...text.matchAll(/resolveStyleProps\(/g)].length - [...text.matchAll(/function resolveStyleProps\(/g)].length;
+    if (calls === 0) continue;
+    const args = [...text.matchAll(/maps:\s*(\{[^}]*\}|\w+)/g)].map((m) => m[1]);
+    if (args.length < calls) {
+      throw new Error(`[astralis] ${file}: ${calls} resolveStyleProps calls but ${args.length} readable \`maps:\` arguments`);
+    }
+    for (const arg of args) for (const id of arg.matchAll(/\b(\w+)\b(?!\s*:)/g)) names.add(id[1]);
+  }
+  return names;
 }
 
 /** Only classes reachable by the runtime responsive engine. */
@@ -89,10 +111,13 @@ export function collectResponsiveTokens() {
   for (const file of collectFiles(join(SRC, "const"))) {
     tokensInText(readFileSync(file, "utf8"), tokens);
   }
+  const engineMaps = engineMapNames();
   for (const file of collectFiles(join(SRC, "components"))) {
     // Singular too: layout/flex ships flex.style.ts.
     if (!/\.styles?\.tsx?$/.test(file)) continue;
-    for (const block of mapBlocks(readFileSync(file, "utf8"))) tokensInText(block, tokens);
+    for (const block of mapBlocks(readFileSync(file, "utf8"))) {
+      if (engineMaps.has(block.name)) tokensInText(block.text, tokens);
+    }
   }
   return tokens;
 }
