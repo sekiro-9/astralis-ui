@@ -173,6 +173,50 @@ describe("Image forwards DOM props to its outermost element", () => {
   });
 });
 
+describe("Image takes the HTML attributes any element takes", () => {
+  it("types id, title, role, tabIndex, aria-* and event handlers, and not the img's own or a paint prop", () => {
+    const typed = [
+      <Image key="a" src="/a.jpg" alt="" id="hero" title="Hero" role="img" tabIndex={-1} aria-describedby="d" onClick={() => {}} />,
+      // @ts-expect-error `color` would read as a style prop, and Image has none
+      <Image key="b" src="/a.jpg" alt="" color="red" />,
+      // @ts-expect-error paint goes through style props, which Image does not take
+      <Image key="c" src="/a.jpg" alt="" bg="surface.muted" />,
+      // @ts-expect-error `width` is the intrinsic size, a number or a CSS length
+      <Image key="d" src="/a.jpg" alt="" width={{ base: 40 }} />,
+      // @ts-expect-error `srcSet` is not an alias: Image's own is `srcset`
+      <Image key="e" src="/a.jpg" alt="" srcSet="/a.jpg 1x" />,
+    ];
+    expect(typed).toHaveLength(5);
+  });
+
+  it.each([
+    ["the img", {}, "IMG"],
+    ["the ratio box", { aspectRatio: "video" }, "DIV"],
+    ["the figure", { caption: "c" }, "FIGURE"],
+  ] as const)("puts them on %s when it is outermost", (_, props, tag) => {
+    const onClick = vi.fn();
+    const { container } = render(
+      <Image src="/a.png" alt="a" id="hero" title="Hero" aria-describedby="d" onClick={onClick} {...props} />,
+    );
+    const outer = container.firstElementChild as HTMLElement;
+    expect(outer.tagName).toBe(tag);
+    expect(outer).toHaveAttribute("id", "hero");
+    expect(outer).toHaveAttribute("title", "Hero");
+    expect(outer).toHaveAttribute("aria-describedby", "d");
+    fireEvent.click(outer);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(container.querySelectorAll("[id='hero']")).toHaveLength(1);
+  });
+
+  it("keeps placement props as classes, never as attributes", () => {
+    const { container } = render(<Image src="/a.png" alt="a" id="hero" w="full" m="4" />);
+    const img = container.querySelector("img")!;
+    expect(img).toHaveAttribute("id", "hero");
+    expect(img).not.toHaveAttribute("w");
+    expect(img).not.toHaveAttribute("m");
+  });
+});
+
 interface StaticImport {
   src: string;
   width: number;

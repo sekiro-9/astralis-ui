@@ -115,7 +115,10 @@ export const ImageRoot = identify("Image", function ImageRoot(
             ? { height: intrinsicHeight ?? 160 }
             : {};
     const { placementClass, placementStyle, rest: splitRest } = splitPlacement(rest);
-    const { style: _placementVars, ...domRest } = splitRest as Record<string, unknown>;
+    // splitPlacement folds the channel variables into `style`; Image places
+    // placementStyle itself, on whichever element is outermost.
+    const domRest: Record<string, unknown> = { ...splitRest };
+    delete domRest.style;
 
     // Keyed by src, so a new src starts loading again instead of inheriting
     // the previous one's loaded or failed state.

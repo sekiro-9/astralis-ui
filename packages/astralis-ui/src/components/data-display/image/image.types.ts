@@ -4,6 +4,7 @@ import type {
   ComponentPropsWithoutRef,
   CSSProperties,
   ElementType,
+  HTMLAttributes,
   ReactElement,
   ReactNode,
   Ref,
@@ -52,8 +53,20 @@ export interface ImageOwnProps extends Omit<PlacementProps, "width" | "height"> 
   ariaLabel?: string;
 }
 
+/**
+ * The HTML attributes any element takes (`id`, `title`, `aria-*`, `role`,
+ * event handlers), which Image puts on its outermost element: the img, the
+ * aspect-ratio box or the figure. The img's own attributes are not among
+ * them: `width`/`height` are Image's intrinsic size, and sizing and paint go
+ * through the style props. `color` is left out because it would read as one.
+ */
+type ImageAttributes = Omit<
+  HTMLAttributes<HTMLElement>,
+  keyof ImageOwnProps | "color" | "children" | "dangerouslySetInnerHTML" | "onLoad" | "onError" | "placeholder"
+>;
+
 /** Image rendering its own img element. */
-export interface ImageProps extends ImageOwnProps {
+export interface ImageProps extends ImageOwnProps, ImageAttributes {
   src: string;
   /**
    * The img element's intrinsic width. With `height`, it reserves the box
@@ -87,7 +100,13 @@ export interface ImageProps extends ImageOwnProps {
  * included, and is passed to it.
  */
 export type ImageAsProps<C extends ElementType> = ImageOwnProps & {
-  /** An image component to render through, such as Next's `Image`. The library never imports one. */
+  /**
+   * An image component to render through, such as Next's `Image`, which then
+   * does the resizing and loading. Every prop Image does not own then follows
+   * that component's props and is passed to it, `src`, `width`, `height`,
+   * `loading`, `sizes` and `placeholder` included; `id`, `data-*` and
+   * `aria-*` stay on the outermost element. The library never imports one.
+   */
   as: C;
   ref?: PolymorphicRef<C>;
 } & Omit<ComponentPropsWithoutRef<C>, keyof ImageOwnProps | "as">;
