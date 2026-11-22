@@ -23,6 +23,10 @@
      "inherit" would copy the nearest w above, not the parent's width
    - a style prop the component does not take, which reaches the HTML as a
      stray attribute and changes nothing                    (unknown-style-prop)
+   - hover/focusVisible/active on a component that takes   (unknown-state-prop)
+     no state props: only the box and text groups resolve them
+   - a prop the component's type does not take at all, when the spec lists
+     the type's whole prop set (ownProps)                   (unknown-prop)
    - a component left empty that its type requires children for (missing-children):
      tsc catches it too, but agents and copied snippets produce code no one type-checks
 
@@ -61,6 +65,12 @@ const DOCTRINE_PAINT_PROPS = new Set([
    so they are never reported as stray. */
 const HTML_ATTRIBUTE_NAMES = new Set(["width", "height", "size", "color", "wrap", "align", "border"]);
 
+/* The recipe props a paint-prop hint may point to, when the component has them. */
+const LOOK_PROPS = ["variant", "size", "colorScheme"];
+
+/* Props React itself takes on every component, whatever its type declares. */
+const REACT_PROPS = new Set(["key", "ref", "children"]);
+
 /* Packages whose components are icons, for the icon-only Button rule. */
 const ICON_PACKAGES = /^(lucide-react|react-icons(\/.*)?|@heroicons\/react(\/.*)?|@radix-ui\/react-icons|@tabler\/icons-react|@phosphor-icons\/react)$/;
 
@@ -98,6 +108,9 @@ export function prepareSpec(spec) {
     // them and older code must keep validating.
     bpKeys: new Set(["base", ...Object.keys(spec.breakpoints), ...Object.keys(spec.containerBreakpoints ?? {})]),
     stateProps: new Set(Object.keys(spec.states)),
+    // React's DOM and SVG attributes any component's type inherits (spec builds
+    // that list each component's ownProps). Null when the spec cannot say.
+    domAttributeSet: spec.domAttributes ? new Set(spec.domAttributes) : null,
     // Every exported value and type (spec 3+). Null for older specs.
     exportSet: spec.exports ? new Set(spec.exports) : null,
   };
@@ -418,7 +431,33 @@ function checkOwnValue(ctx, name, comp, prop, attr) {
   }
 }
 
-function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
+/** The hint for a paint prop on a component that owns its look: its own
+ *  variant/size/colorScheme, or for a part, the ones on the compound it belongs to. */
+function lookHint(ctx, name, comp, prop) {
+  const lookOf = (entry) => LOOK_PROPS.filter((p) => entry?.props?.[p]);
+  const or = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} or ${list.at(-1)}` : list[0]);
+  if (comp.partOf) {
+    const owner = comp.partOf;
+    const vocab = lookOf(ctx.spec.components[owner]);
+    return `${name} is part of ${owner} and has no look of its own: ` +
+      (vocab.length ? `set ${or(vocab)} on the ${owner}, or ` : "") + `put ${prop} on a Box inside it`;
+  }
+  const vocab = lookOf(comp);
+  return vocab.length
+    ? `${name} owns how it looks; reach for ${or(vocab)}`
+    : `${name} owns how it looks; put ${prop} on a Box around it`;
+}
+
+/** Whether the component's type takes `prop` at all. Null when the spec cannot
+ *  say: it lists ownProps only for types it read whole (not polymorphic ones). */
+function takesProp(ctx, comp, allowed, prop) {
+  if (!comp.ownProps || (comp.domProps && !ctx.domAttributeSet)) return null;
+  if (allowed[prop] || comp.ownProps.includes(prop) || REACT_PROPS.has(prop) || /^data-/.test(prop)) return true;
+  if (comp.props?.[prop] || comp.scalarProps?.[prop] || comp.overrides?.includes(prop)) return true;
+  return Boolean(comp.domProps && (/^on[A-Z]/.test(prop) || ctx.domAttributeSet.has(prop)));
+}
+
+function checkComponentProp(ctx, identity, comp, allowed, attr, prop, open) {
   const name = identity.specName;
   if (comp.exclude?.includes(prop)) {
     const short = allowed[prop]?.short;
@@ -439,6 +478,14 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
     // Link only those they take as base props. Elsewhere no claim.
     if (comp.groups.includes("box")) checkStateValue(ctx, name, prop, attr.value);
     else if (comp.groups.includes("text")) checkStateValue(ctx, name, prop, attr.value, allowed);
+    // Only box- and text-group components resolve state props. Decided only
+    // when the spec read the type (ownStyleProps), and never against a state
+    // name the component declares itself.
+    else if (comp.ownStyleProps && !comp.props?.[prop] && !comp.scalarProps?.[prop] && !comp.ownProps?.includes(prop)) {
+      ctx.error("unknown-state-prop", attr,
+        `${name} does not take ${prop}: state props work on Box, the layout primitives, Text, Heading and Link, ` +
+        `so here it changes nothing (put ${prop} on a Box around ${name})`);
+    }
     return;
   }
   if (!overridden && allowed[prop]) {
@@ -463,10 +510,22 @@ function checkComponentProp(ctx, identity, comp, allowed, attr, prop) {
     ctx.error("unknown-style-prop", attr,
       `${name} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing` +
       (recipe
-        ? ` (${name} owns how it looks; reach for variant, size or colorScheme)`
+        ? ` (${lookHint(ctx, name, comp, prop)})`
         : ` (${name} takes ${comp.groups.length ? `${comp.groups.join(", ")} props` : "no style props"}; put ${prop} on a Box around it)`));
+    return;
   }
-  // Anything else: DOM prop or open-typed, no claim.
+  // Style-prop names are the rule above's; `as` or a spread may hand the
+  // element another component's props, so neither is judged.
+  if (open || ctx.stylePropNames.has(prop) || takesProp(ctx, comp, allowed, prop) !== false) return;
+  const candidates = [...comp.ownProps, ...Object.keys(allowed)].filter((p) => !/^(aria|data)-|^on[A-Z]/.test(p) || /^on[A-Z]/.test(prop));
+  // A near spelling, else the one prop that ends or starts with it (fit, objectFit).
+  const lower = prop.toLowerCase();
+  const affixed = candidates.filter((p) => lower.length >= 3 && (p.toLowerCase().endsWith(lower) || p.toLowerCase().startsWith(lower)));
+  const near = (affixed.length === 1 ? affixed[0] : null) ?? suggest(prop, candidates);
+  ctx.error("unknown-prop", attr,
+    `${name} has no ${prop} prop: ` +
+    (comp.domProps ? "it reaches the HTML as a stray attribute and changes nothing" : "it changes nothing") +
+    (near ? ` (did you mean "${near}"?)` : ""));
 }
 
 /* ---- one element: identity, then every attribute ----------------------------- */
@@ -524,6 +583,7 @@ function analyzeOpening(ctx, node) {
   if (comp) for (const g of comp.groups) Object.assign(allowed, ctx.spec.propGroups[g]);
 
   let hasSpread = false;
+  const open = node.attributes.some((a) => a.type === "JSXSpreadAttribute") || Boolean(findAttribute(node, "as"));
   let hasAlt = false;
   let hasAriaCover = false; // aria-label / aria-labelledby / aria-hidden
 
@@ -541,7 +601,7 @@ function analyzeOpening(ctx, node) {
     } else if (prop === "role") checkRole(ctx, attr);
     else if (prop === "tabIndex") checkTabIndex(ctx, attr);
     else if (prop === "alt") hasAlt = true;
-    else if (comp) checkComponentProp(ctx, identity, comp, allowed, attr, prop);
+    else if (comp) checkComponentProp(ctx, identity, comp, allowed, attr, prop, open);
   }
 
   if (identity.specName === "Flex") {

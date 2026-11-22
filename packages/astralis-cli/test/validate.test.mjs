@@ -564,7 +564,7 @@ test("a component whose type requires children is an error when left empty", () 
 test("children given any way satisfy the rule, and a spread makes no claim", () => {
   const r = validate(`<Stack>
     <Tabs defaultValue="a"><Tabs.List><Tabs.Trigger value="a">A</Tabs.Trigger></Tabs.List><Tabs.Content value="a">x</Tabs.Content></Tabs>
-    <Tooltip content="hi">{trigger}</Tooltip>
+    <Tooltip>{trigger}</Tooltip>
     <Modal children={body} />
     <Modal {...props} />
     <Link href="/"> </Link>
@@ -660,4 +660,87 @@ test("a style prop on a component that takes none says so in words", () => {
   const r = validate(`<Textarea p="4" />`, "Textarea");
   assert.deepEqual(codes(r.errors), ["unknown-style-prop"]);
   assert.match(r.errors[0].message, /\(Textarea takes no style props; put p on a Box around it\)$/);
+});
+
+test("state props on a component that takes none are an error; on Box, Text and Link they are not", () => {
+  const r = validate(`<Stack>
+    <Card hover={{ scale: "105" }}>a</Card>
+    <Button active={{ scale: "95" }}>b</Button>
+    <Card.Footer focusVisible={{ shadow: "md" }}>c</Card.Footer>
+    <Image src="/a.png" alt="" hover={{ scale: "105" }} />
+  </Stack>`, "Stack, Card, Button, Image");
+  assert.deepEqual(codes(r.errors), Array(4).fill("unknown-state-prop"));
+  assert.match(r.errors[0].message,
+    /^Card does not take hover: state props work on Box, the layout primitives, Text, Heading and Link, so here it changes nothing \(put hover on a Box around Card\)$/);
+  assert.deepEqual([r.errors[0].component, r.errors[0].prop], ["Card", "hover"]);
+  assert.match(r.errors[2].message, /^CardFooter does not take focusVisible/);
+
+  const good = validate(`<Stack hover={{ gap: "4" }}>
+    <Box hover={{ bg: "muted" }} />
+    <Text hover={{ color: "muted" }}>t</Text>
+    <Link href="/" hover={{ color: "muted" }}>l</Link>
+  </Stack>`, "Stack, Box, Text, Link");
+  assert.deepEqual(good.errors, []);
+});
+
+test("a paint prop on a part points to its compound's recipe props, or to a Box inside it", () => {
+  const r = validate(`<Card><Card.Footer p="4">a</Card.Footer><CardFooter bg="muted">b</CardFooter></Card>`, "Card, CardFooter");
+  assert.deepEqual(codes(r.errors), ["unknown-style-prop", "unknown-style-prop"]);
+  assert.match(r.errors[0].message,
+    /\(CardFooter is part of Card and has no look of its own: set variant or size on the Card, or put p on a Box inside it\)$/);
+  assert.match(r.errors[1].message, /put bg on a Box inside it\)$/);
+  assert.doesNotMatch(r.errors[0].message, /colorScheme/);
+
+  // A recipe component names only the look props it has.
+  assert.match(validate(`<Card bg="muted">x</Card>`).errors[0].message, /\(Card owns how it looks; reach for variant or size\)$/);
+  assert.match(validate(`<Image src="/a.png" alt="" bg="muted" />`, "Image").errors[0].message,
+    /\(Image owns how it looks; put bg on a Box around it\)$/);
+});
+
+/* The spec lists a component's whole prop set (ownProps) only where it read
+   the type whole. Until the shipped spec carries it, these tests give it to
+   two components the way the generator would. */
+/* The built spec carries ownProps, domProps and domAttributes. */
+const withOwnProps = () => prepareSpec(spec);
+
+test("a prop the component's type does not take is an error, with the nearest real prop", () => {
+  const withProps = withOwnProps();
+  const run = (jsx) => validateSource(`import { Card, Image, Button } from "astralis-ui";\nexport const X = () => (${jsx});`, withProps, "t.tsx");
+  const r = run(`<Card>
+    <Image src="/a.png" alt="" fit="cover" />
+    <Image src="/a.png" alt="" objectFt="cover" />
+    <Card varient="outline">x</Card>
+  </Card>`);
+  assert.deepEqual(codes(r.errors), ["unknown-prop", "unknown-prop", "unknown-prop"]);
+  assert.equal(r.errors[0].message, `Image has no fit prop: it reaches the HTML as a stray attribute and changes nothing (did you mean "objectFit"?)`);
+  assert.match(r.errors[1].message, /did you mean "objectFit"/);
+  assert.equal(r.errors[2].message,
+    `Card has no varient prop: it reaches the HTML as a stray attribute and changes nothing (did you mean "variant"?)`);
+  assert.deepEqual([r.errors[0].component, r.errors[0].prop, r.errors[0].value], ["Image", "fit", "cover"]);
+
+  // Own props, group props, DOM attributes and handlers, React's props, data-*: all taken.
+  const good = run(`<Card variant="outline" hoverable id="c" title="t" onClick={go} key="k" data-x="1" w="full" className="x">
+    <Image src="/a.png" alt="" objectFit="cover" width={10} loading="lazy" onLoad={go} m="2" data-y="1" />
+  </Card>`);
+  assert.deepEqual(good.errors, []);
+});
+
+test("unknown-prop stays silent where the spec cannot decide: as, spreads, polymorphic and unknown components", () => {
+  const run = (jsx) => validateSource(
+    `import { Card, Image, Button } from "astralis-ui";\nimport { Foo } from "./foo";\nexport const X = () => (${jsx});`,
+    withOwnProps(), "t.tsx");
+  const r = run(`<Card>
+    <Image as={Foo} src="/a.png" alt="" fit="cover" />
+    <Image {...rest} src="/a.png" alt="" fit="cover" />
+    <Button varient="solid">b</Button>
+    <Foo varient="x" />
+  </Card>`);
+  assert.deepEqual(r.errors, []);
+  // A DOM-taking component with no DOM attribute list to judge against: no claim.
+  const copy = structuredClone(spec);
+  copy.components.Card.ownProps = ["variant"];
+  copy.components.Card.domProps = true;
+  delete copy.domAttributes;
+  assert.deepEqual(validateSource(`import { Card } from "astralis-ui";\nexport const X = () => <Card id="x" varient="y" />;`,
+    prepareSpec(copy), "t.tsx").errors, []);
 });
