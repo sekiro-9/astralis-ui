@@ -26,8 +26,8 @@ function PlacementRow() {
       <Table.Cell>
         <Code style={propChipStyle}>{placementRow.prop}</Code>
       </Table.Cell>
-      <Table.Cell maxW="60">
-        <Code bg="transparent" color="muted">
+      <Table.Cell minW="40" maxW="60">
+        <Code bg="transparent" color="muted" whiteSpace="normal">
           {placementRow.type}
         </Code>
       </Table.Cell>
@@ -71,9 +71,11 @@ export function PropsTable({ rows, of }: { rows: PropRow[]; of?: string }) {
               <Code style={propChipStyle}>{row.prop}</Code>
             </Table.Cell>
             {/* bg="transparent" + color: Box style props, so the unchipped
-                look is expressed in tokens rather than an override class. */}
-            <Table.Cell maxW="60">
-              <Code bg="transparent" color="muted">
+                look is expressed in tokens rather than an override class.
+                Code keeps to one line by default; a union type has to wrap
+                inside the column instead of running into Default. */}
+            <Table.Cell minW="40" maxW="60">
+              <Code bg="transparent" color="muted" whiteSpace="normal">
                 {row.type}
               </Code>
             </Table.Cell>

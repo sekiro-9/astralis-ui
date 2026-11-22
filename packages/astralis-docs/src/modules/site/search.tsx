@@ -172,14 +172,18 @@ export function Search() {
           size="sm"
           aria-label="Search the docs"
           aria-keyshortcuts={apple ? "Meta+K" : "Control+K"}
-          // Button takes no justifyContent, so that stays a class.
+          // Button takes no justifyContent or overflow, so those stay classes.
           rightIcon={
             <Kbd size="sm" display={{ base: "hidden", md: "inline-flex" }}>
               {apple ? "⌘K" : "Ctrl K"}
             </Kbd>
           }
+          // The one item in the header row that gives way when the row runs
+          // short (the nav appears at lg), so the page never grows sideways.
           w={{ md: "56" }}
-          className="justify-between"
+          minW="0"
+          shrink="1"
+          className="justify-between overflow-hidden"
         >
           <Flex as="span" alignItems="center" gap="2">
             <Icon as={SearchIcon} size={14} />

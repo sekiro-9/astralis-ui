@@ -55,6 +55,11 @@ paragraph), `whiteSpace` keeps text on one line or keeps its own line breaks,
 and `numeric="tabular"` lines figures up in a column. Heading and Link take
 them too, and `whiteSpace` also works on Box and the layout primitives.
 
+Use one of the two on an element, not both: in CSS `white-space` is a shorthand
+that also sets whether lines wrap at all, so `whiteSpace="nowrap"` overrides
+`textWrap="balance"` (or `"pretty"`) on the same element and the text stays on
+one line.
+
 <ComponentPreview name="text-wrapping" align="start" />
 
 ## Hover and focus

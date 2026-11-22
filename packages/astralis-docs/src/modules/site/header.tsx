@@ -16,7 +16,7 @@ export function Header({ version }: { version: string }) {
     // A translucent surface, the blur behind it and the z-index level have no props.
     <Box as="header" position="sticky" top="0" borderB="normal" borderColor="base" className="z-50 bg-surface/75 backdrop-blur-xl">
       <Flex mx="auto" h="14" maxW="96rem" alignItems="center" justifyContent="between" px={{ base: "4", lg: "8" }}>
-        <Flex alignItems="center" gap="8">
+        <Flex alignItems="center" gap="8" shrink="0">
           <Logo />
           <Flex as="nav" display={{ base: "hidden", lg: "flex" }} alignItems="center" gap="1" aria-label="Main">
             {links.map((link) => {
@@ -43,11 +43,11 @@ export function Header({ version }: { version: string }) {
           </Flex>
         </Flex>
 
-        <Flex alignItems="center" gap="2">
+        <Flex alignItems="center" gap="2" minW="0">
           <Search />
           {/* Read from astralis-ui's package.json, not typed in. It read
               0.2.0 for two releases after the library moved on. */}
-          <Tag variant="subtle" colorScheme="brand">
+          <Tag variant="subtle" colorScheme="brand" shrink="0">
             {version}
           </Tag>
           <Button
@@ -60,6 +60,7 @@ export function Header({ version }: { version: string }) {
             size="sm"
             aria-label="Astralis on GitHub"
             w="8"
+            shrink="0"
             // Button takes no padding prop; the square icon button zeroes its own.
             className="px-0"
           >
@@ -74,7 +75,7 @@ export function Header({ version }: { version: string }) {
             mx="1"
             display={{ base: "hidden", sm: "block" }}
           />
-          <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
+          <ThemeToggle variant="text" colorScheme="gray" size="sm" shrink="0" aria-label="Toggle theme" />
           <MobileNav version={version} />
         </Flex>
       </Flex>

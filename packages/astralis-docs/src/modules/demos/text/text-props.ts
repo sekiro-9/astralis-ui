@@ -57,12 +57,12 @@ export const textProps: PropRow[] = [
   {
     prop: "textWrap",
     type: `"wrap" | "nowrap" | "balance" | "pretty"`,
-    description: "How lines break: `balance` evens out the lines of a short title, `pretty` avoids a lone last word in a paragraph.",
+    description: "How lines break: `balance` evens out the lines of a short title, `pretty` avoids a lone last word in a paragraph. A `whiteSpace` on the same element overrides it.",
   },
   {
     prop: "whiteSpace",
     type: `"normal" | "nowrap" | "pre" | "pre-line" | "pre-wrap" | "break-spaces"`,
-    description: "How spaces and line breaks are kept: `nowrap` keeps one line, `pre-wrap` keeps the text's own line breaks.",
+    description: "How spaces and line breaks are kept: `nowrap` keeps one line, `pre-wrap` keeps the text's own line breaks. It is a CSS shorthand that also sets wrapping, so it overrides `textWrap` on the same element.",
   },
   {
     prop: "numeric",
