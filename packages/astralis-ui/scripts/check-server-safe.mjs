@@ -174,6 +174,32 @@ for (const name of MUST_BE_ZERO_CLIENT) {
   }
 }
 
+/* ---- 3. the provider's client half stays free of the theme maths ------- */
+
+// AstralisProvider computes a `tokens` seed on the server; its client half
+// reaches the maths only through import() (theme/theme-runtime.js), which
+// this static graph does not follow. A static import here would put ~4 kB
+// gzip back into every app's first load.
+const PROVIDER_CLIENT = "theme/provider-client.js";
+const SERVER_ONLY_MATHS = ["theme/theme-math.js", "theme/serialize.js", "theme/token-spec.js"];
+if (!modules.has(PROVIDER_CLIENT)) {
+  failures.push(`${PROVIDER_CLIENT} is missing — the provider's client half moved; update this gate`);
+} else {
+  const seen = new Set();
+  const stack = [PROVIDER_CLIENT];
+  while (stack.length) {
+    const current = stack.pop();
+    if (seen.has(current)) continue;
+    seen.add(current);
+    stack.push(...(modules.get(current)?.imports ?? []));
+  }
+  for (const maths of SERVER_ONLY_MATHS) {
+    if (seen.has(maths)) {
+      failures.push(`${PROVIDER_CLIENT} statically reaches ${maths}; load it with import() in theme-runtime`);
+    }
+  }
+}
+
 /* ---- verdict ----------------------------------------------------------- */
 
 if (failures.length) {

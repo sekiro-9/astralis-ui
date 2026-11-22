@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, render } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { AstralisProvider } from "./provider";
 import { useTheme } from "./theme-context";
 import { STORED_THEME_STYLE_ID, getThemeScript, tokensStorageKey } from "./theme-storage";
@@ -65,8 +65,10 @@ describe("getThemeScript with persistTokens", () => {
   });
 });
 
+// The seed maths loads with import() on first use, so a chosen or stored seed
+// lands a tick later than the click or mount: these wait for it.
 describe("AstralisProvider persistTokens", () => {
-  it("applies a chosen seed, stores it, and restores it on the next visit", () => {
+  it("applies a chosen seed, stores it, and restores it on the next visit", async () => {
     const first = render(
       <AstralisProvider persistTokens>
         <Picker to={VIOLET} />
@@ -74,7 +76,7 @@ describe("AstralisProvider persistTokens", () => {
     );
     act(() => first.getByRole("button").click());
     expect(first.getByRole("button").dataset.brand).toBe(VIOLET);
-    expect(containerBrand(first.container)).toBe(VIOLET);
+    await waitFor(() => expect(containerBrand(first.container)).toBe(VIOLET));
     expect(localStorage.getItem(TOKENS_KEY)).toContain(VIOLET);
     expect(storedStyle()?.textContent).toContain(VIOLET);
     first.unmount();
@@ -84,18 +86,18 @@ describe("AstralisProvider persistTokens", () => {
         <Picker to={VIOLET} />
       </AstralisProvider>,
     );
-    expect(next.getByRole("button").dataset.brand).toBe(VIOLET);
+    await waitFor(() => expect(next.getByRole("button").dataset.brand).toBe(VIOLET));
     expect(containerBrand(next.container)).toBe(VIOLET);
   });
 
-  it("returns to the tokens prop on setTokens(undefined), and forgets the choice", () => {
+  it("returns to the tokens prop on setTokens(undefined), and forgets the choice", async () => {
     localStorage.setItem(TOKENS_KEY, storedThemeCss({ brandColor: VIOLET }));
     const { getByRole, container } = render(
       <AstralisProvider persistTokens tokens={{ brandColor: "#22c55e" }}>
         <Picker to={undefined} />
       </AstralisProvider>,
     );
-    expect(containerBrand(container)).toBe(VIOLET);
+    await waitFor(() => expect(containerBrand(container)).toBe(VIOLET));
     act(() => getByRole("button").click());
     expect(containerBrand(container)).toBe("#22c55e");
     expect(localStorage.getItem(TOKENS_KEY)).toBeNull();
@@ -116,17 +118,19 @@ describe("AstralisProvider persistTokens", () => {
     expect(storedStyle()).toBeNull();
   });
 
-  it("ignores a stored value that is not a theme", () => {
+  it("ignores a stored value that is not a theme", async () => {
     localStorage.setItem(TOKENS_KEY, "body { display: none }");
     const { getByRole } = render(
       <AstralisProvider persistTokens>
         <Picker to={VIOLET} />
       </AstralisProvider>,
     );
+    // The stored value is read with the maths; give it the time to load.
+    await act(() => import("./theme-runtime"));
     expect(getByRole("button").dataset.brand).toBe("");
   });
 
-  it("still applies the choice when storage is blocked", () => {
+  it("still applies the choice when storage is blocked", async () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new DOMException("blocked", "SecurityError");
     });
@@ -139,6 +143,6 @@ describe("AstralisProvider persistTokens", () => {
       </AstralisProvider>,
     );
     act(() => getByRole("button").click());
-    expect(containerBrand(container)).toBe(VIOLET);
+    await waitFor(() => expect(containerBrand(container)).toBe(VIOLET));
   });
 });

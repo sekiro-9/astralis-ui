@@ -35,6 +35,44 @@ export function writeStoredTheme(key: string, theme: Theme): void {
   }
 }
 
+/** The stored theme CSS as written, or null when absent or storage is blocked. */
+export function readStoredThemeCss(storageKey: string): string | null {
+  try {
+    return window.localStorage.getItem(tokensStorageKey(storageKey)) || null;
+  } catch {
+    return null;
+  }
+}
+
+export function writeStoredSeed(storageKey: string, css: string): void {
+  try {
+    const key = tokensStorageKey(storageKey);
+    if (css) window.localStorage.setItem(key, css);
+    else window.localStorage.removeItem(key);
+  } catch {
+    // Storage blocked or full: the choice still applies for this session.
+  }
+}
+
+/**
+ * Keeps the seed on :root, where overlays portalled out of the provider's
+ * container still inherit it. ThemeScript creates the same element before
+ * first paint; this takes it over.
+ */
+export function applyStoredThemeStyle(doc: Document, css: string): void {
+  let style = doc.getElementById(STORED_THEME_STYLE_ID);
+  if (!css) {
+    style?.remove();
+    return;
+  }
+  if (!style) {
+    style = doc.createElement("style");
+    style.id = STORED_THEME_STYLE_ID;
+    doc.head.appendChild(style);
+  }
+  if (style.textContent !== css) style.textContent = css;
+}
+
 export interface ThemeScriptOptions {
   /** Must match the provider's `storageKey`. Default "astralis-ui-theme". */
   storageKey?: string;
