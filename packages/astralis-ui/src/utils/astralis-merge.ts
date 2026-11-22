@@ -1,31 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
-import { extendTailwindMerge } from "tailwind-merge";
+import { createTailwindMerge } from "tailwind-merge";
+import { MERGE_CONFIG } from "./merge-config.generated";
 
-const twMerge = extendTailwindMerge({
-  prefix: "astralis",
-  extend: {
-    classGroups: {
-      // Tell tailwind-merge that 'border-<val>' are valid border widths for these custom keys
-      // Text's size="inherit" utility is a font size; unregistered,
-      // tailwind-merge would read `text-*` as a colour and drop Link's accent.
-      "font-size": [{ text: ["size-inherit"] }],
-      "border-w": [{ border: ["normal", "moderate", "thick", "thicker", "thickest"] }],
-      // …and the per-side forms, each in its OWN group. Sharing a group with
-      // border-w would make `border-b-normal` cancel `border-normal`, when in
-      // CSS a one-sided width legitimately overrides only its own side.
-      "border-w-t": [{ "border-t": ["normal", "moderate", "thick", "thicker", "thickest"] }],
-      "border-w-r": [{ "border-r": ["normal", "moderate", "thick", "thicker", "thickest"] }],
-      "border-w-b": [{ "border-b": ["normal", "moderate", "thick", "thicker", "thickest"] }],
-      "border-w-l": [{ "border-l": ["normal", "moderate", "thick", "thicker", "thickest"] }],
-      // Tell tailwind-merge that 'border-<val>' are valid colors for these custom keys.
-      // Only the neutral stroke ladder lives here — a status border is a palette
-      // role (`border-error-stroke`), which tailwind-merge already parses.
-      "border-color": [{
-        border: ["stroke-base", "stroke-muted", "stroke-subtle", "stroke-inverted", "stroke-control"]
-      }]
-    }
-  }
-});
+/* createTailwindMerge, not extendTailwindMerge: the latter bundles
+   tailwind-merge's whole default config. MERGE_CONFIG is that config plus the
+   library's additions (scripts/merge-config.mjs), cut down to the utilities in
+   the compiled stylesheet; check-merge-config proves it merges those exactly
+   as the full config does. */
+const twMerge = createTailwindMerge(() => MERGE_CONFIG);
 
 export function astralisMerge(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
