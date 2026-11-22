@@ -2,7 +2,7 @@ import { createElement, type ElementType } from "react";
 import { BREAKPOINTS } from "../const/breakpoints";
 import { CONTAINER_BREAKPOINT_WIDTHS } from "../const/channel";
 import { isStateProp } from "./state-props";
-import { COMPONENT_STYLE_PROPS, HTML_ATTRIBUTE_NAMES, STYLE_PROP_GROUPS } from "./dev-style-props";
+import { COMPONENT_STYLE_PROPS, HTML_ATTRIBUTE_NAMES, LOOK_HINTS, STYLE_PROP_GROUPS } from "./dev-style-props";
 
 /**
  * Development builds name every component on the element it renders, so a
@@ -180,10 +180,14 @@ export function warnIgnoredStyleProps(name: string, props: Record<string, unknow
     const key = `${subject} ${prop}`;
     if (warned.has(key)) continue;
     warned.add(key);
-    const hint =
-      groups.length === 1 && groups[0] === "placement" && PAINT_PROPS.has(prop)
-        ? `${subject} owns how it looks; reach for variant, size or colorScheme`
-        : `${subject} takes ${groups.length ? `${groups.join(", ")} props` : "no style props"}; put ${prop} on a Box around it`;
+    const look = groups.length === 1 && groups[0] === "placement" && PAINT_PROPS.has(prop) ? LOOK_HINTS[subject] ?? LOOK_HINTS[name] : undefined;
+    const hint = !look
+      ? `${subject} takes ${groups.length ? `${groups.join(", ")} props` : "no style props"}; put ${prop} on a Box around it`
+      : look[0]
+        ? `${subject} is part of ${look[0]} and has no look of its own: ${look[1] ? `set ${look[1]} on the ${look[0]}, or ` : ""}put ${prop} on a Box inside it`
+        : look[1]
+          ? `${subject} owns how it looks; reach for ${look[1]}`
+          : `${subject} owns how it looks; put ${prop} on a Box around it`;
     console.warn(
       `[astralis-ui] ${subject} does not take ${prop}: it reaches the HTML as a stray attribute and changes nothing (${hint})`,
     );

@@ -19,6 +19,11 @@ export const HTML_ATTRIBUTE_NAMES = ["width", "height", "size", "color", "wrap",
 
 const quote = (value) => JSON.stringify(value);
 
+/* Mirrors LOOK_PROPS and lookHint in astralis-cli's validate-core.mjs. */
+const LOOK_PROPS = ["variant", "size", "colorScheme"];
+const lookOf = (entry) => LOOK_PROPS.filter((prop) => entry?.props?.[prop]);
+const or = (list) => (list.length > 1 ? `${list.slice(0, -1).join(", ")} or ${list.at(-1)}` : (list[0] ?? ""));
+
 /**
  * The source of src/utils/dev-style-props.ts for a spec.
  * @param {object} spec the system spec being emitted
@@ -30,6 +35,7 @@ export function renderDevStyleProps(spec, rootExports) {
   const groupNames = Object.keys(spec.propGroups);
   const html = new Set(HTML_ATTRIBUTE_NAMES);
   const rows = new Map();
+  const looks = new Map();
   for (const [name, entry] of Object.entries(spec.components)) {
     const identity = rootExports[name]?.displayName;
     if (typeof identity !== "string" || !entry.ownStyleProps) continue;
@@ -43,6 +49,11 @@ export function renderDevStyleProps(spec, rootExports) {
       problems.push(`dev style-prop table: "${identity}" is two components that take different style props (${seen} | ${row})`);
     }
     rows.set(identity, row);
+    if (row[0] === "placement") {
+      const owner = entry.partOf;
+      const ownerName = owner ? (rootExports[owner]?.displayName ?? owner) : "";
+      looks.set(identity, [ownerName, or(lookOf(owner ? spec.components[owner] : entry))]);
+    }
   }
 
   const lines = [
@@ -61,6 +72,11 @@ export function renderDevStyleProps(spec, rootExports) {
     "/** Component name -> [the groups it takes, its other style-prop names], space-separated. */",
     "export const COMPONENT_STYLE_PROPS: Record<string, readonly [string, string]> = {",
     ...[...rows.keys()].sort().map((identity) => `  ${quote(identity)}: [${quote(rows.get(identity)[0])}, ${quote(rows.get(identity)[1])}],`),
+    "};",
+    "",
+    "/** Component name -> [the compound it is a part of, or \"\"; the look props to reach for, as words], for the paint-prop hint. */",
+    "export const LOOK_HINTS: Record<string, readonly [string, string]> = {",
+    ...[...looks.keys()].sort().map((identity) => `  ${quote(identity)}: [${quote(looks.get(identity)[0])}, ${quote(looks.get(identity)[1])}],`),
     "};",
     "",
   ];

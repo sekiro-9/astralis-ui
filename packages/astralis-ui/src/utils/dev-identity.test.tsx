@@ -80,8 +80,9 @@ describe("describeProps", () => {
  * side and React reported a hydration mismatch.
  */
 describe("a component rendered through a motion component", () => {
-  const MotionDiv = ({ initial: _i, animate: _a, transition: _t, ...rest }: Record<string, unknown>) =>
-    createElement("div", rest);
+  const MOTION_ONLY = new Set(["initial", "animate", "transition"]);
+  const MotionDiv = (props: Record<string, unknown>) =>
+    createElement("div", Object.fromEntries(Object.entries(props).filter(([key]) => !MOTION_ONLY.has(key))));
   const place = (duration: number) =>
     createElement(Box as unknown as ComponentType<Record<string, unknown>>, {
       as: MotionDiv,
@@ -199,7 +200,7 @@ describe("a style prop the component does not take", () => {
     render(<Card {...{ p: "4" }}>b</Card>);
 
     expect(told(spy)).toEqual([
-      "[astralis-ui] Card does not take p: it reaches the HTML as a stray attribute and changes nothing (Card owns how it looks; reach for variant, size or colorScheme)",
+      "[astralis-ui] Card does not take p: it reaches the HTML as a stray attribute and changes nothing (Card owns how it looks; reach for variant or size)",
     ]);
     expect(container.querySelector("[p]")).not.toBeNull();
   });

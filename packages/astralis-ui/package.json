@@ -79,7 +79,7 @@
     "build:css": "pnpm run check:tokens && pnpm run gen:safelist && tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css && node scripts/optimize-css.mjs && node scripts/check-css-coverage.mjs && node scripts/check-merge-config.mjs && node scripts/check-contrast.mjs && node scripts/check-motion.mjs && node scripts/gen-system-spec.mjs",
     "gen:spec": "node scripts/gen-system-spec.mjs",
     "gen:dev-props": "node scripts/gen-system-spec.mjs --write-dev-props",
-    "test": "vitest run --project unit",
+    "test": "pnpm run check:types:all && vitest run --project unit",
     "test:watch": "vitest --project unit",
     "lint": "eslint .",
     "preview": "vite preview",
