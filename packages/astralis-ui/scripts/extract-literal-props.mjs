@@ -137,18 +137,23 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   const partOwnProps = new Map();
   const partDocs = new Map();
   const inheritedProps = new Map();
+  const generic = new Set();
   const domAttributes = new Map();
 
   const declaredHere = (propSymbol) => propSymbol.declarations?.some((d) => d.getSourceFile() === source) === true;
   // A prop with no declaration at all comes from one of the library's mapped
   // types (the long-spelling aliases, the state props), so it is the library's.
   const isInheritedAttribute = (propSymbol) => (propSymbol.declarations?.length ?? 0) > 0 && !declaredHere(propSymbol);
-  /** The library's own props of one props type, and the JSDoc of each. */
-  const documentation = (paramType) => {
+  /** The library's own props of a component's props types, and the JSDoc of
+   *  each. A component with several call signatures (Image, and Image with
+   *  `as`) takes the props of all of them; where two declare the same name,
+   *  the first signature's comes first. */
+  const documentation = (paramTypes) => {
     const names = [];
     const found = {};
-    for (const propSymbol of paramType.getProperties()) {
+    for (const propSymbol of paramTypes.flatMap((t) => t.getProperties())) {
       const propName = propSymbol.getName();
+      if (names.includes(propName)) continue;
       if (!declaredHere(propSymbol) || UNDOCUMENTED_PROPS.has(propName) || /^(aria|data)-/.test(propName)) continue;
       names.push(propName);
       const doc = jsDocOf(propSymbol, checker);
@@ -174,10 +179,13 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     }
     return type;
   };
-  const propsTypeOf = (type) => {
-    const [param] = type.getCallSignatures()[0]?.getParameters() ?? [];
-    return param ? checker.getTypeOfSymbolAtLocation(param, source) : null;
-  };
+  const propsTypeOf = (type) => propsTypesOf(type)[0] ?? null;
+  /** The props type of every call signature, in declaration order. */
+  const propsTypesOf = (type) =>
+    type.getCallSignatures().flatMap((signature) => {
+      const [param] = signature.getParameters();
+      return param ? [checker.getTypeOfSymbolAtLocation(param, source)] : [];
+    });
 
   const moduleExports = checker.getExportsOfModule(moduleSymbol);
   for (const symbol of moduleExports) {
@@ -190,6 +198,9 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
 
     const paramType = propsTypeOf(type);
     if (!paramType) continue;
+    // A polymorphic component's props depend on what it renders as, so its
+    // whole prop set cannot be read off the type.
+    if (signatures[0].getTypeParameters()?.length) generic.add(name);
 
     const props = {};
     const responsiveProps = {};
@@ -249,7 +260,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     inheritedProps.set(name, fromReact);
     domAttributes.set(name, dom);
 
-    const { names, found } = documentation(paramType);
+    const { names, found } = documentation(propsTypesOf(type));
     ownProps.set(name, names);
     if (Object.keys(found).length) docs.set(name, found);
 
@@ -258,8 +269,8 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
     for (const partSymbol of type.getProperties()) {
       const part = partSymbol.getName();
       if (!/^[A-Z]/.test(part)) continue;
-      const partProps = propsTypeOf(checker.getTypeOfSymbolAtLocation(partSymbol, source));
-      if (!partProps) continue;
+      const partProps = propsTypesOf(checker.getTypeOfSymbolAtLocation(partSymbol, source));
+      if (!partProps.length) continue;
       const partDoc = documentation(partProps);
       perPartNames[part] = partDoc.names;
       if (Object.keys(partDoc.found).length) perPartDocs[part] = partDoc.found;
@@ -270,7 +281,7 @@ export function extractComponentTypes(dtsPath, { responsiveKeys } = {}) {
   const exports = moduleExports.map((s) => s.getName()).sort();
   return {
     literal: result, responsive, scalar, takesMap: responsiveNames, required, propNames, redefined, needsChildren,
-    ownProps, docs, partOwnProps, partDocs, inherited: inheritedProps, domAttributes, exports,
+    ownProps, docs, partOwnProps, partDocs, inherited: inheritedProps, domAttributes, exports, generic,
   };
 }
 

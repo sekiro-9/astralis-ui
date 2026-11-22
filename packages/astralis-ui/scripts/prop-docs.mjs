@@ -17,11 +17,6 @@
 
 import ts from "typescript";
 
-const MAX_DESCRIPTION = 240;
-
-/** Abbreviations whose full stop does not end a sentence. */
-const ABBREVIATION = /(?:^|[\s(])(?:e\.g|i\.e|etc|vs|cf|approx)\.$/i;
-
 /** Markdown and JSDoc markup reduced to the words a tooltip shows. */
 export function plainText(text) {
   return text
@@ -33,32 +28,18 @@ export function plainText(text) {
     .trim();
 }
 
-/** The first one or two sentences that fit the cap, cut at a sentence end;
- *  a first sentence longer than the cap is cut at a word. */
-export function summarize(text) {
-  const plain = plainText(text);
-  if (!plain) return "";
-  const ends = [];
-  for (const match of plain.matchAll(/[.!?](?=\s|$)/g)) {
-    const end = match.index + 1;
-    if (!ABBREVIATION.test(plain.slice(0, end))) ends.push(end);
-  }
-  const fits = ends.filter((end) => end <= MAX_DESCRIPTION).slice(0, 2);
-  if (fits.length) return plain.slice(0, fits[fits.length - 1]).trim();
-  if (plain.length <= MAX_DESCRIPTION) return plain;
-  const cut = plain.slice(0, MAX_DESCRIPTION - 1);
-  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s,;:–—-]+$/, "") + "…";
-}
-
-/** `{ description?, default?, deprecated? }` from one prop symbol's JSDoc, or null. */
+/** `{ description?, default?, deprecated? }` from one prop symbol's JSDoc, or
+ *  null. The whole comment is kept: the sentences after the first two are
+ *  often the caveat (when a prop stops applying), which is what a tool
+ *  explaining the prop most needs to say. */
 export function jsDocOf(symbol, checker) {
   const doc = {};
-  const description = summarize(ts.displayPartsToString(symbol.getDocumentationComment(checker)));
+  const description = plainText(ts.displayPartsToString(symbol.getDocumentationComment(checker)));
   if (description) doc.description = description;
   for (const tag of symbol.getJsDocTags(checker)) {
     const text = ts.displayPartsToString(tag.text ?? []).replace(/\s+/g, " ").trim();
     if ((tag.name === "default" || tag.name === "defaultValue") && text) doc.default = text;
-    if (tag.name === "deprecated" && text) doc.deprecated = summarize(text);
+    if (tag.name === "deprecated" && text) doc.deprecated = plainText(text);
   }
   return Object.keys(doc).length ? doc : null;
 }

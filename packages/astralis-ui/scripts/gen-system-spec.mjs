@@ -267,6 +267,7 @@ const {
   inherited: inheritedProps,
   domAttributes,
   exports: entryExports,
+  generic: genericComponents,
 } = extractComponentTypes(join(PKG, "dist", "index.d.ts"), {
   responsiveKeys: new Set(["base", ...Object.keys(breakpoints), ...Object.keys(CONTAINER_BREAKPOINT_WIDTHS)]),
 });
@@ -414,6 +415,18 @@ const components = Object.fromEntries(
       entry.ownStyleProps = outside.filter((prop) => !inheritedProps.get(name)?.has(prop));
       const domStyleProps = outside.filter((prop) => domAttributes.get(name)?.has(prop));
       if (domStyleProps.length) entry.domStyleProps = domStyleProps;
+    }
+    // Every prop the type takes beyond its groups and the element's own
+    // attributes, so the validator can tell a misspelt prop (Image `fit`) from
+    // a real one. Left out for polymorphic components, whose props depend on
+    // what they render as. `domProps` says the element's attributes pass
+    // through too; their names are the spec's top-level `domAttributes`.
+    if (accepted && !genericComponents.has(name)) {
+      const inheritedHere = inheritedProps.get(name) ?? new Set();
+      entry.ownProps = [...accepted]
+        .filter((prop) => !groupProps.has(prop) && !inheritedHere.has(prop) && !/^(aria|data)-/.test(prop))
+        .sort();
+      if (inheritedHere.size) entry.domProps = true;
     }
     // Compound parts attached to the export (Menu.Trigger, Card.Body, ...) —
     // enumerated from the real object, so dot-access validates against what
@@ -643,6 +656,11 @@ const spec = {
   channelProps: CHANNEL_PROPS,
   propGroups,
   components,
+  // Every attribute a component may pass to its element (React's DOM and SVG
+  // types), less event handlers, aria-* and data-*, which are always allowed.
+  domAttributes: [...new Set([...inheritedProps.values()].flatMap((names) => [...names]))]
+    .filter((prop) => !/^(on[A-Z]|aria-|data-)/.test(prop))
+    .sort(),
   exports: entryExports,
   classes,
   cssVariables,
