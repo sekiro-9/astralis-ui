@@ -8,8 +8,19 @@ npm. Their changes reached npm in the next published version, which says so.
 
 ## Unreleased
 
+Publish with astralis-cli: the system spec gains `ownProps`, `domProps` and `domAttributes`, which the new `unknown-prop` rule reads.
+
+### Added
+
+- **`<Image>` takes the attributes every element takes**: `id`, `title`, `role`, `tabIndex`, `aria-*` and event handlers, on the outermost element. Image-only attributes and paint props are still refused.
+- **System spec: each component's whole prop set** (`ownProps`, for every component whose props do not depend on what it renders as), whether it passes element attributes through (`domProps`), and the attribute names (`domAttributes`).
+
 ### Fixed
 
+- **Class merging knows the library's own scales.** A later named duration, z-index, opacity, aspect ratio, keyframe animation or motion class in `className` now replaces the earlier one instead of both staying. The merge gate also fails when a utility in the stylesheet belongs to no merge group.
+- **Spec prop descriptions are whole.** They were cut to two sentences; 17 lost text (`lineHeight`, Image `width` and `placeholder`, `scale`, `rotate`, `transition`). Image's `as` is now described.
+- **The development warning for a paint prop names the right props.** It said "reach for variant, size or colorScheme" on every component; it now names the ones the component has, and for a part (Card.Footer) points to its compound: "Card.Footer is part of Card and has no look of its own: set variant or size on the Card, or put p on a Box inside it".
+- **The library's tests type-check and lint clean**, and `pnpm test` now runs the test type check.
 - **Image's loading surface no longer pulses.** The pulse animated a background colour, which repaints on the main thread every frame; on a page of lazy images it more than doubled main-thread time on a throttled phone (shop bench: 3.8 s to 1.9 s). The muted surface and its glyph are unchanged.
 - **Smaller class merging in the browser.** The class merger (tailwind-merge) carried its default config for every Tailwind utility; it now carries a config generated from the library's own stylesheet, the only classes that can do anything. A build gate checks it merges every one of those classes exactly as the full config does (about 1.2 million merges). Every client component pays about 4 kB gzip less. A class that is not in the library's stylesheet now passes through without removing an earlier class of the same group; it had no CSS either way.
 - **The theme maths left the browser.** `AstralisProvider` is now server-safe: given `tokens` in a Server Component layout, it computes the theme's CSS variables on the server and sends them as inline styles, as before. The maths (about 4 kB gzip) loads in the browser only when `setTokens` or a stored seed needs it, so the first `setTokens` call applies a tick later. A provider rendered from a client file (a Vite app) still computes its tokens in the browser. The public API is unchanged.

@@ -6,6 +6,19 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
+## Unreleased
+
+Publish with the next astralis-ui: `unknown-prop` reads the spec's new `ownProps`, `domProps` and `domAttributes`. With an older spec it stays silent.
+
+### Added
+
+- **`unknown-state-prop`** (error): `hover`, `focusVisible` or `active` on a component that takes no state props (Card, Button, Image...), where it changes nothing. Box, the layout primitives, Text, Heading and Link take them.
+- **`unknown-prop`** (error): a prop the component's type does not take, with the nearest real one (`Image has no fit prop... did you mean "objectFit"?`). Silent with `as`, a spread, a polymorphic component or an unknown one.
+
+### Changed
+
+- **The paint-prop hint names the props a component really has**, and for a part points to its compound's: `CardFooter is part of Card and has no look of its own: set variant or size on the Card, or put p on a Box inside it`.
+
 ## 0.6.0 (2026-11-21)
 
 Publish with astralis-ui 0.10.0, whose system spec is version 4.
