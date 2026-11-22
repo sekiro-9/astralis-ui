@@ -37,12 +37,38 @@ export const PKG = join(__dirname, "..");
 export const STYLES = join(PKG, "dist", "styles.css");
 export const OUTPUT = join(PKG, "src", "utils", "merge-config.generated.ts");
 
-/* The library's additions to tailwind-merge's default config. They are the
-   input the generator resolves against, so they live here, not at runtime. */
+/* The library names its own scale steps (`duration-fast`, `z-high`) and its
+   own keyframe utilities (`animate-fade-up`). The default config knows only
+   Tailwind's numbers and names, so it would put these in no group and two of
+   them would both stay. The names are read from the files that create the
+   utilities, so a step added there is grouped without touching this file. */
+const ENTRY_CSS = readFileSync(join(PKG, "src", "tailwind-entry.css"), "utf8");
+const MOTION_CSS = readFileSync(join(PKG, "src", "theme", "motion.css"), "utf8");
+const themeSteps = (namespace) =>
+  [...ENTRY_CSS.matchAll(new RegExp(`^\\s*--${namespace}-([\\w-]+):`, "gm"))].map((m) => m[1]);
+const utilitySteps = (root) =>
+  [...MOTION_CSS.matchAll(new RegExp(`^@utility ${root}-([\\w-]+)\\s*\\{`, "gm"))].map((m) => m[1]);
+
 export const ASTRALIS_EXTENSION = {
   prefix: "astralis",
   extend: {
+    theme: {
+      aspect: themeSteps("aspect"),
+      animate: utilitySteps("animate"),
+    },
     classGroups: {
+      duration: [{ duration: themeSteps("transition-duration") }],
+      z: [{ z: themeSteps("z-index") }],
+      opacity: [{ opacity: themeSteps("opacity") }],
+      // Each sets every animation longhand, so a later one replaces an earlier one.
+      reveal: [{ reveal: utilitySteps("reveal") }],
+      "motion-duration": [{ "motion-duration": utilitySteps("motion-duration") }],
+      "motion-delay": [{ "motion-delay": utilitySteps("motion-delay") }],
+      "motion-distance": [{ "motion-distance": utilitySteps("motion-distance") }],
+      "motion-transition": [{ "motion-transition": utilitySteps("motion-transition") }],
+      // `scope` marks the scrolling container, not a mode: an element can be
+      // both its own scope and `once`, so it stays out of this group.
+      "motion-reveal": [{ "motion-reveal": utilitySteps("motion-reveal").filter((s) => s !== "scope") }],
       // Tell tailwind-merge that 'border-<val>' are valid border widths for these custom keys
       // Text's size="inherit" utility is a font size; unregistered,
       // tailwind-merge would read `text-*` as a colour and drop Link's accent.
@@ -212,7 +238,8 @@ export function emitMergeConfig(config) {
    Run \`pnpm --filter astralis-ui gen:merge-config\` after a build when the
    stylesheet changes; the build's check-merge-config gate fails until you do.
    The library's own additions to tailwind-merge (font-size size-inherit, the
-   border width and stroke-colour groups) are in scripts/merge-config.mjs. */
+   border width and stroke-colour groups, the named duration, z-index, opacity
+   and aspect steps, and the motion utilities) are in scripts/merge-config.mjs. */
 import type { Config } from "tailwind-merge";
 
 const s = (list: string): string[] => list.split(" ");

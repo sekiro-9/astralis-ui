@@ -56,6 +56,14 @@ const cases: Record<string, [string, string][]> = {
     ["a:grid-cols-2 a:grid-cols-3", "a:grid-cols-3"],
     ["a:col-span-2 a:col-span-full", "a:col-span-full"],
   ],
+  "named scale steps": [
+    ["a:z-low a:z-high", "a:z-high"],
+    ["a:z-10 a:z-max", "a:z-max"],
+    ["a:opacity-low a:opacity-high", "a:opacity-high"],
+    ["a:opacity-high a:opacity-0", "a:opacity-0"],
+    ["a:aspect-square a:aspect-wide", "a:aspect-wide"],
+    ["a:aspect-golden a:aspect-portrait", "a:aspect-portrait"],
+  ],
   "position and inset": [
     ["a:relative a:absolute", "a:absolute"],
     ["a:sticky a:relative", "a:relative"],
@@ -74,9 +82,26 @@ const cases: Record<string, [string, string][]> = {
   ],
   "motion and animation": [
     ["a:animate-spin a:animate-pulse", "a:animate-pulse"],
-    // the library's own keyframes are not in tailwind-merge's animate scale
-    ["a:animate-slide-left a:animate-fade-in", "a:animate-slide-left a:animate-fade-in"],
+    // the library's own keyframes are animations too
+    ["a:animate-slide-left a:animate-fade-in", "a:animate-fade-in"],
+    ["a:animate-fade-up a:animate-pop", "a:animate-pop"],
+    ["a:animate-spin a:animate-blur-in", "a:animate-blur-in"],
+    ["a:motion-reduce:animate-none a:animate-fade-up", "a:motion-reduce:animate-none a:animate-fade-up"],
+    ["a:reveal-fade-up a:reveal-slide-left", "a:reveal-slide-left"],
     ["a:duration-150 a:duration-200", "a:duration-200"],
+    // named durations are durations, and override the numbered ones
+    ["a:duration-fast a:duration-moderate", "a:duration-moderate"],
+    ["a:duration-moderate a:duration-fast", "a:duration-fast"],
+    ["a:duration-150 a:duration-moderate", "a:duration-moderate"],
+    ["a:duration-moderate a:ease-out", "a:duration-moderate a:ease-out"],
+    ["a:motion-duration-fast a:motion-duration-slow", "a:motion-duration-slow"],
+    ["a:motion-delay-100 a:motion-delay-1000", "a:motion-delay-1000"],
+    ["a:motion-distance-sm a:motion-distance-xl", "a:motion-distance-xl"],
+    ["a:motion-duration-fast a:motion-delay-100 a:motion-distance-sm", "a:motion-duration-fast a:motion-delay-100 a:motion-distance-sm"],
+    ["a:motion-reveal-scroll a:motion-reveal-once", "a:motion-reveal-once"],
+    // the scope marks the scrolling container, so a mode does not replace it
+    ["a:motion-reveal-scope a:motion-reveal-once", "a:motion-reveal-scope a:motion-reveal-once"],
+    ["a:motion-transition-colors a:motion-transition-common", "a:motion-transition-common"],
     ["a:transition a:transition-[width]", "a:transition-[width]"],
     ["a:transition-[opacity,transform] a:transition-none", "a:transition-none"],
     ["a:motion-reduce:animate-none a:animate-spin", "a:motion-reduce:animate-none a:animate-spin"],
@@ -147,5 +172,9 @@ describe("MERGE_CONFIG (generated)", () => {
     expect(classesOf(groups["border-w"])).toContain("border-normal");
     expect(classesOf(groups["border-w-b"])).toContain("border-b-normal");
     expect(classesOf(groups["border-color"])).toContain("border-stroke-base");
+    expect(classesOf(groups.duration)).toEqual(expect.arrayContaining(["duration-fast", "duration-moderate"]));
+    expect(classesOf(groups.animate)).toEqual(expect.arrayContaining(["animate-fade-up", "animate-slide-left"]));
+    expect(classesOf(groups.reveal)).toContain("reveal-fade-up");
+    expect(classesOf(groups["motion-delay"])).toContain("motion-delay-100");
   });
 });

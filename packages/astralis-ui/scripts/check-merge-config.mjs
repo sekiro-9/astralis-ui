@@ -21,6 +21,9 @@
         - a fixed-seed random sample of other pairs and triples, with a few
           non-library class names mixed in.
 
+   3. GROUPED — every utility in the stylesheet resolves to a merge group,
+      bar the few named in UNGROUPED.
+
    Runs in `build:css` after the coverage gate; exits non-zero on any miss.
    ========================================================================== */
 
@@ -78,6 +81,25 @@ for (let i = 0; i < N; i++) {
     ? baseClassName.substring(0, maybePostfixModifierPosition)
     : baseClassName;
   groupOf[i] = getClassGroupId(bare) ?? getClassGroupId(baseClassName);
+}
+
+/* --- 3. every library utility belongs to a group --------------------------
+   A utility in no group is never replaced, so two of its kind both stay. The
+   cut config would agree with the full one there, which is why part 2 cannot
+   see it. `group` and `peer` are variant markers with no CSS of their own;
+   `motion-reveal-scope` marks the scrolling container and goes with any mode. */
+const UNGROUPED = new Set(["group", "peer", "motion-reveal-scope"]);
+const ungrouped = new Set();
+for (let i = 0; i < N; i++) {
+  if (rootOf[i] === undefined || groupOf[i] !== undefined) continue;
+  const base = parse(classes[i]).baseClassName;
+  if (!UNGROUPED.has(base)) ungrouped.add(base);
+}
+if (ungrouped.size) {
+  fail(
+    `${[...ungrouped].sort().join(", ")} belong to no merge group, so two of them in one class string both stay. ` +
+      "Add the scale to ASTRALIS_EXTENSION in scripts/merge-config.mjs.",
+  );
 }
 
 let compared = 0;

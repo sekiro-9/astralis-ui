@@ -2,7 +2,8 @@
    Run `pnpm --filter astralis-ui gen:merge-config` after a build when the
    stylesheet changes; the build's check-merge-config gate fails until you do.
    The library's own additions to tailwind-merge (font-size size-inherit, the
-   border width and stroke-colour groups) are in scripts/merge-config.mjs. */
+   border width and stroke-colour groups, the named duration, z-index, opacity
+   and aspect steps, and the motion utilities) are in scripts/merge-config.mjs. */
 import type { Config } from "tailwind-merge";
 
 const s = (list: string): string[] => list.split(" ");
@@ -13,7 +14,7 @@ export const MERGE_CONFIG: Config<string, string> = {
   prefix: "astralis",
   theme: {},
   classGroups: {
-    "aspect": p("aspect", "auto square"),
+    "aspect": p("aspect", "auto golden landscape portrait square ultrawide wide"),
     "display": s("block contents flex flow-root grid hidden inline inline-block inline-flex inline-grid inline-table list-item table table-caption table-cell table-column table-column-group table-footer-group table-header-group table-row table-row-group"),
     "sr": s("sr-only"),
     "object-fit": p("object", "contain cover fill none scale-down"),
@@ -30,7 +31,7 @@ export const MERGE_CONFIG: Config<string, string> = {
     "bottom": p("bottom", "0 10 3 4 6 auto"),
     "left": p("left", "0 1 1/2 10 3 4 6 auto"),
     "visibility": s("invisible"),
-    "z": s("z-10"),
+    "z": p("z", "10 high higher highest low lower lowest max moderate"),
     "basis": s("basis-[var(--astralis-splitter-size)]"),
     "flex-direction": p("flex", "col col-reverse row row-reverse"),
     "flex-wrap": p("flex", "nowrap wrap wrap-reverse"),
@@ -133,14 +134,14 @@ export const MERGE_CONFIG: Config<string, string> = {
     "ring-color": p("ring", "accent-ring error-muted surface-base"),
     "ring-offset-w": p("ring-offset", "1 2"),
     "ring-offset-color": s("ring-offset-surface-base"),
-    "opacity": p("opacity", "0 100 70 90"),
+    "opacity": p("opacity", "0 100 70 90 high higher low lower moderate"),
     "backdrop-blur": s("backdrop-blur-sm"),
     "border-collapse": s("border-collapse"),
     "caption": p("caption", "bottom top"),
     "transition": p("transition", " [opacity,transform] [width] all colors none opacity shadow transform"),
-    "duration": p("duration", "150 200"),
+    "duration": p("duration", "150 200 fast moderate"),
     "ease": s("ease-out"),
-    "animate": p("animate", "none pulse spin"),
+    "animate": p("animate", "blur-in fade-down fade-in fade-up none pop pulse scale-in slide-left slide-right spin"),
     "rotate": p("rotate", "0 180 45 90"),
     "scale": p("scale", "100 105 95 [0.98]"),
     "transform-origin": p("origin", "bottom bottom-left bottom-right center left right top top-left top-right"),
@@ -156,6 +157,12 @@ export const MERGE_CONFIG: Config<string, string> = {
     "touch": s("touch-none"),
     "select": s("select-none"),
     "stroke": p("stroke", "accent-solid surface-muted"),
+    "reveal": p("reveal", "blur-in fade-down fade-in fade-up pop scale-in slide-left slide-right"),
+    "motion-duration": p("motion-duration", "fast normal slow"),
+    "motion-delay": p("motion-delay", "100 1000 150 200 300 500 700 75"),
+    "motion-distance": p("motion-distance", "lg md sm xl"),
+    "motion-transition": p("motion-transition", "colors common none transform"),
+    "motion-reveal": p("motion-reveal", "once scroll"),
   },
   conflictingClassGroups: {
     "overflow": s("overflow-x overflow-y"),
