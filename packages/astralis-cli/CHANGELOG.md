@@ -6,9 +6,9 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
-## Unreleased
+## 0.7.0 (2026-11-22)
 
-Publish with the next astralis-ui: `unknown-prop` reads the spec's new `ownProps`, `domProps` and `domAttributes`. With an older spec it stays silent.
+Published with astralis-ui 0.11.0: `unknown-prop` reads the spec's new `ownProps`, `domProps` and `domAttributes`. With an older spec it stays silent.
 
 ### Added
 

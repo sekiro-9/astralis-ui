@@ -6,9 +6,9 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
-## Unreleased
+## 0.11.0 (2026-11-22)
 
-Publish with astralis-cli: the system spec gains `ownProps`, `domProps` and `domAttributes`, which the new `unknown-prop` rule reads.
+Published with astralis-cli 0.7.0: the system spec gains `ownProps`, `domProps` and `domAttributes`, which the new `unknown-prop` rule reads.
 
 ### Added
 
