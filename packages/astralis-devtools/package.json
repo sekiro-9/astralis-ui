@@ -1,6 +1,6 @@
 {
   "name": "astralis-devtools",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Development overlay for Astralis UI: inspect any component on the page (Server Components included) and see the validator's findings live as you edit. Next.js and Vite.",
   "type": "module",
   "license": "MIT",

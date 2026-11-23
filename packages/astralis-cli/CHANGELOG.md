@@ -6,6 +6,23 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
+## 0.8.0 (2026-11-23)
+
+### Removed
+
+- **`astralis report`.** Reporting a problem stays in the DevTools, on the Report screen. The `./snapshot` and `./github` entry points the DevTools use are unchanged.
+
+### Changed
+
+- **When a command can't finish, it says how to.** `create`, `init`, `init --devtools`, `init --ci` and `theme` finish what they can when a file can't be found, read, edited or written, or an install fails. They then print why, numbered steps with the exact file and code, how to check, and the docs section that explains it. A failed install, read or write exits 1; a file shape the CLI leaves alone exits 0.
+- **The starter page** has a plain welcome, and the docs site's logo.
+- `init` and `theme` recognise `app/layout.js`, and `init --ci` no longer needs a Next.js or Vite project.
+
+### Fixed
+
+- **`theme` before `init`** put the theme ahead of the library's stylesheet, so it did not apply. It now adds both imports, in order.
+- `init` no longer says the provider wraps an entry file it could not parse.
+
 ## 0.7.0 (2026-11-22)
 
 Published with astralis-ui 0.11.0: `unknown-prop` reads the spec's new `ownProps`, `domProps` and `domAttributes`. With an older spec it stays silent.

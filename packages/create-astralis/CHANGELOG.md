@@ -2,6 +2,10 @@
 
 All notable changes to `create-astralis`.
 
+## 0.1.3 (2026-11-23)
+
+Uses astralis-cli 0.8.0, so new projects start on astralis-ui 0.11.0, astralis-devtools 0.3.0 and the new starter page.
+
 ## 0.1.2 (2026-11-21)
 
 Uses astralis-cli 0.6.0, so new projects start on astralis-ui 0.10.0 and astralis-devtools 0.2.0.

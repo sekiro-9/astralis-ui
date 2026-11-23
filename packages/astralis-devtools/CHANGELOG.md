@@ -2,6 +2,21 @@
 
 All notable changes to `astralis-devtools`.
 
+## 0.3.0 (2026-11-23)
+
+Uses astralis-cli 0.8.0, so findings include `unknown-prop` and `unknown-state-prop` (astralis-ui 0.11.0).
+
+### Changed
+
+- **A new page starts with the panel folded.** Reloading, or navigating to another page, minimises it to the launcher and ends picking. Reopening it returns to the same screen. A new query or hash, and a hot reload, leave it open.
+- **Creating an issue clears the form** and opens Your issues, with a confirmation that links to it. The list is refreshed, and shows the new issue even while GitHub's own list catches up.
+- **The Report buttons say what they do:** Create issue from here, and Open GitHub's form instead.
+- An unsent report's words are kept when the page changes or reloads, for the browser tab.
+
+### Fixed
+
+- A report cannot be sent twice, and the last words typed before sending are included.
+
 ## 0.2.0 (2026-11-21)
 
 Uses astralis-cli 0.6.0 and reads the prop descriptions astralis-ui 0.10.0 puts in its system spec.

@@ -3,6 +3,10 @@
 All notable changes to `astralis-mcp`. Under 0.x, a minor version may contain
 breaking changes; a patch never does.
 
+## 0.5.0 (2026-11-23)
+
+Uses astralis-cli 0.8.0, so `validate_code` also reports `unknown-prop` and `unknown-state-prop` (astralis-ui 0.11.0).
+
 ## 0.4.1 (2026-11-21)
 
 Uses astralis-cli 0.6.0, so `validate_code` reads astralis-ui 0.10.0's version 4 system spec.
