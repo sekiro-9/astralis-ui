@@ -39,14 +39,20 @@ Same edits, made in place. Pass `--dry-run` to see them first.
 If you'd rather do it by hand, or the CLI doesn't recognise your setup, the
 three steps are below. That's all `init` is doing.
 
-## 1. Install the package
+## By hand
+
+These three steps work in any React 19 project. If yours is
+[Next.js](#nextjs-app-router) or [Vite](#vite--spa), its own section below has
+the whole file.
+
+### 1. Install the package
 
 ```bash
 pnpm add astralis-ui
 # or: npm install astralis-ui / yarn add astralis-ui
 ```
 
-## 2. Import the stylesheet (once)
+### 2. Import the stylesheet (once)
 
 ```tsx
 import "astralis-ui/styles.css";
@@ -56,7 +62,7 @@ Do this at your app's entry point (root layout in Next.js, `main.tsx` in
 Vite). One import covers every component, both themes and all responsive
 variants.
 
-## 3. Wrap your app in the provider
+### 3. Wrap your app in the provider
 
 ```tsx
 import { AstralisProvider } from "astralis-ui";
@@ -71,11 +77,36 @@ export function App({ children }) {
 if you pass a brand color, derives the full shade scale at runtime. Details
 on the [Theming](/docs/theming) page.
 
+### 4. Check it worked
+
+Start your dev server and put a button on a page:
+
+```tsx
+import { Button } from "astralis-ui";
+
+<Button colorScheme="brand">Hello</Button>;
+```
+
+- **A plain, unstyled button** means the stylesheet isn't imported in the file
+  your app starts from.
+- **An error that says `useTheme must be used inside an AstralisProvider`**
+  means the provider isn't around your app yet.
+
 ## Next.js (App Router)
 
-Import the stylesheet and mount the provider in your root layout. The
-provider is a client component, but your pages stay server components:
-children pass straight through.
+First install the package, from your project's root:
+
+```bash
+pnpm add astralis-ui
+# or: npm install astralis-ui / yarn add astralis-ui
+```
+
+Then open your root layout: `app/layout.tsx`, or `src/app/layout.tsx` if your
+project has a `src` folder. With route groups or locales it is one folder down,
+such as `app/[locale]/layout.tsx`. Import the stylesheet after your other
+imports and put the provider around `{children}`. The provider is a client
+component, but your pages stay server components: children pass straight
+through.
 
 ```tsx
 // app/layout.tsx
@@ -107,16 +138,55 @@ const themeInit = `(function(){try{var t=localStorage.getItem("astralis-ui-theme
 <script dangerouslySetInnerHTML={{ __html: themeInit }} />
 ```
 
-This documentation site uses exactly this pattern.
+The constant goes after the imports of `app/layout.tsx`. The script changes
+`<html>` before React starts, which is why `<html>` above has
+`suppressHydrationWarning`. This documentation site uses exactly this pattern.
+
+To check it all, [put a button on a page](#4-check-it-worked).
+
+## Next.js (Pages Router)
+
+Install the package as above, then open `pages/_app.tsx` (or
+`src/pages/_app.tsx`), and create it if you have none. Global stylesheets may
+only be imported there.
+
+```tsx
+// pages/_app.tsx
+import type { AppProps } from "next/app";
+import { AstralisProvider } from "astralis-ui";
+import "astralis-ui/styles.css";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <AstralisProvider defaultTheme="system">
+      <Component {...pageProps} />
+    </AstralisProvider>
+  );
+}
+```
+
+`astralis init` edits App Router layouts only, so with the Pages Router this is
+always done by hand. [Check it worked](#4-check-it-worked) the same way.
 
 ## Vite / SPA
+
+First install the package, from your project's root:
+
+```bash
+pnpm add astralis-ui
+# or: npm install astralis-ui / yarn add astralis-ui
+```
+
+Then open your entry file. It is the one `index.html` loads, usually
+`src/main.tsx`. Add the two `astralis-ui` imports and put the provider around
+`<App />`, inside `<StrictMode>` if you have it:
 
 ```tsx
 // src/main.tsx
 import { createRoot } from "react-dom/client";
 import { AstralisProvider } from "astralis-ui";
 import "astralis-ui/styles.css";
-import { App } from "./App";
+import App from "./App";
 
 createRoot(document.getElementById("root")!).render(
   <AstralisProvider defaultTheme="system">
@@ -124,6 +194,11 @@ createRoot(document.getElementById("root")!).render(
   </AstralisProvider>,
 );
 ```
+
+The Vite template's own `src/index.css` centres the page and sets its colours.
+Remove those rules, or they will fight the theme.
+
+To check it all, [put a button on a page](#4-check-it-worked).
 
 ## Using Astralis alongside your own styling
 

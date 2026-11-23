@@ -1,26 +1,18 @@
 export const metadata = {
   title: "Validate in CI",
-  description: "Run astralis validate before code is committed and on every pull request, so a design-system mistake cannot be merged.",
+  description: "Run astralis validate on every pull request, so a design-system mistake cannot be merged.",
 };
 
 # Validate in CI
 
-Run `astralis validate` before code is committed and on every pull request, so a
-design-system mistake cannot be merged.
+Run `astralis validate` on every pull request, so a design-system mistake cannot
+be merged.
 
-## Two gates
+## The gate
 
-A team's workflow puts checks in front of version control in two places:
-
-- **A pre-commit hook** runs on your machine, on the files you are committing,
-  and stops a bad commit before it is made. It is fast feedback, but it can be
-  skipped with `git commit --no-verify`.
-- **A required check on the pull request** runs in CI on every change. It
-  cannot be skipped: once branch protection marks it as required, nothing is
-  merged until it passes.
-
-Use the hook for speed and the CI check as the authority. Both run the same
-command, so they never disagree.
+A required check on the pull request runs in CI on every change. It cannot be
+skipped: once branch protection marks it as required, nothing is merged until it
+passes.
 
 The validator exits with status `1` only when it finds **errors**. Warnings,
 such as a raw colour under `--strict-tokens`, are reported without failing the
@@ -37,8 +29,8 @@ npx astralis-cli init --ci
 On top of what [`init`](/docs/cli#init-add-astralis-to-an-existing-project)
 already does, `--ci`:
 
-1. installs `astralis-cli` as a devDependency, so CI and your hook run the
-   version you tested with, not whatever is newest;
+1. installs `astralis-cli` as a devDependency, so CI runs the version you
+   tested with, not whatever is newest;
 2. adds a `"validate": "astralis validate"` script to `package.json` (or
    `"astralis:validate"`, if you already have a `validate` script that does
    something else);
@@ -87,6 +79,61 @@ code. If your project sits in a subfolder of the repository, `init --ci` puts
 the workflow at the repository root and runs it in your folder, and annotations
 still point at the right file.
 
+### Set up CI by hand
+
+If `init --ci` couldn't write a file, or you'd rather do it yourself:
+
+1. Install the CLI as a devDependency and commit the lockfile:
+   `pnpm add -D astralis-cli`, `npm install -D astralis-cli` or
+   `yarn add -D astralis-cli`.
+2. Add the script to `package.json`:
+
+   ```json
+   {
+     "scripts": {
+       "validate": "astralis validate"
+     }
+   }
+   ```
+
+   If you already have a `validate` script, name this one `astralis:validate`,
+   or run both in one: `"validate": "tsc --noEmit && astralis validate"`.
+
+3. At the root of the repository, create
+   `.github/workflows/astralis-validate.yml` and paste [the
+   workflow](#the-workflow) into it. Outside npm, start its
+   last step with your package manager's name and change these:
+
+   | Package manager | Before `setup-node` | `cache` | Install step |
+   | --- | --- | --- | --- |
+   | npm | | `npm` | `npm ci` |
+   | pnpm | `- uses: pnpm/action-setup@v6`, with `version: 10` unless `package.json` has `packageManager` | `pnpm` | `pnpm install --frozen-lockfile` |
+   | yarn | `- run: corepack enable` for yarn 2 and up | `yarn` | `yarn install --immutable`, or `--frozen-lockfile` for yarn 1 |
+   | bun | `- uses: oven-sh/setup-bun@v2` | leave out | `bun install --frozen-lockfile` |
+
+   For a project in a subfolder, add this to the job, above `steps`, and
+   `cache-dependency-path: apps/web/package-lock.json` below `cache`:
+
+   ```yaml
+   defaults:
+     run:
+       working-directory: apps/web
+   ```
+
+4. GitHub runs the workflow only in a repository it hosts. If the folder isn't
+   one yet, make it one, create an empty repository on GitHub, and push to it:
+
+   ```bash
+   git init -b main
+   git add -A
+   git commit -m "First commit"
+   git remote add origin https://github.com/YOUR-NAME/YOUR-REPO.git
+   git push -u origin main
+   ```
+
+To check it worked, run `npm run validate` on your machine, then open a pull
+request: **Astralis validate** is in its list of checks.
+
 ### Make the check required
 
 The workflow reports; branch protection is what blocks. Push the workflow once
@@ -98,39 +145,6 @@ so GitHub has seen the check, then:
 3. Turn on **Require status checks to pass** and add **Astralis validate**.
 
 From then on a pull request with a validator error cannot be merged.
-
-## Add a pre-commit hook
-
-The hook validates only the files being committed, using
-[husky](https://typicode.github.io/husky/) to install the hook and
-[lint-staged](https://github.com/lint-staged/lint-staged) to pass it the staged
-files. It needs `astralis-cli` in your devDependencies; `init --ci` adds it, or
-run `npm install -D astralis-cli`.
-
-```bash
-npm install -D husky lint-staged
-npx husky init
-```
-
-Replace the contents of `.husky/pre-commit` with:
-
-```bash
-npx lint-staged
-```
-
-And add to `package.json`:
-
-```json
-{
-  "lint-staged": {
-    "*.{tsx,jsx}": "astralis validate"
-  }
-}
-```
-
-Now a commit that stages a `.tsx` or `.jsx` file with an error is refused, with
-the finding printed in the terminal. A commit that stages no `.tsx` or `.jsx`
-files skips the check entirely, and warnings never block a commit.
 
 ## Other CI systems
 

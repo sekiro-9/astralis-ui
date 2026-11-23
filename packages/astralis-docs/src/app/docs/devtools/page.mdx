@@ -54,7 +54,15 @@ nothing.
 
 ### By hand
 
-For **Next.js**, add the component to the root layout:
+First install the package as a devDependency, from your project's root:
+
+```bash
+pnpm add -D astralis-devtools
+# or: npm install -D astralis-devtools / yarn add -D astralis-devtools
+```
+
+For **Next.js**, open the root layout (`app/layout.tsx` or
+`src/app/layout.tsx`) and add the component last inside `<body>`:
 
 ```tsx
 import { AstralisDevTools } from "astralis-devtools/next";
@@ -71,13 +79,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-Then create `app/api/astralis-devtools/[...path]/route.ts`:
+With the Pages Router, put `<AstralisDevTools />` after `<Component />` in
+`pages/_app.tsx` instead.
+
+Then create `app/api/astralis-devtools/[...path]/route.ts`, inside `src` if
+your `app` folder is. The folder name has the brackets and dots in it. In a
+JavaScript project the file is `route.js`:
 
 ```ts
 export { GET, POST } from "astralis-devtools/next/route";
 ```
 
-For **Vite**, add the plugin:
+If that file already exists and does something else, move what it does to
+another route: the DevTools need this path.
+
+For **Vite**, open `vite.config.ts`, or create it in your project's root, and
+add the plugin after the ones already there:
 
 ```ts
 import { defineConfig } from "vite";
@@ -89,13 +106,17 @@ export default defineConfig({
 });
 ```
 
+To check it worked, restart the dev server and open your app: the launcher is at
+the bottom of the page. If it isn't, look for an error in the terminal that runs
+the dev server, and make sure you are not running a production build.
+
 ## Shortcuts
 
 | Keys | What it does |
 |---|---|
-| `Shift` `Alt` `A` | Open the DevTools on Home, or close them |
+| `Shift` `Alt` `A` | Open the DevTools where you left them, or minimise them |
 | `Shift` `Alt` `C` | Pick a component on the page, then open its page |
-| `Esc` | Stop picking, or close the panel from inside it |
+| `Esc` | Stop picking, or minimise the panel from inside it |
 
 On a Mac, `Alt` is `Option`. The launcher's crosshair button picks too.
 
@@ -173,22 +194,22 @@ like, what happened and what you expected. The screen builds an issue snapshot:
   project), unless you untick them.
 
 Page text is replaced by placeholders unless you tick **Include page text**.
-Console errors from this session and a screenshot are left out unless you add
-them.
+Console errors from this session are left out unless you include them.
 
 Below the form is **exactly** the JSON that would be sent, updated as you type.
-Nothing leaves your machine until you press **Open issue on GitHub**. The
-report then opens as an issue on
+Nothing leaves your machine until you press **Create issue from here**, except,
+while you are signed in, the search described under
+[Already reported?](#already-reported). The report then becomes an issue on
 [the Astralis repository](https://github.com/sekiro-9/astralis-ui/issues), from
-your own GitHub account, and its page opens. The issue carries your words, the
+your own GitHub account, without leaving the DevTools: the form clears and
+**Your issues** shows the new issue, with a link to it. The issue carries your words, the
 versions in use, the findings, a small `repro.tsx` built from the component
-tree, and the snapshot itself. GitHub cannot take images through its API, so a
-screenshot stays with you: save it from the Report screen and drop it into the
-issue. **Copy JSON** and **Download** keep the snapshot without sending it.
+tree, and the snapshot itself. GitHub cannot take images through its API, so to add a
+screenshot, open the issue and drop it into a comment there. **Copy JSON** and **Download** keep the snapshot without sending it.
 
 ### Without signing in
 
-**Open on GitHub instead** needs no sign-in and no app: it opens GitHub's own
+**Open GitHub's form instead** needs no sign-in and no app: it opens GitHub's own
 new-issue form in a new tab, with the title and report filled in, and you
 check it and press Create there. A link holds about 8 kB, so for a large
 snapshot the JSON is left out; **Download** keeps it to attach.
@@ -214,9 +235,7 @@ your code or your other repositories.
 The sign-in is kept by the bridge, in a file in your user config directory
 that only you can read (`%APPDATA%\astralis` on Windows, `~/.config/astralis`
 elsewhere). Your app's page never sees the token, only your GitHub name. You
-stay signed in across restarts, and
-[`astralis report`](/docs/cli#report-report-a-problem-to-the-maintainers) uses
-the same sign-in. **Sign out** forgets it; to revoke the app's access
+stay signed in across restarts. **Sign out** forgets it; to revoke the app's access
 entirely, remove it at github.com/settings/applications.
 
 ### Your issues
@@ -225,9 +244,6 @@ The **Your issues** tab lists the issues you have opened on the Astralis
 repository, with where each stands: open, closed and done, or closed as not
 planned, with its comments and labels. Each one opens on GitHub. Home shows how
 many are open.
-
-From the terminal, `astralis report` builds the same snapshot from your source
-files and opens it the same way.
 
 ## How it works
 
@@ -252,7 +268,9 @@ streams the findings to the overlay.
 The overlay brings its own look: the Astralis brand and fonts, embedded in the
 package and drawn in a shadow root, so it loads nothing from the network and
 your app's styles never reach it, nor its styles your app. It remembers where
-you left the launcher, and whether the panel was open.
+you left the launcher and which screen you were on. Refreshing, or going to
+another page, minimises the panel; a report you have not sent keeps its words
+in this browser tab.
 
 ## Privacy and security
 

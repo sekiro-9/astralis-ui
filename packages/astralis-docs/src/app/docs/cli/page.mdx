@@ -53,6 +53,38 @@ inside the new folder to start it.
 With `--yes` it asks nothing: pass `--framework`, and it tells the scaffolder
 to take its defaults too.
 
+### Creating a project by hand
+
+If the scaffolder fails, or makes the project somewhere `create` doesn't
+expect, the two halves can be run one after the other:
+
+1. Make the project with `npx create-next-app@latest my-app`, or
+   `npm create vite@latest my-app -- --template react-ts`.
+2. Go into the folder that holds its `package.json` and wire Astralis in. Leave
+   `--devtools` out if you don't want the [DevTools](/docs/devtools):
+
+   ```bash
+   cd my-app
+   npm install
+   npx astralis-cli init --devtools
+   ```
+
+3. Replace the scaffolder's demo page, `app/page.tsx` in Next.js or
+   `src/App.tsx` in Vite, with a first page of your own:
+
+   ```tsx
+   import { Button } from "astralis-ui";
+
+   export default function Home() {
+     return <Button colorScheme="brand">Hello</Button>;
+   }
+   ```
+
+4. In Vite, also empty `src/index.css`: the template's rules centre the page and
+   set its colours.
+
+Run `npm run dev`. A styled button means everything is wired.
+
 ## `init`: add Astralis to an existing project
 
 Wires `astralis-ui` into a project you already have (Next.js or Vite): installs
@@ -75,11 +107,12 @@ It reads your entry file rather than pattern-matching it, so an import that is
 already there (however it's quoted or wrapped) isn't added twice, and it never
 writes a file that no longer parses. If your entry file is a shape it can't
 edit safely, it prints the manual steps instead. Running it twice is safe.
+[When a command can't finish](#when-a-command-cant-finish) says what happens
+then, and [Installation](/docs/installation#by-hand) has every step.
 
 With `--ci` it also sets up a check on every pull request: it pins
 `astralis-cli` as a devDependency, adds a `validate` script and writes a GitHub
-Actions workflow. [Validate in CI](/docs/validate-in-ci) covers that, and a
-pre-commit hook.
+Actions workflow. [Validate in CI](/docs/validate-in-ci) covers that.
 
 ## `add`: copy a block into your project
 
@@ -150,6 +183,33 @@ matches the version it's loaded next to, and imports the file into your entry
 point after the library stylesheet. Before writing, it checks every text and
 fill pairing the theme promises against WCAG AA in light and dark mode;
 failures are warnings unless you pass `--strict-contrast`.
+
+### Adding the theme by hand
+
+The file does nothing until your app imports it. If the command couldn't edit
+your entry file, or you passed `--no-import`, add it yourself:
+
+1. Open the file that imports `astralis-ui/styles.css`: `app/layout.tsx` or
+   `src/app/layout.tsx` in Next.js, `src/main.tsx` in Vite.
+2. Import the theme **after** the library's stylesheet. Both set the same
+   variables, and the later one wins:
+
+   ```tsx
+   import "astralis-ui/styles.css";
+   import "./astralis-theme.css";
+   ```
+
+3. Make the path match. It is relative to the file you are editing: from
+   `src/app/layout.tsx`, a theme in `src/` is `"../astralis-theme.css"`.
+
+If the theme file itself couldn't be written, make its folder writable or name
+another place with `--out`. The [theme builder](/theme-builder) also gives you
+the same CSS to paste into a file of your own.
+
+To check it worked, start your dev server, open the page in the browser's
+inspector, select `<html>`, and look up `--astralis-color-brand-500`: it is the
+colour you passed. If it is still the default, the two imports are in the wrong
+order or the theme's path is wrong.
 
 ## `validate`: check code against the design system
 
@@ -239,62 +299,6 @@ The same validator runs inside the [MCP server](/docs/ai-agents) as the
 `validate_code` tool, so an AI agent checks its own output against the rules
 you run in CI.
 
-## `report`: report a problem to the maintainers
-
-Builds an issue snapshot from the files that show the problem and opens it as
-an issue on [the Astralis repository](https://github.com/sekiro-9/astralis-ui/issues),
-from your own GitHub account. The snapshot records the `astralis-ui` components in those files
-with their literal props, the validator's findings for them, and the versions
-of `astralis-ui`, your framework and React. It is the same snapshot the
-[DevTools](/docs/devtools) build from a page.
-
-```bash
-npx astralis-cli report app/page.tsx
-npx astralis-cli report src/App.tsx --title "Card loses its border" --out snapshot.json
-```
-
-| Option | |
-| --- | --- |
-| `--title <text>` | The report's title. Asked for when omitted; required with --yes. |
-| `--happened <text>` | What happened. |
-| `--expected <text>` | What you expected instead. |
-| `--include-text` | Keep the text in your JSX; by default it is replaced by placeholders. |
-| `--no-findings` | Leave out the validator's findings for these files. |
-| `--out <file>` | Write the snapshot to a file instead of sending it. |
-| `--dry-run` | Print the snapshot and send nothing. |
-| `--add-to <issue>` | Add the report to this existing issue instead of opening a new one. |
-| `--new` | Open a new issue without checking for an existing one. |
-| `--link` | Print a link to GitHub's own new-issue form, filled in, instead of signing in; you submit it there. |
-| `--sign-out` | Forget the saved GitHub sign-in, and do nothing else. |
-| `--spec <path>` | Build against this system-spec.json. Default: the installed astralis-ui's. |
-
-It prints the exact JSON first and sends nothing until you confirm. Only props
-the spec describes are recorded, and only literal values: a value computed at
-run time, a link, an image source or an event handler never is. Text in your
-JSX becomes a placeholder unless you pass `--include-text`.
-
-The issue carries your words, the versions in use, the findings, a small
-`repro.tsx` built from the snapshot, and the snapshot itself. The first time,
-the command signs you in to GitHub: it prints a short code to enter at
-github.com/login/device, through the Astralis DevTools app, which can only read
-and write issues on the Astralis repository. The sign-in is saved in your
-config directory, readable by you alone, and the [DevTools](/docs/devtools)
-share it. `--sign-out` forgets it.
-
-Before opening an issue it searches the repository for one that already
-reports the same problem: the same component, the same rule codes in its
-findings, and the same minor version of `astralis-ui`. If it finds one, it
-lists it and asks whether to add your report to it, as a comment, instead of
-opening a second issue. It also lists other open issues about the same
-component. `--add-to 12` adds to issue #12 without asking, and `--new` opens a
-new issue without searching. With `--yes` and neither, it opens a new issue
-and lists the possible duplicates for you to check.
-
-To report without signing in to the app, pass `--link`: it prints a link to
-GitHub's own new-issue form with the report filled in, and you check and
-submit it on github.com. A link holds about 8 kB, so a large snapshot's JSON
-is left out of it.
-
 ## `connect-mcp`: connect an AI coding agent
 
 Connects one AI client to the Astralis [MCP server](/docs/ai-agents) so its
@@ -313,6 +317,23 @@ For Claude Code and Codex it runs the client's own `mcp add` command; for
 Cursor, Claude Desktop, and Antigravity it writes the client's JSON config
 (backing up any existing one first, never over an earlier backup). Full
 details on the [AI Agents](/docs/ai-agents) page.
+
+## When a command can't finish
+
+`create`, `init` and `theme` edit your files only when the result is certain to
+be right. When a file isn't where they expect, has a shape they can't edit
+safely, can't be read or written, or a package doesn't install, they do
+everything else and then print what is left: what they could not do and why,
+the file to open and the exact code to add, how to check it worked, and a link
+to the section of these docs that explains it.
+
+| Exit code | Meaning |
+| --- | --- |
+| `0` | Done, or the steps left are only edits the command won't make for you. |
+| `1` | Something it tried failed: a package did not install, or a file could not be read or written. |
+
+With `theme`, the job is the stylesheet: an import left for you to add is still
+`0`.
 
 ## Global options
 
