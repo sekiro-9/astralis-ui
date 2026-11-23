@@ -1,4 +1,4 @@
-import { join, dirname } from "node:path";
+import { join, dirname, extname } from "node:path";
 
 /**
  * The welcome screen `astralis create` leaves behind.
@@ -29,6 +29,7 @@ import { join, dirname } from "node:path";
  */
 export const STARTER_IMPORTS = [
   "Badge",
+  "Box",
   "Button",
   "Card",
   "CardBody",
@@ -47,39 +48,72 @@ function starterSource() {
 } from "astralis-ui";
 
 /**
- * Astralis is wired up — this screen is rendering through the provider, the
+ * The Astralis mark: four blocks, the last still being placed. Painted with
+ * the brand token, so it re-colours with your theme, and the last block
+ * settles into place on hover.
+ */
+function AstralisLogo() {
+  return (
+    <Flex className="starter-logo" alignItems="center" gap="2" color="base">
+      <style>{\`
+        .starter-block {
+          transform-box: fill-box;
+          transform-origin: center;
+          rotate: 14deg;
+          opacity: 0.6;
+          transition: rotate 300ms ease-out, translate 300ms ease-out, opacity 300ms ease-out;
+        }
+        .starter-logo:hover .starter-block { rotate: 0deg; translate: -2px 2px; opacity: 1; }
+        @media (prefers-reduced-motion: reduce) { .starter-block { transition: none; } }
+      \`}</style>
+      <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style={{ overflow: "visible" }}>
+        <g fill="var(--astralis-color-brand-500)">
+          <rect x="3" y="17" width="12" height="12" rx="3" />
+          <rect x="17" y="17" width="12" height="12" rx="3" />
+          <rect x="3" y="3" width="12" height="12" rx="3" />
+          <rect className="starter-block" x="19" y="1" width="12" height="12" rx="3" />
+        </g>
+      </svg>
+      {/* 15px and 10px sit between the type scale's steps. */}
+      <Text as="span" fontFamily="heading" weight="semibold" letterSpacing="tight" lineHeight="normal" style={{ fontSize: "15px" }}>
+        Astralis
+        <Box
+          as="span"
+          ml="1.5"
+          px="1.5"
+          py="0.5"
+          rounded="md"
+          border="normal"
+          borderColor="base"
+          bg="subtle"
+          color="muted"
+          style={{
+            verticalAlign: "middle",
+            fontSize: "10px",
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+          }}
+        >
+          UI
+        </Box>
+      </Text>
+    </Flex>
+  );
+}
+
+/**
+ * Astralis is wired up: this screen renders through the provider, the
  * precompiled stylesheet and the token scales.
  *
  * It is an ordinary file in your project. Edit it, or delete it and start over.
  */
-/**
- * The Astralis mark — four blocks, the last still being placed. Painted with
- * the brand token rather than fixed hex, so it re-colours with the theme.
- */
-function AstralisMark() {
-  return (
-    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" style={{ overflow: "visible" }}>
-      <g fill="var(--astralis-color-brand-500)">
-        <rect x="3" y="17" width="12" height="12" rx="3" />
-        <rect x="17" y="17" width="12" height="12" rx="3" />
-        <rect x="3" y="3" width="12" height="12" rx="3" />
-        <rect x="19" y="1" width="12" height="12" rx="3" opacity="0.6" transform="rotate(14 25 7)" />
-      </g>
-    </svg>
-  );
-}
-
 export default function Welcome() {
   return (
     <Container maxW="4xl" px={{ base: "6", lg: "8" }} py={{ base: "16", lg: "24" }}>
       <Stack gap="10" alignItems="stretch">
         <Flex justifyContent="between" alignItems="center" gap="4">
-          <Flex alignItems="center" gap="3">
-            <AstralisMark />
-            <Badge variant="subtle" colorScheme="brand" size="xs">
-              Astralis UI
-            </Badge>
-          </Flex>
+          <AstralisLogo />
           <ThemeToggle variant="text" colorScheme="gray" size="sm" aria-label="Toggle theme" />
         </Flex>
 
@@ -88,9 +122,8 @@ export default function Welcome() {
             You&apos;re set up.
           </Heading>
           <Text size="lg" color="muted" lineHeight="relaxed">
-            Everything here is themed through one accent channel. Change{" "}
-            <Code>colorScheme</Code> on any component and the rest follows — no
-            rebuild, no Tailwind config in your project.
+            Welcome to Astralis. Your project is ready: edit this page to start building, add
+            ready-made blocks from the CLI, or browse the docs to see every component.
           </Text>
         </Stack>
 
@@ -128,7 +161,7 @@ export default function Welcome() {
                 Try it
               </Heading>
               <Text color="muted" lineHeight="relaxed">
-                Drop in a prebuilt section with <Code>astralis add hero-01</Code>,
+                Drop in a prebuilt section with <Code>npx astralis-cli add hero-01</Code>,
                 or import anything from <Code>astralis-ui</Code> and compose your
                 own.
               </Text>
@@ -162,11 +195,11 @@ export default function Welcome() {
  *
  * Next renders `page.tsx` beside the root layout; Vite renders `App.tsx`
  * beside `main.tsx`. The extension follows the entry, so a JavaScript project
- * gets .jsx (the source carries no type annotations either way).
+ * gets .jsx or .js (the source carries no type annotations either way).
  */
 export function starterTarget(framework, entryPath) {
   const dir = dirname(entryPath);
-  const ext = entryPath.endsWith("x") ? (entryPath.endsWith(".tsx") ? "tsx" : "jsx") : "tsx";
+  const ext = extname(entryPath).slice(1);
   return join(dir, framework === "next" ? `page.${ext}` : `App.${ext}`);
 }
 

@@ -60,6 +60,11 @@ for (const [framework, entry] of [["next", "/p/app/layout.tsx"], ["vite", "/p/sr
 
     assert.deepEqual(logged, []);
     assert.match(html, /set up\./);
+    assert.match(
+      html,
+      /Welcome to Astralis\. Your project is ready: edit this page to start building, add ready-made blocks from the CLI, or browse the docs to see every component\./,
+    );
+    assert.match(html, /prefers-reduced-motion: reduce/);
     assert.match(html, /href="https:\/\/astralis-ui\.com\/docs\/quick-start"/);
     assert.match(html, /aria-label="Toggle theme"/);
   });

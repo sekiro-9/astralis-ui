@@ -61,4 +61,6 @@ test("the target file sits beside the entry and follows its extension", () => {
     "/p/src/app/page.tsx",
   );
   assert.equal(starterTarget("next", "/p/app/layout.jsx").replace(/\\/g, "/"), "/p/app/page.jsx");
+  // create-next-app's JavaScript project is .js, so a .jsx page would sit beside its page.js.
+  assert.equal(starterTarget("next", "/p/app/layout.js").replace(/\\/g, "/"), "/p/app/page.js");
 });
