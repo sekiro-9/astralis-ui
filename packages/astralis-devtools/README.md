@@ -22,13 +22,15 @@ screens:
   you picked with their props, the versions in use, the validator's findings
   and a small reproduction. You see the exact JSON first, page text is
   replaced by placeholders unless you include it, and nothing is sent until
-  you press Send. To add a screenshot or a file, open the issue on GitHub
-  once it is created and drop it in there. **Your issues** lists the issues
-  you have opened and where each stands.
+  you press **Create issue from here**, which creates it without leaving the
+  DevTools and shows it under **Your issues**, with the others you have opened
+  and where each stands. To add a screenshot or a file, open the issue on
+  GitHub and drop it in there. **Open GitHub's form instead** needs no sign-in.
 
 The minimize button in the panel's header, `Shift+Alt+A`, or Escape from
 inside the panel fold it down to the launcher, so the page is free to use; the
-launcher or `Shift+Alt+A` brings it back where it was. `Shift+Alt+C` picks a
+launcher or `Shift+Alt+A` brings it back where it was. Refreshing or going to
+another page folds it too, and keeps a report you have not sent. `Shift+Alt+C` picks a
 component on the page and opens its page.
 
 It runs in development only. Production builds contain none of it, and the
@@ -79,7 +81,7 @@ re-validates each file when you save it. It answers requests from your own
 machine only. On Next.js it is the route above, and it returns 404 in
 production. On Vite it is dev-server middleware that `vite build` never loads.
 
-The overlay talks only to your own dev server. The bridge talks to GitHub only for you: to sign you in with a code (through the Astralis DevTools GitHub App, which can only read and write issues on the Astralis repository), to open a report you have read and sent, and, while you are signed in, to list your issues. The token is kept in a file in your user config directory that only you can read, never in the page, and `astralis report` shares it.
+The overlay talks only to your own dev server. The bridge talks to GitHub only for you: to sign you in with a code (through the Astralis DevTools GitHub App, which can only read and write issues on the Astralis repository), to open a report you have read and sent, and, while you are signed in, to list your issues. The token is kept in a file in your user config directory that only you can read, never in the page.
 
 ## License
 

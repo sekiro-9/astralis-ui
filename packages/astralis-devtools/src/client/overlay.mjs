@@ -2,14 +2,14 @@ import { animate, h, icon, store } from "./dom.mjs";
 import { FONT_FACES } from "./fonts.mjs";
 import { ICONS, MARK } from "./icons.mjs";
 import { createLauncher } from "./launcher.mjs";
-import { scanPage } from "./page.mjs";
+import { isOnPage, scanPage } from "./page.mjs";
 import { createPicker } from "./picker.mjs";
 import { recordConsoleErrors } from "./report.mjs";
 import { componentScreen } from "./screens/component.mjs";
 import { componentsScreen } from "./screens/components.mjs";
 import { findingsScreen } from "./screens/findings.mjs";
 import { homeScreen } from "./screens/home.mjs";
-import { reportScreen } from "./screens/report.mjs";
+import { emptyReport, reportScreen } from "./screens/report.mjs";
 import { STYLES } from "./styles.mjs";
 
 /* The Astralis DevTools overlay: a launcher that can sit anywhere on the
@@ -27,8 +27,9 @@ import { STYLES } from "./styles.mjs";
 
    Shift+Alt+A, the launcher's mark and the panel's minimize button fold it
    down to the launcher and bring it back where it was; Escape folds it from
-   inside. Whether it is open, and on which screen, lasts the browser tab's
-   session; where the launcher sits lasts across sessions. Shift+Alt+C picks a
+   inside. A new page, loaded or navigated to, starts with it folded; which
+   screen it was on, and a report not yet sent, last the browser tab's session,
+   and where the launcher sits lasts across sessions. Shift+Alt+C picks a
    component on the page and opens its page. Plain DOM in a shadow root, so it
    needs no framework and the page's CSS cannot reach it. Everything from the page or the bridge goes
    in as text. */
@@ -40,6 +41,8 @@ const SCAN_DEBOUNCE_MS = 200;
 const PANEL_GAP = 10;
 /** How often a waiting sign-in is checked. The bridge polls GitHub; this asks the bridge. */
 const SIGN_IN_POLL_MS = 2000;
+/** GitHub's list can lag a moment behind a new issue, so it is read again after a send. */
+const ISSUES_RETRY_MS = 3000;
 const EDGE = 12;
 
 const NAV = [
@@ -51,6 +54,16 @@ const NAV = [
 ];
 
 const SHORTCUTS = { open: "KeyA", pick: "KeyC" };
+
+/** The page a panel was open on when it was unmounted. A hot reload can remount the overlay
+    without a page load, and must not close it; a page load starts with a new window. */
+const openWhenUnmounted = new WeakMap();
+
+/** A report written on an earlier page in this tab and not sent. Only its words: what to include is asked afresh. */
+function readDraft() {
+  const draft = store.read("sessionStorage", "draft") ?? {};
+  return Object.fromEntries(["title", "happened", "expected"].filter((key) => typeof draft[key] === "string").map((key) => [key, draft[key]]));
+}
 
 /**
  * Mount the overlay on this page. Returns a function that removes it and
@@ -72,6 +85,8 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   }
 
   const remembered = store.read("sessionStorage", "panel") ?? {};
+  const remountedOpen = openWhenUnmounted.get(window) === location.pathname;
+  openWhenUnmounted.delete(window);
   const state = {
     open: false,
     screen: NAV.some((n) => n.screen === remembered.screen) ? remembered.screen : "home",
@@ -85,20 +100,10 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     instances: [],
     github: null, // the bridge's GitHub status: { configured, repo, login, pending, error }
     issues: { list: null, loading: false, error: null },
+    created: [], // issues just opened that GitHub's list does not have yet
+    sent: null, // the last report sent, { number, url, added }, until its confirmation has been seen
     reportTab: "new",
-    report: {
-      title: "",
-      happened: "",
-      expected: "",
-      includeText: false,
-      includeFindings: true,
-      includeConsole: false,
-      snapshot: null,
-      problems: [],
-      status: "idle", // idle | sending | sent | failed | notice
-      message: "",
-      url: null,
-    },
+    report: { ...emptyReport(), ...readDraft() },
   };
 
   const cleanups = [];
@@ -197,6 +202,25 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       navigate("component", { open: true });
     },
     startPicking: (returnTo) => startPicking(returnTo),
+    /** Keep the report form's words for the next page in this tab. */
+    keepDraft: ({ title, happened, expected }) => store.write("sessionStorage", "draft", { title, happened, expected }),
+    /** A send ended, perhaps on a form that has since been rebuilt: the one on screen must show it. */
+    reportChanged: () => refresh("report"),
+    /** A report reached GitHub: show it among the reporter's issues. */
+    reportSent(sent, title) {
+      state.sent = sent;
+      if (!sent.added) {
+        const now = new Date().toISOString();
+        state.created.unshift({ number: sent.number, title, state: "open", stateReason: null, url: sent.url, comments: 0, labels: [], createdAt: now, updatedAt: now });
+        if (state.issues.list) state.issues.list = withCreated(state.issues.list);
+      }
+      state.reportTab = "issues";
+      store.write("sessionStorage", "draft", null);
+      loadIssues();
+      clearTimeout(issuesRetry);
+      issuesRetry = setTimeout(loadIssues, ISSUES_RETRY_MS);
+      refresh("sent");
+    },
     /** Outline an element on the page while the reader points at its row; null restores the default. */
     preview: (element) => picker.show(element ?? defaultOutline()),
     locate: (element) => picker.locate(element),
@@ -300,7 +324,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   }
 
   function remember() {
-    store.write("sessionStorage", "panel", { open: state.open, screen: state.screen === "component" ? "components" : state.screen });
+    store.write("sessionStorage", "panel", { screen: state.screen === "component" ? "components" : state.screen });
   }
 
   /* ---- opening, and where the panel sits ------------------------------------------ */
@@ -331,6 +355,11 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   function setOpen(open) {
     // Focus left inside a panel going inert would fall to the page; the launcher brings it back.
     if (!open && panel.contains(shadow.activeElement)) launcher.focus();
+    if (open && state.selected && !isOnPage(state.selected)) {
+      // Picked on a page that is gone, or rendered away while the panel was folded.
+      state.selected = null;
+      if (state.screen === "component" || state.screen === "report") navigate(state.screen);
+    }
     state.open = open;
     if (open) placePanel();
     showPanel(open && !picker.picking);
@@ -338,6 +367,12 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
     picker.show(defaultOutline());
     remember();
     if (open) current?.focus?.();
+  }
+
+  function minimize() {
+    pickReturn = null;
+    picker.stop();
+    if (state.open) setOpen(false);
   }
 
   function startPicking(returnTo = null) {
@@ -445,13 +480,26 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
   /* ---- GitHub -------------------------------------------------------------------------- */
 
   let signInPoll = null;
-  cleanups.push(() => clearTimeout(signInPoll));
+  let issuesRetry = null;
+  cleanups.push(() => {
+    clearTimeout(signInPoll);
+    clearTimeout(issuesRetry);
+  });
+
+  /** GitHub's list, with the issues it does not show yet first. */
+  function withCreated(list) {
+    state.created = state.created.filter((issue) => !list.some((known) => known.number === issue.number));
+    return [...state.created, ...list];
+  }
 
   function setGitHub(status) {
     const before = state.github?.login ?? null;
     state.github = status;
     if (status.login !== before) {
       state.issues = { list: null, loading: false, error: null };
+      state.created = [];
+      state.sent = null;
+      clearTimeout(issuesRetry);
       if (status.login) loadIssues();
     }
     clearTimeout(signInPoll);
@@ -484,7 +532,7 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       const result = await response.json();
       if (response.status === 401) return loadGitHub();
       if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
-      state.issues = { list: result.issues, loading: false, error: null };
+      state.issues = { list: withCreated(result.issues), loading: false, error: null };
     } catch (error) {
       state.issues = { ...state.issues, loading: false, error: error.message };
     }
@@ -505,22 +553,28 @@ export function mountOverlay({ base = "/api/astralis-devtools", framework = null
       .catch(() => {});
   }
   loadRouteFiles();
-  // Client-side navigation changes the URL without an event to hook reliably.
-  const routePoll = setInterval(() => {
-    if (location.pathname !== state.route) {
-      state.route = location.pathname;
-      state.routeFiles = [];
-      loadRouteFiles();
-      scan();
-    }
-  }, ROUTE_POLL_MS);
+  function followRoute() {
+    if (location.pathname === state.route) return; // a new query or hash is still this page
+    state.route = location.pathname;
+    state.routeFiles = [];
+    minimize();
+    loadRouteFiles();
+    scan();
+  }
+  // The Navigation API reports client-side navigation at once; without it, only polling sees a pushState.
+  if (window.navigation?.addEventListener) listen(window.navigation, "currententrychange", followRoute);
+  listen(window, "popstate", followRoute);
+  const routePoll = setInterval(followRoute, ROUTE_POLL_MS);
   cleanups.push(() => clearInterval(routePoll));
+  // The browser can bring a page back, on Back, exactly as it was left.
+  listen(window, "pagehide", minimize);
 
   state.instances = scanPage(document, host);
   navigate(state.screen);
-  if (remembered.open) setOpen(true);
+  if (remountedOpen) setOpen(true);
 
   return () => {
+    if (state.open) openWhenUnmounted.set(window, location.pathname);
     current?.dispose?.();
     for (const cleanup of cleanups.splice(0)) cleanup();
     host.remove();

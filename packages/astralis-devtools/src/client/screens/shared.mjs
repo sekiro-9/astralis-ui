@@ -51,7 +51,7 @@ export function bridgeMissing(app) {
           " containing ",
           h("code", {}, 'export { GET, POST } from "astralis-devtools/next/route";'),
           ", or run ",
-          h("code", {}, "astralis init --devtools"),
+          h("code", {}, "npx astralis-cli init --devtools"),
           ".",
         )
       : h("p", {}, "Is the dev server running? The bridge answers this machine only."),

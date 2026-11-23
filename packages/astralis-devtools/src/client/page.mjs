@@ -17,6 +17,13 @@ export function scanPage(root, skip = null) {
   return instances;
 }
 
+/**
+ * Whether an element is part of the page as it stands. React keeps a page left
+ * by client-side navigation in the document, hidden this way, where the app
+ * turns that on (Next.js cacheComponents).
+ */
+export const isOnPage = (element) => element.isConnected && !element.closest('[style*="display: none !important"]');
+
 /** The instances grouped by the component they are, most used first, then by name. */
 export function groupByComponent(instances) {
   const groups = new Map();

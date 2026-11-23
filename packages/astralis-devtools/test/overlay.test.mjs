@@ -31,6 +31,7 @@ let issues;
 let similar;
 let searched;
 let opened;
+let submitGate;
 
 class FakeEventSource {
   constructor(url) {
@@ -52,13 +53,27 @@ class FakeEventSource {
 
 const tick = () => new Promise((done) => setTimeout(done, 0));
 
+function newWindow(url) {
+  dom = new JSDOM(`<!doctype html><html><head></head><body>${PAGE}</body></html>`, { url });
+  const { window } = dom;
+  window.open = (target) => opened.push(target);
+  Object.assign(globalThis, {
+    window,
+    document: window.document,
+    location: window.location,
+    Element: window.Element,
+    localStorage: window.localStorage,
+    sessionStorage: window.sessionStorage,
+  });
+}
+
 function setup() {
-  dom = new JSDOM(`<!doctype html><html><head></head><body>${PAGE}</body></html>`, { url: "http://localhost:3000/about" });
   streams = [];
   requests = [];
   routeFiles = ["app/about/page.tsx", "app/layout.tsx"];
   posts = [];
   opened = [];
+  submitGate = null;
   submitResult = { ok: true, body: { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" } };
   github = { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null };
   similar = { duplicates: [], related: [] };
@@ -68,15 +83,8 @@ function setup() {
     { number: 9, title: "Tabs panel unreachable", state: "closed", stateReason: "completed", url: "https://github.com/sekiro-9/astralis-ui/issues/9", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
     { number: 7, title: "Wish", state: "closed", stateReason: "not_planned", url: "https://github.com/sekiro-9/astralis-ui/issues/7", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
   ];
-  const { window } = dom;
-  window.open = (url) => opened.push(url);
+  newWindow("http://localhost:3000/about");
   Object.assign(globalThis, {
-    window,
-    document: window.document,
-    location: window.location,
-    Element: window.Element,
-    localStorage: window.localStorage,
-    sessionStorage: window.sessionStorage,
     EventSource: FakeEventSource,
     fetch: async (url, init = {}) => {
       requests.push(url);
@@ -104,6 +112,7 @@ function setup() {
           github = { ...github, login: null, pending: null };
           return { ok: true, status: 200, json: async () => github };
         }
+        await submitGate;
         return { ok: submitResult.ok, status: submitResult.ok ? 200 : 502, json: async () => submitResult.body };
       }
       const body = path === "spec"
@@ -147,6 +156,20 @@ const openPanel = () => click($(".launcher-button.mark"));
 const remount = () => {
   unmount();
   unmount = mountOverlay({ framework: "next" });
+};
+/** A full page load in the same tab: a new window, with the tab's storage. */
+const load = (url = location.href) => {
+  unmount();
+  const kept = ["sessionStorage", "localStorage"].map((name) => [name, Object.entries(globalThis[name])]);
+  dom.window.close();
+  newWindow(url);
+  for (const [name, entries] of kept) for (const [key, value] of entries) globalThis[name].setItem(key, value);
+  unmount = mountOverlay({ framework: "next" });
+};
+/** A client-side navigation, reported by popstate. */
+const go = (url) => {
+  dom.window.history.pushState({}, "", url);
+  dom.window.dispatchEvent(new dom.window.Event("popstate"));
 };
 
 const FINDINGS = {
@@ -214,13 +237,109 @@ test("a tile goes to its screen, and the sidebar marks where you are", () => {
   assert.equal(nav("home").getAttribute("aria-current"), "page");
 });
 
-test("the panel remembers being open, and on which screen, across a reload", () => {
+test("a page load, refreshed or navigated to, minimizes the panel and remembers its screen", () => {
   openPanel();
   click(nav("findings"));
-  unmount();
-  unmount = mountOverlay({ framework: "next" });
+  load();
+  assert.equal(isOpen(), false);
+  assert.equal($(".launcher-button.mark").getAttribute("aria-expanded"), "false");
+  openPanel();
+  assert.equal(nav("findings").getAttribute("aria-current"), "page");
+  load("http://localhost:3000/pricing");
+  assert.equal(isOpen(), false);
+});
+
+test("a panel an earlier version left marked open stays minimized", () => {
+  sessionStorage.setItem("astralis-devtools:panel", JSON.stringify({ open: true, screen: "findings" }));
+  load();
+  assert.equal(isOpen(), false);
+});
+
+test("a hot reload that remounts the overlay on the same page leaves the panel open", () => {
+  openPanel();
+  click(nav("findings"));
+  remount();
   assert.equal(isOpen(), true);
   assert.equal(nav("findings").getAttribute("aria-current"), "page");
+  unmount();
+  dom.window.history.pushState({}, "", "/pricing");
+  unmount = mountOverlay({ framework: "next" });
+  assert.equal(isOpen(), false, "but not on another page");
+});
+
+test("client-side navigation minimizes the panel; a query or a hash does not", (t) => {
+  // Unmount before mocking, so the real interval is cleared by the real clearInterval.
+  unmount();
+  t.mock.timers.enable({ apis: ["setInterval"] });
+  unmount = mountOverlay({ framework: "next" });
+  openPanel();
+  click(nav("recommendations"));
+  for (const url of ["/about?tab=2", "/about?tab=2#team"]) {
+    go(url);
+    t.mock.timers.tick(1000);
+    assert.equal(isOpen(), true, url);
+  }
+  dom.window.history.pushState({}, "", "/pricing");
+  t.mock.timers.tick(1000);
+  assert.equal(isOpen(), false);
+  openPanel();
+  assert.equal(nav("recommendations").getAttribute("aria-current"), "page", "reopening returns to the screen");
+  go("/about");
+  assert.equal(isOpen(), false, "Back minimizes without waiting for the poll");
+});
+
+test("where the browser has the Navigation API, navigation minimizes the panel at once", () => {
+  dom.window.navigation = new dom.window.EventTarget();
+  remount();
+  openPanel();
+  dom.window.history.pushState({}, "", "/pricing");
+  dom.window.navigation.dispatchEvent(new dom.window.Event("currententrychange"));
+  assert.equal(isOpen(), false);
+});
+
+test("leaving the page folds the panel, for a browser that restores the page on Back", () => {
+  openPanel();
+  dom.window.dispatchEvent(new dom.window.Event("pagehide"));
+  assert.equal(isOpen(), false);
+});
+
+test("navigating ends picking, and the panel does not come back", () => {
+  openPanel();
+  click($(".sidebar-end .nav-button"));
+  go("/pricing");
+  assert.equal($(".toast").hidden, true);
+  assert.equal($(".launcher-button[aria-label='Pick a component']").getAttribute("aria-pressed"), "false");
+  assert.equal(isOpen(), false);
+  click(document.getElementById("save"));
+  assert.equal(isOpen(), false, "clicks reach the page again");
+});
+
+test("a picked component the new page does not have falls back to Components", () => {
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.getElementById("save"));
+  assert.equal($(".detail-head h2").textContent, "Button");
+  go("/pricing");
+  document.getElementById("save").remove();
+  openPanel();
+  assert.equal($(".detail-head"), null);
+  assert.equal($(".crumbs").textContent, "Components");
+});
+
+test("so does one on a page React keeps hidden after navigating", () => {
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.getElementById("save"));
+  go("/pricing");
+  document.querySelector("main").style.setProperty("display", "none", "important");
+  openPanel();
+  assert.equal($(".crumbs").textContent, "Components");
+});
+
+test("a picked component that is still there after navigating is returned to", () => {
+  click($(".launcher-button[aria-label='Pick a component']"));
+  click(document.getElementById("save"));
+  go("/pricing");
+  openPanel();
+  assert.equal($(".detail-head h2").textContent, "Button");
 });
 
 test("minimizing folds the panel to the launcher, stays folded across a reload, and restores where it was", () => {
@@ -233,10 +352,9 @@ test("minimizing folds the panel to the launcher, stays folded across a reload, 
   assert.equal(isOpen(), false);
   assert.equal($(".panel").hasAttribute("inert"), true, "a minimized panel takes no focus or clicks");
   assert.equal(shadow().activeElement, $(".launcher-button.mark"), "focus goes to the launcher, not the page");
-  assert.deepEqual(JSON.parse(sessionStorage.getItem("astralis-devtools:panel")), { open: false, screen: "recommendations" });
+  assert.deepEqual(JSON.parse(sessionStorage.getItem("astralis-devtools:panel")), { screen: "recommendations" });
 
-  unmount();
-  unmount = mountOverlay({ framework: "next" });
+  load();
   assert.equal(isOpen(), false, "still minimized after a reload");
   assert.equal($(".launcher-button.mark").getAttribute("aria-expanded"), "false");
   openPanel();
@@ -321,7 +439,7 @@ test("when the bridge does not answer, the Next.js route to add is shown", () =>
   openPanel();
   click(nav("findings"));
   assert.match(view(), /app\/api\/astralis-devtools\/\[\.\.\.path\]\/route\.ts/);
-  assert.match(view(), /astralis init --devtools/);
+  assert.match(view(), /npx astralis-cli init --devtools/);
   assert.match($(".status").textContent, /Bridge offline/);
 });
 
@@ -616,7 +734,7 @@ test("the report shows the exact snapshot and cannot be sent without a title", a
   assert.equal(snap.body.include.console, false);
   assert.match($(".json").textContent, /"format": "astralis-snapshot\/1"/);
   assert.match($(".problems").textContent, /title is required/);
-  assert.equal(button("Open issue on GitHub").disabled, true);
+  assert.equal(button("Create issue from here").disabled, true);
 });
 
 test("editing the form re-assembles the snapshot, and streamed findings do not wipe it", async () => {
@@ -629,7 +747,7 @@ test("editing the form re-assembles the snapshot, and streamed findings do not w
   await settle();
   assert.equal(posts.at(-1).body.description.title, "Card loses its border");
   assert.equal($(".problems").children.length, 0);
-  assert.equal(button("Open issue on GitHub").disabled, false);
+  assert.equal(button("Create issue from here").disabled, false);
 
   const includeText = $$(".toggle input")[0];
   includeText.checked = true;
@@ -646,21 +764,125 @@ test("the form keeps its input across screens", async () => {
   assert.equal($(".field").value, "Kept");
 });
 
-test("Send opens exactly the snapshot shown as a GitHub issue, and shows it", async () => {
+test("Send opens exactly the snapshot shown as a GitHub issue, clears the form and shows it in Your issues", async () => {
   await reportOn("text");
   typeInto($(".field"), "Card loses its border");
   await settle();
   const shown = JSON.parse($(".json").textContent);
-  click(button("Open issue on GitHub"));
+  click(button("Create issue from here"));
   await settle();
   const submitted = posts.find((p) => p.path === "submit");
   assert.deepEqual(submitted.body, shown);
   assert.deepEqual(opened, [], "no tab opens by itself");
-  assert.match($(".report-status .sent-card").textContent, /Opened #12 on GitHub/);
-  assert.match($(".report-status .sent-card").textContent, /To add a screenshot or a file, open the issue/);
-  const link = [...$(".report-status").querySelectorAll("a")].find((a) => a.textContent === "Open the issue on GitHub");
+  assert.equal($(".report-status"), null, "the form is gone");
+  assert.equal($('[data-tab="issues"]').getAttribute("aria-selected"), "true", "Your issues shows instead");
+  assert.match($(".sent-card").textContent, /Created #12/);
+  assert.match($(".sent-card").textContent, /To add a screenshot or a file, open the issue/);
+  const link = $(".sent-card a");
+  assert.equal(link.textContent, "Open #12 on GitHub");
   assert.equal(link.getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/12");
   assert.equal(link.getAttribute("target"), "_blank");
+  assert.equal($$(".issue-row").filter((r) => r.textContent.includes("#12")).length, 1, "listed once");
+
+  click($('[data-tab="new"]'));
+  assert.deepEqual($$(".field").map((f) => f.value), ["", "", ""], "the form is clear");
+  assert.equal(sessionStorage.getItem("astralis-devtools:draft"), "null", "and so is the kept draft");
+  click($('[data-tab="issues"]'));
+  assert.equal($(".sent-card"), null, "the confirmation shows once");
+});
+
+test("a new issue shows before GitHub's list has it, once, and the list is read again", async () => {
+  submitResult = { ok: true, body: { number: 40, url: "https://github.com/sekiro-9/astralis-ui/issues/40" } };
+  await reportOn("text");
+  typeInto($(".field"), "Card loses its border");
+  await settle();
+  const reads = () => requests.filter((r) => r.endsWith("github/issues")).length;
+  const before = reads();
+  click(button("Create issue from here"));
+  await settle();
+  assert.match($$(".issue-row")[0].textContent, /Card loses its border#40 · Open · updated just now/);
+  assert.equal($$(".issue-row").length, 4);
+  assert.match($('[data-tab="issues"]').textContent, /Your issues \(4\)/);
+  issues = [{ ...issues[0], number: 40, title: "From GitHub" }, ...issues];
+  await new Promise((done) => setTimeout(done, 3100));
+  assert.equal(reads(), before + 2);
+  assert.equal($$(".issue-row").length, 4, "not listed twice");
+  assert.match($$(".issue-row")[0].textContent, /From GitHub#40/);
+  assert.match($(".sent-card").textContent, /Created #40/, "the confirmation outlives the refresh");
+});
+
+test("the button says Creating…, and a second press sends nothing", async () => {
+  let release;
+  submitGate = new Promise((done) => (release = done));
+  await reportOn("text");
+  typeInto($(".field"), "t");
+  await settle();
+  click(button("Create issue from here"));
+  click(button("Creating…"));
+  click(button("Copy JSON"));
+  await tick();
+  assert.equal(button("Creating…").disabled, true);
+  assert.equal(button("Open GitHub's form instead").disabled, true);
+  assert.equal($(".field").readOnly, true, "nothing typed now would be lost");
+  click(nav("home"));
+  click(nav("report"));
+  await settle();
+  assert.equal(button("Creating…").disabled, true, "coming back to the form does not arm it again");
+  click(nav("home"));
+  release();
+  await settle();
+  assert.equal(nav("home").getAttribute("aria-current"), "page", "a reader elsewhere is left there");
+  assert.equal(posts.filter((p) => p.path === "submit").length, 1);
+  click(nav("report"));
+  assert.match($(".sent-card").textContent, /Created #12/);
+});
+
+test("keystrokes still waiting to be assembled are in what is sent", async () => {
+  await reportOn("text");
+  typeInto($(".field"), "Card");
+  await settle();
+  typeInto($(".field"), "Card loses its border");
+  click(button("Create issue from here"));
+  await settle();
+  assert.equal(posts.find((p) => p.path === "submit").body.description.title, "Card loses its border");
+});
+
+test("a send that fails on a form since rebuilt is shown, with the text kept", async () => {
+  let release;
+  submitGate = new Promise((done) => (release = done));
+  submitResult = { ok: false, body: { error: "Could not reach GitHub." } };
+  await reportOn("text");
+  typeInto($(".field"), "Kept");
+  await settle();
+  click(button("Create issue from here"));
+  await tick();
+  click(nav("home"));
+  click(nav("report"));
+  release();
+  await settle();
+  assert.match($(".report-status").textContent, /Could not reach GitHub/);
+  assert.equal($(".field").value, "Kept");
+  assert.equal(button("Create issue from here").disabled, false);
+});
+
+test("an unsent report keeps its words across a navigation and a page load", async () => {
+  await reportOn("text");
+  typeInto($(".field"), "Kept");
+  const includeText = $$(".toggle input")[0];
+  includeText.checked = true;
+  includeText.dispatchEvent(new dom.window.Event("change"));
+  go("/pricing");
+  document.getElementById("text").parentElement.remove();
+  openPanel();
+  assert.match(view(), /Which component is it\?.*What you wrote is kept/);
+  load();
+  openPanel();
+  assert.match(view(), /What you wrote is kept/);
+  click([...$(".view").querySelectorAll("button")].find((b) => b.textContent === "Pick a component"));
+  click(document.getElementById("text"));
+  await settle();
+  assert.equal($(".field").value, "Kept");
+  assert.equal($$(".toggle input")[0].checked, false, "what to include is asked afresh");
 });
 
 test("the report has no screenshot of its own: the snapshot carries none, and nothing asks to capture the screen", async () => {
@@ -679,9 +901,11 @@ test("a failed send says so and keeps Copy and Download", async () => {
   await reportOn("text");
   typeInto($(".field"), "t");
   await settle();
-  click(button("Open issue on GitHub"));
+  click(button("Create issue from here"));
   await settle();
   assert.match($(".report-status").textContent, /Could not reach GitHub.*Nothing was sent/);
+  assert.equal($(".field").value, "t", "the form keeps its text");
+  assert.equal(button("Create issue from here").disabled, false, "and can be sent again");
   assert.equal(button("Copy JSON").disabled, false);
   assert.equal(button("Download").disabled, false);
   assert.deepEqual(opened, []);
@@ -726,7 +950,7 @@ test("signed out: sending waits for a sign-in, which shows a code to enter on Gi
   github = { ...github, login: null };
   remount();
   await reportOn("text");
-  assert.equal(button("Open issue on GitHub").disabled, true);
+  assert.equal(button("Create issue from here").disabled, true);
   assert.match($(".account").textContent, /Sign in to report/);
   click(button("Sign in with GitHub"));
   await tick();
@@ -742,7 +966,7 @@ test("signed out: sending waits for a sign-in, which shows a code to enter on Gi
   assert.ok(requests.includes("/api/astralis-devtools/github/issues"), "the issues load once signed in");
   typeInto($(".field"), "Card loses its border");
   await settle();
-  assert.equal(button("Open issue on GitHub").disabled, false);
+  assert.equal(button("Create issue from here").disabled, false);
 
   click(button("Sign out"));
   await tick();
@@ -756,7 +980,7 @@ test("when GitHub sign-in is not set up, Report says how to report by hand", asy
   openPanel();
   click(nav("report"));
   await tick();
-  assert.match($(".notice").textContent, /not set up in this version.*Open on GitHub instead/);
+  assert.match($(".notice").textContent, /not set up in this version.*Open GitHub's form instead/);
 });
 
 test("a likely duplicate is shown before sending, and the report can be added to it", async () => {
@@ -775,20 +999,22 @@ test("a likely duplicate is shown before sending, and the report can be added to
   click(button("Add my report here"));
   await settle();
   assert.equal(posts.at(-1).path, "submit?addTo=3");
-  assert.match($(".report-status").textContent, /Added your report to #3/);
-  assert.equal($(".report-status a.btn").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1");
+  assert.equal($('[data-tab="issues"]').getAttribute("aria-selected"), "true");
+  assert.match($(".sent-card").textContent, /Added your report to #3/);
+  assert.equal($(".sent-card a").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1");
+  assert.equal($$(".issue-row").length, 3, "a comment opens no new issue");
   assert.equal($(".similar"), null, "the suggestion goes once it is acted on");
 });
 
-test("Open on GitHub instead opens GitHub's own form, filled in, with no sign-in", async () => {
+test("Open GitHub's form instead opens GitHub's own form, filled in, with no sign-in", async () => {
   github = { ...github, login: null };
   remount();
   await reportOn("text");
   typeInto($(".field"), "Border gone");
   await settle();
-  assert.equal(button("Open issue on GitHub").disabled, true, "sending through the app needs a sign-in");
-  assert.equal(button("Open on GitHub instead").disabled, false, "the form does not");
-  click(button("Open on GitHub instead"));
+  assert.equal(button("Create issue from here").disabled, true, "sending through the app needs a sign-in");
+  assert.equal(button("Open GitHub's form instead").disabled, false, "the form does not");
+  click(button("Open GitHub's form instead"));
   await settle();
   assert.deepEqual(opened, ["https://github.com/sekiro-9/astralis-ui/issues/new?title=Border%20gone"]);
   assert.match($(".report-status").textContent, /GitHub's form is open in a new tab/);

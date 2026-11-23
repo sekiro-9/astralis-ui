@@ -19,8 +19,8 @@ import {
 /** How long a search for similar issues is reused: typing in the form must not search GitHub per keystroke. */
 const SIMILAR_TTL_MS = 60_000;
 
-/* The bridge's GitHub session: signing in with a code, the saved sign-in
-   (shared with `astralis report`), and the reporter's issues. The token stays
+/* The bridge's GitHub session: signing in with a code, the saved sign-in,
+   and the reporter's issues. The token stays
    in this process and in the user's config file; the page only ever learns
    the login, the code to enter, and the issues. */
 

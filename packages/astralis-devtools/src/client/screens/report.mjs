@@ -9,9 +9,25 @@ import { empty } from "./shared.mjs";
 
    A report is an issue snapshot of one component and everything inside it.
    The exact JSON is shown before anything is sent, and nothing is sent until
-   the reporter presses Send. The form keeps its input across screens and
-   while findings stream in. Pictures and files are added on GitHub, in the
+   the reporter creates the issue. The form keeps its input across screens and
+   pages, and while findings stream in, until the report is sent; then the form
+   clears and Your issues shows it. Pictures and files are added on GitHub, in the
    issue itself: its API cannot attach them. */
+
+/** A report nobody has written yet. */
+export const emptyReport = () => ({
+  title: "",
+  happened: "",
+  expected: "",
+  includeText: false,
+  includeFindings: true,
+  includeConsole: false,
+  snapshot: null,
+  problems: [],
+  similar: null,
+  status: "idle", // idle | sending | failed | notice
+  message: "",
+});
 
 /** The form for a new report. */
 function newReport(app) {
@@ -20,10 +36,11 @@ function newReport(app) {
   const element = state.selected?.isConnected ? state.selected : null;
 
   if (!element) {
+    const written = r.title || r.happened || r.expected;
     const root = h(
       "div",
       {},
-      empty(ICONS.report, "Which component is it?", "Pick the component the problem is in. The report describes it and everything inside it.", { neutral: true }),
+      empty(ICONS.report, "Which component is it?", `Pick the component the problem is in. The report describes it and everything inside it.${written ? " What you wrote is kept." : ""}`, { neutral: true }),
       h(
         "div",
         { class: "row", style: "justify-content:center" },
@@ -36,14 +53,23 @@ function newReport(app) {
 
   let timer = null;
   let request = 0;
+  let current = false; // whether r.snapshot holds everything in the form
+  let disposed = false;
+  if (r.status !== "sending") {
+    // It may describe a component picked earlier.
+    r.snapshot = null;
+    r.problems = [];
+  }
 
   function schedule() {
+    current = false;
     clearTimeout(timer);
     timer = setTimeout(assemble, 250);
   }
 
   /** Ask the bridge to complete the snapshot from the page's part. Nothing leaves the machine. */
   async function assemble() {
+    clearTimeout(timer);
     if (!element.isConnected) return;
     const mine = ++request;
     const body = {
@@ -61,6 +87,7 @@ function newReport(app) {
       if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
       r.snapshot = result.snapshot;
       r.problems = result.problems;
+      current = true;
       if (r.status === "notice") r.status = "idle";
       checkSimilar(result.snapshot);
     } catch (error) {
@@ -77,7 +104,9 @@ function newReport(app) {
     try {
       const response = await fetch(`${app.base}/github/similar`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(snapshot) });
       if (!response.ok) return;
-      r.similar = await response.json();
+      const found = await response.json();
+      if (disposed) return;
+      r.similar = found;
     } catch {
       return; // no check is no reason to stop a report
     }
@@ -86,30 +115,35 @@ function newReport(app) {
 
   /** Open a new issue, or, with `addTo`, add the report to that existing one. */
   async function send(addTo = null) {
-    if (!r.snapshot || r.problems.length) return;
+    if (r.status === "sending" || !r.snapshot || r.problems.length) return;
     r.status = "sending";
     r.message = "";
     refresh();
+    // The last keystrokes may still be waiting to be assembled, and sending clears the form.
+    if (!current) await assemble();
+    if (!current || !r.snapshot || r.problems.length) {
+      r.status = element.isConnected ? "idle" : "notice";
+      r.message = element.isConnected ? "" : "That component is no longer on the page. Nothing was sent; pick it again.";
+      return app.reportChanged();
+    }
+    const { snapshot } = r;
     try {
       const where = addTo ? `submit?addTo=${addTo}` : "submit";
-      const response = await fetch(`${app.base}/${where}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(r.snapshot) });
+      const response = await fetch(`${app.base}/${where}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(snapshot) });
       const result = await response.json();
       if (response.status === 401) app.github.reload();
       if (!response.ok) throw new Error(result?.error ?? `The bridge answered ${response.status}.`);
-      r.status = "sent";
-      r.url = result.url;
-      r.number = result.number;
-      r.added = Boolean(addTo);
-      r.similar = null;
-      app.github.loadIssues();
+      Object.assign(r, emptyReport());
+      app.reportSent({ number: result.number, url: result.url, added: Boolean(addTo) }, snapshot.description.title);
     } catch (error) {
       r.status = "failed";
       r.message = error.message;
+      app.reportChanged();
     }
-    refresh();
   }
 
   function notice(message) {
+    if (r.status === "sending") return;
     r.status = "notice";
     r.message = message;
     refresh();
@@ -145,11 +179,14 @@ function newReport(app) {
     }
   }
 
+  const inputs = [];
   const field = (label, key, multiline, placeholder) => {
     const input = h(multiline ? "textarea" : "input", { class: "field", rows: multiline ? 3 : null, maxlength: multiline ? 4000 : 200, "aria-label": label, placeholder });
     input.value = r[key];
+    inputs.push(input);
     input.addEventListener("input", () => {
       r[key] = input.value;
+      app.keepDraft(r);
       schedule();
     });
     return h("label", { class: "field-label" }, label, input);
@@ -172,8 +209,8 @@ function newReport(app) {
   const problems = h("ul", { class: "problems" });
   const status = h("div", { class: "report-status", role: "status" });
   const similar = h("div", {});
-  const sendButton = h("button", { class: "btn primary", type: "button", onclick: () => send() }, icon(GITHUB_MARK), h("span", {}, "Open issue on GitHub"));
-  const linkButton = h("button", { class: "btn", type: "button", title: "Opens GitHub's own form, filled in; you submit it there. No sign-in.", onclick: openOnGitHub }, icon(ICONS.external), "Open on GitHub instead");
+  const sendButton = h("button", { class: "btn primary", type: "button", onclick: () => send() }, icon(GITHUB_MARK), h("span", {}, "Create issue from here"));
+  const linkButton = h("button", { class: "btn", type: "button", title: "Opens GitHub's own form, filled in; you submit it there. No sign-in.", onclick: openOnGitHub }, icon(ICONS.external), "Open GitHub's form instead");
   const copyButton = h("button", { class: "btn", type: "button", onclick: copy }, icon(ICONS.copy), "Copy JSON");
   const downloadButton = h("button", { class: "btn", type: "button", onclick: download }, icon(ICONS.download), "Download");
 
@@ -184,7 +221,7 @@ function newReport(app) {
       "div",
       { class: "card target" },
       h("span", { class: "detail-icon" }, icon(ICONS.components)),
-      h("div", { class: "grow" }, h("div", { class: "name" }, readIdentity(element)[0]?.name ?? "Component"), h("div", { class: "muted", style: "font-size:12px" }, "and everything inside it. Nothing is sent until you press Send.")),
+      h("div", { class: "grow" }, h("div", { class: "name" }, readIdentity(element)[0]?.name ?? "Component"), h("div", { class: "muted", style: "font-size:12px" }, "and everything inside it. Nothing is sent until you create the issue.")),
       h("button", { class: "btn ghost", type: "button", onclick: () => app.startPicking("report") }, icon(ICONS.pick), "Change"),
     ),
     field("Title", "title", false, "Card loses its border in dark mode"),
@@ -241,33 +278,18 @@ function newReport(app) {
     preview.textContent = r.snapshot ? JSON.stringify(r.snapshot, null, 2) : "Assembling…";
     problems.replaceChildren(...r.problems.map((p) => h("li", {}, p)));
     const signedIn = Boolean(app.state.github?.login);
+    // What is typed while a report is on its way would be cleared with it.
+    for (const input of inputs) input.readOnly = r.status === "sending";
     sendButton.disabled = !signedIn || !r.snapshot || r.problems.length > 0 || r.status === "sending";
     sendButton.title = signedIn ? "" : "Sign in with GitHub first";
-    linkButton.disabled = !r.snapshot || r.problems.length > 0;
+    linkButton.disabled = !r.snapshot || r.problems.length > 0 || r.status === "sending";
     copyButton.disabled = !r.snapshot;
     downloadButton.disabled = !r.snapshot;
-    sendButton.lastChild.textContent = r.status === "sending" ? "Opening…" : "Open issue on GitHub";
+    sendButton.lastChild.textContent = r.status === "sending" ? "Creating…" : "Create issue from here";
     similar.replaceChildren(...[similarCard()].filter(Boolean));
     status.className = `report-status ${r.status}`;
     status.replaceChildren(
-      r.status === "sent"
-        ? h(
-            "div",
-            { class: "card sent-card" },
-            h("span", { class: "sent-icon" }, icon(ICONS.check)),
-            h(
-              "div",
-              { class: "grow" },
-              h("div", { class: "sent-title" }, r.added ? `Added your report to #${r.number}` : `Opened #${r.number} on GitHub`),
-              h("p", { class: "muted small" }, "To add a screenshot or a file, open the issue and drop it into a comment there."),
-              h("a", { class: "btn primary", href: r.url, target: "_blank", rel: "noreferrer" }, icon(GITHUB_MARK), "Open the issue on GitHub", icon(ICONS.external)),
-            ),
-          )
-        : r.status === "failed"
-          ? `${r.message} Nothing was sent; Copy JSON or Download keeps the snapshot.`
-          : r.status === "notice"
-            ? r.message
-            : "",
+      r.status === "failed" ? `${r.message} Nothing was sent; Copy JSON or Download keeps the snapshot.` : r.status === "notice" ? r.message : "",
     );
   }
 
@@ -280,7 +302,11 @@ function newReport(app) {
       refresh();
       if (reason === "findings") schedule();
     },
-    dispose: () => clearTimeout(timer),
+    dispose() {
+      disposed = true;
+      request++; // a snapshot still being assembled is for a form that is gone
+      clearTimeout(timer);
+    },
   };
 }
 
@@ -293,7 +319,7 @@ function accountCard(app) {
     return h(
       "div",
       { class: "notice" },
-      "GitHub sign-in is not set up in this version of the DevTools. Use Open on GitHub instead below: it fills in GitHub's own form, and you submit it there.",
+      "GitHub sign-in is not set up in this version of the DevTools. Use Open GitHub's form instead, in a new report: it opens GitHub's own form, filled in, and you submit it there.",
     );
   }
   if (gh.login) {
@@ -350,7 +376,7 @@ function accountCard(app) {
       "div",
       { class: "grow" },
       h("div", { class: "account-name" }, "Sign in to report"),
-      h("div", { class: "muted small" }, `Issues open on ${repo} from your own account. The app can only read and write issues there. Or use Open on GitHub instead, with no sign-in.`),
+      h("div", { class: "muted small" }, `Issues open on ${repo} from your own account. The app can only read and write issues there. Or use Open GitHub's form instead, with no sign-in.`),
       gh.error ? h("div", { class: "account-error" }, gh.error) : null,
     ),
     h("button", { class: "btn primary", type: "button", onclick: () => app.github.signIn() }, icon(GITHUB_MARK), "Sign in with GitHub"),
@@ -364,12 +390,30 @@ const ago = (iso) => {
   return "just now";
 };
 
+/** What was just sent, where it went, and how to add to it. */
+const sentCard = ({ number, url, added }) =>
+  h(
+    "div",
+    { class: "card sent-card", role: "status", style: "margin-bottom:14px" },
+    h("span", { class: "sent-icon" }, icon(ICONS.check)),
+    h(
+      "div",
+      { class: "grow" },
+      h("div", { class: "sent-title" }, added ? `Added your report to #${number}` : `Created #${number}`),
+      h("p", { class: "muted small" }, "To add a screenshot or a file, open the issue and drop it into a comment there."),
+      h("a", { class: "btn primary", href: url, target: "_blank", rel: "noreferrer" }, icon(GITHUB_MARK), `Open #${number} on GitHub`, icon(ICONS.external)),
+    ),
+  );
+
 /** The issues the reporter has opened, and where each stands. */
 function yourIssues(app) {
+  const sent = app.state.sent;
+  const confirmation = h("div", {}, sent && sentCard(sent));
   const root = h("div", {});
   function update() {
     const gh = app.state.github;
     const issues = app.state.issues;
+    if (app.state.sent !== sent) confirmation.replaceChildren();
     if (!gh?.login) {
       root.replaceChildren(empty(ICONS.report, "Your issues show here", "Sign in with GitHub to see the issues you have opened and where each stands.", { neutral: true }));
       return;
@@ -415,7 +459,13 @@ function yourIssues(app) {
     );
   }
   update();
-  return { root, update };
+  return {
+    root: h("div", {}, confirmation, root),
+    update,
+    dispose() {
+      if (app.state.sent === sent) app.state.sent = null;
+    },
+  };
 }
 
 export function reportScreen(app) {
@@ -448,6 +498,7 @@ export function reportScreen(app) {
     title: [{ label: "Report" }],
     root,
     update(reason) {
+      if (reason === "sent") return show("issues");
       if (reason === "github") {
         account.replaceChildren(accountCard(app));
         drawTabs();
