@@ -39,7 +39,7 @@ export interface IssueSummary {
   comments: number;
   createdAt: string;
   updatedAt: string;
-  /** The component a report from the DevTools or `astralis report` is about. */
+  /** The component a report from the DevTools is about. */
   component: string | null;
 }
 

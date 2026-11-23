@@ -18,8 +18,7 @@ It serves more than the pages people read:
   server reads these.
 - **Site search**, a Pagefind index built from each page's source, so it works in `dev` too.
 - **Issues & Contributions** at `/issues`: a read-only view of the GitHub
-  issues on `sekiro-9/astralis-ui`. Reports from the DevTools and
-  `astralis report` are opened on GitHub from the reporter's own account; an
+  issues on `sekiro-9/astralis-ui`. Reports from the DevTools are opened on GitHub from the reporter's own account; an
   issue that carries a report's snapshot shows it as a reproduction, checked by
   the validator. The site has no database and no accounts.
 

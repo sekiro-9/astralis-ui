@@ -31,8 +31,7 @@ function Intro() {
         </Card.Header>
         <Card.Body>
           <Text size="sm" color="muted" lineHeight="relaxed">
-            In your app, open the Astralis DevTools, pick the component and use Report, or run{" "}
-            <Text as="code" fontFamily="mono" size="xs">npx astralis report</Text> on the files involved. The report
+            In your app, open the Astralis DevTools, pick the component and use Report. The report
             becomes a GitHub issue, opened from your own account, with the library version, the component tree,
             the validator&apos;s findings and a reproduction. Nothing is sent until you have read it, and if the
             problem is already reported you can add to that issue instead.

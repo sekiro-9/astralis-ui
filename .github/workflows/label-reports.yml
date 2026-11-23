@@ -1,6 +1,6 @@
 name: Label reports
 
-# Issues opened from the Astralis DevTools or `astralis report` end with a
+# Issues opened from the Astralis DevTools end with a
 # "Match keys" line. GitHub drops the labels a non-collaborator asks for, so
 # this labels them instead: devtools-report, to filter them, and needs triage,
 # like an issue from the issue forms.
@@ -27,7 +27,7 @@ jobs:
           NUMBER: ${{ github.event.issue.number }}
         run: |
           gh label create devtools-report --repo "$REPO" --color FBCA04 \
-            --description "Reported from the Astralis DevTools or astralis report" 2>/dev/null || true
+            --description "Reported from the Astralis DevTools" 2>/dev/null || true
           gh label create "needs triage" --repo "$REPO" --color D4C5F9 \
             --description "Not yet looked at by a maintainer" 2>/dev/null || true
           gh issue edit "$NUMBER" --repo "$REPO" --add-label "devtools-report,needs triage"

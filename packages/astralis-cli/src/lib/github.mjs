@@ -8,8 +8,8 @@
    Astralis repository. It needs no client secret, so none ships here.
 
    The token is saved in a file only the user can read, in their config
-   directory, and is shared by `astralis report` and the DevTools bridge. It
-   never reaches a web page: both run in Node and call GitHub themselves.
+   directory, and is used by the DevTools bridge. It never reaches a web page:
+   the bridge runs in Node and calls GitHub itself.
    ========================================================================== */
 
 import { createHash } from "node:crypto";

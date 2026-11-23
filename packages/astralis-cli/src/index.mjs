@@ -11,7 +11,6 @@ const MODULES = {
   add: () => import("./commands/add.mjs"),
   theme: () => import("./commands/theme.mjs"),
   validate: () => import("./commands/validate.mjs"),
-  report: () => import("./commands/report.mjs"),
   "connect-mcp": () => import("./commands/connect-mcp.mjs"),
 };
 
@@ -28,7 +27,7 @@ try {
     await run(rest);
   } else {
     const near = suggest(name, Object.keys(MODULES));
-    fail(`Unknown command "${name}".${near ? ` Did you mean "${near}"?` : ""} Run ${cyan("astralis --help")} for the list.`);
+    fail(`Unknown command "${name}".${near ? ` Did you mean "${near}"?` : ""} Run ${cyan("npx astralis-cli --help")} for the list.`);
   }
 } catch (error) {
   if (!(error instanceof CliExit)) {

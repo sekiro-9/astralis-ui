@@ -1,8 +1,8 @@
 /* ==========================================================================
    Issue snapshots (format astralis-snapshot/1): the unit of evidence in the
-   feedback loop. Built by the DevTools from a rendered page and by
-   `astralis report` from source files, and checked here before anything is
-   sent. github.mjs turns one into a GitHub issue.
+   feedback loop. Built by the DevTools from a rendered page, and checked here
+   before anything is sent. github.mjs turns one into a GitHub issue. CLI
+   versions before 0.8.0 also built them from source files (source "cli").
 
    Pure JavaScript with no Node built-ins, so the same code runs in the
    browser overlay, the dev-server bridge, the CLI and the platform.

@@ -125,38 +125,6 @@ astralis validate src/components --json
 astralis validate --strict-tokens
 ```
 
-### `astralis report <files...>`
-
-Report a problem to the Astralis maintainers, with a snapshot built from your source files.
-
-| Option | |
-| --- | --- |
-| `--title <text>` | The report's title. Asked for when omitted; required with --yes. |
-| `--happened <text>` | What happened. |
-| `--expected <text>` | What you expected instead. |
-| `--include-text` | Keep the text in your JSX; by default it is replaced by placeholders. |
-| `--no-findings` | Leave out the validator's findings for these files. |
-| `--out <file>` | Write the snapshot to a file instead of sending it. |
-| `--dry-run` | Print the snapshot and send nothing. |
-| `--add-to <issue>` | Add the report to this existing issue instead of opening a new one. |
-| `--new` | Open a new issue without checking for an existing one. |
-| `--link` | Print a link to GitHub's own new-issue form, filled in, instead of signing in; you submit it there. |
-| `--sign-out` | Forget the saved GitHub sign-in, and do nothing else. |
-| `--spec <path>` | Build against this system-spec.json. Default: the installed astralis-ui's. |
-
-It prints the exact JSON first and sends nothing until you confirm; --yes confirms without asking.
-
-It opens a GitHub issue from your own account. The first time, you sign in with a code on github.com.
-
-Before opening one it looks for an issue that already reports the same problem, and offers to add your report to it.
-
-Only literal props are recorded, and only those the spec describes; links, sources and handlers never are.
-
-```bash
-astralis report app/page.tsx
-astralis report src/App.tsx --title "Card loses its border" --out snapshot.json
-```
-
 ### `astralis connect-mcp`
 
 Connect an AI coding agent to the Astralis MCP docs server.
