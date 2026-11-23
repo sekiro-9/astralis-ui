@@ -34,7 +34,7 @@ function printCatalogue(blocks) {
     }
     console.log("");
   }
-  console.log(`  ${dim(`Add one with ${cyan("astralis add <id>")}`)}\n`);
+  console.log(`  ${dim(`Add one with ${cyan("npx astralis-cli add <id>")}`)}\n`);
 }
 
 export async function run(argv) {
@@ -48,7 +48,7 @@ export async function run(argv) {
   if (values.list) return printCatalogue((await fetchIndex(base)).blocks);
 
   if (positionals.length === 0) {
-    fail(`Name at least one block, or list them with ${cyan("astralis add --list")}.`);
+    fail(`Name at least one block, or list them with ${cyan("npx astralis-cli add --list")}.`);
   }
 
   const badIds = positionals.filter((id) => !isBlockId(id));
@@ -63,7 +63,7 @@ export async function run(argv) {
     if (!block) {
       fail(
         `No block called ${cyan(id)}.\n` +
-          `  Run ${cyan("astralis add --list")} to see what exists.`,
+          `  Run ${cyan("npx astralis-cli add --list")} to see what exists.`,
       );
     }
     items.push(block);
@@ -133,7 +133,7 @@ export async function run(argv) {
     console.log("");
     warn(
       `astralis-ui is not in this project's dependencies — the block will not compile.\n` +
-        `  Run ${cyan(`${install} astralis-ui`)}, or ${cyan("astralis init")} to wire it up fully.`,
+        `  Run ${cyan(`${install} astralis-ui`)}, or ${cyan("npx astralis-cli init")} to wire it up fully.`,
     );
   }
 

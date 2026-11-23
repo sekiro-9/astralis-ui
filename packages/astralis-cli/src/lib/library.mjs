@@ -15,26 +15,31 @@ function exportTarget(pkg, subpath) {
  * own astralis-ui when it has one new enough, so the generated file matches
  * the version it will be loaded next to; otherwise the copy bundled with the
  * CLI. `source` is "project" or "bundled"; `outdated` names a project copy
- * that was passed over.
+ * that was passed over, and `broken` says why one couldn't be loaded.
  */
 export async function loadThemeLibrary(cwd) {
   let outdated = null;
+  let broken = null;
   const pkgPath = findInstalledLibrary(cwd);
   if (pkgPath) {
-    const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-    const root = dirname(pkgPath);
-    const [serializeFile, contrastFile, stylesFile] = THEME_EXPORTS.map((subpath) => exportTarget(pkg, subpath));
-    if (serializeFile && contrastFile && stylesFile) {
-      const [serialize, contrast] = await Promise.all(
-        [serializeFile, contrastFile].map((file) => import(pathToFileURL(join(root, file)).href)),
-      );
-      return { serialize, contrast, stylesPath: join(root, stylesFile), version: pkg.version, source: "project" };
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+      const root = dirname(pkgPath);
+      const [serializeFile, contrastFile, stylesFile] = THEME_EXPORTS.map((subpath) => exportTarget(pkg, subpath));
+      if (serializeFile && contrastFile && stylesFile) {
+        const [serialize, contrast] = await Promise.all(
+          [serializeFile, contrastFile].map((file) => import(pathToFileURL(join(root, file)).href)),
+        );
+        return { serialize, contrast, stylesPath: join(root, stylesFile), version: pkg.version, source: "project" };
+      }
+      outdated = pkg.version;
+    } catch (error) {
+      broken = error.message;
     }
-    outdated = pkg.version;
   }
 
   const [serialize, contrast] = await Promise.all([import("astralis-ui/serialize"), import("astralis-ui/contrast")]);
   const stylesPath = fileURLToPath(import.meta.resolve("astralis-ui/styles.css"));
   const version = JSON.parse(readFileSync(join(dirname(stylesPath), "..", "package.json"), "utf8")).version;
-  return { serialize, contrast, stylesPath, version, source: "bundled", outdated };
+  return { serialize, contrast, stylesPath, version, source: "bundled", outdated, broken };
 }

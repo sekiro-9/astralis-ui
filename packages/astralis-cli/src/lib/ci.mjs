@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 import { posix } from "./ui.mjs";
@@ -151,5 +151,3 @@ export function withScript(packageJsonText, name, command) {
   const text = JSON.stringify(pkg, null, indent).replaceAll("\n", eol);
   return /\r?\n$/.test(packageJsonText) ? text + eol : text;
 }
-
-export const readText = (path) => (existsSync(path) ? readFileSync(path, "utf8") : null);

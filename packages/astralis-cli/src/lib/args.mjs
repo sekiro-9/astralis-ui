@@ -18,7 +18,7 @@ export function parseCommandArgs(command, argv) {
   const values = Object.fromEntries(options.filter((o) => o.type === "boolean").map((o) => [o.name, false]));
   const positionals = [];
   const forwarded = [];
-  const usageHint = `Run ${cyan(`astralis ${command.name} --help`)} for its options.`;
+  const usageHint = `Run ${cyan(`npx astralis-cli ${command.name} --help`)} for its options.`;
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
@@ -128,7 +128,7 @@ export function mainHelp(commands) {
     `  ${bold("Global options")}`,
     ...optionLines([...GLOBAL_OPTIONS, versionFlag]),
     "",
-    `  Run ${cyan("astralis <command> --help")} for a command's options.`,
+    `  Run ${cyan("npx astralis-cli <command> --help")} for a command's options.`,
     `  ${dim("Docs")} ${cyan(DOCS_URL)}`,
     "",
   ].join("\n");

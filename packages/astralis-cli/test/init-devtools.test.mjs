@@ -80,7 +80,7 @@ test("Next.js: the overlay goes in the root layout and the bridge gets its route
     assert.match(layout, /<AstralisProvider defaultTheme="system">\{children\}<\/AstralisProvider><AstralisDevTools \/><\/body>/);
     assert.equal(read(project.dir, ROUTE), 'export { GET, POST } from "astralis-devtools/next/route";\n');
     assert.match(result.stdout, /wrote the DevTools route/);
-    assert.match(result.stdout, /click the ✦ button/);
+    assert.match(result.stdout, /click the Astralis button/);
   } finally {
     project.cleanup();
   }
@@ -218,7 +218,7 @@ test("--dry-run shows the DevTools steps and writes nothing", async () => {
     assert.equal(read(project.dir, "app/layout.tsx"), before);
     assert.equal(existsSync(join(project.dir, ROUTE)), false);
     assert.match(result.stdout, /would write the DevTools route/);
-    assert.match(result.stdout, /Run astralis init --devtools to apply it/);
+    assert.match(result.stdout, /Run npx astralis-cli init --devtools to apply it/);
   } finally {
     project.cleanup();
   }

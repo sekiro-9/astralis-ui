@@ -89,7 +89,7 @@ test("--dry-run with --ci writes nothing", async () => {
     const result = await runCli(["init", "--ci", "--dry-run"], { cwd: project.dir });
     assert.equal(result.code, 0, result.output);
     assert.match(result.stdout, /would write \.github\/workflows\/astralis-validate\.yml/);
-    assert.match(result.stdout, /Run astralis init --ci to apply it/);
+    assert.match(result.stdout, /Run npx astralis-cli init --ci to apply it/);
     assert.equal(existsSync(join(project.dir, WORKFLOW)), false);
     assert.equal(read(project.dir, "package.json"), packageBefore);
   } finally {

@@ -1,4 +1,4 @@
-import { existsSync, writeFileSync, rmSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
 import { ok, warn, info, fail, bold, cyan, dim, ask, isAssumeYes, menu, posix, printBanner } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
@@ -6,6 +6,8 @@ import { commandNamed } from "../lib/commands.mjs";
 import { runCommand, UnsafeArgumentError } from "../lib/run.mjs";
 import { findEntryFile } from "../lib/detect.mjs";
 import { starterFile, starterCleanup } from "../lib/starter.mjs";
+import { DOCS, commandProblem, createGuide, formatGuide, printGuide, tryWrite } from "../lib/manual.mjs";
+import { likelyEntry } from "../lib/wiring.mjs";
 
 /**
  * Scaffold a brand-new project and wire Astralis into it. We own NO project
@@ -96,6 +98,56 @@ function promptLanguage() {
   return answer === "2" || answer === "js" || answer === "javascript" ? VITE_TEMPLATES.js : VITE_TEMPLATES.ts;
 }
 
+/** The welcome screen in place of the scaffolder's demo, or the steps that put a first page there. */
+function writeStarter(cwd, framework, pm) {
+  const entry = findEntryFile(cwd, framework);
+  const { path, source } = starterFile(framework, entry?.path ?? join(cwd, likelyEntry(cwd, framework).file));
+  const shown = posix(relative(cwd, path));
+  const guide = createGuide({
+    title: "The welcome screen isn't in place",
+    docs: DOCS.create,
+    check: `run ${pm} run dev: the page shows a styled button.`,
+  });
+  const pageStep = () => guide.step(`Open ${shown} and replace what is in it with a first page of your own:`, FIRST_PAGE);
+
+  if (!entry) {
+    guide.because("the project's entry file wasn't found, so the scaffolder's demo page was kept");
+    pageStep();
+    return printGuide(guide);
+  }
+  const problem = tryWrite(path, source);
+  if (problem) {
+    guide.because(`${shown} couldn't be written: ${problem}`, { failed: true });
+    pageStep();
+  } else {
+    ok(`welcome screen written ${dim(`(${shown})`)}`);
+  }
+
+  // The template's demo CSS centres and re-colours everything, so it goes with its demo.
+  const cleanup = starterCleanup(framework, entry.path);
+  for (const file of cleanup.rewrite) {
+    const unwritten = existsSync(file.path) && tryWrite(file.path, file.source);
+    if (!unwritten) continue;
+    const css = posix(relative(cwd, file.path));
+    guide.because(`${css} couldn't be replaced, and its demo styles fight the page: ${unwritten}`);
+    guide.step(`Open ${css} and replace what is in it with:`, file.source);
+  }
+  for (const orphan of cleanup.remove) {
+    try {
+      rmSync(orphan, { force: true });
+    } catch {
+      // Nothing imports it any more, so a file that won't delete is only clutter.
+    }
+  }
+  printGuide(guide);
+}
+
+const FIRST_PAGE = `import { Button } from "astralis-ui";
+
+export default function Home() {
+  return <Button colorScheme="brand">Hello</Button>;
+}`;
+
 export async function run(argv) {
   const args = parseCommandArgs(commandNamed("create"), argv);
   if (!args) return;
@@ -103,7 +155,7 @@ export async function run(argv) {
   const [name] = args.positionals;
   const yes = isAssumeYes();
 
-  if (!name) fail(`Name the project: ${cyan("astralis create <name>")}.`);
+  if (!name) fail(`Name the project: ${cyan("npx astralis-cli create <name>")}.`);
   printBanner(`Creating ${name}`);
   if (!/^[a-z0-9@][a-z0-9-_.]*$/i.test(name)) fail(`"${name}" isn't a safe project name.`);
   if (existsSync(join(process.cwd(), name))) fail(`./${name} already exists.`);
@@ -125,7 +177,7 @@ export async function run(argv) {
 
   if (forwarded.some((arg) => arg === "-i" || arg === "--immediate")) {
     warn("--immediate starts a dev server that doesn't exit, so Astralis can't be wired in afterwards.");
-    console.log(dim(`  Run ${cyan("astralis init")} inside ./${name} once you've stopped it.`));
+    console.log(dim(`  Run ${cyan("npx astralis-cli init")} inside ./${name} once you've stopped it.`));
   }
   info(`${bold([bin, ...scaffoldArgs].join(" "))} ${dim("(the scaffolder's own prompts — answer them as usual)")}`);
 
@@ -138,9 +190,19 @@ export async function run(argv) {
     if (error instanceof UnsafeArgumentError) fail(`Couldn't forward that to the scaffolder: ${error.message}.`);
     throw error;
   }
-  if (scaffold.status !== 0) fail("Scaffolding failed or was cancelled — nothing to wire up.");
+  const wireCommand = `npx astralis-cli init${values["no-devtools"] ? "" : " --devtools"}`;
+  if (scaffold.status !== 0) {
+    const guide = createGuide({ title: "Scaffolding failed or was cancelled, so there is nothing to wire up", docs: DOCS.create })
+      .because(`${[bin, ...scaffoldArgs].join(" ")}: ${commandProblem(scaffold)}`)
+      .step(`Delete ./${name} if it was half made, then run the scaffolder yourself:`, [bin, ...scaffoldArgs].join(" "))
+      .step("Wire Astralis in:", `cd ${name}\n${wireCommand}`);
+    fail(formatGuide(guide));
+  }
   if (!existsSync(join(process.cwd(), name, "package.json"))) {
-    fail(`Expected ./${name}/package.json after scaffolding — did the scaffolder use a different directory?`);
+    const guide = createGuide({ title: "The project was scaffolded, but Astralis isn't wired in", docs: DOCS.create })
+      .because(`Expected ./${name}/package.json. The scaffolder may have used a different directory`)
+      .step("Go to the folder it made, the one that holds package.json, and wire Astralis in:", `cd path/to/that-folder\n${wireCommand}`);
+    fail(formatGuide(guide));
   }
 
   ok(`project created in ./${name}`);
@@ -156,22 +218,7 @@ export async function run(argv) {
    * nothing to lose, and it makes "did init work?" visible on first `dev`.
    */
   if (!values["no-starter"]) {
-    const entry = findEntryFile(process.cwd(), framework);
-    if (entry) {
-      const { path, source } = starterFile(framework, entry.path);
-      writeFileSync(path, source);
-
-      // The template's demo CSS centres and re-colours everything, so it goes with its demo.
-      const cleanup = starterCleanup(framework, entry.path);
-      for (const file of cleanup.rewrite) {
-        if (existsSync(file.path)) writeFileSync(file.path, file.source);
-      }
-      for (const orphan of cleanup.remove) {
-        if (existsSync(orphan)) rmSync(orphan);
-      }
-
-      ok(`welcome screen written ${dim(`(${posix(relative(process.cwd(), path))})`)}`);
-    }
+    writeStarter(process.cwd(), framework, pm);
   }
 
   console.log(`\n${bold("Next steps:")}\n  ${cyan(`cd ${name}`)}\n  ${cyan(`${pm} run dev`)}`);

@@ -129,3 +129,17 @@ test("bad seed values are rejected with the field that's wrong", async () => {
     project.cleanup();
   }
 });
+
+test("theme run before init imports the library stylesheet first, and init keeps that order", async () => {
+  const project = viteProject({ ...FAKE_LIBRARY, "src/main.tsx": MAIN.replace('import "astralis-ui/styles.css";\n', "") });
+  try {
+    const result = await runCli(["theme", "#8b5cf6"], { cwd: project.dir });
+    assert.equal(result.code, 0, result.output);
+    await runCli(["init", "--yes"], { cwd: project.dir });
+    const main = readFileSync(join(project.dir, "src/main.tsx"), "utf8");
+    assert.equal(main.match(/astralis-ui\/styles\.css/g).length, 1);
+    assert.ok(main.indexOf("astralis-ui/styles.css") < main.indexOf("astralis-theme.css"), main);
+  } finally {
+    project.cleanup();
+  }
+});

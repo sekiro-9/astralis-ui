@@ -29,7 +29,7 @@ export function detectFramework(pkg) {
 }
 
 const ENTRY_CANDIDATES = {
-  next: ["app/layout.tsx", "app/layout.jsx", "src/app/layout.tsx", "src/app/layout.jsx"],
+  next: ["app", "src/app"].flatMap((dir) => ["tsx", "jsx", "js"].map((ext) => `${dir}/layout.${ext}`)),
   vite: ["src/main.tsx", "src/main.jsx"],
 };
 

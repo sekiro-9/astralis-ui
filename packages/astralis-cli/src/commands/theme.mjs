@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { ok, warn, fail, cyan, dim, posix } from "../lib/ui.mjs";
 import { parseCommandArgs } from "../lib/args.mjs";
@@ -6,6 +6,8 @@ import { commandNamed } from "../lib/commands.mjs";
 import { readPackageJson, detectFramework, findEntryFile } from "../lib/detect.mjs";
 import { addImports, parses } from "../lib/edits.mjs";
 import { loadThemeLibrary } from "../lib/library.mjs";
+import { DOCS, createGuide, formatGuide, printGuide, tryRead, tryWrite } from "../lib/manual.mjs";
+import { likelyEntry } from "../lib/wiring.mjs";
 
 /**
  * Renders a theme seed as a stylesheet: the static equivalent of
@@ -65,6 +67,31 @@ function checkContrast(library, seed) {
   }
 }
 
+/**
+ * The import line for the theme and the entry file it goes in. Without one the
+ * CLI knows how to edit, `place` is the likeliest file and has no `path`.
+ */
+function themeImport(cwd, outPath) {
+  const pkg = readPackageJson(cwd);
+  const framework = pkg ? detectFramework(pkg) : null;
+  const entry = findEntryFile(cwd, framework);
+  const file = entry?.relative ?? (framework ? likelyEntry(cwd, framework).file : null);
+  // With no framework the entry is unknown, and src/ is where most keep it.
+  const dir = file ? dirname(join(cwd, file)) : existsSync(join(cwd, "src")) ? join(cwd, "src") : cwd;
+  const specifier = posix(relative(dir, outPath));
+  return {
+    line: `import "${specifier.startsWith(".") ? specifier : `./${specifier}`}";`,
+    place: { path: entry?.path, file: file ?? "the file your app starts from (often src/main.tsx or app/layout.tsx)" },
+  };
+}
+
+/* Added with the theme when the entry lacks it (theme run before init): the
+   theme only wins when it comes second, and init appends what is missing. */
+const LIBRARY_IMPORT = 'import "astralis-ui/styles.css";';
+
+/** This run's own command line, to print for running again. */
+const rerun = (argv) => `npx astralis-cli theme ${argv.map((arg) => (/^[\w./=-]+$/.test(arg) ? arg : `"${arg}"`)).join(" ")}`;
+
 export async function run(argv) {
   const args = parseCommandArgs(commandNamed("theme"), argv);
   if (!args) return;
@@ -73,9 +100,10 @@ export async function run(argv) {
   const seed = seedFrom(values, positionals);
   const cwd = process.cwd();
   const library = await loadThemeLibrary(cwd);
+  if (library.broken) warn(`Your project's astralis-ui couldn't be loaded (${library.broken}); using the CLI's own copy.`);
   const { themeCss, validateSeed, isEmptySeed } = library.serialize;
 
-  if (isEmptySeed(seed)) fail(`Nothing to generate: no theme options given. Run ${cyan("astralis theme --help")}.`);
+  if (isEmptySeed(seed)) fail(`Nothing to generate: no theme options given. Run ${cyan("npx astralis-cli theme --help")}.`);
   const issues = validateSeed(seed);
   if (issues.length) {
     fail(`Invalid theme options:\n${issues.map((i) => `    ${i.field}: ${i.message}`).join("\n")}`);
@@ -108,37 +136,49 @@ export async function run(argv) {
     }
   }
 
-  writeFileSync(outPath, themeCss(seed));
+  const shown = posix(out);
+  const { line, place } = themeImport(cwd, outPath);
+  const guide = createGuide({
+    title: "The theme isn't applied yet",
+    docs: DOCS.theme,
+    check: seed.brandColor
+      ? `start your dev server, open the page in the browser's inspector and select <html>: --astralis-color-brand-500 is ${seed.brandColor}.`
+      : "start your dev server, open the page in the browser's inspector and select <html>: the values come from your theme file.",
+  });
+  const importLines = `import "astralis-ui/styles.css";\n${line}`;
+
+  const writeProblem = tryWrite(outPath, themeCss(seed));
+  if (writeProblem) {
+    guide.because(`${shown} couldn't be written: ${writeProblem}`);
+    guide.step("Make that file and its folder writable, then run this again. To write somewhere else, change --out:", rerun(values.out ? argv : [...argv, "--out", shown]));
+    if (!values["no-import"]) guide.step(`If it then says the import is missing, open ${place.file} and add it after the library's stylesheet:`, importLines);
+    fail(formatGuide(guide));
+  }
   const from = library.source === "project" ? "your project's" : "the CLI's bundled";
-  ok(`wrote ${cyan(posix(out))} ${dim(`(astralis-ui ${library.version}, ${from} copy)`)}`);
+  ok(`wrote ${cyan(shown)} ${dim(`(astralis-ui ${library.version}, ${from} copy)`)}`);
   if (library.outdated) {
     warn(`Your astralis-ui ${library.outdated} predates static themes; upgrade it so the file matches the library you ship.`);
   }
 
-  // A generated stylesheet nobody imports changes nothing, silently. After the
-  // last import is after astralis-ui/styles.css: the order the override needs.
-  const pkg = readPackageJson(cwd);
-  const entry = pkg ? findEntryFile(cwd, detectFramework(pkg)) : null;
-  const specifier = entry ? posix(relative(dirname(entry.path), outPath)) : null;
-  const line = specifier ? `import "${specifier.startsWith(".") ? specifier : `./${specifier}`}";` : null;
-
-  if (!values["no-import"] && entry) {
-    const result = addImports(readFileSync(entry.path, "utf8"), [line]);
-    if (result.changed && parses(result.source)) {
-      writeFileSync(entry.path, result.source);
-      ok(`imported in ${cyan(entry.relative)} ${dim("(after the library stylesheet)")}`);
-    } else if (result.changed || result.note) {
-      warn(`${entry.relative} ${result.note ?? "couldn't be edited safely"} — add this after the library stylesheet:`);
-      console.log(`  ${cyan(line)}`);
+  // A generated stylesheet nobody imports changes nothing, silently.
+  if (!values["no-import"]) {
+    const { text, problem: readProblem } = place.path ? tryRead(place.path) : {};
+    const result = text === undefined ? null : addImports(text, [LIBRARY_IMPORT, line]);
+    if (!place.path) {
+      guide.because("No Next.js or Vite entry point was found to import it in");
+    } else if (readProblem) {
+      guide.because(`${place.file} couldn't be read: ${readProblem}`);
+    } else if (result.note || (result.changed && !parses(result.source))) {
+      guide.because(`${place.file}: ${result.note ?? "it couldn't be edited safely, so it was left alone"}`);
+    } else if (!result.changed) {
+      ok(`already imported in ${cyan(place.file)}`);
     } else {
-      ok(`already imported in ${cyan(entry.relative)}`);
+      const problem = tryWrite(place.path, result.source);
+      if (problem) guide.because(`${place.file} couldn't be written: ${problem}`);
+      else ok(`imported in ${cyan(place.file)} ${dim("(after the library stylesheet)")}`);
     }
-  } else if (!values["no-import"]) {
-    warn("No Next.js or Vite entry point found — import it yourself:");
-    console.log(
-      `  ${cyan('import "astralis-ui/styles.css";')}\n` +
-        `  ${cyan(`import "./${posix(out)}";`)}  ${dim("← must come second")}`,
-    );
+    if (guide.needed) guide.step(`Open ${place.file} and add your theme after the library's stylesheet. It must come second:`, importLines);
+    printGuide(guide);
   }
 
   if (seed.fontHeading || seed.fontBody || seed.fontMono) {
