@@ -33,8 +33,8 @@ export function CodeResult() {
   return (
     <Box as="section" mx="auto" maxW="7xl" px={{ base: "6", lg: "12" }} py={{ base: "28", lg: "36" }}>
       <Reveal>
-        <SectionTitle>The code is the demo</SectionTitle>
-        <SectionLead>Each snippet is the exact source of the preview beside it, as on every docs page.</SectionLead>
+        <SectionTitle>What the code looks like</SectionTitle>
+        <SectionLead>Forms, loading states and responsive layout, in a few lines each.</SectionLead>
       </Reveal>
       <Reveal delay={0.1}>
         <Box mt="12">

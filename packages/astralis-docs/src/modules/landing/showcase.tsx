@@ -26,9 +26,9 @@ export function Showcase({ components, version }: { components: number; version:
             <Box>
               {/* Not SectionTitle: balancing this title would rewrap it on a phone. */}
               <Heading size="4xl" weight="semibold" lineHeight="size" color="base">
-                {components} components, all real
+                {components} components
               </Heading>
-              <SectionLead>Nothing below is a screenshot. Hover to pause, then meet them in the docs.</SectionLead>
+              <SectionLead>Hover to pause, then find each one in the docs.</SectionLead>
             </Box>
             <Link as={NextLink} href="/docs/components/button" variant="underline" size="sm" weight="medium">
               Component docs →
