@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { Box, Button, Flex, Grid, Heading, Stack, Tag, Text } from "astralis-ui";
+import NextLink from "next/link";
+import { Box, Button, Flex, Grid, Heading, Link, Stack, Tag, Text } from "astralis-ui";
 import { Check, MousePointer2, Server } from "lucide-react";
 import { Reveal } from "./reveal";
 import { SectionLead, SectionTitle } from "./section-title";
@@ -124,7 +125,19 @@ function NoBuildArt() {
   );
 }
 
-function Reason({ art, title, children }: { art: ReactNode; title: string; children: ReactNode }) {
+function Reason({
+  art,
+  title,
+  href,
+  link,
+  children,
+}: {
+  art: ReactNode;
+  title: string;
+  href: string;
+  link: string;
+  children: ReactNode;
+}) {
   return (
     <Stack
       as="article"
@@ -144,13 +157,16 @@ function Reason({ art, title, children }: { art: ReactNode; title: string; child
           {art}
         </Flex>
       </Box>
-      <Stack gap="2" p="7">
+      <Stack gap="3" p="7" flex="1">
         <Heading as="h3" size="xl" weight="semibold" lineHeight="size" color="base">
           {title}
         </Heading>
         <Text size="sm" color="muted" lineHeight="relaxed">
           {children}
         </Text>
+        <Link as={NextLink} href={href} mt="auto" alignSelf="start" size="sm" weight="medium">
+          {link} →
+        </Link>
       </Stack>
     </Stack>
   );
@@ -166,19 +182,19 @@ export function Why() {
 
       <Grid mt="14" gap="5" columns={{ lg: "3" }}>
         <Reveal className="h-full min-w-0">
-          <Reason art={<ServerFirstArt />} title="Static parts send no JavaScript">
+          <Reason art={<ServerFirstArt />} title="Static parts send no JavaScript" href="/docs" link="Read the introduction">
             Cards, tables, text and buttons render on the server and reach the browser as plain HTML. Only the
             parts people interact with bring JavaScript.
           </Reason>
         </Reveal>
         <Reveal delay={0.08} className="h-full min-w-0">
-          <Reason art={<DevToolsArt />} title="DevTools that know your components">
+          <Reason art={<DevToolsArt />} title="DevTools that know your components" href="/docs/devtools" link="Set up DevTools">
             Click anything on the page to see which component it is, the props it was given and every prop it
             takes, while you build.
           </Reason>
         </Reveal>
         <Reveal delay={0.16} className="h-full min-w-0">
-          <Reason art={<NoBuildArt />} title="No extra build step">
+          <Reason art={<NoBuildArt />} title="No extra build step" href="/docs/installation" link="Installation guide">
             The styles ship ready-made. Install the package, import one stylesheet, and every prop works.
           </Reason>
         </Reveal>

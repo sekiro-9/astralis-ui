@@ -11,36 +11,42 @@ export function Toolkit({ blocks }: { blocks: number }) {
       title: "Start in one command",
       body: "The CLI scaffolds a Next.js or Vite project, or adds Astralis to one you already have.",
       href: "/docs/cli",
+      link: "Read the CLI guide",
     },
     {
       icon: LayoutTemplate,
       title: `${blocks} ready-made blocks`,
       body: "Heroes, pricing, sign-in, FAQs and more, copied into your project as code you own.",
       href: "/blocks",
+      link: "Browse the blocks",
     },
     {
       icon: Palette,
       title: "Design your theme visually",
       body: "Pick colours, fonts and radii in the theme builder, watch every component follow, then export.",
       href: "/theme-builder",
+      link: "Open the theme builder",
     },
     {
       icon: Bot,
       title: "Your AI assistant knows it",
       body: "Connect Claude Code, Cursor or Codex, and it writes Astralis code from the real docs, then checks it.",
       href: "/docs/ai-agents",
+      link: "Connect your assistant",
     },
     {
       icon: MousePointerClick,
       title: "See components on the page",
       body: "DevTools show which components a page is built from and flag mistakes while you work.",
       href: "/docs/devtools",
+      link: "Set up DevTools",
     },
     {
       icon: ShieldCheck,
-      title: "Checked on every commit",
+      title: "Checked on every pull request",
       body: "Run the validator in CI, so every pull request uses the design system the way it was meant.",
       href: "/docs/validate-in-ci",
+      link: "Add the check to CI",
     },
   ];
 
@@ -74,8 +80,8 @@ export function Toolkit({ blocks }: { blocks: number }) {
                   background: "var(--astralis-color-surface-subtle)",
                 }}
               >
-                <CardBody>
-                  <Stack gap="3">
+                <CardBody h="full">
+                  <Stack gap="3" h="full">
                     <Flex
                       as="span"
                       size="10"
@@ -92,6 +98,10 @@ export function Toolkit({ blocks }: { blocks: number }) {
                     </Heading>
                     <Text size="sm" color="muted" lineHeight="relaxed">
                       {tool.body}
+                    </Text>
+                    {/* The whole card is the link; this line says where it goes. */}
+                    <Text as="span" mt="auto" size="sm" weight="medium" color="brand-label">
+                      {tool.link} →
                     </Text>
                   </Stack>
                 </CardBody>
