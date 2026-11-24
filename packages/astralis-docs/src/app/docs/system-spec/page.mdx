@@ -1,0 +1,142 @@
+export const metadata = {
+  title: "System Spec",
+  description: "The contract the library's build writes: one JSON file that says what every component accepts, read by the CLI, CI, DevTools and AI agents.",
+};
+
+# System Spec
+
+The contract the library's build writes: one JSON file that says what every
+component accepts, read by the CLI, CI, DevTools and AI agents.
+
+## What it is
+
+Every release of `astralis-ui` carries a file called `system-spec.json`. It is
+the library describing itself in a form a program can read: which components
+exist, which props each one takes, which values each prop allows, and whether
+the component sends JavaScript to the browser.
+
+It is a contract in the plain sense. The library promises that anything the
+file allows will work, and the tools hold your code to exactly that. Nothing
+in it is written by hand, so it cannot say one thing while the components do
+another.
+
+## Where it comes from
+
+The library's build writes it as its last step, after the components are
+compiled and the stylesheet is generated. It is read from what was built, not
+from the source:
+
+- **Components and parts** come from the package's real exports.
+- **Props and their values** come from the built type declarations and the
+  token scales.
+- **Classes and CSS variables** come from the compiled stylesheet, so a class
+  the file lists is a class that exists.
+- **Server or client** comes from the built module graph: a component is
+  marked by whether its compiled code reaches a `"use client"` module.
+
+A build that cannot produce a spec matching the components fails, so a release
+never ships with a stale one.
+
+## Where it lives
+
+In one place: inside the package you installed.
+
+```text
+node_modules/astralis-ui/dist/system-spec.json
+```
+
+You can import it like any other file the package exports:
+
+```ts
+import spec from "astralis-ui/system-spec.json";
+```
+
+This site also serves the latest release's copy at
+[/system-spec.json](https://astralis-ui.com/system-spec.json), for tools that
+have no project to read it from.
+
+Because the file travels with the package, it always matches the version you
+have. Upgrade `astralis-ui` and every tool below starts checking against the
+new rules, with nothing else to update.
+
+## What is in it
+
+| Field | What it holds |
+| --- | --- |
+| `name`, `version`, `specVersion` | Which library release the file describes, and the version of the file's own format. |
+| `components` | One entry per component and compound part: its props and their allowed values, boolean and other simple props, which style props it takes, each prop's description and default, and its `client` field. |
+| `propGroups` | The shared sets of style props (box, flex, grid, text, placement and the rest) that components opt into. |
+| `channelProps` | The style props that also accept a raw CSS value, such as `p`, `w`, `bg` and `rounded`. |
+| `breakpoints`, `containerBreakpoints` | The keys a responsive prop may use. |
+| `states`, `stateableProps` | The states (`hover`, `focusVisible`, `active`) and the props that can change in them. |
+| `exports` | Everything the package exports. |
+| `classes`, `cssVariables` | Every class and token variable in the compiled stylesheet. |
+| `domAttributes` | The HTML attributes a component may pass through to its element. |
+| `contrast` | The measured contrast of the colour pairs, in light and dark. |
+
+One component's entry, shortened:
+
+```json
+"Button": {
+  "client": "none",
+  "props": {
+    "variant": ["link", "text", "outline", "subtle", "solid", "surface"],
+    "size": ["sm", "md", "lg", "xl", "xs"]
+  },
+  "scalarProps": { "disabled": "boolean", "loading": "boolean" },
+  "propDocs": {
+    "variant": { "default": "\"solid\"" }
+  }
+}
+```
+
+The `client` field has three values:
+
+| Value | Meaning |
+| --- | --- |
+| `none` | A Server Component. It sends none of its own JavaScript to the browser. |
+| `leaf` | Renders on the server, with one small interactive piece inside it. |
+| `required` | A Client Component, because it holds state or responds to input. |
+
+## What reads it
+
+There is one validator, and it lives in `astralis-cli`. It takes your code and
+the spec, and reports every place the code steps outside what the spec allows.
+Four tools use it, and none of them has rules of its own:
+
+| Tool | When it runs | How it gets the spec |
+| --- | --- | --- |
+| [`astralis validate`](/docs/cli#validate-check-code-against-the-design-system) | When you run it in a terminal. | From the installed `astralis-ui`, or the file you pass with `--spec`. |
+| [CI](/docs/validate-in-ci) | On every pull request. | The same command, run by the workflow. |
+| [DevTools](/docs/devtools) | Each time you save a file, in development. | From the installed `astralis-ui`, inside your dev server. |
+| [AI agents](/docs/ai-agents) | When the agent checks code it has just written. | From the installed `astralis-ui`, or this site's copy when there is no project. |
+
+So a mistake gets the same answer wherever it is caught: the finding DevTools
+shows while you build is the one the agent sees before it hands code over, and
+the one CI would stop the pull request for.
+
+DevTools also reads the spec directly, to show a picked component's full list
+of props and whether it is a server or client component.
+
+## Using it yourself
+
+The file is plain JSON, so your own scripts can read it. To list the
+components that send no JavaScript:
+
+```ts
+import spec from "astralis-ui/system-spec.json";
+
+const serverOnly = Object.entries(spec.components)
+  .filter(([, component]) => component.client === "none")
+  .map(([name]) => name);
+```
+
+To run the same checks from a script, import the validator from the CLI
+package and hand it the spec:
+
+```ts
+import spec from "astralis-ui/system-spec.json";
+import { prepareSpec, validateSource } from "astralis-cli/validate";
+
+const findings = validateSource(source, prepareSpec(spec), "page.tsx");
+```

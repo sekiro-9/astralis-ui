@@ -52,6 +52,28 @@ Any other MCP client takes the same server entry in its config file:
 }
 ```
 
+## How it runs
+
+The server is not a service you host or sign in to. It is a small program
+that your AI client starts on your own machine.
+
+The setup above writes one entry into the client's settings: a name,
+`astralis`, and the command that starts the server, `npx -y astralis-mcp`.
+You do it once. From then on:
+
+1. **The client starts it.** When the client opens, it runs that command.
+   `npx` fetches the package from npm the first time and starts it.
+2. **The server says what it can do.** The client asks for its tools, and gets
+   back the eight below, each with a description and the inputs it takes.
+3. **The agent calls a tool when it needs one.** It decides from the
+   descriptions, so you don't have to ask: tell it to build a pricing page
+   with Astralis and it looks up the components, then checks what it wrote.
+4. **It stops with the client.** Nothing keeps running after you close it.
+
+The two talk over a direct local channel, not over the network. The server
+reaches the internet for one thing only: reading from this site (the
+documentation, the blocks, and the spec when no project has one).
+
 ## What the agent gets
 
 The server exposes eight tools:
@@ -75,7 +97,7 @@ astralis-ui version installed in your project. It is the same validator as
 [`astralis validate`](/docs/cli#validate-check-code-against-the-design-system),
 so the rules the agent checks against are the ones you run in CI.
 
-The spec itself (`dist/system-spec.json` in the installed package, or
+The [spec](/docs/system-spec) itself (`dist/system-spec.json` in the installed package, or
 [/system-spec.json](https://astralis-ui.com/system-spec.json) on this
 site) also records each component's `client` field (`none`, `leaf`, or
 `required`), classified from the shipped module graph at build time. No tool
