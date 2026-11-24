@@ -1,5 +1,5 @@
 import { Hero } from "@/modules/landing/hero";
-import { Bento } from "@/modules/landing/bento";
+import { Why } from "@/modules/landing/why";
 import { Showcase } from "@/modules/landing/showcase";
 import { CodeResult } from "@/modules/landing/code-result";
 import { Toolkit } from "@/modules/landing/toolkit";
@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Bento stats={siteStats} />
+      <Why />
       <Showcase components={siteStats.components} version={siteStats.version} />
       <CodeResult />
       <Toolkit blocks={siteStats.blocks} />
