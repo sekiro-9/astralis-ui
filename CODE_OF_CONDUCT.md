@@ -51,7 +51,7 @@ the project in public, for example by posting from an official account.
 ## Reporting
 
 If you experience or witness unacceptable behaviour, report it to the
-maintainer at **sekiro9178@gmail.com**. You can also use the **Report content**
+maintainer at **paulandy452@gmail.com**. You can also use the **Report content**
 option GitHub offers on any issue, pull request or comment.
 
 Every report is reviewed promptly and fairly, and you can expect an initial
