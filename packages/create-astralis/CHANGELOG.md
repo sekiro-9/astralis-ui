@@ -2,6 +2,10 @@
 
 All notable changes to `create-astralis`.
 
+## 0.1.4 (2026-11-27)
+
+The repository moved to github.com/paulandy789/astralis-ui (the GitHub account was renamed). The package's links point there. Uses astralis-cli 0.8.1.
+
 ## 0.1.3 (2026-11-23)
 
 Uses astralis-cli 0.8.0, so new projects start on astralis-ui 0.11.0, astralis-devtools 0.3.0 and the new starter page.

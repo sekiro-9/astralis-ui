@@ -2,6 +2,10 @@
 
 All notable changes to `astralis-devtools`.
 
+## 0.3.1 (2026-11-27)
+
+The repository moved to github.com/paulandy789/astralis-ui (the GitHub account was renamed). Reports go to that repository by name, no longer through a redirect, and the package's links point there. Uses astralis-cli 0.8.1.
+
 ## 0.3.0 (2026-11-23)
 
 Uses astralis-cli 0.8.0, so findings include `unknown-prop` and `unknown-state-prop` (astralis-ui 0.11.0).

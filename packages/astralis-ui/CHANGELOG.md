@@ -6,6 +6,10 @@ contain breaking changes; a patch (0.8.1) never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version, which says so.
 
+## 0.11.1 (2026-11-27)
+
+The repository moved to github.com/paulandy789/astralis-ui (the GitHub account was renamed). The package's repository, issue and README links point there. No change to the components or the stylesheet; the system spec changes only in its version.
+
 ## 0.11.0 (2026-11-22)
 
 Published with astralis-cli 0.7.0: the system spec gains `ownProps`, `domProps` and `domAttributes`, which the new `unknown-prop` rule reads.

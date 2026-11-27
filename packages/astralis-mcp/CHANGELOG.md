@@ -3,6 +3,10 @@
 All notable changes to `astralis-mcp`. Under 0.x, a minor version may contain
 breaking changes; a patch never does.
 
+## 0.5.1 (2026-11-27)
+
+The repository moved to github.com/paulandy789/astralis-ui (the GitHub account was renamed). The package's links point there. Uses astralis-cli 0.8.1.
+
 ## 0.5.0 (2026-11-23)
 
 Uses astralis-cli 0.8.0, so `validate_code` also reports `unknown-prop` and `unknown-state-prop` (astralis-ui 0.11.0).

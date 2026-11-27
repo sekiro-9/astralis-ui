@@ -6,6 +6,10 @@ breaking changes; a patch never does.
 Versions marked **internal** were set in the repository but never published to
 npm. Their changes reached npm in the next published version.
 
+## 0.8.1 (2026-11-27)
+
+The repository moved to github.com/paulandy789/astralis-ui (the GitHub account was renamed). The `./github` entry point, which the DevTools use to list and create issues, now names that repository, and the package's links point there.
+
 ## 0.8.0 (2026-11-23)
 
 ### Removed
