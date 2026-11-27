@@ -8,14 +8,14 @@ body:
       value: |
         Thanks for taking the time to report this. A small reproduction is the fastest way to a fix.
 
-        Found a security problem? Please report it [privately](https://github.com/sekiro-9/astralis-ui/security/advisories/new) instead.
+        Found a security problem? Please report it [privately](https://github.com/paulandy789/astralis-ui/security/advisories/new) instead.
 
   - type: checkboxes
     id: checks
     attributes:
       label: Before you file
       options:
-        - label: I searched the [existing issues](https://github.com/sekiro-9/astralis-ui/issues?q=is%3Aissue) and this hasn't been reported.
+        - label: I searched the [existing issues](https://github.com/paulandy789/astralis-ui/issues?q=is%3Aissue) and this hasn't been reported.
           required: true
         - label: I can reproduce it on the latest version of the package.
           required: true

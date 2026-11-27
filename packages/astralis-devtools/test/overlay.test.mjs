@@ -74,14 +74,14 @@ function setup() {
   posts = [];
   opened = [];
   submitGate = null;
-  submitResult = { ok: true, body: { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" } };
-  github = { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null };
+  submitResult = { ok: true, body: { number: 12, url: "https://github.com/paulandy789/astralis-ui/issues/12" } };
+  github = { configured: true, repo: "paulandy789/astralis-ui", login: "sam", pending: null, error: null };
   similar = { duplicates: [], related: [] };
   searched = [];
   issues = [
-    { number: 12, title: "Card loses its border", state: "open", stateReason: null, url: "https://github.com/sekiro-9/astralis-ui/issues/12", comments: 2, labels: ["bug"], createdAt: "2026-10-01T00:00:00Z", updatedAt: new Date().toISOString() },
-    { number: 9, title: "Tabs panel unreachable", state: "closed", stateReason: "completed", url: "https://github.com/sekiro-9/astralis-ui/issues/9", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
-    { number: 7, title: "Wish", state: "closed", stateReason: "not_planned", url: "https://github.com/sekiro-9/astralis-ui/issues/7", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
+    { number: 12, title: "Card loses its border", state: "open", stateReason: null, url: "https://github.com/paulandy789/astralis-ui/issues/12", comments: 2, labels: ["bug"], createdAt: "2026-10-01T00:00:00Z", updatedAt: new Date().toISOString() },
+    { number: 9, title: "Tabs panel unreachable", state: "closed", stateReason: "completed", url: "https://github.com/paulandy789/astralis-ui/issues/9", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
+    { number: 7, title: "Wish", state: "closed", stateReason: "not_planned", url: "https://github.com/paulandy789/astralis-ui/issues/7", comments: 0, labels: [], createdAt: "2026-09-01T00:00:00Z", updatedAt: "2026-09-02T00:00:00Z" },
   ];
   newWindow("http://localhost:3000/about");
   Object.assign(globalThis, {
@@ -92,7 +92,7 @@ function setup() {
       if (init.method === "POST") {
         const sent = JSON.parse(init.body);
         if (path === "github/link") {
-          return { ok: true, status: 200, json: async () => ({ url: `https://github.com/sekiro-9/astralis-ui/issues/new?title=${encodeURIComponent(sent.description.title)}` }) };
+          return { ok: true, status: 200, json: async () => ({ url: `https://github.com/paulandy789/astralis-ui/issues/new?title=${encodeURIComponent(sent.description.title)}` }) };
         }
         if (path === "github/similar") {
           searched.push(sent);
@@ -780,7 +780,7 @@ test("Send opens exactly the snapshot shown as a GitHub issue, clears the form a
   assert.match($(".sent-card").textContent, /To add a screenshot or a file, open the issue/);
   const link = $(".sent-card a");
   assert.equal(link.textContent, "Open #12 on GitHub");
-  assert.equal(link.getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/12");
+  assert.equal(link.getAttribute("href"), "https://github.com/paulandy789/astralis-ui/issues/12");
   assert.equal(link.getAttribute("target"), "_blank");
   assert.equal($$(".issue-row").filter((r) => r.textContent.includes("#12")).length, 1, "listed once");
 
@@ -792,7 +792,7 @@ test("Send opens exactly the snapshot shown as a GitHub issue, clears the form a
 });
 
 test("a new issue shows before GitHub's list has it, once, and the list is read again", async () => {
-  submitResult = { ok: true, body: { number: 40, url: "https://github.com/sekiro-9/astralis-ui/issues/40" } };
+  submitResult = { ok: true, body: { number: 40, url: "https://github.com/paulandy789/astralis-ui/issues/40" } };
   await reportOn("text");
   typeInto($(".field"), "Card loses its border");
   await settle();
@@ -941,7 +941,7 @@ test("signed in: the account shows who, and Your issues lists each issue with wh
   assert.match(rows[0].textContent, /Card loses its border#12 · Open · updated just now · 2 comments/);
   assert.match(rows[1].textContent, /Closed, done/);
   assert.match(rows[2].textContent, /Closed, not planned/);
-  assert.equal(rows[0].getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/12");
+  assert.equal(rows[0].getAttribute("href"), "https://github.com/paulandy789/astralis-ui/issues/12");
   click(nav("home"));
   assert.match($('.tile[data-screen="report"]').textContent, /^1Report a problemYour issues: 1 open, 2 closed/);
 });
@@ -975,7 +975,7 @@ test("signed out: sending waits for a sign-in, which shows a code to enter on Gi
 });
 
 test("when GitHub sign-in is not set up, Report says how to report by hand", async () => {
-  github = { configured: false, repo: "sekiro-9/astralis-ui", login: null, pending: null, error: null };
+  github = { configured: false, repo: "paulandy789/astralis-ui", login: null, pending: null, error: null };
   remount();
   openPanel();
   click(nav("report"));
@@ -985,10 +985,10 @@ test("when GitHub sign-in is not set up, Report says how to report by hand", asy
 
 test("a likely duplicate is shown before sending, and the report can be added to it", async () => {
   similar = {
-    duplicates: [{ number: 3, title: "Card loses its border", state: "open", url: "https://github.com/sekiro-9/astralis-ui/issues/3" }],
-    related: [{ number: 5, title: "Card padding", state: "open", url: "https://github.com/sekiro-9/astralis-ui/issues/5" }],
+    duplicates: [{ number: 3, title: "Card loses its border", state: "open", url: "https://github.com/paulandy789/astralis-ui/issues/3" }],
+    related: [{ number: 5, title: "Card padding", state: "open", url: "https://github.com/paulandy789/astralis-ui/issues/5" }],
   };
-  submitResult = { ok: true, body: { number: 3, url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1" } };
+  submitResult = { ok: true, body: { number: 3, url: "https://github.com/paulandy789/astralis-ui/issues/3#issuecomment-1" } };
   await reportOn("text");
   typeInto($(".field"), "Border gone");
   await settle();
@@ -1001,7 +1001,7 @@ test("a likely duplicate is shown before sending, and the report can be added to
   assert.equal(posts.at(-1).path, "submit?addTo=3");
   assert.equal($('[data-tab="issues"]').getAttribute("aria-selected"), "true");
   assert.match($(".sent-card").textContent, /Added your report to #3/);
-  assert.equal($(".sent-card a").getAttribute("href"), "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-1");
+  assert.equal($(".sent-card a").getAttribute("href"), "https://github.com/paulandy789/astralis-ui/issues/3#issuecomment-1");
   assert.equal($$(".issue-row").length, 3, "a comment opens no new issue");
   assert.equal($(".similar"), null, "the suggestion goes once it is acted on");
 });
@@ -1016,6 +1016,6 @@ test("Open GitHub's form instead opens GitHub's own form, filled in, with no sig
   assert.equal(button("Open GitHub's form instead").disabled, false, "the form does not");
   click(button("Open GitHub's form instead"));
   await settle();
-  assert.deepEqual(opened, ["https://github.com/sekiro-9/astralis-ui/issues/new?title=Border%20gone"]);
+  assert.deepEqual(opened, ["https://github.com/paulandy789/astralis-ui/issues/new?title=Border%20gone"]);
   assert.match($(".report-status").textContent, /GitHub's form is open in a new tab/);
 });

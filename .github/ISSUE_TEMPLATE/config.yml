@@ -4,5 +4,5 @@ contact_links:
     url: https://astralis-ui.com/docs
     about: Guides, every component with live examples, and the API reference.
   - name: Report a security vulnerability
-    url: https://github.com/sekiro-9/astralis-ui/security/advisories/new
+    url: https://github.com/paulandy789/astralis-ui/security/advisories/new
     about: Please report security problems privately, not as a public issue.

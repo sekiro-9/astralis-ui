@@ -21,7 +21,7 @@ change needs before it can be merged.
 
 ## Ways to contribute
 
-- **Report a bug** with the [bug report form](https://github.com/sekiro-9/astralis-ui/issues/new?template=1.bug.yml).
+- **Report a bug** with the [bug report form](https://github.com/paulandy789/astralis-ui/issues/new?template=1.bug.yml).
   The smallest code that shows the problem is the most useful thing you can
   include. For a component bug, the CLI can capture one for you:
 
@@ -33,7 +33,7 @@ change needs before it can be merged.
   any problems the validator finds), with your text replaced by placeholders.
   With `--out` nothing is sent; attach the file to the issue.
 
-- **Suggest a feature** with the [feature request form](https://github.com/sekiro-9/astralis-ui/issues/new?template=2.feature.yml):
+- **Suggest a feature** with the [feature request form](https://github.com/paulandy789/astralis-ui/issues/new?template=2.feature.yml):
   a component, a prop, a block, or something in the tooling.
 - **Improve the docs**: a confusing sentence, a missing example or a wrong
   prop description is worth a pull request on its own.
@@ -70,7 +70,7 @@ packages/
 ```
 
 The benchmarks that compare Astralis with other libraries live in their own
-repository, [astralis-bench](https://github.com/sekiro-9/astralis-bench).
+repository, [astralis-bench](https://github.com/paulandy789/astralis-bench).
 
 ## Setting up
 
@@ -231,7 +231,7 @@ contain breaking changes and a patch (0.8.1) never does; breaking changes are
 listed at the top of the release notes with how to upgrade.
 
 Every published version is tagged `package@version` (for example
-`astralis-ui@0.8.0`) and has a [GitHub release](https://github.com/sekiro-9/astralis-ui/releases)
+`astralis-ui@0.8.0`) and has a [GitHub release](https://github.com/paulandy789/astralis-ui/releases)
 with its notes. The maintainer handles publishing.
 
 ## Code of conduct and license

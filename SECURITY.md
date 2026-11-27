@@ -21,7 +21,7 @@ versions are not patched: upgrade to get a fix.
 pull requests.**
 
 Report them privately through GitHub:
-[**Report a vulnerability**](https://github.com/sekiro-9/astralis-ui/security/advisories/new).
+[**Report a vulnerability**](https://github.com/paulandy789/astralis-ui/security/advisories/new).
 Only the maintainer can see the report and the conversation that follows.
 
 A useful report includes:
@@ -45,7 +45,7 @@ will tell you why and agree a new date with you.
 ## Disclosure
 
 Disclosure is coordinated. Once a fix is released, a
-[security advisory](https://github.com/sekiro-9/astralis-ui/security/advisories)
+[security advisory](https://github.com/paulandy789/astralis-ui/security/advisories)
 is published describing the problem, the affected versions and how to
 upgrade, and a CVE is requested where one applies. You are credited in the
 advisory unless you prefer to stay anonymous.

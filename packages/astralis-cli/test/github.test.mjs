@@ -66,9 +66,9 @@ test("finishSignIn ends on a declined, an expired or a stale code", async () => 
 });
 
 test("createIssue posts to the Astralis repository; a revoked token is reported as signed out", async () => {
-  const { calls, fetchImpl } = scripted([{ status: 201, body: { number: 3, html_url: "https://github.com/sekiro-9/astralis-ui/issues/3" } }]);
-  assert.deepEqual(await createIssue("tok", { title: "t", body: "b" }, { fetchImpl }), { number: 3, url: "https://github.com/sekiro-9/astralis-ui/issues/3" });
-  assert.equal(calls[0].url, "https://api.github.com/repos/sekiro-9/astralis-ui/issues");
+  const { calls, fetchImpl } = scripted([{ status: 201, body: { number: 3, html_url: "https://github.com/paulandy789/astralis-ui/issues/3" } }]);
+  assert.deepEqual(await createIssue("tok", { title: "t", body: "b" }, { fetchImpl }), { number: 3, url: "https://github.com/paulandy789/astralis-ui/issues/3" });
+  assert.equal(calls[0].url, "https://api.github.com/repos/paulandy789/astralis-ui/issues");
   assert.deepEqual(JSON.parse(calls[0].init.body), { title: "t", body: "b" });
   assert.equal(calls[0].init.headers["x-github-api-version"], "2022-11-28");
   const revoked = scripted([{ status: 401, body: { message: "Bad credentials" } }]);
@@ -85,7 +85,7 @@ test("listIssues lists the user's issues, not their pull requests", async () => 
     },
   ]);
   const list = await listIssues("tok", "sam", { fetchImpl });
-  assert.match(calls[0].url, /\/repos\/sekiro-9\/astralis-ui\/issues\?creator=sam&state=all/);
+  assert.match(calls[0].url, /\/repos\/paulandy789\/astralis-ui\/issues\?creator=sam&state=all/);
   assert.deepEqual(list, [{ number: 9, title: "Card", state: "closed", stateReason: "completed", url: "u9", comments: 2, labels: ["bug"], createdAt: "a", updatedAt: "b" }]);
 });
 
@@ -138,7 +138,7 @@ test("a snapshot too large for GitHub keeps everything but the raw JSON", () => 
 test("a pre-filled new-issue link carries the report, and fits in a link however large the snapshot", async () => {
   const { newIssueUrl } = await import("astralis-cli/github");
   const url = new URL(newIssueUrl(SNAPSHOT));
-  assert.equal(url.origin + url.pathname, "https://github.com/sekiro-9/astralis-ui/issues/new");
+  assert.equal(url.origin + url.pathname, "https://github.com/paulandy789/astralis-ui/issues/new");
   assert.equal(url.searchParams.get("title"), "Card loses its border");
   assert.match(url.searchParams.get("body"), /^### What happened\n\nNo border in dark mode/);
   assert.match(url.searchParams.get("body"), /Match keys: afp[0-9a-f]{12} acmpcard<\/sub>$/);

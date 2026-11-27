@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /** Where the library's Storybook is published (GitHub Pages, from the storybook workflow). */
-export const STORYBOOK_URL = "https://sekiro-9.github.io/astralis-ui";
+export const STORYBOOK_URL = "https://paulandy789.github.io/astralis-ui";
 
 /**
  * Storybook's own rule for turning a story title into the id in its URLs:

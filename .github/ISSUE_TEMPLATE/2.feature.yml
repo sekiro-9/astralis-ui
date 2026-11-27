@@ -13,7 +13,7 @@ body:
     attributes:
       label: Before you file
       options:
-        - label: I searched the [existing issues](https://github.com/sekiro-9/astralis-ui/issues?q=is%3Aissue) and the [docs](https://astralis-ui.com/docs), and this doesn't exist yet.
+        - label: I searched the [existing issues](https://github.com/paulandy789/astralis-ui/issues?q=is%3Aissue) and the [docs](https://astralis-ui.com/docs), and this doesn't exist yet.
           required: true
 
   - type: dropdown

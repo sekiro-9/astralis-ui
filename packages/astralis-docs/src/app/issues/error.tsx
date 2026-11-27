@@ -25,7 +25,7 @@ export default function IssuesError({ error, retry }: { error: Error & { digest?
             <Button size="sm" variant="outline" colorScheme="gray" onClick={() => retry()}>
               Try again
             </Button>
-            <Button as="a" href="https://github.com/sekiro-9/astralis-ui/issues" size="sm" variant="text" colorScheme="gray">
+            <Button as="a" href="https://github.com/paulandy789/astralis-ui/issues" size="sm" variant="text" colorScheme="gray">
               Open GitHub issues
             </Button>
           </Flex>

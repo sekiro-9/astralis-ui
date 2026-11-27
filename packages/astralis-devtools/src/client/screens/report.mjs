@@ -313,7 +313,7 @@ function newReport(app) {
 /** Who is signed in to GitHub, or how to sign in. */
 function accountCard(app) {
   const gh = app.state.github;
-  const repo = gh?.repo ?? "sekiro-9/astralis-ui";
+  const repo = gh?.repo ?? "paulandy789/astralis-ui";
   if (!gh) return h("div", { class: "card account" }, h("div", { class: "skeleton", style: "width:50%" }));
   if (!gh.configured) {
     return h(

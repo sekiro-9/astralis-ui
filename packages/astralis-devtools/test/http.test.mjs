@@ -211,7 +211,7 @@ test("GitHub status tells the page who is signed in, never the token", async () 
   try {
     const response = await handle(request("github"), { ...p.options, github });
     const text = await response.text();
-    assert.deepEqual(JSON.parse(text), { configured: true, repo: "sekiro-9/astralis-ui", login: "sam", pending: null, error: null });
+    assert.deepEqual(JSON.parse(text), { configured: true, repo: "paulandy789/astralis-ui", login: "sam", pending: null, error: null });
     assert.doesNotMatch(text, /tok-secret/);
   } finally {
     p.cleanup();
@@ -266,14 +266,14 @@ test("a declined sign-in is reported once it ends", async () => {
 test("POST submit opens the confirmed snapshot as an issue from the reporter's account", async () => {
   const p = project();
   const { calls, fetchImpl } = fakeGitHub({
-    "/repos/sekiro-9/astralis-ui/issues": { status: 201, body: { number: 12, html_url: "https://github.com/sekiro-9/astralis-ui/issues/12" } },
+    "/repos/paulandy789/astralis-ui/issues": { status: 201, body: { number: 12, html_url: "https://github.com/paulandy789/astralis-ui/issues/12" } },
   });
   const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
   try {
     const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
     const response = await handle(post("submit", snapshot), { ...p.options, github });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { number: 12, url: "https://github.com/sekiro-9/astralis-ui/issues/12" });
+    assert.deepEqual(await response.json(), { number: 12, url: "https://github.com/paulandy789/astralis-ui/issues/12" });
     const sent = JSON.parse(calls[0].body);
     assert.equal(calls[0].auth, "Bearer tok");
     assert.equal(sent.title, snapshot.description.title);
@@ -289,7 +289,7 @@ test("POST submit opens the confirmed snapshot as an issue from the reporter's a
 
 test("POST submit asks for a sign-in first, and forgets a token GitHub revoked", async () => {
   const p = project();
-  const { fetchImpl } = fakeGitHub({ "/repos/sekiro-9/astralis-ui/issues": { status: 401, body: { message: "Bad credentials" } } });
+  const { fetchImpl } = fakeGitHub({ "/repos/paulandy789/astralis-ui/issues": { status: 401, body: { message: "Bad credentials" } } });
   try {
     const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
     const none = await handle(post("submit", snapshot), { ...p.options, github: new GitHubSession({ store: memoryStore(), fetchImpl }) });
@@ -308,7 +308,7 @@ test("POST submit asks for a sign-in first, and forgets a token GitHub revoked",
 test("GET github/issues lists the reporter's issues", async () => {
   const p = project();
   const { calls, fetchImpl } = fakeGitHub({
-    "/repos/sekiro-9/astralis-ui/issues": [{ number: 4, title: "Card", state: "open", html_url: "u4", comments: 1, labels: [], created_at: "a", updated_at: "b" }],
+    "/repos/paulandy789/astralis-ui/issues": [{ number: 4, title: "Card", state: "open", html_url: "u4", comments: 1, labels: [], created_at: "a", updated_at: "b" }],
   });
   const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
   try {
@@ -368,13 +368,13 @@ test("POST github/similar finds a likely duplicate and related issues, and searc
 test("POST submit?addTo adds the report to that issue as a comment", async () => {
   const p = project();
   const { calls, fetchImpl } = fakeGitHub({
-    "/repos/sekiro-9/astralis-ui/issues/3/comments": { status: 201, body: { html_url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-9" } },
+    "/repos/paulandy789/astralis-ui/issues/3/comments": { status: 201, body: { html_url: "https://github.com/paulandy789/astralis-ui/issues/3#issuecomment-9" } },
   });
   const github = new GitHubSession({ store: memoryStore({ token: "tok", login: "sam" }), fetchImpl });
   try {
     const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
     const response = await handle(post("submit?addTo=3", snapshot), { ...p.options, github });
-    assert.deepEqual(await response.json(), { number: 3, url: "https://github.com/sekiro-9/astralis-ui/issues/3#issuecomment-9" });
+    assert.deepEqual(await response.json(), { number: 3, url: "https://github.com/paulandy789/astralis-ui/issues/3#issuecomment-9" });
     assert.match(JSON.parse(calls[0].body).body, /^\*\*Another report of this problem:\*\*/);
     assert.equal((await handle(post("submit?addTo=x", snapshot), { ...p.options, github })).status, 400);
   } finally {
@@ -389,7 +389,7 @@ test("POST github/link builds GitHub's own form for the snapshot, signed in or n
     const { snapshot } = await (await handle(post("snapshot", PAGE_PART), p.options)).json();
     const { url } = await (await handle(post("github/link", snapshot), { ...p.options, github })).json();
     const link = new URL(url);
-    assert.equal(link.origin + link.pathname, "https://github.com/sekiro-9/astralis-ui/issues/new");
+    assert.equal(link.origin + link.pathname, "https://github.com/paulandy789/astralis-ui/issues/new");
     assert.equal(link.searchParams.get("title"), snapshot.description.title);
     assert.equal((await handle(post("github/link", { ...snapshot, extra: 1 }), { ...p.options, github })).status, 400);
   } finally {

@@ -12,7 +12,7 @@
 <p>Accessible, themeable React components for polished web apps and design systems.<br>Server-first, with the tooling to set it up, theme it and keep it right.</p>
 
 [![npm version](https://img.shields.io/npm/v/astralis-ui?color=eab308&label=npm)](https://www.npmjs.com/package/astralis-ui)
-[![CI](https://github.com/sekiro-9/astralis-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/sekiro-9/astralis-ui/actions/workflows/ci.yml)
+[![CI](https://github.com/paulandy789/astralis-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/paulandy789/astralis-ui/actions/workflows/ci.yml)
 [![React 19](https://img.shields.io/badge/react-19-149eca)](https://react.dev)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-astralis--ui.com-18181b)](https://astralis-ui.com)
@@ -22,7 +22,7 @@
 [Blocks](https://astralis-ui.com/blocks) ·
 [Theme builder](https://astralis-ui.com/theme-builder) ·
 [Changelog](packages/astralis-ui/CHANGELOG.md) ·
-[Report a bug](https://github.com/sekiro-9/astralis-ui/issues/new?template=1.bug.yml)
+[Report a bug](https://github.com/paulandy789/astralis-ui/issues/new?template=1.bug.yml)
 
 </div>
 
@@ -157,7 +157,7 @@ Each package keeps its own:
 [astralis-mcp](packages/astralis-mcp/CHANGELOG.md) ·
 [astralis-devtools](packages/astralis-devtools/CHANGELOG.md) ·
 [create-astralis](packages/create-astralis/CHANGELOG.md).
-Every published version also has a [GitHub release](https://github.com/sekiro-9/astralis-ui/releases).
+Every published version also has a [GitHub release](https://github.com/paulandy789/astralis-ui/releases).
 
 ## License
 

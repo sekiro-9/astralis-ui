@@ -22,7 +22,7 @@ import { LIMITS, toRepro } from "./snapshot.mjs";
 export const GITHUB_CLIENT_ID = "Iv23liqZqPWZWAsCwTUG";
 
 /** Where reports go. */
-export const ISSUES_REPO = "sekiro-9/astralis-ui";
+export const ISSUES_REPO = "paulandy789/astralis-ui";
 
 /** github.com and its API; ASTRALIS_GITHUB_URL and ASTRALIS_GITHUB_API_URL override them, for tests. */
 const web = () => process.env.ASTRALIS_GITHUB_URL || "https://github.com";

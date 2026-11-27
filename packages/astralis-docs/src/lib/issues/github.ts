@@ -7,7 +7,7 @@ import { checkSnapshot, type Snapshot } from "astralis-cli/snapshot";
  */
 
 /** The repository the issues live on. */
-export const GITHUB_REPO = "sekiro-9/astralis-ui";
+export const GITHUB_REPO = "paulandy789/astralis-ui";
 export const REPO_URL = `https://github.com/${GITHUB_REPO}`;
 
 /** Labels the maintainers put on issues anyone may take on. */

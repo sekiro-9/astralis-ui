@@ -22,7 +22,7 @@ const raw = (extra: Partial<RawIssue> = {}): RawIssue => ({
   number: 12,
   title: "Card loses its border",
   state: "open",
-  html_url: "https://github.com/sekiro-9/astralis-ui/issues/12",
+  html_url: "https://github.com/paulandy789/astralis-ui/issues/12",
   user: { login: "sam", avatar_url: "https://avatars.githubusercontent.com/u/1", html_url: "https://github.com/sam" },
   labels: [{ name: "bug", color: "d73a4a" }, "needs triage"],
   comments: 2,
@@ -55,7 +55,7 @@ describe("an issue as the list shows it", () => {
       number: 12,
       title: "Card loses its border",
       state: "open",
-      url: "https://github.com/sekiro-9/astralis-ui/issues/12",
+      url: "https://github.com/paulandy789/astralis-ui/issues/12",
       author: { login: "sam", avatar: "https://avatars.githubusercontent.com/u/1", url: "https://github.com/sam" },
       labels: [
         { name: "bug", color: "d73a4a" },
@@ -95,13 +95,13 @@ describe("the list's filters", () => {
   });
 
   it("asks GitHub's issue search for exactly the filters", () => {
-    expect(searchQuery(parseFilters({}))).toBe("repo:sekiro-9/astralis-ui is:issue is:open");
-    expect(searchQuery(parseFilters({ status: "closed", label: "bug" }))).toBe('repo:sekiro-9/astralis-ui is:issue is:closed label:"bug"');
-    expect(searchQuery(parseFilters({ q: "Card" }))).toBe("repo:sekiro-9/astralis-ui is:issue is:open Card");
+    expect(searchQuery(parseFilters({}))).toBe("repo:paulandy789/astralis-ui is:issue is:open");
+    expect(searchQuery(parseFilters({ status: "closed", label: "bug" }))).toBe('repo:paulandy789/astralis-ui is:issue is:closed label:"bug"');
+    expect(searchQuery(parseFilters({ q: "Card" }))).toBe("repo:paulandy789/astralis-ui is:issue is:open Card");
     expect(searchQuery(parseFilters({ status: "contributors" }))).toBe(
-      'repo:sekiro-9/astralis-ui is:issue is:open label:"good first issue","help wanted"',
+      'repo:paulandy789/astralis-ui is:issue is:open label:"good first issue","help wanted"',
     );
-    expect(searchQuery(parseFilters({ status: "all", label: "bug", q: "Tabs" }))).toBe('repo:sekiro-9/astralis-ui is:issue label:"bug" Tabs');
+    expect(searchQuery(parseFilters({ status: "all", label: "bug", q: "Tabs" }))).toBe('repo:paulandy789/astralis-ui is:issue label:"bug" Tabs');
   });
 });
 
